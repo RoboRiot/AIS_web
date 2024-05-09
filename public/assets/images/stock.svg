@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="40" viewBox="0 0 125 40">
+  <g id="Group_341" data-name="Group 341" transform="translate(-1013 -864)">
+    <g id="Group_340" data-name="Group 340" transform="translate(985 850)">
+      <path id="Path_331" data-name="Path 331" d="M0,0H115l-9,20,9,20H0Z" transform="translate(38 14)" fill="#f7a765"/>
+      <path id="Path_330" data-name="Path 330" d="M0,0H115l-9,20,9,20H0Z" transform="translate(28 14)" fill="#506381"/>
+      <text id="In_stock" data-name="In stock" transform="translate(48 39)" fill="#f9f9fd" font-size="14" font-family="Geologica-Regular, Geologica"><tspan x="0" y="0">IN STOCK</tspan></text>
+    </g>
+  </g>
+</svg>

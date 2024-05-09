@@ -1,0 +1,13 @@
+.parts_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    h1 {
+        font-size: 60px;
+        margin: 0;
+        @media(max-width: 999px) {
+            font-size: 36px;
+        }
+    }
+}

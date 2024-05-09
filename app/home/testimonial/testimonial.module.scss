@@ -1,0 +1,46 @@
+@import "../../../styles/variables";
+.testimonial_wrap {
+    padding: 0 0 45px;
+    .testimonial_slide {
+        section {
+            border: 2px solid #BAE3D1;
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            text-align: left;
+            padding: 40px;
+            min-height: 400px;
+            // box-shadow: 20px 32px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 55px;
+            @media (max-width: $breakpoint_mini_laptop) {
+                min-height: 380px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                margin-bottom: 15px;
+            }
+            img { margin-bottom: 20px;}
+            p {
+                margin: 0 0 20px;
+                font-size: 20px;
+                font-weight: 300;
+                line-height: 30px;
+                @media (max-width: $breakpoint_laptop) {
+                    font-size: 18px;
+                    line-height: 28px;
+                }
+                @media (max-width: $breakpoint_mini_laptop) {
+                    font-size: 15px;
+                    line-height: 24px;
+                }
+                @media (max-width: $breakpoint_tablet) {
+                    font-size: 14px;
+                    line-height: 22px;
+                }
+            }
+            span {
+                b {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}

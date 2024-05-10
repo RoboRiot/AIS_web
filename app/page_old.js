@@ -8,12 +8,11 @@ import Services from "./home/services/Services";
 import ExpertsProvidingService from "./home/experts-providing-service/ExpertsProvidingService";
 import OurFocus from "./home/our-focus/OurFocus";
 import Testimonial from "./home/testimonial/Testimonial";
-import BannerTwo from "./home-2/banner/BannerTwo";
 
 export default function Home() {
   return (
     <>
-      <BannerTwo/>
+      <Banner/>
       <HomeCard/>
       <About/>
       <BuySearch/>

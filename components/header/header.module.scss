@@ -8,6 +8,9 @@
     width: 100%;
     transform: translateY(-150px);
     transition: all 0.4s ease-in-out;
+    @media (max-width: '600px') {
+        transform: translateY(0px);
+    }
     &.sticky_header {
         .header_strip {
             display: none;

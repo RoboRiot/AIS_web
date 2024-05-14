@@ -1,5 +1,4 @@
 import About from "./home/about/About";
-import Banner from "./home/banner/Banner";
 import BuySearch from "./home/buy-search/BuySearch";
 import GetInTouch from "./home/get-in-touch/GetInTouch";
 import HomeCard from "./home/home-card/HomeCard";

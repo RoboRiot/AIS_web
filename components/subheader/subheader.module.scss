@@ -1,0 +1,44 @@
+@import "../../styles/variables";
+.subheader_wrapper {
+    padding: 100px 0;
+    margin-top: 140px;
+    background: url('../../public/assets/images/about_subheader.jpg') center;
+    background-size: cover;
+    &.contact_bg {
+        background: url('../../public/assets/images/contact_subheader.jpg') center;
+        background-size: cover;
+    }
+    &.services_bg {
+        background: url('../../public/assets/images/service_subheader.jpg') center;
+        background-size: cover;
+    }
+    &.product_bg {
+        background: url('../../public/assets/images/product-detail-bg.jpg') center;
+        background-size: cover;
+        @media (max-width: $breakpoint_mobile_portrait) {
+            h1 {font-size: 24px;}
+        }
+    }
+    @media (max-width: $breakpoint_tablet) {
+        margin-top: 83px;
+        padding: 50px 0;
+    }
+    h1 {
+        display: none;
+        margin: 0;
+        font-size: 72px;
+        color: #F9F9FD;
+        line-height: 1.25;
+        text-transform: uppercase;
+        font-weight: bold;
+        span {
+            font-weight: 100;
+        }
+        @media (max-width: $breakpoint_laptop) {
+            font-size: 62px;
+        }
+        @media (max-width: $breakpoint_tablet) {
+            font-size: 26px;
+        }
+    }
+}

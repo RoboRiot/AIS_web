@@ -72,7 +72,7 @@ export default function Navigation() {
                         <ul className="list-none flex items-center">
                             <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/' ? styles.active : ''} href="/">Home</Link></li>
                             <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/about' ? styles.active : ''} href="/about">Our Story</Link></li>
-                            <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/services' ? styles.active : ''} href="/services">Our Services</Link></li>
+                            {/* <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/services' ? styles.active : ''} href="/services">Our Services</Link></li> */}
                             <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/parts' ? styles.active : ''} href="/parts">Parts</Link></li>
                             <li><Link onClick={()=> setShowMenu(false)} className={pathname === '/contact' ? styles.active : ''} href="/contact">Contact Us</Link></li>
                             <li><button onClick={searchFun} className={`${pathname === '/search' ? styles.hidebtn : ""}`}><Image src={searchIcon} alt="search"/></button></li>

@@ -25,7 +25,7 @@ export default function Services() {
                                             <section data-aos="fade-in" data-aos-duration="1000">
                                                 <h3>{listTitle}</h3>
                                                 <p>{listDescription} <Link href="/">{link}</Link></p>
-                                                <a href={pageLink} className="learn_more">Learn More</a>
+                                                {/* <a href={pageLink} className="learn_more">Learn More</a> */}
                                             </section>
                                             <figure data-aos="fade-in" data-aos-duration="1000">
                                                 <Image src={listImage} width={690} height={499} alt="image" />

@@ -15,11 +15,11 @@ export default function Home() {
       <BannerTwo/>
       <HomeCard/>
       <About/>
-      <BuySearch/>
+      {/* <BuySearch/> */}
       <Services/>
-      <PartCard mainTitle={["Most Requested ", <span key="1">Parts</span>]}/>
+      {/* <PartCard mainTitle={["Most Requested ", <span key="1">Parts</span>]}/> */}
       <GetInTouch/>
-      <PartCard mainTitle={["CT Tubes ", <span key="2">Available</span>]}/>
+      {/* <PartCard mainTitle={["CT Tubes ", <span key="2">Available</span>]}/> */}
       <ExpertsProvidingService/>
       <OurFocus/>
       <Testimonial/>

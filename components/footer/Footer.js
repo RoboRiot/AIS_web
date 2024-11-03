@@ -56,7 +56,7 @@ export default function Footer() {
                             <ul className="list-none">
                                 <li><Link href="/">Home</Link></li>
                                 <li><Link href="/about">Our Story</Link></li>
-                                <li><Link href="/services">Our Services</Link></li>
+                                {/* <li><Link href="/services">Our Services</Link></li> */}
                                 <li><Link href="/parts">Parts</Link></li>
                                 <li><Link href="/contact">Contact Us</Link></li>
                                 <li><Link href="/search">Search</Link></li>

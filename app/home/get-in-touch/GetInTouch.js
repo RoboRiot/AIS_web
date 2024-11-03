@@ -22,7 +22,7 @@ export default function GetInTouch() {
                     <div className={`flex items-center ${styles.get_bg_wrapper}`}>
                         <section data-aos="fade-left" data-aos-duration="1000">
                             <h2>Get In <span>Touch</span></h2>
-                            <p>With 100% Coverage of all GE and Toshiba CT parts, Advanced Imaging offers the ability to make sure our customers spend as little downtime as possible. We improve both our parts inventory and quality assurance methods on a regular basis, stocking hard to find parts, so we can be the fastest to get our customers up and running!</p>
+                            {/* <p>With 100% Coverage of all GE and Toshiba CT parts, Advanced Imaging offers the ability to make sure our customers spend as little downtime as possible. We improve both our parts inventory and quality assurance methods on a regular basis, stocking hard to find parts, so we can be the fastest to get our customers up and running!</p> */}
                             <p>We would love to hear from you. Please feel free to reach out to us!</p>
                             <a href="/contact" className="simple-btn">Contact Us</a>
                         </section>

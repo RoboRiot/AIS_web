@@ -1,0 +1,94 @@
+@import "../../../styles/variables";
+.how_we_are {
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0;
+        background: radial-gradient(circle, #F9F9FD 0%, #F7A765 100%);
+    }
+    &.how_expansion {
+        margin-bottom: 100px;
+        @media (max-width: $breakpoint_tablet) {
+            margin-bottom: 0;
+        }
+        figure {
+            margin-right: 40px;
+            @media (max-width: $breakpoint_tablet) {
+                margin-right: 0;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+        section {
+            max-width: 620px;
+        }
+    }
+    & > div {
+        &::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 248px 20px 20px 248px;
+            top: 50%;
+            width: calc(100% + 220px);
+            background: radial-gradient(circle, #F9F9FD 0%, #F7A765 100%);
+            height: calc(100% - 100px);
+            @media (max-width: $breakpoint_tablet) {
+                display: none;
+            }
+        }
+        @media (max-width: $breakpoint_tablet) {
+           flex-direction: column; 
+        }
+    }
+    section {
+        max-width: 477px;
+        position: relative;
+        h2 {
+            font-weight: bold;
+            font-size: 72px;
+            margin: 0 0 10px;
+            line-height: 1.25;
+            text-transform: uppercase;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 62px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 40px;
+            }
+            span {
+                font-weight: 100;
+            }
+        }
+        p {
+            font-size: 20px;
+            line-height: 30px;
+            margin: 0;
+            font-weight: 300;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 18px;
+                line-height: 28px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 14px;
+                line-height: 22px;
+            }
+        }
+    }
+    figure {
+        margin: 0 auto 0 0;
+        position: relative;
+        @media (max-width: $breakpoint_tablet) {
+            margin-bottom: 30px;
+        }
+        img {
+            border-radius: 20px;
+            @media (max-width: $breakpoint_tablet) {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    }
+}
+

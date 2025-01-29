@@ -1,0 +1,64 @@
+@import "../../../styles/variables";
+.product_details {
+    padding: 100px 0;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0;
+    }
+    @media (max-width: $breakpoint_tablet) {
+        & > div {
+            flex-direction: column;
+        }
+    }
+    .product_slider {
+        width: 100%;
+        max-width: 606px;
+        max-height: 313px;
+        position: relative;
+        @media (max-width: $breakpoint_tablet) {
+            margin: 0 auto 30px;
+        }
+    }
+    .detail_content {
+        padding-left: 44px;
+        @media (max-width: $breakpoint_tablet) {
+            padding-left: 20px;
+        }
+        @media (max-width: $breakpoint_mobile_portrait) {
+            padding-left: 0;
+        }
+        h2 {
+            margin: 0 0 20px;
+            text-transform: uppercase;
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1.25;
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 24px;
+            }
+        }
+        span {
+            line-height: 18px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            display: block;
+        }
+        img { margin-bottom: 20px;}
+        h3 {
+            margin: 0 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 26px;
+        }
+        p {
+            margin: 0 0 20px;
+            line-height: 25px;
+            font-size: 16px;
+            a {
+                font-weight: bold;
+                transition: all 0.4s ease-in-out;
+                &:hover { color: #F7A765;}
+            }
+        }
+    }
+}

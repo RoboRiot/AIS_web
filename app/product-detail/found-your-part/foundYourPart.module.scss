@@ -1,0 +1,39 @@
+@import "../../../styles/variables";
+.found_part_wrap {
+    background: radial-gradient(circle, #F9F9FD 0%, #F7A765 100%);
+    padding: 100px 0 80px;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0 40px;
+    }
+    form {
+        gap: 50px;
+        @media (max-width: $breakpoint_mobile_portrait) {
+            gap: 0;
+            flex-direction: column;
+        }
+        ul {
+            width: 50%;
+            @media (max-width: $breakpoint_mobile_portrait) { width: 100%;}
+            li {
+                margin: 0 0 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                input {
+                    height: 62px;
+                    color: #000;
+                    &::placeholder {
+                        text-transform: uppercase;
+                    }
+                }
+                textarea {
+                    height: 144px;
+                    color: #000;
+                    &::placeholder {
+                        text-transform: uppercase;
+                    }
+                }
+            }
+        }
+    }
+}

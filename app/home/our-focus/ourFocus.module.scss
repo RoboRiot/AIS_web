@@ -1,0 +1,119 @@
+@import "../../../styles/variables";
+.focus_wrapper {
+    position: relative;
+    padding: 100px 0;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0;
+    }
+    h2 {
+        font-size: 72px;
+        line-height: 1.25;
+        font-weight: bold;
+        margin: 0 0 10px;
+        text-transform: uppercase;
+        span { font-weight: 100;}
+        @media (max-width: $breakpoint_laptop) {
+            font-size: 62px;
+        }
+        @media (max-width: $breakpoint_tablet) {
+            font-size: 40px;
+        }
+    }
+    p {
+        margin: 0 0 40px;
+        font-weight: 300;
+        font-size: 20px;
+        line-height: 30px;
+        @media (max-width: $breakpoint_laptop) {
+            font-size: 18px;
+            line-height: 28px;
+        }
+        @media (max-width: $breakpoint_tablet) {
+            font-size: 14px;
+            line-height: 22px;
+            margin-bottom: 25px;
+        }
+    }
+    .focus_content {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        @media (max-width: $breakpoint_tablet) {
+            flex-direction: column;
+            gap: 20px;
+        }
+        section {
+            h3 {
+                margin: 0 0 10px;
+                font-weight: 900;
+                color: #19191D;
+                font-size: 24px;
+                text-transform: uppercase;
+                // @media (max-width: $breakpoint_laptop) {
+                //     font-size: 26px;
+                // }
+                @media (max-width: $breakpoint_tablet) {
+                    font-size: 20px;
+                }
+            }
+            ul {
+                li {
+                    font-size: 20px;
+                    line-height: 30px;
+                    font-weight: 300;
+                    margin-bottom: 20px;
+                    gap: 10px;
+                    display: flex;
+                    position: relative;
+                    @media (max-width: $breakpoint_laptop) {
+                        font-size: 18px;
+                        line-height: 28px;
+                    }
+                    @media (max-width: $breakpoint_tablet) {
+                        font-size: 14px;
+                        line-height: 22px;
+                        margin-bottom: 10px;
+                    }
+                    &::before {
+                        content: '';
+                        display: flex;
+                        position: relative;
+                        background: url('../../../public//assets/images/polygon.svg') center no-repeat;
+                        background-size: contain;
+                        width: 12px;
+                        height: 10px;
+                        padding: 20px 0 0;
+                        flex: 0 0 12px;
+                        @media (max-width: $breakpoint_tablet) {
+                            padding: 11px 0 0;
+                            flex: 0 0 8px;
+                        }
+                    }
+                }
+            }
+        }
+        figure {
+            margin: 0;
+            position: relative;
+            &::before {
+                content: '';
+                position: absolute;
+                right: -20px;
+                bottom: -20px;
+                height: 93%;
+                width: 90%;
+                background-color: #F7A765;
+                border-radius: 0 0 40px 0;
+            }
+            img {
+                position: relative;
+                border-radius: 40px;
+                box-shadow: 16px 24px 32px rgba(0,0,0,0.1);
+                @media (max-width: $breakpoint_tablet) {
+                    max-width: 100%;
+                    height: auto;
+                }
+            }
+        }
+    }
+}

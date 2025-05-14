@@ -1,0 +1,182 @@
+@import "../../../styles/variables";
+.mobile_mri {
+    padding: 100px 0;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0;
+    }
+    @media (max-width: $breakpoint_mobile_portrait) {
+        & > div {
+            flex-direction: column-reverse;
+        }
+    }
+    // & > h2 {
+    //     margin: 0 0 10px;
+    //     text-align: center;
+    //     font-weight: bold;
+    //     font-size: 48px;
+    // }
+    // & > p {
+    //     margin: 0 auto 120px;
+    //     max-width: 1160px;
+    //     text-align: center;
+    //     font-weight: 300;
+    //     font-size: 20px;
+    //     line-height: 30px;
+    //     padding: 0 15px;
+    //     @media (max-width: $breakpoint_laptop) {
+    //         font-size: 18px;
+    //         line-height: 28px;
+    //     }
+    //     @media (max-width: $breakpoint_tablet) {
+    //         font-size: 14px;
+    //         line-height: 22px;
+    //         margin-bottom: 60px;
+    //     }
+    // }
+    section {
+        max-width: 522px;
+        @media (max-width: $breakpoint_tablet) {
+            padding: 0 20px 0 0;
+            max-width: 50%;
+        }
+        @media (max-width: $breakpoint_mobile_portrait) {
+            max-width: 100%;
+            padding: 0;
+        }
+        h2 {
+            font-weight: bold;
+            font-size: 72px;
+            margin: 0 0 10px;
+            line-height: 1.25;
+            text-transform: uppercase;
+            span {
+                font-weight: 100;
+            }
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 62px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 40px;
+            }
+        }
+        p {
+            font-size: 20px;
+            line-height: 30px;
+            margin: 0 0 20px;
+            font-weight: 300;
+            a {
+                color: #3797F8;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 18px;
+                line-height: 28px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 14px;
+                line-height: 22px;
+            }
+        }
+    }
+    figure {
+        margin: 0 0 0 auto;
+        position: relative;
+        @media (max-width: $breakpoint_tablet) {
+            margin-bottom: 30px;
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            width: 88%;
+            height: 30%;
+            background-color: #F7A765;
+            border-radius: 40px 0 0 0;
+            z-index: -1;
+            @media (max-width: $breakpoint_tablet) {
+                left: -10px;
+                top: -10px;
+            }
+        }
+        img {
+            border-radius: 20px;
+            @media (max-width: $breakpoint_tablet) {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    }
+    .section_second {
+        margin-top: 50px;
+        @media (max-width: $breakpoint_mobile_portrait) {
+            flex-direction: column;
+        }
+        section {
+            h2 {
+                font-size: 48px;
+                margin-bottom: 20px;
+                @media (max-width: $breakpoint_mobile_portrait) {
+                    font-size: 26px;
+                }
+            }
+            p { margin-bottom: 20px;}
+            ul {
+                li {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin: 0 0 20px;
+                    display: flex;
+                    span {
+                        font-weight: 300;
+                        margin-left: auto;
+                    }
+                }
+            }
+        }
+        figure {
+            &::before {display: none;}
+        }
+    }
+}
+
+.section_title {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 15px;
+    h2 {
+        margin: 0 0 20px;
+        font-size: 72px;
+        font-weight: bold;
+        line-height: 1.2;
+        text-transform: uppercase;
+        span {
+            font-weight: 100;
+        }
+        @media (max-width: $breakpoint_laptop) {
+            font-size: 62px;
+        }
+        @media (max-width: $breakpoint_tablet) {
+            font-size: 40px;
+        }
+    }
+    p {
+        font-weight: 300;
+        margin: 0 auto 30px;
+        font-size: 20px;
+        line-height: 30px;
+        max-width: 71%;
+        @media (max-width: $breakpoint_laptop) {
+            font-size: 18px;
+            line-height: 28px;
+        }
+        @media (max-width: $breakpoint_tablet) {
+            font-size: 14px;
+            max-width: 100%;
+            line-height: 22px;
+            br { display: none;}
+        }
+    }
+}

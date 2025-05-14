@@ -1,0 +1,63 @@
+@import "../../../styles/variables";
+.card_wrapper {
+    padding: 60px 0 0;
+    z-index: 2;
+    position: relative;
+    .card_list {
+        ul {
+            margin: 0 -20px;
+            @media (max-width: $breakpoint_tablet) {
+                flex-wrap: wrap;
+            }
+            li {
+                width: 25%;
+                padding: 0 20px;
+                margin-bottom: 30px;
+                @media (max-width: $breakpoint_tablet) {
+                    width: 50%;
+                }
+                @media (max-width: $breakpoint_mobile_landscape) {
+                    width: 100%;
+                }
+                .card_box {
+                    height: 100%;
+                    text-align: center;
+                    border: 1px solid #9ACCD8;
+                    background-color: #fff;
+                    box-shadow: 8px 12px 20px rgba(55 151 248 / 8%);
+                    border-radius: 20px;
+                    padding: 60px 36px;
+                    transition: all 0.4s ease-in-out;
+                    @media (max-width: $breakpoint_laptop) {
+                        padding: 50px 25px;
+                    }
+                    &:hover {
+                        transform: translateY(-10px);
+                    }
+                    img {
+                        height: 80px;
+                        width: 80px;
+                        object-fit: contain;
+                        margin: 0 0 30px;
+                        @media (max-width: $breakpoint_laptop) {
+                            width: 70px;
+                            height: 70px;
+                            margin-bottom: 20px;
+                        }
+                        @media (max-width: $breakpoint_tablet) {
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                    span {
+                        font-size: 20px;
+                        text-transform: uppercase;
+                        @media (max-width: $breakpoint_laptop) {
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

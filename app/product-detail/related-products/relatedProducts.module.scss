@@ -1,0 +1,46 @@
+@import "../../../styles/variables";
+.related_products {
+    padding: 100px 0 80px;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0 40px;
+    }
+    ul {
+        margin: 0 -25px;
+        @media (max-width: $breakpoint_tablet) {
+            margin: 0 -10px;
+        }
+        li {
+            padding: 0 25px;
+            margin-bottom: 20px;
+            width: 33.333%;
+            @media (max-width: $breakpoint_tablet) {
+                padding: 0 10px;
+            }
+            @media (max-width: $breakpoint_mobile_portrait) {
+                width: 100%;
+            }
+            figure {
+                margin: 0;
+                img {
+                    margin: 0 0 20px;
+                    width: 100%;
+                    height: auto;
+                    max-height: 255px;
+                    object-fit: contain;
+                    @media (max-width: $breakpoint_tablet) {
+                        margin-bottom: 10px;
+                    }
+                }
+                h3 {
+                    margin: 0;
+                    font-size: 20px;
+                    font-weight: bold;
+                    transition: all 0.4s ease-in-out;
+                }
+                &:hover {
+                    h3 { color: #F7A765;}
+                }
+            }
+        }
+    }
+}

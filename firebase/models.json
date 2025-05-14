@@ -1,0 +1,101 @@
+
+{
+   
+      "GE": {
+        "CT": [
+          "Discovery CT750 HD",
+          "BrightSpeed",
+          "Discovery 4 PET",
+          "Lightspeed",
+          "Lightspeed RT 16",
+          "Revolution CT",
+          "Optima CT660"
+        ],
+        "MRI": [
+          "Signa Architect",
+          "Signa Premier",
+          "Signa Voyager",
+          "Optima MR450w",
+          "Discovery MR750",
+          "Brivo MR355",
+          "Signa Creator",
+          "Signa HDxt",
+          "Signa Pioneer",
+          "Optima MR360"
+        ]
+      },
+      "Philips": {
+        "CT": [
+          "Brilliance 16",
+          "Brilliance 40",
+          "Brilliance 64",
+          "iCT 256",
+          "Ingenuity Core",
+          "IQon Spectral CT",
+          "Access CT"
+        ],
+        "MRI": [
+          "Ingenia Elition",
+          "Ingenia Ambition",
+          "Achieva",
+          "Ingenia 1.5T",
+          "Ingenia 3.0T",
+          "Prodiva 1.5T",
+          "Intera 1.5T",
+          "Achieva 3T"
+        ]
+      },
+      "Siemens": {
+        "CT": [
+          "SOMATOM Force",
+          "SOMATOM Definition Edge",
+          "SOMATOM Definition AS",
+          "SOMATOM Drive",
+          "SOMATOM Perspective",
+          "SOMATOM Spirit",
+          "SOMATOM go.All",
+          "SOMATOM Edge Plus",
+          "SOMATOM Emotion"
+        ],
+        "MRI": [
+          "MAGNETOM Altea",
+          "MAGNETOM Lumina",
+          "MAGNETOM Vida",
+          "MAGNETOM Sola",
+          "MAGNETOM Skyra",
+          "MAGNETOM Prisma",
+          "MAGNETOM Aera",
+          "Espree",
+          "Avanto"
+        ]
+      },
+      "Toshiba": {
+        "CT": [
+          "Aquilion 4",
+          "Aquilion 8",
+          "Aquilion 16",
+          "Aquilion 32",
+          "Aquilion 64",
+          "Aquilion CX/CXL 128",
+          "Aquilion Prime 160",
+          "Aquilion ONE",
+          "Aquilion ONE ViSION",
+          "Aquilion Lightning",
+          "Aquilion Prime SP",
+          "Aquilion Precision",
+          "Aquilion Exceed LB",
+          "Aquilion Serve SP",
+          "Aquilion RXL"
+        ],
+        "MRI": [
+          "Vantage Orian 1.5T",
+          "Vantage Galan 3T",
+          "Vantage Elan 1.5T",
+          "Vantage Titan 3T",
+          "Vantage Titan 1.5T",
+          "Vantage Atlas 1.5T",
+          "Excelart Vantage XGV"
+        ]
+      }
+    
+  }

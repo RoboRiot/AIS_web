@@ -1,0 +1,61 @@
+@import "../../../styles/variables";
+.about_main_wrapper {
+    padding: 0px 0 57px;
+    margin: -40px 0 0;
+    position: relative;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 30px 0 60px;
+        margin: 0;
+        & > div {
+            flex-direction: column;
+        }
+    }
+    section {
+        width: 511px;
+        flex: 0 0 511px;
+        margin-right: -93px;
+        @media (max-width: $breakpoint_tablet) {
+            margin-right: 0;
+            flex: 0 0 100%;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 72px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0 0 10px;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 62px;
+            }
+            span {
+                font-weight: 100;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 40px;
+            }
+        }
+        p {
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 18px;
+                line-height: 28px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 14px;
+                line-height: 22px;
+            }
+        }
+    }
+    img {
+        z-index: -1;
+        @media (max-width: $breakpoint_tablet) {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+[
+    {
+        "listImage": "/assets/images/image1.png",
+        "listTitle": "Expert MRI Service",
+        "listDescription": "Immediate, Expert Care When You Need It Most At Advanced Imaging, we’re not just experts, we’re the rapid-response team for MRI machines. Our family-operated business means you get a personal touch with direct communication, bypassing the red tape of larger corporations.",
+        "pageLink": "/services#service1"
+    },
+    {
+        "listImage": "/assets/images/image2.png",
+        "listTitle": "Comprehensive CT Service Solutions",
+        "listDescription": "Tailored, Swift, and Superior Our close-knit team at Advanced Imaging treats every CT service with the urgency and attention only a client-centered company can offer.",
+        "pageLink": "/services#service2"
+    },
+    {
+        "listImage": "/assets/images/image3.png",
+        "listTitle": "Mobile MRI & CT Trailer Rentals and Service",
+        "listDescription": "Personalized, Dependable, Around-the-Clock. Choose Advanced Imaging for more than just rentals; choose us for a partnership. We offer an exclusive fleet of GE and Siemens MRI, and GE and Toshiba CT mobile trailers, supported by a service team that's always on standby. As a family business, we ensure not only the functionality but the constant care of our units. We're here for you at any hour, providing not just equipment, but peace of mind with every rental. For flexible solutions and service with a personal touch, visit us at",
+        "link": "https://www.advancedimagingparts.com",
+        "pageLink": "/services#service3"
+    }
+]

@@ -1,0 +1,94 @@
+@import "../../../styles/variables";
+.mri_experts {
+    padding: 100px 0;
+    background: url('../../../public/assets/images/ct-service.jpg') center;
+    background-size: cover;
+    @media (max-width: $breakpoint_tablet) {
+        padding: 60px 0;
+    }
+    & > div {
+        @media (max-width: 1300px) {
+            gap: 50px;
+        }
+        @media (max-width: $breakpoint_mobile_portrait) {
+            flex-direction: column-reverse;
+        }
+    }
+    section {
+        max-width: 500px;
+        @media (max-width: $breakpoint_tablet) {
+            padding: 0 20px 0 0;
+            max-width: 50%;
+        }
+        @media (max-width: $breakpoint_mobile_portrait) {
+            max-width: 100%;
+            padding: 0;
+        }
+        h2 {
+            font-weight: bold;
+            font-size: 72px;
+            margin: 0 0 10px;
+            line-height: 1.25;
+            text-transform: uppercase;
+            span {
+                font-weight: 100;
+            }
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 62px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 40px;
+            }
+        }
+        p {
+            font-size: 20px;
+            line-height: 30px;
+            margin: 0 0 20px;
+            font-weight: 300;
+            a {
+                color: #3797F8;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 18px;
+                line-height: 28px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 14px;
+                line-height: 22px;
+            }
+        }
+    }
+    figure {
+        margin: 0 0 0 auto;
+        position: relative;
+        @media (max-width: $breakpoint_tablet) {
+            margin-bottom: 30px;
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            width: 88%;
+            height: 50%;
+            background-color: #506381;
+            border-radius: 40px 0 0 0;
+            z-index: -1;
+            @media (max-width: $breakpoint_tablet) {
+                left: -10px;
+                top: -10px;
+            }
+        }
+        img {
+            border-radius: 20px;
+            @media (max-width: 1300px) {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    }
+}
+

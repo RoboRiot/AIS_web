@@ -1,0 +1,78 @@
+@import "../../../styles/variables";
+.banner_main_wrapper {
+    background: url('../../../public//assets/images/banner-image.png') center;
+    background-size: cover;
+    padding: 209px 0 57px;
+    margin-top: 140px;
+    @media (max-width: $breakpoint_laptop) {
+        padding-top: 140px;
+    }
+    @media (max-width: $breakpoint_tablet) {
+        padding: 70px 0;
+        margin-top: 83px;
+        & > div {
+            flex-direction: column;
+        }
+    }
+    section {
+        width: 733px;
+        flex: 0 0 733px;
+        margin-right: -373px;
+        padding-top: 25px;
+        @media (max-width: $breakpoint_tablet) {
+            margin-right: 0;
+            flex: 0 0 100%;
+            width: 100%;
+            padding-top: 0;
+            margin-bottom: 30px;
+        }
+        small {
+            display: block;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 20px;
+            margin-bottom: 13px;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 17px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                letter-spacing: 14px;
+                margin-bottom: 5px;
+                font-size: 14px;
+            }
+        }
+        h1 {
+            font-size: 72px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0 0 13px;
+            @media (max-width: $breakpoint_laptop) {
+                font-size: 62px;
+            }
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 45px;
+            }
+            span {
+                font-weight: 100;
+            }
+        }
+        p {
+            font-size: 24px;
+            line-height: 36px;
+            font-weight: 300;
+            margin-bottom: 28px;
+            @media (max-width: $breakpoint_tablet) {
+                font-size: 18px;
+                line-height: 25px;
+                br { display: none;}
+            }
+        }
+    }
+    img {
+        @media (max-width: $breakpoint_tablet) {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}

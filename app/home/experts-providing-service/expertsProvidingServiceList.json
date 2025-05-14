@@ -1,0 +1,32 @@
+[
+    {
+        "icon": "/assets/images/tabicon1.svg",
+        "tabImage": "/assets/images/tab_image1.jpg",
+        "tabButton": "High Quality Parts",
+        "tabDescription": "We provide top-tier, system-tested imaging parts that meet the highest standards. Our parts are ready to deploy, ensuring your operations continue seamlessly."
+    },
+    {
+        "icon": "/assets/images/tabicon2.svg",
+        "tabImage": "/assets/images/tab_image1.jpg",
+        "tabButton": "Full Service Coverage",
+        "tabDescription": "Experience comprehensive service that covers all your needs. From parts to repairs, our expert team ensures your equipment operates flawlessly and efficiently."
+    },
+    {
+        "icon": "/assets/images/tabicon3.svg",
+        "tabImage": "/assets/images/tab_image1.jpg",
+        "tabButton": "Remote Monitoring",
+        "tabDescription": "Stay ahead with our cutting-edge remote monitoring services that keep your systems in check around the clock. Quick diagnostics and proactive support mean less downtime and more productivity."
+    },
+    {
+        "icon": "/assets/images/tabicon4.svg",
+        "tabImage": "/assets/images/tab_image1.jpg",
+        "tabButton": "Equipment Installation",
+        "tabDescription": "Trust in our experienced professionals for precise and efficient equipment installation. Our OEM-trained engineers handle everything, ensuring your systems are set up for optimal performance."
+    },
+    {
+        "icon": "/assets/images/tabicon5.svg",
+        "tabImage": "/assets/images/tab_image1.jpg",
+        "tabButton": "Technical Support",
+        "tabDescription": "Access immediate and reliable technical support. Our knowledgeable specialists are here to solve issues swiftly, ensuring your operations run smoothly at all times."
+    }
+]

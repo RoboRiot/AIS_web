@@ -1,0 +1,18 @@
+[
+    {
+        "IconImage": "/assets/images/icon1.svg",
+        "BoxText": "24 hours accessibility"
+    },
+    {
+        "IconImage": "/assets/images/icon2.svg",
+        "BoxText": "Virtually resolve majority of issues"
+    },
+    {
+        "IconImage": "/assets/images/icon3.svg",
+        "BoxText": "Alerts our engineers of potential system faults"
+    },
+    {
+        "IconImage": "/assets/images/icon4.svg",
+        "BoxText": "HIPPA compliant, your patient’s privacy is secure"
+    }
+]

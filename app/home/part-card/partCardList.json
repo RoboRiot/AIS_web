@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Product 1",
+        "partImage": "/assets/images/slide1.png",
+        "partTitle": "VCT- 64 VeRB2"
+    },
+    {
+        "id": 2,
+        "name": "Product 2",
+        "partImage": "/assets/images/slide2.png",
+        "partTitle": "VCT - 64 VDIG2"
+    },
+    {
+        "id": 3,
+        "name": "Product 3",
+        "partImage": "/assets/images/slide3.png",
+        "partTitle": "JEDI H4 MP HVTANK"
+    },
+    {
+        "id": 4,
+        "name": "Product 4",
+        "partImage": "/assets/images/slide1.png",
+        "partTitle": "VCT- 64 VeRB2"
+    },
+    {
+        "id": 5,
+        "name": "Product 5",
+        "partImage": "/assets/images/slide2.png",
+        "partTitle": "VCT - 64 VDIG2"
+    },
+    {
+        "id": 6,
+        "name": "Product 6",
+        "partImage": "/assets/images/slide3.png",
+        "partTitle": "JEDI H4 MP HVTANK"
+    }
+]

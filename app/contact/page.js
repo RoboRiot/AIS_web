@@ -37,6 +37,11 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const getRecipients = () =>
+    (process.env.emailAccounts || "")
+      .split(",")
+      .map((address) => address.trim())
+      .filter(Boolean);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,9 +62,16 @@ export default function Contact() {
     //     return;
     // }
 
+    const to = getRecipients();
+    if (to.length === 0) {
+      setIsError(true);
+      setFeedbackMessage("Email configuration error. Please try again later.");
+      return;
+    }
+
     try {
       await db.collection("mail").add({
-        to: process.env.emailAccount,
+        to,
         message: {
           subject: `Contact Form Submission | Advanced Imaging`,
           text: message,

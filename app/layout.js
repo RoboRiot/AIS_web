@@ -1,10 +1,18 @@
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import '@/styles/globals.scss'
+import { BASE_URL } from "@/app/data/seoProducts";
 
 export const metadata = {
-  title: "Advanced Imaging - World's leading CT and MRI scanning equipment.",
-  description: "Advanced Imaging - World's leading CT and MRI scanning equipment.",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "Advanced Imaging | CT, MRI & Mobile Imaging Services",
+    template: "%s",
+  },
+  description: "Advanced Imaging provides CT, MRI, PET/CT, parts, service, and mobile imaging trailer support for hospitals and imaging centers across the United States.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({ children }) {

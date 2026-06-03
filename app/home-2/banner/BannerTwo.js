@@ -11,6 +11,13 @@ import 'swiper/css/effect-fade';
 import bannerImageList from "./bannerImageList.json"
 
 export default function BannerTwo() {
+    React.useEffect(() => {
+        bannerImageList.forEach(({ image }) => {
+            const preloadImage = new window.Image();
+            preloadImage.src = image;
+        });
+    }, []);
+
     return(
         <>
             <div className={`banner_main_wrapper flex items-center ${styles.banner_main_wrapper}`}>
@@ -19,13 +26,19 @@ export default function BannerTwo() {
                         slidesPerView={1}
                         spaceBetween={0}
                         effect={'fade'}
+                        speed={2200}
+                        loop={true}
+                        fadeEffect={{
+                            crossFade: true,
+                        }}
                         navigation={false}
                         pagination={{
                             clickable: true,
                         }}
                         autoplay={{
-                            delay: 2500,
+                            delay: 7600,
                             disableOnInteraction: false,
+                            pauseOnMouseEnter: true,
                         }}
                         modules={[EffectFade, Autoplay, Pagination, Navigation]}
                         className="mySwiper"

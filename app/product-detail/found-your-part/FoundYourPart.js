@@ -3,71 +3,64 @@ import React, {useEffect, useState } from 'react';
 import styles from "./foundYourPart.module.scss"
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { db } from '@/firebase/Firebase';
+import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
+import { evaluateBotSignals } from '@/components/utils/antiBot';
+import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
+import { submitLead } from '@/components/utils/submitLead';
 
 export default function FoundYourPart() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [partNumber, setPartNumber] = useState("");
     const [message, setMessage] = useState("");
+    const [honeypot, setHoneypot] = useState("");
+    const [formStartedAt] = useState(() => Date.now());
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
-    const getRecipients = () =>
-        (process.env.emailAccounts || "")
-            .split(",")
-            .map((address) => address.trim())
-            .filter(Boolean);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
-    // useEffect(() => {
-    //     // Load reCAPTCHA script dynamically when the component mounts
-    //     const script = document.createElement('script');
-    //     script.src = `https://www.google.com/recaptcha/api.js?render=6LcmZyIqAAAAAIztRJsHyudfi22qgQzTvkSVm82X`; // Replace with your site key
-    //     script.async = true;
-    //     script.defer = true;
-    //     document.head.appendChild(script);
-
-    //     return () => {
-    //         document.head.removeChild(script);
-    //     };
-    // }, []);
+    useEffect(() => {
+        ensureRecaptchaScript(recaptchaSiteKey);
+    }, [recaptchaSiteKey]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
 
-        // Execute reCAPTCHA and get the token
-        // const token = await new Promise((resolve) => {
-        //     if (typeof grecaptcha !== 'undefined') {
-        //         grecaptcha.execute().then(resolve);
-        //     } else {
-        //         console.error('reCAPTCHA not loaded');
-        //         resolve(null);
-        //     }
-        // });
-
-        // if (!token) {
-        //     setIsError(true);
-        //     setFeedbackMessage("Error with reCAPTCHA. Please try again.");
-        //     return;
-        // }
-
-        const to = getRecipients();
-        if (to.length === 0) {
+        const botSignals = evaluateBotSignals({
+            honeypotValue: honeypot,
+            startedAt: formStartedAt,
+        });
+        if (botSignals.blocked) {
             setIsError(true);
-            setFeedbackMessage("Email configuration error. Please try again later.");
+            setFeedbackMessage("Submission blocked. Please try again.");
+            return;
+        }
+
+        const { sanitized, errors } = sanitizeLeadForm({ name, email, partNumber, message });
+        if (errors.length) {
+            setIsError(true);
+            setFeedbackMessage(errors[0]);
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        const token = await executeRecaptcha(recaptchaSiteKey, "part_request");
+        if (!token) {
+            setIsError(true);
+            setFeedbackMessage("Error with reCAPTCHA. Please try again.");
+            setIsSubmitting(false);
             return;
         }
 
         try {
-            await db.collection("mail").add({
-                to,
-                message: {
-                    subject: `Part Request Form | Advanced Imaging`,
-                    text: message,
-                    email: email,
-                    partNumber: partNumber,
-                    html: `<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" mc:repeatable="product-name-1"><tr><td height="50px"></td></tr><tr><td align="center"><table align="center" bgcolor="#f7f7f7" cellpadding="0" cellspacing="0" width="600" style="border-radius:10px"><tr><td><table align="center" border="0" cellpadding="0" cellspacing="0" width="500"><tr><td height="30"></td></tr><tr><td align="center" width="100%" style="padding:0 15px"><a target="_blank" href="https://advanced-imaging.vercel.app/"><img width="250px" src="https://frontend.development-env.com/advancedimaging/logo.png" alt="logo"></a></td></tr><tr><td height="30"></td></tr><tr><td align="left" style="color:#000;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;letter-spacing:1px"><table align="left" border="1" cellpadding="0" cellspacing="0" width="500" style="border-radius:10px;padding:10px 0"><tr><th align="left" style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;width:30%;padding:10px 20px">Name:</th><td align="left" style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;padding:10px 20px">${name}</td></tr><tr><th align="left" style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;width:30%;padding:10px 20px">Email Address:</th><td style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;padding:10px 20px">${email}</td></tr><tr><th align="left" style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;width:30%;padding:10px 20px">Part Number:</th><td style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;padding:10px 20px">${partNumber}</td></tr><tr><th align="left" style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;width:30%;padding:10px 20px">Message:</th><td style="font-size:13px;border:none;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;color:#000;padding:10px 20px">${message}</td></tr></table></td></tr></table></td></tr><tr><td height="40"></td></tr></table></td></tr></table>`,
-                },
-                // token,
+            await submitLead({
+                ...sanitized,
+                token,
+                action: "part_request",
+                formType: "part_request",
             });
             setIsError(false);
             setFeedbackMessage("Thank you! We have received your message. We will contact you soon.");
@@ -81,6 +74,7 @@ export default function FoundYourPart() {
         setEmail("");
         setMessage("");
         setPartNumber("");
+        setIsSubmitting(false);
         // closeModal();
     };
     
@@ -94,9 +88,22 @@ export default function FoundYourPart() {
                     <h2 className="main-title">Found <span>Your Part?</span></h2>
                     <form className="flex w-100" onSubmit={handleSubmit}>
                         <ul className="list-none">
+                            <li className="bot-field" aria-hidden="true">
+                                <label htmlFor="found-part-website">Website</label>
+                                <input
+                                    id="found-part-website"
+                                    name="website"
+                                    type="text"
+                                    value={honeypot}
+                                    onChange={(e) => setHoneypot(e.target.value)}
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                />
+                            </li>
                             <li>
                                 <input placeholder="Name" type='text'
                                     value={name}
+                                    maxLength={FORM_LIMITS.name}
                                     pattern=".{3,}"
                                     title="Please enter at least 3 characters"
                                     onChange={(e) => setName(e.target.value)}
@@ -105,6 +112,7 @@ export default function FoundYourPart() {
                             </li>
                             <li><input placeholder="Email" type="email"
                                         value={email}
+                                        maxLength={FORM_LIMITS.email}
                                         name="email"
                                         id="email"
                                         pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
@@ -113,15 +121,17 @@ export default function FoundYourPart() {
                                         required/></li>
                             <li><input placeholder="Part Number" type="text"
                                         value={partNumber}
+                                        maxLength={FORM_LIMITS.partNumber}
                                         onChange={(e) => setPartNumber(e.target.value)}
                                         required/></li>
                         </ul>
                         <ul className="list-none">
                         <li><textarea placeholder="Message" type="text"
                                         value={message}
+                                        maxLength={FORM_LIMITS.message}
                                         onChange={(e) => setMessage(e.target.value)}
                                         required></textarea></li>
-                            <li><button type="submit" className="simple-btn">Send</button></li>
+                            <li><button type="submit" className="simple-btn" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send"}</button></li>
                         </ul>
                     </form>
                     {feedbackMessage && 

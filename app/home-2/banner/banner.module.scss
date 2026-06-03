@@ -37,6 +37,25 @@
         width: 100%;
         height: 100vh;
         padding: 140px 0 0;
+        :global(.swiper) {
+            width: 100%;
+            height: 100%;
+        }
+        :global(.swiper-wrapper) {
+            transition-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+        }
+        :global(.swiper-slide) {
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            will-change: opacity;
+        }
+        :global(.swiper-fade .swiper-slide) {
+            transition-property: opacity;
+            transition-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+        }
         @media (max-width: $breakpoint_tablet) {
             padding: 83px 0 0;
         }

@@ -21,20 +21,31 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import 'lightgallery/scss/lightgallery.scss';
 import 'lightgallery/scss/lg-zoom.scss';
+import {
+    buildProductImageAlt,
+    cleanText,
+    getProductPartNumbers,
+    parseProductSpecs,
+} from '@/app/data/seoProducts';
+
+const IMAGE_TYPES = ['.png', '.jpg', '.jpeg', 'JPEG', 'JPG'];
 
 export default function Product({ clickedProduct }) {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [showPop, setShowPop] = useState(false);
     const [uniqueImages, setUniqueImages] = useState([]); // Array to store unique images URLs
-    const imageType = ['.png', '.jpg', '.jpeg', 'JPEG', 'JPG'];
 
     const [enlargeImage, setEnlargedImage] = useState(Image1);
 
     const swiperRef = useRef(null);
+    const productSpecs = parseProductSpecs(clickedProduct);
+    const partNumbers = getProductPartNumbers(clickedProduct);
+    const manufacturer = cleanText(clickedProduct?.OEM || productSpecs.manufacturer);
+    const modality = cleanText(clickedProduct?.Modality || productSpecs.category);
+    const systemModel = cleanText(clickedProduct?.Machine || productSpecs.systemModel);
 
     // Handle image click for enlarging the image
     const handleImageClick = (image) => {
-        console.log("Image clicked for enlargement:", image);
         setEnlargedImage(image); // Set the enlarged image
     };
 
@@ -42,32 +53,25 @@ export default function Product({ clickedProduct }) {
     const handleSlideChange = (swiper) => {
         const currentSlideIndex = swiper.activeIndex;
         const currentImage = uniqueImages[currentSlideIndex];
-        console.log("Active Image on slide change:", currentImage);
         setEnlargedImage(currentImage); // Set the enlarged image based on active slide
     };
 
-
-    console.log(clickedProduct);
 
     // Fetch image URLs for the clicked product
     useEffect(() => {
         const processImageUrls = async () => {
             const images = [];
+            const productImages = Array.isArray(clickedProduct?.Images) ? clickedProduct.Images : [];
 
-            for (const img of clickedProduct?.Images) {
-
-
-
-                for (const x of imageType) {
+            for (const img of productImages) {
+                for (const x of IMAGE_TYPES) {
                     const url = await getImageUrl(img.endsWith("g") ? `${img}` : `${img}${x}`);
-                    console.log(`${clickedProduct?.Images[0]}${x}`, "uni", url, `Parts/${clickedProduct?.id}/${clickedProduct?.id}${x}`)
 
                     if (url && !images.includes(url)) {
                         images.push(url);
                     }
                 }
             }
-            console.log(images);
 
             setUniqueImages(images); // Set the unique images state with fetched URLs
         };
@@ -126,7 +130,7 @@ export default function Product({ clickedProduct }) {
                             {uniqueImages.length > 0 ? (
                                 uniqueImages.map((image, index) => (
                                     <SwiperSlide key={index}>
-                                        <Image width={114} height={76} alt="image" src={image}
+                                        <Image width={114} height={76} alt={buildProductImageAlt(clickedProduct, index)} src={image}
                                             onClick={() => handleImageClick(image)} // Set enlarge image when clicked
 
                                         />
@@ -154,7 +158,7 @@ export default function Product({ clickedProduct }) {
 
                                     <SwiperSlide key={index}>
                                         <LightGallery {...lgSettings}>
-                                            <Image width={470} height={313} alt="image" src={image}
+                                            <Image width={470} height={313} alt={buildProductImageAlt(clickedProduct, index)} src={image}
                                                 onClick={() => handleImageClick(image)} // Set enlarge image when clicked
                                             />
                                         </LightGallery>
@@ -185,11 +189,11 @@ export default function Product({ clickedProduct }) {
                         <Image src={stockImage} alt="stockImage" />
                         <h3>Description</h3>
                         <ul className='list-none' style={{marginBottom: "20px"}}>
-                            <li><b>Part Number: </b> {clickedProduct?.PN}</li>
-                            <li>{clickedProduct?.SN && <b> Serial Number: </b> && clickedProduct?.SN && <br style={{display : "none"}} />}</li>
-                            <li><b> System Model: </b> {clickedProduct?.Machine}</li>
-                            <li><b> System Manufacturer: </b> {clickedProduct?.OEM}</li>
-                            <li><b> Category: </b> {clickedProduct?.Modality}</li>
+                            <li><b>Part Number: </b> {partNumbers.length ? partNumbers.join(", ") : "N/A"}</li>
+                            {clickedProduct?.SN && <li><b>Serial Number: </b> {clickedProduct.SN}</li>}
+                            <li><b>System Model: </b> {systemModel || "N/A"}</li>
+                            <li><b>System Manufacturer: </b> {manufacturer || "N/A"}</li>
+                            <li><b>Category: </b> {modality || "N/A"}</li>
                         </ul>
 
                         <p>Call for Pricing: <Link href="tel:(800) 200-3583">(800) 200-3583</Link></p>

@@ -22,7 +22,4 @@ if (!Firebase.apps.length) {
 }
 const db = Firebase.firestore();
 
-
-Firebase.initializeApp(FirebaseCredentials);
-
 export { db, Firebase };

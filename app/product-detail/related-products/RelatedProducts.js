@@ -10,6 +10,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { fetchProducts } from "@/components/fetchProducts/fetchedProducts";
 import { ImageComponent } from '@/components/fetchImages/Image';
+import { buildProductHref } from "@/app/data/seoProducts";
 
 
 export default function RelatedProducts() {
@@ -19,13 +20,23 @@ export default function RelatedProducts() {
 
 
     useEffect(() => {
-        setStoredProduct(JSON.parse(localStorage.getItem('product')));
+        const stored = (() => {
+            try {
+                return JSON.parse(localStorage.getItem('product'));
+            } catch {
+                return null;
+            }
+        })();
+        setStoredProduct(stored || {});
 
         const fetchData = async () => {
 
             try {
                 const data = await fetchProducts();
-                const matchedProducts = data.filter((product) => (product.OEM === JSON.parse(localStorage.getItem('product')).OEM))
+                const targetOEM = stored?.OEM;
+                const matchedProducts = targetOEM
+                    ? data.filter((product) => product.OEM === targetOEM)
+                    : [];
                 const slicedProductsArray = matchedProducts.slice(0, 3);
                 setProducts(slicedProductsArray);
             } catch (error) {
@@ -49,7 +60,16 @@ export default function RelatedProducts() {
                             <li key={index}>
                             {/* {getImageUrl(x.id)} */}
 
-                                <Link href="/product-detail">
+                                <Link
+                                    href={buildProductHref(x) || "/product-detail"}
+                                    onClick={() => {
+                                        try {
+                                            localStorage.setItem("product", JSON.stringify(x));
+                                        } catch {
+                                            // ignore storage errors
+                                        }
+                                    }}
+                                >
                                     <figure>
                                         {/* <Image src={imageUrl  ? imageUrl : pro1 } alt="pro1" /> */}
                                         <ImageComponent imagePath={`Parts/${x.id}/${x.id}`} />

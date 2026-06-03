@@ -35,8 +35,10 @@ export default function BuySearch() {
     };
 
     const generateSuggestions = (value) => {
-        const regex = new RegExp(`${value}`, 'i');
-        const filteredSuggestions = productsData.filter(product => regex.test(product.partTitle));
+        const normalizedValue = value.toLowerCase().trim();
+        const filteredSuggestions = productsData.filter(product =>
+            product.partTitle.toLowerCase().includes(normalizedValue)
+        );
         setSuggestions(filteredSuggestions);
     };
 
@@ -58,6 +60,7 @@ export default function BuySearch() {
                         placeholder="Search" 
                         name="searchInput" 
                         value={searchQuery} 
+                        maxLength={120}
                         onChange={handleInputChange}
                     />
                     <button type="submit" className="simple-btn">Find Now</button>

@@ -10,6 +10,7 @@ import { ImageComponent } from '@/components/fetchImages/Image';
 import { db } from '@/firebase/Firebase';
 import SidebarFoundYourPart from '../product-detail/found-your-part/SidebarFoundYourPart';
 import RecentProducts from './RecentProducts';
+import { buildProductHref, slugify } from '@/app/data/seoProducts';
 
 export default function ProductsPage() {
     const [sortQuery, setSortQuery] = useState(true);
@@ -115,7 +116,13 @@ export default function ProductsPage() {
     const handleClick = (product) => {
         localStorage.setItem('product', JSON.stringify(product));
 
-        let recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+        let recentProducts = [];
+        try {
+            const storedRecentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+            recentProducts = Array.isArray(storedRecentProducts) ? storedRecentProducts : [];
+        } catch {
+            recentProducts = [];
+        }
 
         recentProducts.push(product);
 
@@ -184,6 +191,7 @@ export default function ProductsPage() {
                                         type="text"
                                         placeholder='SEARCH BY NAME'
                                         value={searchQuery}
+                                        maxLength={120}
                                         onChange={handleInputChange}
                                     />
                                 </li>
@@ -193,6 +201,7 @@ export default function ProductsPage() {
                                         type="text"
                                         placeholder='SEARCH BY SKU NUMBER'
                                         value={skuQuery}
+                                        maxLength={120}
                                         onChange={handleSkuChange}
                                     />
                                 </li>
@@ -238,7 +247,12 @@ export default function ProductsPage() {
                             currentProducts.map((product, index) => (
                                 <li key={`part-${index}`} className="flex">
                                     <div onClick={() => { handleClick(product) }}>
-                                        <Link href={`/product-detail?${product.Name}`}>
+                                        <Link
+                                            href={
+                                                buildProductHref(product) ||
+                                                (product?.Name ? `/products/${slugify(product.Name)}` : "/parts")
+                                            }
+                                        >
                                             <figure>
                                                 <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} />
                                                 <h3>{product.Name}</h3>

@@ -50,8 +50,10 @@ export default function Navigation() {
     };
 
     const generateSuggestions = (value) => {
-        const regex = new RegExp(`${value}`, 'i');
-        const filteredSuggestions = productsData.filter(product => regex.test(product.partTitle));
+        const normalizedValue = value.toLowerCase().trim();
+        const filteredSuggestions = productsData.filter(product =>
+            product.partTitle.toLowerCase().includes(normalizedValue)
+        );
         setSuggestions(filteredSuggestions);
     };
 
@@ -83,7 +85,7 @@ export default function Navigation() {
                             }}
                             >
                             <form onSubmit={handleSearch} className={`${pathname === '/parts' ? styles.hidebtn : ""} ${styles.search_wrap} ${showSearch ? styles.active : ""}`}>
-                                <input placeholder='Search' name="searchInput" type='text' value={searchQuery} onChange={handleInputChange} />
+                                <input placeholder='Search' name="searchInput" type='text' value={searchQuery} maxLength={120} onChange={handleInputChange} />
                                 <button type="submit" onClick={()=> setShowSearch(false)}><Image src={searchIcon} alt="search" /></button>
                                 {suggestions.length > 0 && (
                                     <div className={styles.suggestions}>

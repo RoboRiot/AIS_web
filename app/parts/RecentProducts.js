@@ -5,14 +5,19 @@ import styles from './search.module.scss';
 import Link from 'next/link';
 import slide1 from "@/public/assets/images/slide1.png";
 import { ImageComponent } from '@/components/fetchImages/Image';
+import { buildProductHref, slugify } from '@/app/data/seoProducts';
 
 export default function RecentProducts() {
     const [recentProducts, setRecentProducts] = useState([]);
 
     // Fetch recent products from local storage on component mount
     useEffect(() => {
-        const storedProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
-        setRecentProducts(storedProducts);
+        try {
+            const storedProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+            setRecentProducts(Array.isArray(storedProducts) ? storedProducts : []);
+        } catch {
+            setRecentProducts([]);
+        }
     }, []);
 
     // Update localStorage with the selected product
@@ -28,7 +33,13 @@ export default function RecentProducts() {
                 {/* Reverse the array when displaying */}
                 {[...recentProducts].reverse().map((product, index) => (
                     <li key={index}>
-                        <Link href={`/product-detail?${product.Name}`} onClick={() => handleClick(product)}>
+                        <Link
+                            href={
+                                buildProductHref(product) ||
+                                (product?.Name ? `/products/${slugify(product.Name)}` : "/parts")
+                            }
+                            onClick={() => handleClick(product)}
+                        >
                             {/* Replace with dynamic product image if available */}
                             <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} />
                             <h6>{product.Name}</h6>

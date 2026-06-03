@@ -727,6 +727,23 @@ select {
   }
 }
 
+.seo-fallback {
+  margin: 20px 0 40px;
+}
+
+.bot-field {
+  position: absolute !important;
+  left: -10000px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+html[data-seo-product-loaded="true"] .seo-fallback {
+  display: none;
+}
+
 .lg-components {
   .lg-thumb-outer,.lg-sub-html { display: none;}
 }

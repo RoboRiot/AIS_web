@@ -1,4 +1,5 @@
-export const BASE_URL = "https://advancedimagingparts.com";
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://advancedimagingparts.com";
 
 const PRODUCT_CODE_PATTERN = /\b(?=[A-Z0-9-]*[A-Z])(?=[A-Z0-9-]*\d)[A-Z0-9-]{4,}\b/gi;
 

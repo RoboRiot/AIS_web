@@ -1,71 +1,65 @@
 import Subheader from "@/components/subheader/Subheader";
 import ExpertMriServices from "./expert-mri-services/ExpertMriServices";
-import MobileMri from "./mobile-mri/MobileMri";
 import CtServices from "./ct-services/CtServices";
 import Link from "next/link";
 import styles from "./servicesSeo.module.scss";
 import { BASE_URL } from "@/app/data/seoProducts";
+import { serviceLandingPages, serviceModalities } from "@/app/data/serviceLandingPages";
 
 export const metadata = {
-    title: "Mobile MRI Trailer Rental, CT & PET/CT Services | Advanced Imaging",
+    title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
     description:
-        "Mobile MRI trailer rental, mobile CT scanner rental, PET/CT trailer support, and 24/7 service for GE, Philips, Siemens, Canon, and Toshiba imaging systems.",
+        "Advanced Imaging Services provides MRI, CT, and PET/CT equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts across the U.S.",
     keywords: [
-        "mobile medical trailer",
-        "mobile diagnostic imaging rentals",
-        "mobile imaging equipment rental",
-        "mobile MRI rental",
-        "mobile MRI trailer",
-        "mobile MRI trailer rental",
-        "mobile MRI scanner rental",
-        "mobile CT trailer",
-        "mobile CT scanner rental",
-        "temporary CT scanner rental",
-        "mobile PET CT trailer",
-        "PET CT mobile units",
-        "MRI trailer rental",
-        "CT trailer rental",
-        "interim mobile imaging",
-        "short term mobile MRI lease",
-        "long term mobile imaging trailer lease",
-        "mobile imaging trailer",
-        "GE mobile MRI",
-        "Philips mobile MRI",
-        "Siemens mobile MRI",
-        "mobile MRI service",
-        "mobile CT service",
+        "MRI service",
+        "CT service",
+        "PET service",
+        "PET/CT service",
+        "medical imaging equipment service",
+        "MRI repair",
+        "CT scanner repair",
+        "preventive maintenance",
+        "emergency imaging service",
+        "GE MRI service",
+        "Siemens MRI service",
+        "Toshiba MRI service",
+        "GE CT service",
+        "Siemens CT service",
+        "Toshiba CT service",
     ],
     alternates: {
         canonical: "/services",
     },
     openGraph: {
-        title: "Mobile MRI Trailer Rental, CT & PET/CT Services | Advanced Imaging",
+        title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
         description:
-            "Mobile MRI and CT trailer rentals, PET/CT support, fleet maintenance, and rapid-response service for major imaging platforms.",
+            "MRI, CT, PET/CT service, repair, preventive maintenance, emergency support, and tested medical imaging parts.",
         url: "/services",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Mobile MRI Trailer Rental, CT & PET/CT Services | Advanced Imaging",
+        title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
         description:
-            "24/7 mobile imaging trailer support for MRI, CT, PET/CT, and major OEM platforms.",
+            "Nationwide MRI, CT, and PET/CT service support.",
     },
 };
 
 const servicesStructuredData = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": `${BASE_URL}/services#mobile-imaging-services`,
+    "@id": `${BASE_URL}/services#medical-imaging-equipment-service`,
     url: `${BASE_URL}/services`,
-    serviceType: "Mobile MRI, CT, and PET/CT trailer rental and service",
-    name: "Advanced Imaging Mobile Imaging Services",
+    serviceType: "MRI, CT, and PET/CT medical imaging equipment service",
+    name: "MRI, CT & PET/CT Service",
     description:
-        "Mobile MRI trailer rental, mobile CT scanner rental, PET/CT trailer support, and emergency imaging service for hospitals and imaging centers.",
+        "Advanced Imaging Services provides MRI maintenance and repair, CT scanner service and repair, PET/CT service, preventive maintenance, emergency troubleshooting, and tested replacement parts support.",
     provider: {
         "@type": "Organization",
-        name: "Advanced Imaging",
+        "@id": `${BASE_URL}/#organization`,
+        name: "Advanced Imaging Services",
         url: BASE_URL,
+        telephone: "+1-800-200-3583",
     },
     areaServed: {
         "@type": "Country",
@@ -73,98 +67,155 @@ const servicesStructuredData = {
     },
     hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Mobile Imaging Service Catalog",
+        name: "Medical Imaging Service Catalog",
         itemListElement: [
             {
                 "@type": "Offer",
                 itemOffered: {
                     "@type": "Service",
-                    name: "Mobile MRI trailer rental and lease support",
+                    name: "MRI maintenance and repair",
                 },
             },
             {
                 "@type": "Offer",
                 itemOffered: {
                     "@type": "Service",
-                    name: "Mobile CT scanner and trailer rental support",
+                    name: "CT scanner service and repair",
                 },
             },
             {
                 "@type": "Offer",
                 itemOffered: {
                     "@type": "Service",
-                    name: "Mobile PET/CT trailer support",
+                    name: "PET/CT service",
                 },
             },
             {
                 "@type": "Offer",
                 itemOffered: {
                     "@type": "Service",
-                    name: "Interim mobile imaging coverage for downtime, renovations, and overflow",
+                    name: "Preventive maintenance and emergency repair",
+                },
+            },
+            {
+                "@type": "Offer",
+                itemOffered: {
+                    "@type": "Service",
+                    name: "System-tested medical imaging parts support",
                 },
             },
         ],
     },
     additionalType: [
-        "GE mobile MRI service",
-        "Philips mobile MRI service",
-        "Siemens mobile MRI service",
+        "MRI repair",
+        "CT scanner repair",
+        "Preventive maintenance",
+        "Emergency imaging equipment service",
+    ],
+};
+
+const localBusinessStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${BASE_URL}/#localbusiness`,
+    name: "Advanced Imaging Services",
+    url: BASE_URL,
+    image: `${BASE_URL}/assets/images/logo.svg`,
+    logo: `${BASE_URL}/assets/images/logo.svg`,
+    telephone: "+1-800-200-3583",
+    email: "info@advancedimagingparts.com",
+    address: {
+        "@type": "PostalAddress",
+        streetAddress: "17410 Murphy Pkwy.",
+        addressLocality: "Lathrop",
+        addressRegion: "CA",
+        postalCode: "95330",
+        addressCountry: "US",
+    },
+    areaServed: {
+        "@type": "Country",
+        name: "United States",
+    },
+    makesOffer: {
+        "@id": `${BASE_URL}/services#medical-imaging-equipment-service`,
+    },
+};
+
+const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: BASE_URL,
+        },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Services",
+            item: `${BASE_URL}/services`,
+        },
     ],
 };
 
 const faqItems = [
     {
-        question: "Do you provide mobile MRI trailer rental for GE, Philips, and Siemens systems?",
+        question: "Do you service GE, Siemens, and Toshiba imaging systems?",
         answer:
-            "Yes. We support mobile MRI trailer rental and service workflows across major OEM platforms, including GE, Philips, and Siemens systems.",
+            "Yes. Advanced Imaging Services supports MRI, CT, and PET/CT service workflows across major OEM platforms, including GE, Siemens, and Toshiba/Canon systems.",
     },
     {
-        question: "When do hospitals use mobile MRI or mobile CT scanner rentals?",
+        question: "Do you provide emergency imaging equipment repair?",
         answer:
-            "Facilities commonly use mobile imaging rentals during equipment failure, planned renovations, scanner upgrades, seasonal volume increases, rural access programs, and new service-line launches.",
+            "Yes. We support urgent troubleshooting, replacement-part coordination, and practical service response for facilities dealing with scanner downtime.",
     },
     {
-        question: "Do you service mobile CT trailers and mobile PET CT trailers?",
+        question: "Can you help with preventive maintenance?",
         answer:
-            "Yes. Our team supports mobile CT trailer and mobile PET CT trailer operations with maintenance, troubleshooting, and rapid-response service.",
+            "Yes. Preventive maintenance support helps protect image quality, reduce unplanned downtime, and keep clinical schedules moving.",
     },
     {
-        question: "Can you help with emergency downtime on mobile imaging trailers?",
+        question: "Do you support tested replacement parts?",
         answer:
-            "Yes. We offer 24/7 support designed to reduce downtime and restore clinical operations as quickly as possible.",
+            "Yes. We coordinate tested parts support for MRI, CT, and PET/CT systems, including coils, tubes, boards, detectors, power supplies, and related assemblies.",
     },
     {
-        question: "Do you offer both short-term and long-term trailer support?",
+        question: "What service areas do you cover?",
         answer:
-            "Yes. We work with facilities on flexible rental and service plans, from temporary coverage to long-term mobile imaging programs.",
-    },
-    {
-        question: "Do you support MRI trailer cost planning and replacement decisions?",
-        answer:
-            "Yes. We help teams evaluate mobile MRI trailer cost factors, service needs, and transition planning for replacement or expansion.",
+            "We work with hospitals, imaging centers, and service buyers across the United States for MRI, CT, and PET/CT service support.",
     },
 ];
 
-const searchIntentItems = [
+const primaryServiceLinks = serviceLandingPages.filter((page) => !page.brand);
+const brandServiceLinks = serviceLandingPages.filter((page) => page.brand);
+const directoryModalities = Object.entries(serviceModalities);
+
+const serviceSupportSections = [
     {
-        title: "Mobile MRI Trailer Rental",
-        description:
-            "Short-term and long-term MRI trailer rental support for equipment downtime, construction projects, service-line expansion, and patient-volume overflow.",
+        title: "MRI Service",
+        text: "Advanced Imaging Services supports MRI maintenance and repair, system diagnostics, troubleshooting, coil support, RF and gradient-related parts coordination, image-quality support, and downtime reduction planning.",
     },
     {
-        title: "Mobile CT Scanner Rental",
-        description:
-            "Temporary CT scanner trailer planning and service coordination for hospitals, imaging centers, emergency coverage, and rotating sites.",
+        title: "CT Service",
+        text: "Our CT scanner service and repair support covers preventive maintenance, emergency troubleshooting, component replacement, calibration coordination, CT tube support, detector and board replacement, and practical help for high-volume imaging departments.",
     },
     {
-        title: "Mobile PET/CT Trailer Support",
-        description:
-            "Operational and technical support for PET/CT mobile units, including service planning for oncology imaging continuity.",
+        title: "PET/CT Service",
+        text: "We support PET service and PET/CT service needs for oncology and diagnostic imaging providers, including uptime planning, tested replacement parts, and service coordination for major imaging platforms.",
     },
     {
-        title: "GE, Philips & Siemens Mobile MRI",
-        description:
-            "OEM-aware support for GE mobile MRI, Philips mobile MRI, and Siemens mobile MRI environments, plus related fleet and uptime needs.",
+        title: "Preventive Maintenance",
+        text: "Preventive maintenance programs help hospitals and imaging centers reduce unplanned downtime, protect image quality, and keep MRI, CT, and PET/CT systems ready for clinical schedules.",
+    },
+    {
+        title: "Emergency Repair",
+        text: "When a scanner is down, Advanced Imaging Services provides emergency imaging equipment repair support, troubleshooting, field-service coordination, and replacement-part sourcing to restore patient access as quickly as possible.",
+    },
+    {
+        title: "System Tested Parts Support",
+        text: "Our parts support helps buyers source tested MRI coils, CT tubes, boards, power supplies, detectors, and related medical imaging equipment parts with OEM, modality, system model, part number, and AIS item ID details.",
     },
 ];
 
@@ -190,70 +241,103 @@ export default function Services() {
             />
             <script
                 type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessStructuredData) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+            />
+            <script
+                type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
             />
             <Subheader
-                title={['Our ', <span key="1">Services</span>]}
+                title={['MRI, CT & PET/CT ', <span key="1">Service</span>]}
                 extraClass="services_bg"
             />
-            <MobileMri/>
+            <section className={styles.introSection}>
+                <div className="container">
+                    <div className={styles.introPanel}>
+                        <span>Nationwide Medical Imaging Equipment Support</span>
+                        <h2>MRI, CT, PET/CT, and Tested Parts Support</h2>
+                        <p>
+                            Advanced Imaging Services provides MRI service, CT service, PET/CT service,
+                            preventive maintenance, emergency repair, and system-tested medical imaging
+                            parts support for hospitals, imaging centers, and service buyers across the
+                            United States.
+                        </p>
+                        <p>
+                            Our team helps maintain and repair medical imaging equipment, troubleshoot scanner
+                            downtime, coordinate tested replacement parts, and support major OEM systems including
+                            GE, Siemens, Toshiba/Canon, and other platforms where appropriate.
+                        </p>
+                    </div>
+                </div>
+            </section>
             <ExpertMriServices/>
             <CtServices/>
-            <section className={styles.intentSection}>
+            <section className={styles.capabilitiesSection}>
                 <div className="container">
-                    <h2>Mobile Medical Trailer Rental Support</h2>
-                    <p>
-                        Facilities searching for mobile diagnostic imaging rentals often need coverage for scanner downtime,
-                        renovations, overflow volume, rural access, or new program launches. Advanced Imaging supports those
-                        workflows with mobile MRI, mobile CT, PET/CT trailer, and major OEM service expertise.
-                    </p>
-                    <div className={styles.intentGrid}>
-                        {searchIntentItems.map((item) => (
-                            <article key={item.title} className={styles.intentItem}>
+                    <h2>Medical Imaging Equipment <span>Service Capabilities</span></h2>
+                    <div className={styles.capabilityGrid}>
+                        {serviceSupportSections.map((item) => (
+                            <article
+                                key={item.title}
+                                id={item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}
+                                className={styles.capabilityItem}
+                            >
                                 <h3>{item.title}</h3>
-                                <p>{item.description}</p>
+                                <p>{item.text}</p>
                             </article>
                         ))}
                     </div>
                 </div>
             </section>
-            <section className={styles.oemLinksSection}>
+            <section className={styles.serviceIndexSection}>
                 <div className="container">
-                    <h2>Specialized Mobile Imaging Pages</h2>
-                    <p>
-                        Explore dedicated pages for the highest-intent mobile imaging trailer searches.
-                    </p>
-                    <div className={styles.cardGrid}>
-                        <Link href="/services/mobile-mri-trailer-rental" className={styles.cardLink}>
-                            <h3>Mobile MRI Trailer Rental</h3>
-                            <p>MRI trailer rental, lease planning, downtime coverage, and mobile MRI service support.</p>
-                        </Link>
-                        <Link href="/services/ge-mobile-mri" className={styles.cardLink}>
-                            <h3>GE Mobile MRI Service</h3>
-                            <p>Service coverage, uptime support, and field response for GE mobile MRI systems.</p>
-                        </Link>
-                        <Link href="/services/philips-mobile-mri" className={styles.cardLink}>
-                            <h3>Philips Mobile MRI Service</h3>
-                            <p>Maintenance and repair support for Philips mobile MRI trailers and imaging workflows.</p>
-                        </Link>
-                        <Link href="/services/siemens-mobile-mri" className={styles.cardLink}>
-                            <h3>Siemens Mobile MRI Service</h3>
-                            <p>Rapid-response service and technical support for Siemens mobile MRI environments.</p>
-                        </Link>
-                        <Link href="/services/mobile-ct-trailer-rental" className={styles.cardLink}>
-                            <h3>Mobile CT Trailer Rental</h3>
-                            <p>CT trailer rental and service support for high-availability imaging operations.</p>
-                        </Link>
-                        <Link href="/services/mobile-pet-ct-trailer" className={styles.cardLink}>
-                            <h3>Mobile PET/CT Trailer Service</h3>
-                            <p>Operational and technical support for mobile PET/CT trailer programs.</p>
-                        </Link>
+                    <div className={styles.indexHeading}>
+                        <span>Choose a service path</span>
+                        <h2>Service <span>Coverage Directory</span></h2>
+                        <p>
+                            Start with MRI, CT, or PET/CT, then choose a general service page or an
+                            OEM-specific path for GE, Siemens, or Toshiba/Canon support.
+                        </p>
+                    </div>
+                    <div className={styles.modalityDirectory}>
+                        {directoryModalities.map(([modality, config]) => {
+                            const servicePage = primaryServiceLinks.find((page) => page.modality === modality);
+                            const serviceBrandPages = brandServiceLinks.filter((page) => page.modality === modality);
+
+                            return (
+                                <details key={modality} className={styles.modalityPanel}>
+                                    <summary>
+                                        <span>{config.label}</span>
+                                        <strong>{config.serviceLabel} and OEM support</strong>
+                                    </summary>
+                                    <div className={styles.directoryColumns}>
+                                        <section>
+                                            <h3>{config.label} Service</h3>
+                                            {servicePage && (
+                                                <Link href={`/services/${servicePage.slug}`}>
+                                                    All {servicePage.shortTitle}
+                                                </Link>
+                                            )}
+                                            {serviceBrandPages.map((page) => (
+                                                <Link key={page.slug} href={`/services/${page.slug}`}>
+                                                    {page.shortTitle}
+                                                </Link>
+                                            ))}
+                                        </section>
+                                    </div>
+                                </details>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
             <section className={styles.faqSection}>
                 <div className="container">
-                    <h2>Mobile Imaging Services FAQ</h2>
+                    <h2>Medical Imaging Service FAQ</h2>
                     <div className={styles.faqList}>
                         {faqItems.map((item) => (
                             <article key={item.question} className={styles.faqItem}>

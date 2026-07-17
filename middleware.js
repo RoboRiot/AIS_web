@@ -7,6 +7,9 @@ const KNOWN_GOOD_BOTS = [
   "duckduckbot",
   "baiduspider",
   "applebot",
+  "google-inspectiontool",
+  "chrome-lighthouse",
+  "lighthouse",
   "slurp",
   "facebookexternalhit",
   "linkedinbot",
@@ -32,6 +35,26 @@ const LIKELY_AUTOMATION_UA = [
 
 export function middleware(request) {
   const pathname = request.nextUrl.pathname;
+
+  if (pathname === "/product-detail") {
+    const rawQuery = request.nextUrl.search.replace(/^\?/, "");
+    const redirectUrl = request.nextUrl.clone();
+    if (rawQuery) {
+      const decoded = decodeURIComponent(rawQuery);
+      const slug = decoded
+        .trim()
+        .toLowerCase()
+        .normalize("NFKD")
+        .replace(/[\u2013\u2014]/g, "-")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      redirectUrl.pathname = slug ? `/products/${slug}` : "/parts";
+    } else {
+      redirectUrl.pathname = "/parts";
+    }
+    redirectUrl.search = "";
+    return NextResponse.redirect(redirectUrl, 308);
+  }
 
   if (
     pathname.startsWith("/_next") ||

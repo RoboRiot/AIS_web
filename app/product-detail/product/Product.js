@@ -184,7 +184,7 @@ export default function Product({ clickedProduct }) {
 
                     <div className={styles.detail_content} data-aos="fade-left" data-aos-duration="1000">
                         <h2>{clickedProduct?.Name}</h2>
-                        <span> <b>SKU:</b> {clickedProduct?.id}</span>
+                        <span> <b>AIS Item ID:</b> {clickedProduct?.id}</span>
                         <span><b>Categories:</b>  <Link href={`/parts?clickedOEM=${clickedProduct.OEM}`}>  {clickedProduct?.OEM} </Link>,  <Link href={`/parts?OEM=${clickedProduct.OEM}?clickedModality=${clickedProduct.Modality}`}> {clickedProduct?.Modality} </Link> </span>
                         <Image src={stockImage} alt="stockImage" />
                         <h3>Description</h3>

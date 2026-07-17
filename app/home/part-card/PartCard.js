@@ -81,7 +81,7 @@ export default function PartCard({ mainTitle }) {
                                             }}
                                         >
                                             <figure>
-                                                <ImageComponent imagePath={`Parts/${id}/${id}`}/>
+                                                <ImageComponent imagePath={`Parts/${id}/${id}`} alt={`${Name || "Medical imaging part"} ${id || ""}`}/>
                                                 <h3>{Name}</h3>
                                             </figure>
                                         </Link>

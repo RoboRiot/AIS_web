@@ -17,10 +17,10 @@ export default function ExpertMriServices() {
                 <div className="flex items-center container">
                     <section data-aos="fade-left" data-aos-duration="1000">
                         <h2>Expert <span> MRI Service</span></h2>
-                        <p>Immediate expert care for fixed and mobile MRI systems. Advanced Imaging provides fast-response diagnostics, repair, PM support, and parts coordination for GE, Philips, and Siemens MRI platforms used in mobile medical trailers and facility-based imaging suites. Our 24/7 coverage is designed to reduce downtime and keep your schedule moving.</p>
+                        <p>Immediate expert care for MRI systems. Advanced Imaging provides fast-response diagnostics, repair, PM support, and parts coordination for GE, Siemens, and Toshiba/Canon MRI platforms used in hospitals and outpatient imaging suites. Our 24/7 coverage is designed to reduce downtime and keep your schedule moving.</p>
                         <Link href="/contact" className="simple-btn">Contact Us for More Details</Link>
                     </section>
-                    <figure data-aos="fade-right" data-aos-duration="1000"><Image src={weDoImage} alt="Expert MRI service team for mobile and fixed imaging systems" /></figure>
+                    <figure data-aos="fade-right" data-aos-duration="1000"><Image src={weDoImage} alt="Expert MRI service team for medical imaging systems" /></figure>
                 </div>
             </div>
         </>

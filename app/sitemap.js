@@ -1,5 +1,6 @@
 import { BASE_URL, buildProductSlug } from "@/app/data/seoProducts";
 import { fetchAllProducts } from "@/app/data/firestoreProducts";
+import { serviceLandingPages, trailerLandingPages } from "@/app/data/serviceLandingPages";
 
 export default async function sitemap() {
   const now = new Date();
@@ -23,40 +24,10 @@ export default async function sitemap() {
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/services/ge-mobile-mri`,
+      url: `${BASE_URL}/about`,
       lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/philips-mobile-mri`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/siemens-mobile-mri`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/mobile-mri-trailer-rental`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/services/mobile-ct-trailer-rental`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/mobile-pet-ct-trailer`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     {
       url: `${BASE_URL}/contact`,
@@ -64,7 +35,31 @@ export default async function sitemap() {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${BASE_URL}/trailers`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
   ];
+
+  for (const page of serviceLandingPages) {
+    urls.push({
+      url: `${BASE_URL}/services/${page.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: page.brand ? 0.78 : 0.82,
+    });
+  }
+
+  for (const page of trailerLandingPages) {
+    urls.push({
+      url: `${BASE_URL}/trailers/${page.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: page.brand ? 0.78 : 0.84,
+    });
+  }
 
   try {
     const products = await fetchAllProducts();

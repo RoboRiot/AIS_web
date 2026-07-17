@@ -15,11 +15,11 @@ export default function CtServices() {
         <>
             <div className={styles.mobile_mri} id="service2">
                 <div className="flex items-center container">
-                    <figure data-aos="fade-left" data-aos-duration="1000"><Image src={weDoImage} alt="Comprehensive mobile CT trailer service solutions" /></figure>
+                    <figure data-aos="fade-left" data-aos-duration="1000"><Image src={weDoImage} alt="Comprehensive CT scanner service solutions" /></figure>
                     <section data-aos="fade-right" data-aos-duration="1000">
                         <h2>Comprehensive CT <span> Service Solutions</span></h2>
-                        <p>Advanced Imaging delivers tailored CT service for both fixed installations and mobile CT trailer programs. From preventive maintenance and emergency troubleshooting to component replacement and calibration, our engineers support high-demand environments that require fast turnaround and clear communication.</p>
-                        <p>We also support mobile PET CT trailer workflows and related imaging logistics, helping your team maintain performance, compliance, and patient access across rotating sites.</p>
+                        <p>Advanced Imaging delivers tailored CT service for high-use clinical environments. From preventive maintenance and emergency troubleshooting to component replacement and calibration, our engineers support departments that require fast turnaround and clear communication.</p>
+                        <p>We help imaging teams maintain performance, protect schedule continuity, and coordinate service needs across GE, Siemens, and Toshiba/Canon CT platforms.</p>
                         <Link href="/contact" className="simple-btn">Contact Us for More Details</Link>
                     </section>
                 </div>

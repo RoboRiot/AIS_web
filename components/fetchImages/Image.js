@@ -19,7 +19,7 @@ export const getImageUrl = async (imagePath) => {
     }
   };
   
-  export const ImageComponent = ({ imagePath }) => {
+  export const ImageComponent = ({ imagePath, alt = "Medical imaging equipment part image" }) => {
     const [imageUrl, setImageUrl] = useState(null);
   
     useEffect(() => {
@@ -46,7 +46,7 @@ export const getImageUrl = async (imagePath) => {
     return (
       <div>
         {/* {imageUrl ? <img src={imageUrl} alt="Image"/> : <p>Loading image...</p>} */}
-        <Image width={470} height={320} alt="image" src={imageUrl  ? imageUrl : '/assets/images/slide1.png' } />
+        <Image width={470} height={320} alt={alt} src={imageUrl  ? imageUrl : '/assets/images/slide1.png' } />
       </div>
     );
   };

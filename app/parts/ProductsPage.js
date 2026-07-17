@@ -12,6 +12,39 @@ import SidebarFoundYourPart from '../product-detail/found-your-part/SidebarFound
 import RecentProducts from './RecentProducts';
 import { buildProductHref, slugify } from '@/app/data/seoProducts';
 
+const normalize = (value) => (value ?? '').toString().toLowerCase().trim();
+
+const includesText = (value, query) => normalize(value).includes(normalize(query));
+
+const getProductSearchText = (product) => [
+    product?.Name,
+    product?.id,
+    product?.PN,
+    product?.OEM,
+    product?.Modality,
+    product?.Machine,
+    product?.Description,
+].filter(Boolean).join(' ');
+
+const getPartNumberSearchText = (product) => [
+    product?.id,
+    product?.PN,
+    product?.Name,
+    product?.Description,
+].filter(Boolean).join(' ');
+
+const getModelsForType = (brand, type) => {
+    if (!type) return [];
+    if (brand) return brandsModels[brand]?.[type] || [];
+
+    return [
+        ...new Set(
+            Object.values(brandsModels)
+                .flatMap((typesByBrand) => typesByBrand[type] || [])
+        ),
+    ];
+};
+
 export default function ProductsPage() {
     const [sortQuery, setSortQuery] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -20,6 +53,8 @@ export default function ProductsPage() {
     const [suggestions, setSuggestions] = useState([]);
     const [showMenu, setShowMenu] = useState(false);
     const [products, setProducts] = useState([]);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+    const [productsError, setProductsError] = useState('');
     const [sortOrder, setSortOrder] = useState('a-z'); // Added state for sorting order
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -37,13 +72,24 @@ export default function ProductsPage() {
     const [models, setModels] = useState([]);
 
     useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q') || '';
+        setSearchQuery(query);
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
+            setIsLoadingProducts(true);
+            setProductsError('');
             try {
                 const snapshot = await db.collection('Parts').get();
                 const datam = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setProducts(datam);
             } catch (error) {
                 console.error(error);
+                setProductsError('Unable to load products right now. Please refresh the page or contact us for help finding a part.');
+            } finally {
+                setIsLoadingProducts(false);
             }
         };
 
@@ -51,24 +97,34 @@ export default function ProductsPage() {
     }, []);
 
     useEffect(() => {
-        let results = products.filter(product =>
-            product.Name && product.Name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const nameQuery = normalize(searchQuery);
+        const partQuery = normalize(skuQuery);
+        const brandQuery = normalize(selectedBrand);
+        const typeQuery = normalize(selectedType);
+        const modelQuery = normalize(selectedModel);
 
-        if (skuQuery.trim() !== '') {
-            results = results.filter(product =>
-                product.id && product.id.toLowerCase().includes(skuQuery.toLowerCase())
-            );
-        }
+        let results = products.filter((product) => {
+            const matchesName = !nameQuery || includesText(getProductSearchText(product), nameQuery);
+            const matchesPart = !partQuery || includesText(getPartNumberSearchText(product), partQuery);
+            const matchesBrand = !brandQuery || normalize(product.OEM) === brandQuery;
+            const matchesType = !typeQuery || normalize(product.Modality) === typeQuery;
+            const matchesModel = !modelQuery || normalize(product.Machine) === modelQuery;
+
+            return matchesName && matchesPart && matchesBrand && matchesType && matchesModel;
+        });
 
         if (sortOrder === 'a-z') {
-            results.sort((a, b) => a.Name.localeCompare(b.Name));
+            results.sort((a, b) => normalize(a.Name).localeCompare(normalize(b.Name)));
         } else if (sortOrder === 'z-a') {
-            results.sort((a, b) => b.Name.localeCompare(a.Name));
+            results.sort((a, b) => normalize(b.Name).localeCompare(normalize(a.Name)));
         }
 
         setSearchResult(results);
-    }, [searchQuery, skuQuery, products, sortOrder]);
+    }, [searchQuery, skuQuery, selectedBrand, selectedType, selectedModel, products, sortOrder]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, skuQuery, selectedBrand, selectedType, selectedModel, sortOrder]);
 
     const handleSortArrowClick = () => {
         setSortOrder((prevOrder) => (prevOrder === 'a-z' ? 'z-a' : 'a-z'));
@@ -83,25 +139,20 @@ export default function ProductsPage() {
         const brand = event.target.value;
         setSelectedBrand(brand);
         setSelectedType("");
-        setTypes(Object.keys(brandsModels[brand] || {}));
+        setSelectedModel("");
+        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : uniqueKeys);
         setModels([]);
-        brand === '' ? setSearchResult(products) : setSearchResult(products.filter(x => x.OEM === brand));
     };
 
     const handleTypeChange = (event) => {
         const type = event.target.value;
         setSelectedType(type);
-        selectedBrand !== '' ? setModels(brandsModels[selectedBrand][type] || []) : setModels(brandsModels[type] || []);
-        type === '' ? setSearchResult(products.filter(x => x.OEM === selectedBrand)) : 
-                     (selectedBrand === '' ? setSearchResult(products.filter(x => x.Modality === type)) :
-                     setSearchResult(products.filter(x => x.OEM === selectedBrand && x.Modality === type)));
+        setSelectedModel("");
+        setModels(getModelsForType(selectedBrand, type));
     };
 
     const handleModelChange = (event) => {
-        const model = event.target.value;
         setSelectedModel(event.target.value);
-        model === '' ? setSearchResult(products.filter(x => x.OEM === selectedBrand && x.Modality === selectedType)) : 
-                       setSearchResult(products.filter(x => x.OEM === selectedBrand && x.Machine === model && x.Modality === selectedType));
     };
 
     const handleSuggestionClick = (suggestion) => {
@@ -143,11 +194,14 @@ export default function ProductsPage() {
         setSelectedModel('');
         setSearchQuery('');
         setSkuQuery('');
-        setSortOrder('');
-        setSearchResult(products);
+        setTypes(uniqueKeys);
+        setModels([]);
+        setSortOrder('a-z');
     };
 
     const totalPages = Math.ceil(searchResult.length / itemsPerPage);
+    const firstVisibleResult = searchResult.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const lastVisibleResult = Math.min(currentPage * itemsPerPage, searchResult.length);
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
@@ -160,7 +214,12 @@ export default function ProductsPage() {
         <div className={styles.search_wrapper}>
             <div className='container'>
                 <div className={styles.sorting}>
-                    <p><span>{searchQuery}Parts</span> Showing {Math.min((currentPage - 1) * itemsPerPage + 1, searchResult.length)}–{Math.min(currentPage * itemsPerPage, searchResult.length)} of {searchResult.length} results</p>
+                    <p>
+                        <span>{searchQuery}Parts</span>
+                        {isLoadingProducts
+                            ? 'Loading products...'
+                            : `Showing ${firstVisibleResult}-${lastVisibleResult} of ${searchResult.length} results`}
+                    </p>
                     <section>
                         <button onClick={openMenu} className={`${styles.menu_btn} ${showMenu ? styles.active : ''}`}>
                             <span></span>
@@ -183,7 +242,7 @@ export default function ProductsPage() {
             <div className='flex items-start container'>
                 <div className={`${styles.search_sidebar} ${showMenu ? styles.active : ''}`}>
                     <div className={styles.search_product}>
-                        <form>
+                        <form onSubmit={(event) => event.preventDefault()}>
                             <ul className='list-none'>
                                 <li>
                                     <Image src={searchIcon} alt="search" />
@@ -243,7 +302,11 @@ export default function ProductsPage() {
                 </div>
                 <div className={styles.content_wrapper}>
                     <ul className='list-none flex flex-wrap'>
-                        {(products.length > 0) && searchResult.length > 0 ? (
+                        {isLoadingProducts ? (
+                            <li className={styles.no_product}>Loading products...</li>
+                        ) : productsError ? (
+                            <li className={styles.no_product}>{productsError}</li>
+                        ) : (products.length > 0) && searchResult.length > 0 ? (
                             currentProducts.map((product, index) => (
                                 <li key={`part-${index}`} className="flex">
                                     <div onClick={() => { handleClick(product) }}>
@@ -254,7 +317,7 @@ export default function ProductsPage() {
                                             }
                                         >
                                             <figure>
-                                                <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} />
+                                                <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} alt={`${product.Name || "Medical imaging part"} ${product.id || ""}`} />
                                                 <h3>{product.Name}</h3>
                                             </figure>
                                         </Link>
@@ -262,7 +325,7 @@ export default function ProductsPage() {
                                 </li>
                             ))
                         ) : (
-                            <li className={styles.no_product}>No product found</li>
+                            <li className={styles.no_product}>No products match your current search or filters.</li>
                         )}
                     </ul>
                     {(products.length > 0 && searchResult.length > 0) &&

@@ -1,4 +1,5 @@
 import { cache } from "react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import FoundYourPart from "@/app/product-detail/found-your-part/FoundYourPart";
@@ -26,7 +27,14 @@ export function generateStaticParams() {
 const getProductBySlug = cache(async (nameSlug) => {
   if (!nameSlug) return null;
   const products = await fetchAllProducts();
-  return products.find((product) => slugify(product?.Name) === nameSlug) || null;
+  return products.find((product) => {
+    const requestedSlug = slugify(nameSlug);
+    return (
+      buildProductSlug(product) === requestedSlug ||
+      slugify(product?.Name) === requestedSlug ||
+      slugify(product?.id) === requestedSlug
+    );
+  }) || null;
 });
 
 export async function generateMetadata({ params }) {
@@ -103,6 +111,9 @@ export default async function ProductSeoPage({ params }) {
           name: manufacturer,
         }
       : undefined,
+    image: Array.isArray(product.Images)
+      ? product.Images.filter((image) => typeof image === "string" && image.startsWith("http"))
+      : undefined,
     url,
     additionalProperty: [
       ...partNumbers.map((partNumber) => ({
@@ -128,13 +139,12 @@ export default async function ProductSeoPage({ params }) {
     offers: {
       "@type": "Offer",
       url,
-      priceCurrency: "USD",
       availability: product.Available === false
         ? "https://schema.org/OutOfStock"
         : "https://schema.org/InStock",
       seller: {
         "@type": "Organization",
-        name: "Advanced Imaging Parts",
+        name: "Advanced Imaging Services",
       },
     },
   };
@@ -184,6 +194,9 @@ export default async function ProductSeoPage({ params }) {
               </p>
               <ul className="list-none">
                 <li>
+                  <b>AIS Item ID:</b> {product.id || "N/A"}
+                </li>
+                <li>
                   <b>Product Name:</b> {product.Name || "N/A"}
                 </li>
                 <li>
@@ -201,8 +214,16 @@ export default async function ProductSeoPage({ params }) {
                 <li>
                   <b>Availability:</b> {product.Available === false ? "Call for availability" : "Available"}
                 </li>
+                {product.Condition && (
+                  <li>
+                    <b>Condition:</b> {product.Condition}
+                  </li>
+                )}
               </ul>
-              <p>Call for pricing: (800) 200-3583</p>
+              <p>
+                Call for pricing: <Link href="tel:+18002003583">(800) 200-3583</Link> or{" "}
+                <Link href="/contact">request availability and compatibility support</Link>.
+              </p>
             </div>
             <div>
               <h2>Compatibility and Availability</h2>
@@ -214,6 +235,10 @@ export default async function ProductSeoPage({ params }) {
               <p>
                 Advanced Imaging Parts can help confirm fit, availability, lead time, and related
                 CT or MRI replacement parts before you place a request.
+              </p>
+              <p>
+                Browse more <Link href="/parts">medical imaging parts</Link> or learn about{" "}
+                <Link href="/services">MRI, CT, and PET/CT service support</Link>.
               </p>
             </div>
           </div>

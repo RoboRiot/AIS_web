@@ -34,7 +34,20 @@ export const slugify = (value) => {
 
 export const buildProductSlug = (product) => {
   if (!product) return "";
-  return slugify(product.Name);
+  const nameSlug = slugify(product.Name);
+  const partNumbers = getProductPartNumbers(product).map(slugify).filter(Boolean);
+  const idSlug = slugify(product.id);
+  const pieces = [nameSlug];
+
+  for (const partNumber of partNumbers.slice(0, 2)) {
+    if (partNumber && !nameSlug.includes(partNumber)) pieces.push(partNumber);
+  }
+
+  if (idSlug && !pieces.some((piece) => piece === idSlug || piece.includes(idSlug))) {
+    pieces.push(idSlug);
+  }
+
+  return pieces.filter(Boolean).join("-").slice(0, 140).replace(/-+$/g, "");
 };
 
 export const buildProductHref = (product) => {
@@ -44,7 +57,7 @@ export const buildProductHref = (product) => {
 
 export const parseProductSlug = (slug) => {
   if (!slug) return { id: null, nameSlug: "" };
-  return { id: null, nameSlug: slug };
+  return { id: null, nameSlug: slugify(slug) };
 };
 
 export const getProductUrl = (slug) =>
@@ -122,12 +135,21 @@ export const buildProductKeywords = (product) => {
 export const buildProductSeoTitle = (product) => {
   const name = cleanText(product?.Name) || "Imaging Part";
   const specs = parseProductSpecs(product);
+  const partNumbers = getProductPartNumbers(product);
+  const primaryPart = partNumbers[0] && !name.toLowerCase().includes(partNumbers[0].toLowerCase())
+    ? partNumbers[0]
+    : "";
   const oem = cleanText(product?.OEM || specs.manufacturer);
   const modality = cleanText(product?.Modality || specs.category);
+  const productLabel = [name, primaryPart].filter(Boolean).join(" ");
   const suffix = [oem, modality && `${modality} Part`].filter(Boolean).join(" ");
-  const title = suffix ? `${name} | ${suffix}` : `${name} | Advanced Imaging Parts`;
+  const title = suffix
+    ? `${productLabel} | ${suffix} | Advanced Imaging Services`
+    : `${productLabel} | Advanced Imaging Services`;
 
-  return title.length <= 70 ? title : `${name} | Advanced Imaging`;
+  if (title.length <= 70) return title;
+  const compactTitle = suffix ? `${productLabel} | ${suffix}` : `${productLabel} | AIS`;
+  return compactTitle.length <= 70 ? compactTitle : `${name} | Advanced Imaging`;
 };
 
 export const buildProductSeoDescription = (product) => {
@@ -141,7 +163,7 @@ export const buildProductSeoDescription = (product) => {
   const compatibility = [oem, model, modality].filter(Boolean).join(" ");
 
   return truncateText(
-    `${name} available from Advanced Imaging Parts.${identifiers} Request pricing, availability, compatibility, and service support${compatibility ? ` for ${compatibility} systems` : ""}.`,
+    `${name} is a medical imaging equipment part available from Advanced Imaging Services.${identifiers} Request pricing, availability, compatibility, and service support${compatibility ? ` for ${compatibility} systems` : ""}.`,
     170
   );
 };

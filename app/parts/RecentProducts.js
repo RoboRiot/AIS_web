@@ -41,7 +41,7 @@ export default function RecentProducts() {
                             onClick={() => handleClick(product)}
                         >
                             {/* Replace with dynamic product image if available */}
-                            <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} />
+                            <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} alt={`${product.Name || "Medical imaging part"} ${product.id || ""}`} />
                             <h6>{product.Name}</h6>
                         </Link>
                     </li>

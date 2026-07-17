@@ -1,7 +1,58 @@
 @import "../../styles/variables";
 
+.introSection {
+  padding: 70px 0 20px;
+
+  @media (max-width: $breakpoint_tablet) {
+    padding: 50px 0 10px;
+  }
+}
+
+.introPanel {
+  border-left: 6px solid #f7a765;
+  max-width: 1040px;
+  padding: 10px 0 10px 34px;
+
+  @media (max-width: $breakpoint_tablet) {
+    padding-left: 20px;
+  }
+
+  span {
+    color: #3797f8;
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+
+    @media (max-width: $breakpoint_tablet) {
+      font-size: 30px;
+    }
+  }
+
+  p {
+    color: #263644;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.65;
+    margin: 0 0 14px;
+
+    @media (max-width: $breakpoint_tablet) {
+      font-size: 15px;
+    }
+  }
+}
+
 .intentSection {
-  padding: 30px 0 20px;
+  padding: 58px 0 35px;
 
   h2 {
     font-size: 42px;
@@ -46,11 +97,13 @@
   background: #ffffff;
   padding: 18px;
 
+  h2,
   h3 {
     margin: 0 0 8px;
     font-size: 20px;
     line-height: 1.35;
     font-weight: 700;
+    text-transform: none;
   }
 
   p {
@@ -60,38 +113,32 @@
   }
 }
 
-.oemLinksSection {
-  padding: 40px 0 10px;
+.capabilitiesSection {
+  padding: 70px 0 45px;
 
   h2 {
-    font-size: 42px;
-    line-height: 1.2;
-    margin: 0 0 12px;
-    text-transform: uppercase;
+    font-size: 50px;
     font-weight: 700;
+    line-height: 1.12;
+    margin: 0 0 30px;
+    text-transform: uppercase;
 
-    @media (max-width: $breakpoint_tablet) {
-      font-size: 28px;
+    span {
+      font-weight: 100;
     }
-  }
-
-  p {
-    font-size: 18px;
-    line-height: 1.6;
-    margin: 0 0 22px;
 
     @media (max-width: $breakpoint_tablet) {
-      font-size: 15px;
+      font-size: 32px;
     }
   }
 }
 
-.cardGrid {
+.capabilityGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  @media (max-width: $breakpoint_laptop) {
+  @media (max-width: $breakpoint_tablet) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -100,30 +147,286 @@
   }
 }
 
-.cardLink {
-  display: block;
-  border: 1px solid #d9d9e4;
-  border-radius: 8px;
-  padding: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.capabilityItem {
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 12px;
+  padding: 22px;
+  position: relative;
+
+  &::before {
+    background-color: #f7a765;
+    content: "";
+    height: 3px;
+    left: 22px;
+    position: absolute;
+    top: 0;
+    width: 54px;
+  }
 
   h3 {
-    margin: 0 0 8px;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 900;
     line-height: 1.3;
-    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
   }
 
   p {
+    color: #53606d;
+    font-size: 15px;
+    line-height: 1.65;
     margin: 0;
-    font-size: 16px;
-    line-height: 1.6;
+  }
+}
+
+.serviceIndexSection {
+  background: #f9f9fd;
+  padding: 85px 0;
+
+  @media (max-width: $breakpoint_tablet) {
+    padding: 60px 0;
+  }
+}
+
+.indexHeading {
+  max-width: 920px;
+  margin-bottom: 34px;
+
+  > span {
+    color: #3797f8;
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-transform: uppercase;
   }
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  h2 {
+    font-size: 50px;
+    font-weight: 900;
+    line-height: 1.12;
+    margin: 0 0 16px;
+    text-transform: uppercase;
+
+    span {
+      font-weight: 100;
+    }
+
+    @media (max-width: $breakpoint_tablet) {
+      font-size: 32px;
+    }
+  }
+
+  p {
+    color: #263644;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.65;
+    margin: 0;
+  }
+}
+
+.indexGrid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: $breakpoint_tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.indexBlock {
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 14px;
+  padding: 24px;
+
+  h3 {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin: 0 0 16px;
+    text-transform: uppercase;
+  }
+}
+
+.routeList {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    grid-template-columns: 1fr;
+  }
+
+  a {
+    align-items: center;
+    border-bottom: 1px solid #e7e7ef;
+    color: #19191d;
+    display: flex;
+    margin: 0;
+    min-height: 44px;
+    padding: 6px 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.35;
+    transition: all 0.3s ease;
+
+    &::before {
+      background: url("../../public/assets/images/polygon.svg") center no-repeat;
+      background-size: contain;
+      content: "";
+      flex: 0 0 12px;
+      height: 10px;
+      margin-right: 10px;
+      width: 12px;
+    }
+
+    &:hover {
+      color: #3797f8;
+      transform: translateX(4px);
+    }
+  }
+}
+
+.modalityDirectory {
+  display: grid;
+  gap: 14px;
+}
+
+.modalityPanel {
+  background: #fff;
+  border: 1px solid #e4e4ec;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  summary {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 110px minmax(0, 1fr);
+    list-style: none;
+    min-height: 86px;
+    padding: 18px 24px;
+    position: relative;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      border-bottom: 2px solid #506381;
+      border-right: 2px solid #506381;
+      content: "";
+      height: 12px;
+      position: absolute;
+      right: 26px;
+      top: 34px;
+      transform: rotate(45deg);
+      transition: all 0.25s ease;
+      width: 12px;
+    }
+
+    span {
+      align-items: center;
+      background: #fff4eb;
+      border-radius: 999px;
+      color: #f28d39;
+      display: flex;
+      font-size: 20px;
+      font-weight: 900;
+      height: 54px;
+      justify-content: center;
+      line-height: 1;
+      width: 86px;
+    }
+
+    strong {
+      color: #19191d;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.25;
+      padding-right: 42px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: $breakpoint_mobile_portrait) {
+      align-items: flex-start;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 18px;
+
+      strong {
+        font-size: 18px;
+        padding-right: 34px;
+      }
+    }
+  }
+
+  &[open] {
+    border-color: rgba(247, 167, 101, 0.75);
+
+    summary::after {
+      top: 40px;
+      transform: rotate(225deg);
+    }
+  }
+}
+
+.directoryColumns {
+  border-top: 1px solid #ececf3;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  section {
+    padding: 24px 28px;
+  }
+
+  h3 {
+    color: #3797f8;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+  }
+
+  a {
+    align-items: center;
+    border-bottom: 1px solid #f0f0f5;
+    color: #263644;
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    min-height: 44px;
+    padding: 8px 0;
+    transition: all 0.25s ease;
+
+    &::before {
+      background: #f7a765;
+      border-radius: 999px;
+      content: "";
+      flex: 0 0 8px;
+      height: 8px;
+      margin-right: 12px;
+      width: 8px;
+    }
+
+    &:hover {
+      color: #3797f8;
+      transform: translateX(4px);
+    }
+  }
+
+  @media (max-width: $breakpoint_tablet) {
+    section {
+      padding: 22px 18px;
+    }
   }
 }
 

@@ -43,6 +43,26 @@
             display: block;
         }
         img { margin-bottom: 20px;}
+        .availability {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            min-height: 40px;
+            margin-bottom: 20px;
+            padding: 10px 18px;
+            border-left: 6px solid #f7a765;
+            background: #506381;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .available {
+            border-left-color: #f7a765;
+        }
+        .callForAvailability {
+            background: #3f506c;
+        }
         h3 {
             margin: 0 0 20px;
             font-size: 20px;

@@ -3,101 +3,57 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "@/app/services/landingPage.module.scss";
+
 const fallbackSlides = [
   {
+    id: "fallback/interior-1.avif",
     src: "/assets/images/interior-1.avif",
     alt: "Mobile MRI trailer interior exam room",
     category: "Interior",
   },
   {
+    id: "fallback/interior-2.webp",
     src: "/assets/images/interior-2.webp",
     alt: "Mobile MRI trailer interior floor plan",
     category: "Interior",
   },
   {
+    id: "fallback/exterior-1.jpg",
     src: "/assets/images/exterior-1.jpg",
     alt: "Mobile MRI trailer exterior side view",
     category: "Exterior",
   },
   {
+    id: "fallback/mobile-mri.jpg",
     src: "/assets/images/mobile-mri.jpg",
     alt: "Mobile MRI trailer interior cutaway layout",
     category: "Interior",
   },
   {
+    id: "fallback/mobile-mri2.jpg",
     src: "/assets/images/mobile-mri2.jpg",
     alt: "Mobile imaging trailer exterior",
     category: "Exterior",
   },
 ];
 
-const imageExtensions = ["jpg", "jpeg", "png", "webp", "avif"];
-const optionalImageNames = [
-  ["Exterior", "trailer-exterior", "Mobile MRI trailer exterior"],
-  ["Exterior", "exterior", "Mobile MRI trailer exterior side view"],
-  ["Exterior", "exterior-1", "Mobile MRI trailer exterior side view"],
-  ["Exterior", "mobile-mri-exterior", "Mobile MRI trailer exterior"],
-  ["Interior", "trailer-interior", "Mobile MRI trailer interior"],
-  ["Interior", "interior", "Mobile MRI trailer interior layout"],
-  ["Interior", "interior-1", "Mobile MRI trailer interior exam room"],
-  ["Interior", "interior-2", "Mobile MRI trailer interior floor plan"],
-  ["Interior", "mobile-mri-interior", "Mobile MRI trailer interior"],
-];
-
-const optionalSlides = optionalImageNames.flatMap(([category, fileName, alt]) =>
-  imageExtensions.map((extension) => ({
-    src: `/assets/images/${fileName}.${extension}`,
-    alt,
-    category,
-  }))
-);
+const thumbnailCategories = ["Exterior", "Interior"];
 
 const buildThumbnailGroups = (slides) =>
-  ["Exterior", "Interior"].map((category) => ({
+  thumbnailCategories.map((category) => ({
     category,
     slides: slides
       .map((slide, index) => ({ ...slide, index }))
       .filter((slide) => slide.category === category),
   }));
 
-export default function TrailerImageCarousel({ title }) {
-  const [trailerSlides, setTrailerSlides] = useState(fallbackSlides);
+export default function TrailerImageCarousel({ title, slides = [] }) {
+  const trailerSlides = slides.length > 0 ? slides : fallbackSlides;
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-
-    Promise.all(
-      optionalSlides.map(
-        (slide) =>
-          new Promise((resolve) => {
-            const image = new window.Image();
-            image.onload = () => resolve(slide);
-            image.onerror = () => resolve(null);
-            image.src = slide.src;
-          })
-      )
-    ).then((loadedSlides) => {
-      if (!isMounted) return;
-
-      const availableSlides = loadedSlides.filter(Boolean);
-      if (availableSlides.length > 0) {
-        const slidesBySource = new Map(
-          [...fallbackSlides, ...availableSlides].map((slide) => [slide.src, slide])
-        );
-        setTrailerSlides([...slidesBySource.values()]);
-        setActiveIndex(0);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isAutoPlaying) return undefined;
+    if (!isAutoPlaying || trailerSlides.length < 2) return undefined;
 
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % trailerSlides.length);
@@ -112,13 +68,14 @@ export default function TrailerImageCarousel({ title }) {
   };
 
   const thumbnailGroups = buildThumbnailGroups(trailerSlides);
+  const activeSlide = trailerSlides[activeIndex];
 
   return (
     <figure className={`${styles.figure} ${styles.carouselFigure}`}>
       <div className={styles.carouselFrame}>
         {trailerSlides.map((slide, index) => (
           <Image
-            key={slide.alt}
+            key={slide.id}
             src={slide.src}
             alt={`${title}: ${slide.alt}`}
             fill
@@ -127,39 +84,49 @@ export default function TrailerImageCarousel({ title }) {
             className={index === activeIndex ? styles.carouselActive : ""}
           />
         ))}
+        <span className={styles.carouselCategoryBadge}>{activeSlide.category}</span>
       </div>
-      <div className={styles.carouselDots} aria-label="Trailer image carousel controls">
-        {trailerSlides.map((slide, index) => (
-          <button
-            key={slide.alt}
-            type="button"
-            aria-label={`Show trailer image ${index + 1}`}
-            aria-pressed={index === activeIndex}
-            onClick={() => showSlide(index)}
-            className={index === activeIndex ? styles.carouselDotActive : ""}
-          />
-        ))}
+      {trailerSlides.length > 1 && (
+        <div className={styles.carouselDots} aria-label="Trailer image carousel controls">
+          {trailerSlides.map((slide, index) => (
+            <button
+              key={slide.id}
+              type="button"
+              aria-label={`Show trailer image ${index + 1}`}
+              aria-pressed={index === activeIndex}
+              onClick={() => showSlide(index)}
+              className={index === activeIndex ? styles.carouselDotActive : ""}
+            />
+          ))}
+        </div>
+      )}
+      <div className={styles.carouselGalleryStatus} aria-live="polite">
+        <span>{trailerSlides.length} images</span>
       </div>
       <div className={styles.carouselThumbTable} aria-label="Trailer image thumbnails">
         {thumbnailGroups.map((group) => (
           <section key={group.category} className={styles.carouselThumbSection}>
             <h3>{group.category}</h3>
-            <div className={styles.carouselThumbGrid}>
-              {group.slides.map((slide) => (
-                <button
-                  key={`${slide.alt}-thumbnail`}
-                  type="button"
-                  aria-label={`View ${slide.category.toLowerCase()} trailer image`}
-                  aria-current={slide.index === activeIndex ? "true" : undefined}
-                  onClick={() => showSlide(slide.index)}
-                  className={slide.index === activeIndex ? styles.carouselThumbActive : ""}
-                >
-                  <span className={styles.carouselThumbImage}>
-                    <Image src={slide.src} alt="" aria-hidden="true" fill sizes="120px" />
-                  </span>
-                </button>
-              ))}
-            </div>
+            {group.slides.length > 0 ? (
+              <div className={styles.carouselThumbGrid}>
+                {group.slides.map((slide) => (
+                  <button
+                    key={`${slide.id}-thumbnail`}
+                    type="button"
+                    aria-label={`View ${slide.category.toLowerCase()} trailer image`}
+                    aria-current={slide.index === activeIndex ? "true" : undefined}
+                    onClick={() => showSlide(slide.index)}
+                    className={`${styles.carouselThumbButton} ${slide.index === activeIndex ? styles.carouselThumbActive : ""}`}
+                  >
+                    <span className={styles.carouselThumbImage}>
+                      <Image src={slide.src} alt="" aria-hidden="true" fill sizes="120px" />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className={styles.carouselThumbEmpty}>No images in this section.</p>
+            )}
           </section>
         ))}
       </div>

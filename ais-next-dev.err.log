@@ -1,0 +1,280 @@
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Failed to generate static paths for /services/[slug]:
+Error: Cannot find module './vendor-chunks/@opentelemetry.js'
+Require stack:
+- C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+- C:\Users\mack2\Desktop\AIS_web\.next\server\app\services\[slug]\page.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\static-paths-worker.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at __webpack_require__.f.require (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:116:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:115:67) {
+  type: 'Error',
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\app\\services\\[slug]\\page.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\static-paths-worker.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\compiled\\jest-worker\\processChild.js'
+  ]
+}
+ ⨯ Error: Cannot find module './vendor-chunks/@opentelemetry.js'
+Require stack:
+- C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+- C:\Users\mack2\Desktop\AIS_web\.next\server\app\services\[slug]\page.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\static-paths-worker.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at __webpack_require__.f.require (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:116:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:115:67) {
+  type: 'Error',
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\app\\services\\[slug]\\page.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\static-paths-worker.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\compiled\\jest-worker\\processChild.js'
+  ],
+  page: '/services/ge-mri-service'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\firebase.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/firebase' in C:\Users\mack2\Desktop\AIS_web\.next\server for build dependencies doesn't lead to expected result 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\firebase.js', but to 'Error: Can't resolve './vendor-chunks/firebase' in 'C:\Users\mack2\Desktop\AIS_web\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/firebase (expected C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\firebase.js)
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/idb' in C:\Users\mack2\Desktop\AIS_web\.next\server for build dependencies doesn't lead to expected result 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\idb.js', but to 'Error: Can't resolve './vendor-chunks/idb' in 'C:\Users\mack2\Desktop\AIS_web\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/idb (expected C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\idb.js)
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/tslib' in C:\Users\mack2\Desktop\AIS_web\.next\server for build dependencies doesn't lead to expected result 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\tslib.js', but to 'Error: Can't resolve './vendor-chunks/tslib' in 'C:\Users\mack2\Desktop\AIS_web\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/tslib (expected C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\tslib.js)
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/lodash.camelcase' in C:\Users\mack2\Desktop\AIS_web\.next\server for build dependencies doesn't lead to expected result 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\lodash.camelcase.js', but to 'Error: Can't resolve './vendor-chunks/lodash.camelcase' in 'C:\Users\mack2\Desktop\AIS_web\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/lodash.camelcase (expected C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\lodash.camelcase.js)
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/@protobufjs' in C:\Users\mack2\Desktop\AIS_web\.next\server for build dependencies doesn't lead to expected result 'C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\@protobufjs.js', but to 'Error: Can't resolve './vendor-chunks/@protobufjs' in 'C:\Users\mack2\Desktop\AIS_web\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/@protobufjs (expected C:\Users\mack2\Desktop\AIS_web\.next\server\vendor-chunks\@protobufjs.js)
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\.next\server\app\parts\page.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+ ⨯ Error: Cannot find module './948.js'
+Require stack:
+- C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+- C:\Users\mack2\Desktop\AIS_web\.next\server\pages\_document.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\start-server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at __webpack_require__.f.require (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:116:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:167:22)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\app\trailers\[slug]\page.js:1:25248
+    at Object.<anonymous> (C:\Users\mack2\Desktop\AIS_web\.next\server\app\trailers\[slug]\page.js:1:25309)
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at requirePage (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/trailers/ge-ct-trailer-rental'
+}
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ⨯ Error: Cannot find module './948.js'
+Require stack:
+- C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js
+- C:\Users\mack2\Desktop\AIS_web\.next\server\pages\_document.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\build\utils.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\start-server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at __webpack_require__.f.require (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:116:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\mack2\Desktop\AIS_web\.next\server\webpack-runtime.js:167:22)
+    at C:\Users\mack2\Desktop\AIS_web\.next\server\app\favicon.ico\route.js:1:4896
+    at Object.<anonymous> (C:\Users\mack2\Desktop\AIS_web\.next\server\app\favicon.ico\route.js:1:4942)
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at mod.require (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:177:18)
+    at requirePage (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\mack2\\Desktop\\AIS_web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/favicon.ico'
+}

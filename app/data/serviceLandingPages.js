@@ -65,6 +65,7 @@ const geMriModelCoverage = [
     category: "GE 1.5T MRI platforms",
     summary: "Core GE 1.5T systems commonly searched for mobile MRI rental, lease coverage, replacement planning, and service support.",
     models: [
+      { name: "Signa HDxt 1.5T", aliases: ["GE HDxt"] },
       { name: "Signa Artist 1.5T", aliases: ["Platform and legacy configurations"] },
       { name: "Signa Artist Evo 1.5T" },
       { name: "Optima MR450w 1.5T" },
@@ -234,7 +235,7 @@ const getTrailerModelKeywords = (brand, modality) =>
 
 const brandSystems = {
   GE: {
-    mri: ["Optima MR450w 1.5T", "SIGNA Voyager 1.5T", "SIGNA Artist 1.5T", "SIGNA Architect 3.0T", "SIGNA Premier 3.0T", "Discovery MR750w 3.0T"],
+    mri: ["SIGNA HDxt 1.5T", "Optima MR450w 1.5T", "SIGNA Voyager 1.5T", "SIGNA Artist 1.5T", "SIGNA Architect 3.0T", "SIGNA Premier 3.0T", "Discovery MR750w 3.0T"],
     ct: ["Discovery CT750 HD", "LightSpeed", "BrightSpeed", "Revolution CT", "Optima CT660", "Discovery 4 PET"],
     "pet-ct": ["Discovery PET/CT", "Discovery MI", "Discovery IQ", "Discovery 4 PET"],
   },
@@ -252,7 +253,7 @@ const brandSystems = {
 
 const trailerBrandSystems = {
   GE: {
-    mri: ["Optima MR450w 1.5T", "SIGNA Voyager 1.5T", "SIGNA Artist 1.5T", "SIGNA Creator / Explorer 1.5T", "SIGNA Prime 1.5T", "SIGNA Victor 1.5T"],
+    mri: ["SIGNA HDxt 1.5T", "Optima MR450w 1.5T", "SIGNA Voyager 1.5T", "SIGNA Artist 1.5T", "SIGNA Creator / Explorer 1.5T", "SIGNA Prime 1.5T", "SIGNA Victor 1.5T"],
   },
   Siemens: {
     mri: ["MAGNETOM Aera Mobile 1.5T", "MAGNETOM Viato.Mobile 1.5T", "MAGNETOM Avanto Mobile 1.5T", "MAGNETOM Espree Mobile 1.5T", "MAGNETOM Symphony Mobile 1.5T", "MAGNETOM Sola 1.5T"],

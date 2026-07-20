@@ -10,7 +10,6 @@ import 'swiper/css/thumbs';
 import Image from 'next/image';
 import Image1 from "@/public/assets/images/loader2.png"
 import Enlarge from "@/public/assets/images/enlarge.svg"
-import stockImage from "@/public/assets/images/stock.svg"
 import Link from 'next/link';
 import RequestModal from '@/components/modals/RequestModal';
 import AOS from 'aos';
@@ -186,7 +185,11 @@ export default function Product({ clickedProduct }) {
                         <h2>{clickedProduct?.Name}</h2>
                         <span> <b>AIS Item ID:</b> {clickedProduct?.id}</span>
                         <span><b>Categories:</b>  <Link href={`/parts?clickedOEM=${clickedProduct.OEM}`}>  {clickedProduct?.OEM} </Link>,  <Link href={`/parts?OEM=${clickedProduct.OEM}?clickedModality=${clickedProduct.Modality}`}> {clickedProduct?.Modality} </Link> </span>
-                        <Image src={stockImage} alt="stockImage" />
+                        <span
+                            className={`${styles.availability} ${clickedProduct?.Available === false ? styles.callForAvailability : styles.available}`}
+                        >
+                            {clickedProduct?.Available === false ? "Call for availability" : "In stock"}
+                        </span>
                         <h3>Description</h3>
                         <ul className='list-none' style={{marginBottom: "20px"}}>
                             <li><b>Part Number: </b> {partNumbers.length ? partNumbers.join(", ") : "N/A"}</li>

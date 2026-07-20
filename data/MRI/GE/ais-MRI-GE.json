@@ -1,0 +1,888 @@
+{
+  "source": "Advanced Imaging Services",
+  "sourceUrl": "https://advancedimagingparts.com/parts",
+  "sourceData": "Firebase Firestore Parts collection",
+  "firebaseProjectId": "magmo-ac10c",
+  "manufacturer": "GE",
+  "modality": "MRI",
+  "collectedAt": "2026-07-17T21:08:16.620954+00:00",
+  "selectionMethod": "The same case-insensitive OEM=GE and Modality=MRI fields used by the AIS parts-page filters. All matching inventory documents are retained.",
+  "orderingMethod": "Alphabetical by product Name, matching the parts page's default A-Z order.",
+  "allPartsCollectionCount": 325,
+  "matchingPartCount": 41,
+  "availablePartCount": 13,
+  "soldPartCount": 0,
+  "inferredPartNumberCount": 5,
+  "missingPartNumberCount": 0,
+  "duplicatePartNumberCount": 0,
+  "uniquePartNumberCount": 41,
+  "items": [
+    {
+      "sourceOrder": 1,
+      "inventoryId": "ea56db895371",
+      "partNumber": "2317115-2",
+      "originalPartNumber": "2317115-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "-2 8CH NV Array",
+      "description": "2317115-2 8CH Neuro Vascular Array\n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/ea56db895371/ea56db895371.jpg",
+        "Parts/ea56db895371/ea56db895371.2.jpg",
+        "Parts/ea56db895371/ea56db895371.3.jpg",
+        "Parts/ea56db895371/ea56db895371.4.jpg",
+        "Parts/ea56db895371/ea56db895371.5.jpg",
+        "Parts/ea56db895371/ea56db895371.6.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/2-8ch-nv-array-2317115-2-ea56db895371"
+    },
+    {
+      "sourceOrder": 2,
+      "inventoryId": "temp-69",
+      "partNumber": "5145566-2",
+      "originalPartNumber": "5145566-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "-2 HD 4CH NV",
+      "description": "5145566-2 1.5T HD 4CH NV Coil With Cable \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-69/temp-69.jpg",
+        "Parts/temp-69/temp-69.2.jpg",
+        "Parts/temp-69/temp-69.3.jpg",
+        "Parts/temp-69/temp-69.4.jpg",
+        "Parts/temp-69/temp-69.5.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/2-hd-4ch-nv-5145566-2-temp-69"
+    },
+    {
+      "sourceOrder": 3,
+      "inventoryId": "d71a15d4d849",
+      "partNumber": "5117092-2",
+      "originalPartNumber": "5117092-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "-2 HD NV Array",
+      "description": "5117092-2 1.5t Hd Nv Array Medrad With Cable\n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/d71a15d4d849/d71a15d4d849.jpg",
+        "Parts/d71a15d4d849/d71a15d4d849.2.jpg",
+        "Parts/d71a15d4d849/d71a15d4d849.3.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/2-hd-nv-array-5117092-2-d71a15d4d849"
+    },
+    {
+      "sourceOrder": 4,
+      "inventoryId": "SC7744C1BF5AC3",
+      "partNumber": "5165957-51",
+      "originalPartNumber": "5165957-51",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "128-TO-32"
+      ],
+      "partName": "128-to-32 Channel TDM Assembly",
+      "description": "128-to-32 Channel TDM Assembly, GE part number 5165957-51, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC7744C1BF5AC3%2FSC7744C1BF5AC3.jpg alt=media&token=4df27a98-e591-7d6d-7bfa-22cd60a109aa"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/128-to-32-channel-tdm-assembly-5165957-51-sc7744c1bf5ac3"
+    },
+    {
+      "sourceOrder": 5,
+      "inventoryId": "SCC68C17B8FF25",
+      "partNumber": "5309197",
+      "originalPartNumber": "5309197",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "1kV Dynamic Disable Filter Module",
+      "description": "1kV Dynamic Disable Filter Module, GE part number 5309197, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCC68C17B8FF25%2FSCC68C17B8FF25.jpg alt=media&token=6564a9d2-0f5d-68ba-e4f9-b5c38b4394d2"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/1kv-dynamic-disable-filter-module-5309197-scc68c17b8ff25"
+    },
+    {
+      "sourceOrder": 6,
+      "inventoryId": "bbebb2371560",
+      "partNumber": "46-264442G3",
+      "originalPartNumber": "",
+      "partNumberSource": "inferred from displayed name or description",
+      "alternatePartNumbers": [],
+      "partName": "46-264442G3 1.5T Preamp",
+      "description": "46-264442G3 1.5T Preamp\n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/bbebb2371560/bbebb2371560.jpg",
+        "Parts/bbebb2371560/bbebb2371560.2.jpg",
+        "Parts/bbebb2371560/bbebb2371560.3.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46-264442g3-1-5t-preamp-bbebb2371560"
+    },
+    {
+      "sourceOrder": 7,
+      "inventoryId": "temp-44",
+      "partNumber": "46-264776G1",
+      "originalPartNumber": "",
+      "partNumberSource": "inferred from displayed name or description",
+      "alternatePartNumbers": [],
+      "partName": "46-264776G1 Dynamic Disable Filter Module",
+      "description": "46-264776-G1 Dynamic Disable Filter Module \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-44/temp-44.jpg",
+        "Parts/temp-44/temp-44.2.jpg",
+        "Parts/temp-44/temp-44.3.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46-264776g1-dynamic-disable-filter-module-46-264776-g1-temp-44"
+    },
+    {
+      "sourceOrder": 8,
+      "inventoryId": "temp-47",
+      "partNumber": "46-307878G1",
+      "originalPartNumber": "",
+      "partNumberSource": "inferred from displayed name or description",
+      "alternatePartNumbers": [],
+      "partName": "46-307878G1 \u2013 Hydraulic Oil Filter",
+      "description": "46-307878G1 \u2013 Hydraulic OIL Filter \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-47/temp-47.jpg",
+        "Parts/temp-47/temp-47.2.jpg",
+        "Parts/temp-47/temp-47.3.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46-307878g1-hydraulic-oil-filter-temp-47"
+    },
+    {
+      "sourceOrder": 9,
+      "inventoryId": "temp-48",
+      "partNumber": "46-317758P18",
+      "originalPartNumber": "",
+      "partNumberSource": "inferred from displayed name or description",
+      "alternatePartNumbers": [],
+      "partName": "46-317758P18 Squeeze Bulb and Tubing",
+      "description": "46-317758P18 Squeeze Bulb\n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-48/temp-48.jpg",
+        "Parts/temp-48/temp-48.2.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46-317758p18-squeeze-bulb-and-tubing-temp-48"
+    },
+    {
+      "sourceOrder": 10,
+      "inventoryId": "temp-51",
+      "partNumber": "46-321312G3",
+      "originalPartNumber": "",
+      "partNumberSource": "inferred from displayed name or description",
+      "alternatePartNumbers": [],
+      "partName": "46-321312G3 Hybrid Splitter",
+      "description": "46-321312G3 Hybrid Splitter \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-51/temp-51.jpg",
+        "Parts/temp-51/temp-51.2.jpg",
+        "Parts/temp-51/temp-51.3.jpg",
+        "Parts/temp-51/temp-51.4.jpg",
+        "Parts/temp-51/temp-51.5.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46-321312g3-hybrid-splitter-temp-51"
+    },
+    {
+      "sourceOrder": 11,
+      "inventoryId": "temp-53",
+      "partNumber": "51001",
+      "originalPartNumber": "51001",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "46305000P3",
+        "3CPX800A7"
+      ],
+      "partName": "46305000P3 Tube",
+      "description": "46305000P3 3CPX800A7 Tube 51001 \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-53/temp-53.jpg",
+        "Parts/temp-53/temp-53.2.jpg",
+        "Parts/temp-53/temp-53.3.jpg",
+        "Parts/temp-53/temp-53.4.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/46305000p3-tube-51001-temp-53"
+    },
+    {
+      "sourceOrder": 12,
+      "inventoryId": "dcbeb2a671ca",
+      "partNumber": "5154685",
+      "originalPartNumber": "5154685",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "4CH Cardiac Array",
+      "description": "5154685 1.5T HDE 4CH Cardiac Array \n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/dcbeb2a671ca/dcbeb2a671ca.jpg",
+        "Parts/dcbeb2a671ca/dcbeb2a671ca.2.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/4ch-cardiac-array-5154685-dcbeb2a671ca"
+    },
+    {
+      "sourceOrder": 13,
+      "inventoryId": "temp-36",
+      "partNumber": "23774262",
+      "originalPartNumber": "23774262",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "8 Channel CTL Coil",
+      "description": "23774262 1.5t MRI 8 Channel CTL Coil\n\n\nIn stock\n\n90 days warranty",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "",
+      "imagePaths": [
+        "Parts/temp-36/temp-36.jpg",
+        "Parts/temp-36/temp-36.2.jpg",
+        "Parts/temp-36/temp-36.3.jpg",
+        "Parts/temp-36/temp-36.4.jpg"
+      ],
+      "available": true,
+      "sold": 0,
+      "listedDate": "2024-12-05",
+      "sourceUrl": "https://advancedimagingparts.com/products/8-channel-ctl-coil-23774262-temp-36"
+    },
+    {
+      "sourceOrder": 14,
+      "inventoryId": "SC03A915B0AC3E",
+      "partNumber": "5167035",
+      "originalPartNumber": "5167035",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "CAN Fiber Optic DVMR Assembly",
+      "description": "CAN Fiber Optic DVMR Assembly, GE part number 5167035, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC03A915B0AC3E%2FSC03A915B0AC3E.jpg alt=media&token=b5813746-61d3-7c5b-5102-aa42db601eec"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/can-fiber-optic-dvmr-assembly-5167035-sc03a915b0ac3e"
+    },
+    {
+      "sourceOrder": 15,
+      "inventoryId": "SC3A8D204F6356",
+      "partNumber": "5351002",
+      "originalPartNumber": "5351002",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "DC Power Supply Tray Assembly",
+      "description": "DC Power Supply Tray Assembly, GE part number 5351002, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Optima MR360 1.5T",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC3A8D204F6356%2FSC3A8D204F6356.jpg alt=media&token=4370fa75-43f1-a144-c772-62e3947052c2"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/dc-power-supply-tray-assembly-5351002-sc3a8d204f6356"
+    },
+    {
+      "sourceOrder": 16,
+      "inventoryId": "SC700BEE3C8E0A",
+      "partNumber": "5151531",
+      "originalPartNumber": "5151531",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "DCERD2",
+        "4-CHANNEL"
+      ],
+      "partName": "DCERD2 4-Channel Receiver with Firmware",
+      "description": "DCERD2 4-Channel Receiver with Firmware, GE part number 5151531, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC700BEE3C8E0A%2FSC700BEE3C8E0A.jpg alt=media&token=b85e5a2c-cf37-5bbf-6e94-cf574391f560"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/dcerd2-4-channel-receiver-with-firmware-5151531-sc700bee3c8e0a"
+    },
+    {
+      "sourceOrder": 17,
+      "inventoryId": "AIS11233",
+      "partNumber": "2361471 rev 0",
+      "originalPartNumber": "2361471 rev 0",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Exciter 2 board",
+      "description": "Bad exciter 2 board from magnolia. No clock generator. Oscillator is dead. No fiber signal",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "igor-MRI",
+      "imagePaths": [
+        "Parts/AIS11233/AIS11233",
+        "Parts/AIS11233/AIS11233.2"
+      ],
+      "available": true,
+      "sold": null,
+      "listedDate": "",
+      "sourceUrl": "https://advancedimagingparts.com/products/exciter-2-board-2361471-rev-0-ais11233"
+    },
+    {
+      "sourceOrder": 18,
+      "inventoryId": "SC344B5D19C719",
+      "partNumber": "5250122",
+      "originalPartNumber": "5250122",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Extreme Gradient Amplifier Control Board",
+      "description": "Extreme Gradient Amplifier Control Board, GE part number 5250122, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC344B5D19C719%2FSC344B5D19C719.jpg alt=media&token=052b56d9-c6ce-0c72-9512-ff96a104e7bf"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/extreme-gradient-amplifier-control-board-5250122-sc344b5d19c719"
+    },
+    {
+      "sourceOrder": 19,
+      "inventoryId": "SC72AF06D02630",
+      "partNumber": "5146875",
+      "originalPartNumber": "5146875",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "GP3 Assembly",
+      "description": "GP3 Assembly, GE part number 5146875, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE 1.5T MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC72AF06D02630%2FSC72AF06D02630.jpg alt=media&token=b96b00f7-46fb-44e2-c6e8-f5239eff6882"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/gp3-assembly-5146875-sc72af06d02630"
+    },
+    {
+      "sourceOrder": 20,
+      "inventoryId": "SCA79783759390",
+      "partNumber": "5176921",
+      "originalPartNumber": "5176921",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Gradient Amplifier Assembly",
+      "description": "Gradient Amplifier Assembly, GE part number 5176921, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCA79783759390%2FSCA79783759390.jpg alt=media&token=bf0669ea-e7a3-2ac9-491d-e0278a67b270"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/gradient-amplifier-assembly-5176921-sca79783759390"
+    },
+    {
+      "sourceOrder": 21,
+      "inventoryId": "SC0E4F90929E07",
+      "partNumber": "5154662",
+      "originalPartNumber": "5154662",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "HDV 1.5T Reference Clock and Narrow Band Exciter Module",
+      "description": "HDV 1.5T Reference Clock and Narrow Band Exciter Module, GE part number 5154662, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Signa HD / HDx 1.5T",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC0E4F90929E07%2FSC0E4F90929E07.jpg alt=media&token=12a2fe53-2da4-9365-c3c1-635891760bcf"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/hdv-1-5t-reference-clock-and-narrow-band-exciter-module-5154662-sc0e4f90929e07"
+    },
+    {
+      "sourceOrder": 22,
+      "inventoryId": "SC7808FFB244E1",
+      "partNumber": "5177062-20",
+      "originalPartNumber": "5177062-20",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "HDV Control Panel Kit",
+      "description": "HDV Control Panel Kit, GE part number 5177062-20, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Discovery MR750 3.0T",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC7808FFB244E1%2FSC7808FFB244E1.jpg alt=media&token=ff3823ee-953f-bdbf-f929-adb665f70d93"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/hdv-control-panel-kit-5177062-20-sc7808ffb244e1"
+    },
+    {
+      "sourceOrder": 23,
+      "inventoryId": "SC24F9D7691718",
+      "partNumber": "5174169",
+      "originalPartNumber": "5174169",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "HDV Remote Receiver Module",
+      "description": "HDV Remote Receiver Module, GE part number 5174169, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Discovery MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC24F9D7691718%2FSC24F9D7691718.jpg alt=media&token=e7949f7a-3cf0-8dd1-d9ea-9a5110e364bc"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/hdv-remote-receiver-module-5174169-sc24f9d7691718"
+    },
+    {
+      "sourceOrder": 24,
+      "inventoryId": "SC5A112952497D",
+      "partNumber": "5250066",
+      "originalPartNumber": "5250066",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "IRF3"
+      ],
+      "partName": "IRF3 Interface and Remote Board",
+      "description": "IRF3 Interface and Remote Board, GE part number 5250066, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Brivo MR355 / Discovery MR750 / Optima MR360",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC5A112952497D%2FSC5A112952497D.jpg alt=media&token=208077da-0df6-ae11-d89f-b44d991f95d5"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/irf3-interface-and-remote-board-5250066-sc5a112952497d"
+    },
+    {
+      "sourceOrder": 25,
+      "inventoryId": "SC11168C24BA8D",
+      "partNumber": "5342679",
+      "originalPartNumber": "5342679",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Large Cylindrical Unified MRI Phantom",
+      "description": "Large Cylindrical Unified MRI Phantom, GE part number 5342679, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC11168C24BA8D%2FSC11168C24BA8D.jpg alt=media&token=eeceadbc-a98e-1ea1-076a-46413a0cc39e"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/large-cylindrical-unified-mri-phantom-5342679-sc11168c24ba8d"
+    },
+    {
+      "sourceOrder": 26,
+      "inventoryId": "SCE0650F8D6785",
+      "partNumber": "5393370-2",
+      "originalPartNumber": "5393370-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "MR SCIM Black Operator Control Module",
+      "description": "MR SCIM Black Operator Control Module, GE part number 5393370-2, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCE0650F8D6785%2FSCE0650F8D6785.jpg alt=media&token=ddbd8bb4-cabc-fc0d-5ad1-1aec5feeac7a"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/mr-scim-black-operator-control-module-5393370-2-sce0650f8d6785"
+    },
+    {
+      "sourceOrder": 27,
+      "inventoryId": "SC54B482F2507A",
+      "partNumber": "5148389-2",
+      "originalPartNumber": "5148389-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "MR SCIM Operator Control Module",
+      "description": "MR SCIM Operator Control Module, GE part number 5148389-2, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC54B482F2507A%2FSC54B482F2507A.jpg alt=media&token=cb16b696-8775-c00d-c344-47ae4a1183a1"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/mr-scim-operator-control-module-5148389-2-sc54b482f2507a"
+    },
+    {
+      "sourceOrder": 28,
+      "inventoryId": "SC294829C8494A",
+      "partNumber": "5250106",
+      "originalPartNumber": "5250106",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "MUX 2 Board",
+      "description": "MUX 2 Board, GE part number 5250106, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC294829C8494A%2FSC294829C8494A.jpg alt=media&token=cdd81fdc-98b6-4d7b-e6d7-9371a8b9db06"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/mux-2-board-5250106-sc294829c8494a"
+    },
+    {
+      "sourceOrder": 29,
+      "inventoryId": "SCDD2267856A93",
+      "partNumber": "5215012",
+      "originalPartNumber": "5215012",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Patient Handling Power Supply",
+      "description": "Patient Handling Power Supply, GE part number 5215012, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCDD2267856A93%2FSCDD2267856A93.jpg alt=media&token=bdb7bfdb-ee3c-967e-198c-22dc8652b806"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/patient-handling-power-supply-5215012-scdd2267856a93"
+    },
+    {
+      "sourceOrder": 30,
+      "inventoryId": "SC1372B47302D8",
+      "partNumber": "5138527",
+      "originalPartNumber": "5138527",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Patient Handling Power Supply Lite",
+      "description": "Patient Handling Power Supply Lite, GE part number 5138527, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC1372B47302D8%2FSC1372B47302D8.jpg alt=media&token=7b8b4e1c-6a6a-9e5c-1e75-337cb9855c6d"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/patient-handling-power-supply-lite-5138527-sc1372b47302d8"
+    },
+    {
+      "sourceOrder": 31,
+      "inventoryId": "SC2EBB049DE4E2",
+      "partNumber": "5250214",
+      "originalPartNumber": "5250214",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "PCI Non-Transparent Bridge Board",
+      "description": "PCI Non-Transparent Bridge Board, GE part number 5250214, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC2EBB049DE4E2%2FSC2EBB049DE4E2.jpg alt=media&token=62c195c2-504b-2ca6-1de9-da6443a744c7"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/pci-non-transparent-bridge-board-5250214-sc2ebb049de4e2"
+    },
+    {
+      "sourceOrder": 32,
+      "inventoryId": "SC025C79065B21",
+      "partNumber": "5112668-2",
+      "originalPartNumber": "5112668-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Physiological Acquisition Controller with Vector Gating",
+      "description": "Physiological Acquisition Controller with Vector Gating, GE part number 5112668-2, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC025C79065B21%2FSC025C79065B21.jpg alt=media&token=6bf8b505-f75d-eec3-b5bd-33228b642f85"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/physiological-acquisition-controller-with-vector-gating-5112668-2-sc025c79065b21"
+    },
+    {
+      "sourceOrder": 33,
+      "inventoryId": "SC906F3873B149",
+      "partNumber": "5135723",
+      "originalPartNumber": "5135723",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Power Distribution Unit Control Board",
+      "description": "Power Distribution Unit Control Board, GE part number 5135723, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC906F3873B149%2FSC906F3873B149.jpg alt=media&token=cdb73e53-ba8c-7f7d-9fb3-e26cda6f73b0"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/power-distribution-unit-control-board-5135723-sc906f3873b149"
+    },
+    {
+      "sourceOrder": 34,
+      "inventoryId": "SCE3EF3FFCB715",
+      "partNumber": "5196918",
+      "originalPartNumber": "5196918",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "MRU2006"
+      ],
+      "partName": "Primary Magnet Rundown Unit MRU2006",
+      "description": "Primary Magnet Rundown Unit MRU2006, GE part number 5196918, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCE3EF3FFCB715%2FSCE3EF3FFCB715.jpg alt=media&token=7bcf36ef-d9be-995d-5abe-edc48e9f62b3"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/primary-magnet-rundown-unit-mru2006-5196918-sce3ef3ffcb715"
+    },
+    {
+      "sourceOrder": 35,
+      "inventoryId": "SCC59D11091232",
+      "partNumber": "5438959",
+      "originalPartNumber": "5438959",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "RDK-408A3"
+      ],
+      "partName": "RDK-408A3 Cold Head and Gasket Kit",
+      "description": "RDK-408A3 Cold Head and Gasket Kit, GE part number 5438959, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSCC59D11091232%2FSCC59D11091232.jpg alt=media&token=e4658dda-c951-3246-b456-dbdb1d848e1d"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/rdk-408a3-cold-head-and-gasket-kit-5438959-scc59d11091232"
+    },
+    {
+      "sourceOrder": 36,
+      "inventoryId": "SC0C4E43CE16DC",
+      "partNumber": "5250028",
+      "originalPartNumber": "5250028",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Remote RF Digital Interface 2 Board",
+      "description": "Remote RF Digital Interface 2 Board, GE part number 5250028, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Signa HDxt 1.5T",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC0C4E43CE16DC%2FSC0C4E43CE16DC.jpg alt=media&token=789eb81e-e938-33df-a332-c7219cb9a75d"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/remote-rf-digital-interface-2-board-5250028-sc0c4e43ce16dc"
+    },
+    {
+      "sourceOrder": 37,
+      "inventoryId": "SC8C4668C998E0",
+      "partNumber": "5116657",
+      "originalPartNumber": "5116657",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "SCSI Tower",
+      "description": "SCSI Tower, GE part number 5116657, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "Signa Excite",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC8C4668C998E0%2FSC8C4668C998E0.jpg alt=media&token=a76bc3e5-1b01-c229-cb73-ed9ecf5dfec7"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/scsi-tower-5116657-sc8c4668c998e0"
+    },
+    {
+      "sourceOrder": 38,
+      "inventoryId": "SC9236B5FE2860",
+      "partNumber": "5342680",
+      "originalPartNumber": "5342680",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Small Cylindrical Unified MRI Phantom",
+      "description": "Small Cylindrical Unified MRI Phantom, GE part number 5342680, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC9236B5FE2860%2FSC9236B5FE2860.jpg alt=media&token=f24a2394-fc79-0484-aa11-c25c4da63ec6"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/small-cylindrical-unified-mri-phantom-5342680-sc9236b5fe2860"
+    },
+    {
+      "sourceOrder": 39,
+      "inventoryId": "SC3CCEB3C09503",
+      "partNumber": "5160929-2",
+      "originalPartNumber": "5160929-2",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [
+        "SRI4"
+      ],
+      "partName": "SRI4 Remote Intercom Board 3",
+      "description": "SRI4 Remote Intercom Board 3, GE part number 5160929-2, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC3CCEB3C09503%2FSC3CCEB3C09503.jpg alt=media&token=b0b5f5c1-8016-08fa-f7a8-a750c393782d"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/sri4-remote-intercom-board-3-5160929-2-sc3cceb3c09503"
+    },
+    {
+      "sourceOrder": 40,
+      "inventoryId": "SC7AC0895364F8",
+      "partNumber": "5343347",
+      "originalPartNumber": "5343347",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "TL Unified MRI Phantom",
+      "description": "TL Unified MRI Phantom, GE part number 5343347, for GE MRI service and replacement-part requests. This part number appears in the reviewed DOTmed, PartsSource, and Block Imaging GE MRI catalogs. Contact Advanced Imaging Services to confirm compatibility, condition, pricing, and current availability.",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "GE MRI",
+      "imagePaths": [
+        "https://firebasestorage.googleapis.com/v0/b/magmo-ac10c.appspot.com/o/Parts%2FSC7AC0895364F8%2FSC7AC0895364F8.jpg alt=media&token=798deb6f-a607-290d-e53c-74e4306a1c78"
+      ],
+      "available": false,
+      "sold": 0,
+      "listedDate": "2026-07-17",
+      "sourceUrl": "https://advancedimagingparts.com/products/tl-unified-mri-phantom-5343347-sc7ac0895364f8"
+    },
+    {
+      "sourceOrder": 41,
+      "inventoryId": "AIS11333",
+      "partNumber": "2359519 rev 0",
+      "originalPartNumber": "2359519 rev 0",
+      "partNumberSource": "PN field",
+      "alternatePartNumbers": [],
+      "partName": "Upm processor board",
+      "description": "This is the board that was bad from the dtla installation that was first swapped with a board fro, accent and then accent got a new good board so this is the bad core from dtla",
+      "manufacturer": "GE",
+      "modality": "MRI",
+      "model": "igor-MRI",
+      "imagePaths": [
+        "Parts/AIS11333/AIS11333",
+        "Parts/AIS11333/AIS11333.2"
+      ],
+      "available": true,
+      "sold": null,
+      "listedDate": "",
+      "sourceUrl": "https://advancedimagingparts.com/products/upm-processor-board-2359519-rev-0-ais11333"
+    }
+  ]
+}

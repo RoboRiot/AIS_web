@@ -1,0 +1,1360 @@
+{
+  "generatedAt": "2026-07-17T20:39:45.420Z",
+  "importBatch": "common-ge-mri-2026-07-17",
+  "comparison": {
+    "rule": "Part number appears in DOTmed, PartsSource, and Block Imaging GE MRI source files.",
+    "matchedCount": 31,
+    "existingAisDuplicatesExcluded": 0
+  },
+  "idRule": "SC plus the first 12 uppercase hexadecimal characters of SHA-256(normalized part number).",
+  "availabilityPolicy": "Imported research candidates are listed as Call for availability; no stock claim is made.",
+  "preparation": {
+    "preparedAt": "2026-07-17T20:39:45.420Z",
+    "images": [
+      {
+        "partNumber": "5911000-8",
+        "id": "SC86F41C062F21",
+        "sourceDimensions": "2560x1920",
+        "bytes": 175001,
+        "sha256": "cd37b896a0d608999d604d1e9a6f3662a8e06ee615a3342afd56c1244a6c1292"
+      },
+      {
+        "partNumber": "5438959",
+        "id": "SCC59D11091232",
+        "sourceDimensions": "300x300",
+        "bytes": 28842,
+        "sha256": "c879e8d43f0e1d4f25f425cbff56a4315a262e98e659ea178872802068fb95b2"
+      },
+      {
+        "partNumber": "5393370-2",
+        "id": "SCE0650F8D6785",
+        "sourceDimensions": "300x300",
+        "bytes": 51105,
+        "sha256": "fff6fa377ac6ff9395cbb46f226a3f74322499fa2261682b752331b0f2af00f3"
+      },
+      {
+        "partNumber": "5371622-2",
+        "id": "SCBE09BCE309D4",
+        "sourceDimensions": "300x300",
+        "bytes": 20279,
+        "sha256": "9a5752f0b31f227e949dfc327bf736397b6651c443de9e5ad5c90f94efb1fa06"
+      },
+      {
+        "partNumber": "5351002",
+        "id": "SC3A8D204F6356",
+        "sourceDimensions": "300x300",
+        "bytes": 23392,
+        "sha256": "73cd076b93500369c36a36823723b2901935765fe68352375eee967d42fdc77d"
+      },
+      {
+        "partNumber": "5343347",
+        "id": "SC7AC0895364F8",
+        "sourceDimensions": "300x300",
+        "bytes": 15905,
+        "sha256": "dd964a0e9f65827f4b75db9974c79c0294e6a98ef7ac3cad1eedd90f088c9c05"
+      },
+      {
+        "partNumber": "5342680",
+        "id": "SC9236B5FE2860",
+        "sourceDimensions": "300x300",
+        "bytes": 21193,
+        "sha256": "ce4424691aecef6ace978d052d91627172d7cd01af20fe8158982903cd4a4e43"
+      },
+      {
+        "partNumber": "5342679",
+        "id": "SC11168C24BA8D",
+        "sourceDimensions": "300x300",
+        "bytes": 19281,
+        "sha256": "731ae94d8582538b07861252f52b8145877952f5451d1fcb7dbe0c1c4b3a7276"
+      },
+      {
+        "partNumber": "5309197",
+        "id": "SCC68C17B8FF25",
+        "sourceDimensions": "300x300",
+        "bytes": 27818,
+        "sha256": "9157dd46f0e737d2484f8a888c51c49687ed92b0a8b718603780fe97dfa98554"
+      },
+      {
+        "partNumber": "5250214",
+        "id": "SC2EBB049DE4E2",
+        "sourceDimensions": "300x300",
+        "bytes": 23366,
+        "sha256": "8f4c96bc0518ac5387aaaa79138ba6146993b574985d016d29852d0adb3e9961"
+      },
+      {
+        "partNumber": "5250122",
+        "id": "SC344B5D19C719",
+        "sourceDimensions": "300x300",
+        "bytes": 94077,
+        "sha256": "5e42fa2b3bf1418ec9938b70563c1166ce6f204137d17387e3efcc0116bb9d8f"
+      },
+      {
+        "partNumber": "5250106",
+        "id": "SC294829C8494A",
+        "sourceDimensions": "300x300",
+        "bytes": 62238,
+        "sha256": "fc1cb3b79a74c695576a460832b58b407e756a333bd6cb8f89ebad1ca83305de"
+      },
+      {
+        "partNumber": "5250066",
+        "id": "SC5A112952497D",
+        "sourceDimensions": "300x300",
+        "bytes": 33523,
+        "sha256": "24d835568c16b692e4fdd34b73f9286438f2ba71fc850ce8a29f0fb5427758b9"
+      },
+      {
+        "partNumber": "5250028",
+        "id": "SC0C4E43CE16DC",
+        "sourceDimensions": "1000x1000",
+        "bytes": 94277,
+        "sha256": "fd9183ff7288f07ee551472ee22ce32817bf54f8a4b60c0aa5418f084550303c"
+      },
+      {
+        "partNumber": "5215012",
+        "id": "SCDD2267856A93",
+        "sourceDimensions": "1000x1000",
+        "bytes": 72972,
+        "sha256": "215781245390e49919b19c0ceeedd45124c559b622c1d21ef8ab27736720c0f4"
+      },
+      {
+        "partNumber": "5196918",
+        "id": "SCE3EF3FFCB715",
+        "sourceDimensions": "1000x1000",
+        "bytes": 46542,
+        "sha256": "5bb7d3965d4efd5b27cd4f77adff6c10dfb0d1bead1e264218949cff7eb8406f"
+      },
+      {
+        "partNumber": "5179918",
+        "id": "SCCBFC899C1621",
+        "sourceDimensions": "1000x1000",
+        "bytes": 31123,
+        "sha256": "ed5d371b43c44d7c0a3d75b2b69c91132fb0c8ca014ae2502a5af1f430183368"
+      },
+      {
+        "partNumber": "5177062-20",
+        "id": "SC7808FFB244E1",
+        "sourceDimensions": "300x300",
+        "bytes": 54959,
+        "sha256": "e054564b62b385aad6f3f8d768bd888ae29203d6b2cc29178865323c8f25e19c"
+      },
+      {
+        "partNumber": "5176921",
+        "id": "SCA79783759390",
+        "sourceDimensions": "2560x1920",
+        "bytes": 267522,
+        "sha256": "f096a2e35a2818a47725776ace866803a51664a95220f0d65c4ad94ba92be6c0"
+      },
+      {
+        "partNumber": "5174169",
+        "id": "SC24F9D7691718",
+        "sourceDimensions": "500x500",
+        "bytes": 16884,
+        "sha256": "dac3f2bcbd6e79d75b659ca1020e94f5bb28584334f4ce6c5c0db784f2b69d61"
+      },
+      {
+        "partNumber": "5167035",
+        "id": "SC03A915B0AC3E",
+        "sourceDimensions": "1000x1000",
+        "bytes": 40444,
+        "sha256": "81b8ce70712511e0c52cffca9f39a99c9c260d15083cd11e9aee96b68006c593"
+      },
+      {
+        "partNumber": "5165957-51",
+        "id": "SC7744C1BF5AC3",
+        "sourceDimensions": "1000x1000",
+        "bytes": 58066,
+        "sha256": "a1f8d34ee3c3e95d00e0a31b864d9ea04dd3de617021ce3ac76d508887ff0913"
+      },
+      {
+        "partNumber": "5160929-2",
+        "id": "SC3CCEB3C09503",
+        "sourceDimensions": "300x300",
+        "bytes": 70139,
+        "sha256": "6c7079a5e0f9a6f1cf8cdb80e9fe19dec6e8604d1696159d103cf74bb3ca06c4"
+      },
+      {
+        "partNumber": "5154662",
+        "id": "SC0E4F90929E07",
+        "sourceDimensions": "613x146",
+        "bytes": 44813,
+        "sha256": "3e7c78d9ae3267b7da19d2674812de0265bacdcb4950300c07a368a7e0c5ecbb"
+      },
+      {
+        "partNumber": "5151531",
+        "id": "SC700BEE3C8E0A",
+        "sourceDimensions": "1000x1000",
+        "bytes": 71317,
+        "sha256": "d5d4071426f4bd01fa9f66af61b5ca3b7334f473b397c8c054763f51a638ce2d"
+      },
+      {
+        "partNumber": "5148389-2",
+        "id": "SC54B482F2507A",
+        "sourceDimensions": "300x300",
+        "bytes": 51105,
+        "sha256": "fff6fa377ac6ff9395cbb46f226a3f74322499fa2261682b752331b0f2af00f3"
+      },
+      {
+        "partNumber": "5146875",
+        "id": "SC72AF06D02630",
+        "sourceDimensions": "300x300",
+        "bytes": 29442,
+        "sha256": "01c63cd674877f511df95fcf2f45a2b24af695d43aa0c00b30fb9aa3da941f48"
+      },
+      {
+        "partNumber": "5138527",
+        "id": "SC1372B47302D8",
+        "sourceDimensions": "300x300",
+        "bytes": 47023,
+        "sha256": "725610369f325958d5d6b4a6a5bced2209418c5092e7d089cec47ea54c56da49"
+      },
+      {
+        "partNumber": "5135723",
+        "id": "SC906F3873B149",
+        "sourceDimensions": "300x300",
+        "bytes": 29066,
+        "sha256": "b513a2e61ccc4eaa269b3f88d19d4c2575e3425a5c670a148fbfc9f18fe87d12"
+      },
+      {
+        "partNumber": "5116657",
+        "id": "SC8C4668C998E0",
+        "sourceDimensions": "300x300",
+        "bytes": 27808,
+        "sha256": "29b775b740cf1eb66b6c83cc0238cd7cdf7f7c7340b893f47c676ab486a68d61"
+      },
+      {
+        "partNumber": "5112668-2",
+        "id": "SC025C79065B21",
+        "sourceDimensions": "300x300",
+        "bytes": 64974,
+        "sha256": "5e32fa1da9cafc4ee75e47b59ef4886022f34da3937db78efd254d4ef68aedfd"
+      }
+    ]
+  },
+  "items": [
+    {
+      "sequence": 1,
+      "id": "SC86F41C062F21",
+      "partNumber": "5911000-8",
+      "normalizedPartNumber": "59110008",
+      "name": "Gen 4.1 HDxt 16-Channel Image Compute Node",
+      "machine": "Signa HDxt",
+      "image": {
+        "url": "https://pmimagingmgmt.com/wp-content/uploads/2023/02/IMG_7437-scaled.jpg",
+        "source": "PM Imaging Management",
+        "page": "https://pmimagingmgmt.com/product/icn-sun-x4170-5911000-8/",
+        "imagePartNumber": "5911000-8",
+        "localPath": "data/MRI/GE/common-images/SC86F41C062F21.jpg",
+        "storagePath": "Parts/SC86F41C062F21/SC86F41C062F21.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "IMAGE COMPUTE NODE",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5911000-8/5751009"
+        },
+        "partssource": {
+          "name": "GEN 4.1 HDXT 16 CHANNEL IMAGE COMPUTE NODE",
+          "url": "https://www.partssource.com/parts/ge-healthcare/59110008"
+        },
+        "block": {
+          "name": "Gen 4 1 Hdxt 16 Channel Qdr Icn",
+          "url": "https://www.blockimaging.com/parts/5911000-8-ge-mri-gen-4-1-hdxt-16-channel-qdr-icn"
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "id": "SCC59D11091232",
+      "partNumber": "5438959",
+      "normalizedPartNumber": "5438959",
+      "name": "RDK-408A3 Cold Head and Gasket Kit",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5438959.jpeg?context=bWFzdGVyfGltYWdlc3wxMzkyMHxpbWFnZS9qcGVnfGFEazRMMmhqTkM4NU56UTFOek13TVRReU1qTTRMelUwTXpnNU5Ua3VhbkJsWnd8NzZmZjAwMzhhNTA2YjJhNmRiOTNmNjY0MGQ0MDg3MTBiZjUxN2M5ZGE4ZmVjOWMxOGFmMmRjNTUwMmQ5NzliYw",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5438959",
+        "imagePartNumber": "5438959",
+        "localPath": "data/MRI/GE/common-images/SCC59D11091232.jpg",
+        "storagePath": "Parts/SCC59D11091232/SCC59D11091232.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "RDK-408A3 COALD HEAD",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5438959/5750981"
+        },
+        "partssource": {
+          "name": "A3 SUMITOMO COLD HEAD AND GASKET KIT FOR GE CLOSED MRI",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5438959"
+        },
+        "block": {
+          "name": "Rdk 408A3 Cold Head",
+          "url": "https://www.blockimaging.com/parts/5438959-ge-mri-rdk-408a3-cold-head"
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "id": "SCE0650F8D6785",
+      "partNumber": "5393370-2",
+      "normalizedPartNumber": "53933702",
+      "name": "MR SCIM Black Operator Control Module",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5393370-2.jpeg?context=bWFzdGVyfHJvb3R8MjE2MTR8aW1hZ2UvanBlZ3xhRE0wTDJnMVlTODVOekl5T1RRMk16ZzNPVGs0THpVek9UTXpOekF0TWk1cWNHVm58MWVkOGM4MWJkMzk3NGE0OTgzYWMwZjc2YzNlNGRmMGNmZDg0MWE0OTU4ZDI0MmNlMTUyY2QzNTc5MzI3YjYxNA",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5393370-2",
+        "imagePartNumber": "5393370-2",
+        "localPath": "data/MRI/GE/common-images/SCE0650F8D6785.jpg",
+        "storagePath": "Parts/SCE0650F8D6785/SCE0650F8D6785.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "SCIM Black with English Overlay ROHS",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5393370-2/5750960"
+        },
+        "partssource": {
+          "name": "MR SCIM-BLACK WITH ENGLISH OVERLAY MULTIFUNCTIONAL INPUT ROHS",
+          "url": "https://www.partssource.com/parts/ge-healthcare/53933702"
+        },
+        "block": {
+          "name": "Scim Black With English Overlay Rohs",
+          "url": "https://www.blockimaging.com/parts/5393370-2-ge-mri-scim-black-with-english-overlay-rohs"
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "id": "SCBE09BCE309D4",
+      "partNumber": "5371622-2",
+      "normalizedPartNumber": "53716222",
+      "name": "Hypertronics B-Bezel Cable Harness",
+      "machine": "Signa HD 1.5T",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5371622-2-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMDA3N3xpbWFnZS9qcGVnfGFERTRMMmhpTXk4NU56SXlPVFF5TXprd016QXlMelV6TnpFMk1qSXRNbDh4TG1wd1pXY3wwZDZkOWMxNjkyNTZiMGM5OWY0ODk5ZWE2NTg0YzJhYWQ4ZDk4MDE3OWNhZGVjZWM2ODA5ZWU2MWZhZjZkYjMz",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5371622-2",
+        "imagePartNumber": "5371622-2",
+        "localPath": "data/MRI/GE/common-images/SCBE09BCE309D4.jpg",
+        "storagePath": "Parts/SCBE09BCE309D4/SCBE09BCE309D4.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "B-BEZEL CABLE HARNESS- HY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5371622-2/5750951"
+        },
+        "partssource": {
+          "name": "HYPERTRONICS B-BEZEL CABLE HARNESS FOR SIGNA HD 1.5T MRI SYSTEM",
+          "url": "https://www.partssource.com/parts/ge-healthcare/53716222"
+        },
+        "block": {
+          "name": "B Bezel Cable Harness Hy",
+          "url": "https://www.blockimaging.com/parts/5371622-2-ge-mri-b-bezel-cable-harness-hy"
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "id": "SC3A8D204F6356",
+      "partNumber": "5351002",
+      "normalizedPartNumber": "5351002",
+      "name": "DC Power Supply Tray Assembly",
+      "machine": "Optima MR360 1.5T",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5351002-1.jpeg?context=bWFzdGVyfHJvb3R8ODk3N3xpbWFnZS9qcGVnfGFEYzBMMmczTlM4NU56SXlPVE0yTXprek56VTRMelV6TlRFd01ESmZNUzVxY0dWbnw1Yjc5MDUzZTI2NzkxYzBhYTA5ZWFjOGE4YmU2OTRhOGI4MmI4ZWVjYmM1YjA1ZTQ5YmQxMjMwNWQwZDM5MDcy",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5351002",
+        "imagePartNumber": "5351002",
+        "localPath": "data/MRI/GE/common-images/SC3A8D204F6356.jpg",
+        "storagePath": "Parts/SC3A8D204F6356/SC3A8D204F6356.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "DC POWER SUPPLY TRAY ASSEMBLY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5351002/5750949"
+        },
+        "partssource": {
+          "name": "DC POWER SUPPLY TRAY ASSEMBLY FOR 1.5T OPTIMA MR360 MRI SYSTEM",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5351002"
+        },
+        "block": {
+          "name": "DC Power Supply Tray Assembly",
+          "url": "https://www.blockimaging.com/parts/5351002-ge-mri-dc-power-supply-tray-assembly"
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "id": "SC7AC0895364F8",
+      "partNumber": "5343347",
+      "normalizedPartNumber": "5343347",
+      "name": "TL Unified MRI Phantom",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5343347-1.jpeg?context=bWFzdGVyfGltYWdlc3w4MjUyfGltYWdlL2pwZWd8YUdNeEwyaGpNQzg1TnpJeU9UTTBOalUzTURVMEx6VXpORE16TkRkZk1TNXFjR1ZufDQyZjhiZjdhYzY3ZDdjYzk3ZDM4YjNmMTNiMGQxZjVlMWUzYzNjNjRkZWFiYTk1Yzg5MzE3NzI5MzVhOTFlMGI",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5343347",
+        "imagePartNumber": "5343347",
+        "localPath": "data/MRI/GE/common-images/SC7AC0895364F8.jpg",
+        "storagePath": "Parts/SC7AC0895364F8/SC7AC0895364F8.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "TL Unified Phantom",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5343347/5750943"
+        },
+        "partssource": {
+          "name": "UNIFIED PHANTOM SIOIL TL",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5343347"
+        },
+        "block": {
+          "name": "Tl Unified Phantom",
+          "url": "https://www.blockimaging.com/parts/5343347-ge-mri-tl-unified-phantom"
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "id": "SC9236B5FE2860",
+      "partNumber": "5342680",
+      "normalizedPartNumber": "5342680",
+      "name": "Small Cylindrical Unified MRI Phantom",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5342680-1.jpeg?context=bWFzdGVyfHJvb3R8NzUxNHxpbWFnZS9qcGVnfGFHWmlMMmcxWkM4NU56SXlPVE16T0Rjd05qSXlMelV6TkRJMk9EQmZNUzVxY0dWbnwxMWQ3NDVkMmJiMTEwMTliNGYwYmI2MTJlZDYxODY1MzczNTU5Y2E0ZGFhOGU2NjVkYjhhNDRlYjQ4MmEyZGI4",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5342680",
+        "imagePartNumber": "5342680",
+        "localPath": "data/MRI/GE/common-images/SC9236B5FE2860.jpg",
+        "storagePath": "Parts/SC9236B5FE2860/SC9236B5FE2860.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "Small Cylindrical Unified Phantom",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5342680/5750936"
+        },
+        "partssource": {
+          "name": "SMALL CYLINDRICAL UNIFIED PHANTOM 5342680",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5342680"
+        },
+        "block": {
+          "name": "Small Cylindrical Unified Phantom",
+          "url": "https://www.blockimaging.com/parts/5342680-ge-mri-small-cylindrical-unified-phantom"
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "id": "SC11168C24BA8D",
+      "partNumber": "5342679",
+      "normalizedPartNumber": "5342679",
+      "name": "Large Cylindrical Unified MRI Phantom",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5342679-1.jpeg?context=bWFzdGVyfGltYWdlc3w3Nzc4fGltYWdlL2pwZWd8YURjMEwyaGhaaTg1TnpJeU9UTTBNVE15TnpZMkx6VXpOREkyTnpsZk1TNXFjR1ZufDUxZTYwN2RiOWVmOTJlMmM4ZmFhOTJiMmNkNmM5NmJjNzUxZGFkNzgzNTdkODJlZDFjNGI3MjY5NzFhMjQ2MjI",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5342679",
+        "imagePartNumber": "5342679",
+        "localPath": "data/MRI/GE/common-images/SC11168C24BA8D.jpg",
+        "storagePath": "Parts/SC11168C24BA8D/SC11168C24BA8D.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "Lar",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5342679/5750935"
+        },
+        "partssource": {
+          "name": "LARGE CYLINDRICAL UNIFIED PHANTOM SIOIL",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5342679"
+        },
+        "block": {
+          "name": "Large Cylindrical Unified Phantom",
+          "url": "https://www.blockimaging.com/parts/5342679-ge-mri-large-cylindrical-unified-phantom"
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "id": "SCC68C17B8FF25",
+      "partNumber": "5309197",
+      "normalizedPartNumber": "5309197",
+      "name": "1kV Dynamic Disable Filter Module",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5309197-1.jpeg?context=bWFzdGVyfHJvb3R8ODMwOHxpbWFnZS9qcGVnfGFERTFMMmhpT0M4NU56SXpOems1TmpZMk56RTRMelV6TURreE9UZGZNUzVxY0dWbnw4NmY0MzIwYTVjOTEwMGQ0YjlmODJjNmU0ZjA1Yzg1NWJiMTU3YzQ2N2M3ODY1Y2YxY2Y3OTcyN2M5ZjI0NzE2",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5309197",
+        "imagePartNumber": "5309197",
+        "localPath": "data/MRI/GE/common-images/SCC68C17B8FF25.jpg",
+        "storagePath": "Parts/SCC68C17B8FF25/SCC68C17B8FF25.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "1KV DYNAMIC FILTER",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5309197/5750908"
+        },
+        "partssource": {
+          "name": "1KV DYNAMIC DISABLE FILTER MODULE 5309197",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5309197"
+        },
+        "block": {
+          "name": "1 Kv Dynamic Disable Filter Module",
+          "url": "https://www.blockimaging.com/parts/5309197-ge-mri-1-kv-dynamic-disable-filter-module"
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "id": "SC2EBB049DE4E2",
+      "partNumber": "5250214",
+      "normalizedPartNumber": "5250214",
+      "name": "PCI Non-Transparent Bridge Board",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5250214-1.jpeg?context=bWFzdGVyfHJvb3R8ODkzMXxpbWFnZS9qcGVnfGFESTRMMmhqWXk4NU56STBNelEyTWpBME1Ua3dMelV5TlRBeU1UUmZNUzVxY0dWbnw5ZWQxMDBiZmIwODZlMmUyZmFlZTg5Zjk5OWU1NzBkMzY4M2MyMzQ1ODUzZmFlZDAzY2VjMjVlODk0MmM2NzVm",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5250214",
+        "imagePartNumber": "5250214",
+        "localPath": "data/MRI/GE/common-images/SC2EBB049DE4E2.jpg",
+        "storagePath": "Parts/SC2EBB049DE4E2/SC2EBB049DE4E2.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "PCI BRID",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5250214/5750884"
+        },
+        "partssource": {
+          "name": "PERIPHERAL COMPONENT INTERCONNECT (PCI) BRIDGE BOARD",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5250214"
+        },
+        "block": {
+          "name": "Non Transparent Bridge Board",
+          "url": "https://www.blockimaging.com/parts/5250214-ge-mri-non-transparent-bridge-board"
+        }
+      }
+    },
+    {
+      "sequence": 11,
+      "id": "SC344B5D19C719",
+      "partNumber": "5250122",
+      "normalizedPartNumber": "5250122",
+      "name": "Extreme Gradient Amplifier Control Board",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5250122-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMTQ5OTZ8aW1hZ2UvanBlZ3xhRFZoTDJoa01DODVOekl6TnprME5ESXpPRE00THpVeU5UQXhNakpmTVM1cWNHVm58YjEyMWZkZjI0OTU3YzAzMzM1YjEwYzQzNTBlMTJiOWZhMDNhY2YwZTAxOTBlZTg0ZWJmOGRhZTQwMGNjMmU2Zg",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5250122",
+        "imagePartNumber": "5250122",
+        "localPath": "data/MRI/GE/common-images/SC344B5D19C719.jpg",
+        "storagePath": "Parts/SC344B5D19C719/SC344B5D19C719.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "XGA CONTROL BOARD",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5250122/5750882"
+        },
+        "partssource": {
+          "name": "EXTREME GRADIENT AMPLIFIER CONTROL BOARD",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5250122"
+        },
+        "block": {
+          "name": "Extreme Gradient Amplifier Control Board",
+          "url": "https://www.blockimaging.com/parts/5250122-ge-mri-extreme-gradient-amplifier-control-board"
+        }
+      }
+    },
+    {
+      "sequence": 12,
+      "id": "SC294829C8494A",
+      "partNumber": "5250106",
+      "normalizedPartNumber": "5250106",
+      "name": "MUX 2 Board",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5250106.jpeg?context=bWFzdGVyfHJvb3R8MjY3Njl8aW1hZ2UvanBlZ3xhR015TDJnNE5TODVOekl5T1RFd05qY3dPRGM0THpVeU5UQXhNRFl1YW5CbFp3fGVjZWI4MTA5YTdjMzdjZTEyOGQyOTM4M2Y1N2VjYTBhNGZlODJjYmNiNWRlMjg4ODIwMzMzNDFiNzdiMTVlN2Y",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5250106",
+        "imagePartNumber": "5250106",
+        "localPath": "data/MRI/GE/common-images/SC294829C8494A.jpg",
+        "storagePath": "Parts/SC294829C8494A/SC294829C8494A.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "MUX2",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5250106/5750881"
+        },
+        "partssource": {
+          "name": "MUX 2 BOARD 5250106",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5250106"
+        },
+        "block": {
+          "name": "Mux 2 Board",
+          "url": "https://www.blockimaging.com/parts/5250106-ge-mri-mux-2-board"
+        }
+      }
+    },
+    {
+      "sequence": 13,
+      "id": "SC5A112952497D",
+      "partNumber": "5250066",
+      "normalizedPartNumber": "5250066",
+      "name": "IRF3 Interface and Remote Board",
+      "machine": "Brivo MR355 / Discovery MR750 / Optima MR360",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5250066-1.jpeg?context=bWFzdGVyfGltYWdlc3w5NzU3fGltYWdlL2pwZWd8YURKakwyZzROaTg1TnpJeU9URXdOak00TVRFd0x6VXlOVEF3TmpaZk1TNXFjR1ZufDA1ZWIzNzExMjE0Mjg5Y2YwYTkzN2I0NDFlMTZiZjEwYjViZTRjZTE5ZGRjMzE5OWE3ZGRhMWY1ZjA4YWM4M2Q",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5250066",
+        "imagePartNumber": "5250066",
+        "localPath": "data/MRI/GE/common-images/SC5A112952497D.jpg",
+        "storagePath": "Parts/SC5A112952497D/SC5A112952497D.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "IRF3/ERF BOARD",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5250066/5750878"
+        },
+        "partssource": {
+          "name": "INTERFACE AND REMOTE IRF3 BOARD FOR BRIVO 355, DISCOVERY 750 3.0T AND OPTIMA 360 1.5T SYSTEMS",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5250066"
+        },
+        "block": {
+          "name": "IRF3 Erf Board",
+          "url": "https://www.blockimaging.com/parts/5250066-ge-mri-irf3-erf-board"
+        }
+      }
+    },
+    {
+      "sequence": 14,
+      "id": "SC0C4E43CE16DC",
+      "partNumber": "5250028",
+      "normalizedPartNumber": "5250028",
+      "name": "Remote RF Digital Interface 2 Board",
+      "machine": "Signa HDxt 1.5T",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5250028-2-1.jpeg?context=bWFzdGVyfHJvb3R8MTAxOTgzfGltYWdlL2pwZWd8YUdOaUwyaGpNQzg1TnpJMU9EY3hNRFl6TURjd0x6VXlOVEF3TWpndE1sOHhMbXB3WldjfDljY2UwOTI2ZmViOTc2YjliODhjYjQwMzhiZjQ0ZTVhNjRjOWE1YTA0OGRiODNhMTZkMDI5ZjI3ZWU3MDk1NWQ",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5250028",
+        "imagePartNumber": "5250028-2",
+        "note": "Official GE exact-replacement photo for 5250028.",
+        "localPath": "data/MRI/GE/common-images/SC0C4E43CE16DC.jpg",
+        "storagePath": "Parts/SC0C4E43CE16DC/SC0C4E43CE16DC.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "Remote RF Digital IF 2 Board",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5250028/5750877"
+        },
+        "partssource": {
+          "name": "DIGITAL INTERFACE 2 BOARD FOR SIGNA HDXT 1.5T MRI SYSTEM",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5250028"
+        },
+        "block": {
+          "name": "Remote RF Digital IF 2 Board",
+          "url": "https://www.blockimaging.com/parts/5250028-ge-mri-remote-rf-digital-if-2-board"
+        }
+      }
+    },
+    {
+      "sequence": 15,
+      "id": "SCDD2267856A93",
+      "partNumber": "5215012",
+      "normalizedPartNumber": "5215012",
+      "name": "Patient Handling Power Supply",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5215012-1.jpeg?context=bWFzdGVyfHJvb3R8NzcxMzN8aW1hZ2UvanBlZ3xhRGt4TDJoak9DODVOekkwTXpReE9ERXpNamM0THpVeU1UVXdNVEpmTVM1cWNHVm58YmEzYmFhZjE0NzIxYTFjMDdlMzc1ODAyMDBlYmY3ZjA2MzA5NTJhMzZlNjBlNWE4NGE5ZWYyYTk4NzczZWM1NQ",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5215012",
+        "imagePartNumber": "5215012",
+        "localPath": "data/MRI/GE/common-images/SCDD2267856A93.jpg",
+        "storagePath": "Parts/SCDD2267856A93/SCDD2267856A93.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "PATIENT HANDLING POWER SUPPLY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5215012/5750867"
+        },
+        "partssource": {
+          "name": "PATIENT HANDLING POWER SUPPLY FOR GE CLOSED MRI",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5215012"
+        },
+        "block": {
+          "name": "Patient Handling Power Supply Phps",
+          "url": "https://www.blockimaging.com/parts/5215012-ge-mri-patient-handling-power-supply-phps"
+        }
+      }
+    },
+    {
+      "sequence": 16,
+      "id": "SCE3EF3FFCB715",
+      "partNumber": "5196918",
+      "normalizedPartNumber": "5196918",
+      "name": "Primary Magnet Rundown Unit MRU2006",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5196918-2-1.jpeg?context=bWFzdGVyfHJvb3R8MTAyMDU3fGltYWdlL2pwZWd8YURRd0wyZzBaUzg1TnpFNU1EUTFNakkyTlRJMkx6VXhPVFk1TVRndE1sOHhMbXB3WldjfGNiYzdkY2JjYmUzZTAzMjMzNDI3NmQ1MjZiZWZlYzU2YTUzYjdiZjJkNmIyZTFlZmQ1YmIxNDliYmQxNGZlZDU",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5196918",
+        "imagePartNumber": "5196918-2",
+        "note": "Official GE exact-replacement photo for 5196918.",
+        "localPath": "data/MRI/GE/common-images/SCE3EF3FFCB715.jpg",
+        "storagePath": "Parts/SCE3EF3FFCB715/SCE3EF3FFCB715.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "Magnet Rundown Unit",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5196918/5750850"
+        },
+        "partssource": {
+          "name": "MAGNET RUNDOWN UNIT, PRIMARY, MRU2006 5196918",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5196918"
+        },
+        "block": {
+          "name": "Magnet Rundown Unit",
+          "url": "https://www.blockimaging.com/parts/5196918-ge-mri-magnet-rundown-unit"
+        }
+      }
+    },
+    {
+      "sequence": 17,
+      "id": "SCCBFC899C1621",
+      "partNumber": "5179918",
+      "normalizedPartNumber": "5179918",
+      "name": "MRI Cradle Wheel Kit",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5179918-1.jpeg?context=bWFzdGVyfHJvb3R8NDExNTB8aW1hZ2UvanBlZ3xhRFF6TDJnMk9DODVOekkwTXpNME5EUXdORGM0THpVeE56azVNVGhmTVM1cWNHVm58OTdiYjhiZmE4ZmFlYjBkMjZkNmY1MDI2N2VlYWY2OWZmMTcxMTkwY2M1NmQ5YTRiM2IwNDdkOTI2MzkwYzgxZg",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5179918",
+        "imagePartNumber": "5179918",
+        "localPath": "data/MRI/GE/common-images/SCCBFC899C1621.jpg",
+        "storagePath": "Parts/SCCBFC899C1621/SCCBFC899C1621.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "NEW CRADLE WHEEL KIT",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5179918/5750829"
+        },
+        "partssource": {
+          "name": "NEW CRADLE WHEEL KIT",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5179918"
+        },
+        "block": {
+          "name": "Cradle Wheel Set Of 6",
+          "url": "https://www.blockimaging.com/parts/5179918-ge-mri-cradle-wheel-set-of-6"
+        }
+      }
+    },
+    {
+      "sequence": 18,
+      "id": "SC7808FFB244E1",
+      "partNumber": "5177062-20",
+      "normalizedPartNumber": "517706220",
+      "name": "HDV Control Panel Kit",
+      "machine": "Discovery MR750 3.0T",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5177062-20-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMjk5NXxpbWFnZS9qcGVnfGFHVXpMMmd6WXk4NU56SXpNalU0TVRReU56VXdMelV4Tnpjd05qSXRNakJmTVM1cWNHVm58YzlhZWEzMmY0ZThiODhkMzlmMzA5NjY3ZGVkNmNjYWU3YTI4NWIzOGYyNzUxNmI0OGU2OGEyYWFkYjQ3MjA1Mg",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5177062-20",
+        "imagePartNumber": "5177062-20",
+        "localPath": "data/MRI/GE/common-images/SC7808FFB244E1.jpg",
+        "storagePath": "Parts/SC7808FFB244E1/SC7808FFB244E1.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "HI-DEF VIDEO CONTROL PANEL",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5177062-20/5750827"
+        },
+        "partssource": {
+          "name": "CONTROL PANEL KIT WITH ALL OVERLAYS HIGH DEFINITION VIDEO FOR DISCOVERY 750 3.0T WU_0755 MRI SYSTEM",
+          "url": "https://www.partssource.com/parts/ge-healthcare/517706220"
+        },
+        "block": {
+          "name": "Hdv Control Panel",
+          "url": "https://www.blockimaging.com/parts/5177062-20-ge-mri-hdv-control-panel"
+        }
+      }
+    },
+    {
+      "sequence": 19,
+      "id": "SCA79783759390",
+      "partNumber": "5176921",
+      "normalizedPartNumber": "5176921",
+      "name": "Gradient Amplifier Assembly",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://pmimagingmgmt.com/wp-content/uploads/2023/04/IMG_8581-scaled.jpg",
+        "source": "PM Imaging Management",
+        "page": "https://pmimagingmgmt.com/product/hfa-gradient-amplifier-5176921/",
+        "imagePartNumber": "5176921",
+        "localPath": "data/MRI/GE/common-images/SCA79783759390.jpg",
+        "storagePath": "Parts/SCA79783759390/SCA79783759390.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "GRADIENT HFA ASSEMBLY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5176921/5750826"
+        },
+        "partssource": {
+          "name": "GRADIENT AMP",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5176921"
+        },
+        "block": {
+          "name": "Gradient Amplifier",
+          "url": "https://www.blockimaging.com/parts/5176921-ge-mri-gradient-amplifier"
+        }
+      }
+    },
+    {
+      "sequence": 20,
+      "id": "SC24F9D7691718",
+      "partNumber": "5174169",
+      "normalizedPartNumber": "5174169",
+      "name": "HDV Remote Receiver Module",
+      "machine": "Discovery MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5174169-1.jpg?context=bWFzdGVyfGltYWdlc3wxMDgwN3xpbWFnZS9qcGVnfGFEWXhMMmcxT1M4NU9EYzFNalk0TnprMk5EUTJMelV4TnpReE5qbGZNUzVxY0djfGJjMGNlNTIxMzA1YzU2NzBmYzdlZjQyMzNlYmZiNTUxOTk3Y2E1YTZiYzk3YTFhNGFmODAzYmJhNjY5NjcwYTA",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5174169",
+        "imagePartNumber": "5174169",
+        "localPath": "data/MRI/GE/common-images/SC24F9D7691718.jpg",
+        "storagePath": "Parts/SC24F9D7691718/SC24F9D7691718.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "HDv Remtore Receiver Module",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5174169/5750820"
+        },
+        "partssource": {
+          "name": "RECEIVER MODULE HDV REMOTE FOR DISCOVERY MRI SYSTEM",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5174169"
+        },
+        "block": {
+          "name": "Hdv Remtore Receiver Module",
+          "url": "https://www.blockimaging.com/parts/5174169-ge-mri-hdv-remtore-receiver-module"
+        }
+      }
+    },
+    {
+      "sequence": 21,
+      "id": "SC03A915B0AC3E",
+      "partNumber": "5167035",
+      "normalizedPartNumber": "5167035",
+      "name": "CAN Fiber Optic DVMR Assembly",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5167035-51-1.jpeg?context=bWFzdGVyfHJvb3R8MTAyMjkyfGltYWdlL2pwZWd8YUdFeEwyZ3pNeTg1TnpFNU1ETTRPREF6T1RrNEx6VXhOamN3TXpVdE5URmZNUzVxY0dWbnw3ZmE0YzE5OTJlZjhiZTYyM2Y4NzY0YTJjYzg0YmVjYjE5ZmE3YzhjMDE0ODc2MzMwOWYyMjdkNDYyOTgxZTFi",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5167035-51",
+        "imagePartNumber": "5167035-51",
+        "note": "Official GE exact-replacement photo for 5167035.",
+        "localPath": "data/MRI/GE/common-images/SC03A915B0AC3E.jpg",
+        "storagePath": "Parts/SC03A915B0AC3E/SC03A915B0AC3E.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "CAN FO DVMR ASSEMBLY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5167035/5750815"
+        },
+        "partssource": {
+          "name": "ASSEMBLY CAN FO DVMR",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5167035"
+        },
+        "block": {
+          "name": "Can Fo DVMR Assembly",
+          "url": "https://www.blockimaging.com/parts/5167035-ge-mri-can-fo-dvmr-assembly"
+        }
+      }
+    },
+    {
+      "sequence": 22,
+      "id": "SC7744C1BF5AC3",
+      "partNumber": "5165957-51",
+      "normalizedPartNumber": "516595751",
+      "name": "128-to-32 Channel TDM Assembly",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5165957-51-1.jpeg?context=bWFzdGVyfHJvb3R8NjcyNzZ8aW1hZ2UvanBlZ3xhR0ppTDJnMk15ODVOekl6TnpnME5UWXdOamN3THpVeE5qVTVOVGN0TlRGZk1TNXFjR1ZufDNiYTdiY2M1NTBiYjRmMmZiM2ZiYzIzNGZlMjFjZDgxNzczODZlOTdiMWNmOWQzZmM4OWRkZmQzZmQ3NDdiMzk",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5165957-51",
+        "imagePartNumber": "5165957-51",
+        "localPath": "data/MRI/GE/common-images/SC7744C1BF5AC3.jpg",
+        "storagePath": "Parts/SC7744C1BF5AC3/SC7744C1BF5AC3.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "128 to",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5165957-51/5750812"
+        },
+        "partssource": {
+          "name": "DEPOPULATE TDM ASSEMBLY FROM 128 TO 32 CHANNELS ROHS",
+          "url": "https://www.partssource.com/parts/ge-healthcare/516595751"
+        },
+        "block": {
+          "name": "128 To 32 Channel Depoplutate Tdm Rohs Assembly",
+          "url": "https://www.blockimaging.com/parts/5165957-51-ge-mri-128-to-32-channel-depoplutate-tdm-rohs-assembly"
+        }
+      }
+    },
+    {
+      "sequence": 23,
+      "id": "SC3CCEB3C09503",
+      "partNumber": "5160929-2",
+      "normalizedPartNumber": "51609292",
+      "name": "SRI4 Remote Intercom Board 3",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5160929-2.jpeg?context=bWFzdGVyfHJvb3R8Mjk1Nzd8aW1hZ2UvanBlZ3xhRGhrTDJoa1pTODVOelExTnpFd01ESXlOamcyTHpVeE5qQTVNamt0TWk1cWNHVm58MmMzMGU3YTUwZWY3MGMyNWI1YTEzMjFjOWE5YWMxZWJiOWRlMmIxYzk1YTVlZGIzZDQ4NGU2NjgwZDFmZjlmMQ",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5160929-2",
+        "imagePartNumber": "5160929-2",
+        "localPath": "data/MRI/GE/common-images/SC3CCEB3C09503.jpg",
+        "storagePath": "Parts/SC3CCEB3C09503/SC3CCEB3C09503.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "SRI4 with Remote Intercom Board 3",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5160929-2/5750806"
+        },
+        "partssource": {
+          "name": "SRI4 WITH REMOTE INTERCOM BOARD 3 5160929-2",
+          "url": "https://www.partssource.com/parts/ge-healthcare/51609292"
+        },
+        "block": {
+          "name": "SRI4 With Remote Intercom Board 3",
+          "url": "https://www.blockimaging.com/parts/5160929-2-ge-mri-sri4-with-remote-intercom-board-3"
+        }
+      }
+    },
+    {
+      "sequence": 24,
+      "id": "SC0E4F90929E07",
+      "partNumber": "5154662",
+      "normalizedPartNumber": "5154662",
+      "name": "HDV 1.5T Reference Clock and Narrow Band Exciter Module",
+      "machine": "Signa HD / HDx 1.5T",
+      "image": {
+        "url": "https://store.dex.com/cdn/shop/files/hdv-15t-reference-clock-and-nb-exciter-module-105981454-medical-ge-healthcare-666009.jpg?v=1720146704",
+        "source": "DEX",
+        "page": "https://store.dex.com/products/hdv-1-5t-reference-clock-and-nb-exciter-module-105981454",
+        "imagePartNumber": "5154662",
+        "localPath": "data/MRI/GE/common-images/SC0E4F90929E07.jpg",
+        "storagePath": "Parts/SC0E4F90929E07/SC0E4F90929E07.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "CLOCK, NB EXCITER MODULE",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5154662/5750801"
+        },
+        "partssource": {
+          "name": "HDV 1.5T REFERENCE CLOCK AND NARROW BAND EXCITER MODULE",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5154662"
+        },
+        "block": {
+          "name": "Hdv 1 5T Reference Clock And Nb Exciter Assembly",
+          "url": "https://www.blockimaging.com/parts/5154662-ge-mri-hdv-1-5t-reference-clock-and-nb-exciter-assembly"
+        }
+      }
+    },
+    {
+      "sequence": 25,
+      "id": "SC700BEE3C8E0A",
+      "partNumber": "5151531",
+      "normalizedPartNumber": "5151531",
+      "name": "DCERD2 4-Channel Receiver with Firmware",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5151531-1.jpeg?context=bWFzdGVyfHJvb3R8MTU5NDA4fGltYWdlL2pwZWd8YUdFMkwyZzBNQzg1TnpRMU56QTRPVGMwTVRFd0x6VXhOVEUxTXpGZk1TNXFjR1ZufDA0MzU3YWVhMzY0ZjlhMDI0YjEwMTk5MjZiNzExNzFjOWJmMzViYzc2N2VmZDMwNDkyZTMxMTkyNTIzODZmOGI",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5151531",
+        "imagePartNumber": "5151531",
+        "localPath": "data/MRI/GE/common-images/SC700BEE3C8E0A.jpg",
+        "storagePath": "Parts/SC700BEE3C8E0A/SC700BEE3C8E0A.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "DCERD2 4CH RCVR",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5151531/5750798"
+        },
+        "partssource": {
+          "name": "DCERD2 4-CHANNEL RCVR WITH FIRMWARE",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5151531"
+        },
+        "block": {
+          "name": "DCERD2 4CH Receiver With Firmware",
+          "url": "https://www.blockimaging.com/parts/5151531-ge-mri-dcerd2-4ch-receiver-with-firmware"
+        }
+      }
+    },
+    {
+      "sequence": 26,
+      "id": "SC54B482F2507A",
+      "partNumber": "5148389-2",
+      "normalizedPartNumber": "51483892",
+      "name": "MR SCIM Operator Control Module",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5393370-2.jpeg?context=bWFzdGVyfHJvb3R8MjE2MTR8aW1hZ2UvanBlZ3xhRE0wTDJnMVlTODVOekl5T1RRMk16ZzNPVGs0THpVek9UTXpOekF0TWk1cWNHVm58MWVkOGM4MWJkMzk3NGE0OTgzYWMwZjc2YzNlNGRmMGNmZDg0MWE0OTU4ZDI0MmNlMTUyY2QzNTc5MzI3YjYxNA",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5148389-2",
+        "imagePartNumber": "5393370-2",
+        "note": "Official GE photo for the replacement SCIM part number shown for 5148389-2.",
+        "localPath": "data/MRI/GE/common-images/SC54B482F2507A.jpg",
+        "storagePath": "Parts/SC54B482F2507A/SC54B482F2507A.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "MR SCIM",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5148389-2/5750795"
+        },
+        "partssource": {
+          "name": "MR SCIM-BLACK WITH ENGLISH OVERLAY",
+          "url": "https://www.partssource.com/parts/ge-healthcare/51483892"
+        },
+        "block": {
+          "name": "Mr Scim",
+          "url": "https://www.blockimaging.com/parts/5148389-2-ge-mri-mr-scim"
+        }
+      }
+    },
+    {
+      "sequence": 27,
+      "id": "SC72AF06D02630",
+      "partNumber": "5146875",
+      "normalizedPartNumber": "5146875",
+      "name": "GP3 Assembly",
+      "machine": "GE 1.5T MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5146875-1.jpeg?context=bWFzdGVyfGltYWdlc3wxNDIyNXxpbWFnZS9qcGVnfGFEazNMMmhtWkM4NU56SXpNalE0TkRRek5ESXlMelV4TkRZNE56VmZNUzVxY0dWbnw2ZDQwM2RlZWUxODUzNTQxODljMjMxNjdkYTQxZmM1ZmE3OWI0ZmMxZjU3YWY0ZjdmMzg1OTc1ZjM3NzA5Y2Mw",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5146875",
+        "imagePartNumber": "5146875",
+        "localPath": "data/MRI/GE/common-images/SC72AF06D02630.jpg",
+        "storagePath": "Parts/SC72AF06D02630/SC72AF06D02630.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "GP3",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5146875/5750790"
+        },
+        "partssource": {
+          "name": "GP3 ASSEMBLY FOR VALUE1.5T",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5146875"
+        },
+        "block": {
+          "name": "GP3",
+          "url": "https://www.blockimaging.com/parts/5146875-ge-mri-gp3"
+        }
+      }
+    },
+    {
+      "sequence": 28,
+      "id": "SC1372B47302D8",
+      "partNumber": "5138527",
+      "normalizedPartNumber": "5138527",
+      "name": "Patient Handling Power Supply Lite",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5138527-1.jpeg?context=bWFzdGVyfHJvb3R8MTI5NTd8aW1hZ2UvanBlZ3xhR1ZoTDJnd015ODVOekkwTXpFME5UZ3pNRGN3THpVeE16ZzFNamRmTVM1cWNHVm58MDlkNmFlYjM5N2RjNTQ4ZTA1N2Q4ZmZmMzVkOWY4NjI2MDRlNjg0MzA3YTY0MjBkYmQxODFlMzM5OTFlMzBhYg",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/5138527",
+        "imagePartNumber": "5138527",
+        "localPath": "data/MRI/GE/common-images/SC1372B47302D8.jpg",
+        "storagePath": "Parts/SC1372B47302D8/SC1372B47302D8.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "PHPS LITE",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5138527/5750770"
+        },
+        "partssource": {
+          "name": "PATIENT HANDLING POWER SUPPLY LITE",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5138527"
+        },
+        "block": {
+          "name": "Phps Lite",
+          "url": "https://www.blockimaging.com/parts/5138527-ge-mri-phps-lite"
+        }
+      }
+    },
+    {
+      "sequence": 29,
+      "id": "SC906F3873B149",
+      "partNumber": "5135723",
+      "normalizedPartNumber": "5135723",
+      "name": "Power Distribution Unit Control Board",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5135723-1.jpeg?context=bWFzdGVyfHJvb3R8OTk2MHxpbWFnZS9qcGVnfGFERXhMMmczT0M4NU56STBNekV6TWpjeU16VXdMelV4TXpVM01qTmZNUzVxY0dWbnxmODI0Y2NiZTJhOGUxNzUxODlmMDM0NzE5OTZjZmVmMDIxN2U4NDViZmVmNWJlYzMwYzVkZTE1YzVkZTgzYWFh",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5135723",
+        "imagePartNumber": "5135723",
+        "localPath": "data/MRI/GE/common-images/SC906F3873B149.jpg",
+        "storagePath": "Parts/SC906F3873B149/SC906F3873B149.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "PDU CONTROL BOARD",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5135723/5750760"
+        },
+        "partssource": {
+          "name": "POWER DISTRIBUTION UNIT PCB",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5135723"
+        },
+        "block": {
+          "name": "Pdu Control Board",
+          "url": "https://www.blockimaging.com/parts/5135723-ge-mri-pdu-control-board"
+        }
+      }
+    },
+    {
+      "sequence": 30,
+      "id": "SC8C4668C998E0",
+      "partNumber": "5116657",
+      "normalizedPartNumber": "5116657",
+      "name": "SCSI Tower",
+      "machine": "Signa Excite",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/2381744-1.jpeg?context=bWFzdGVyfGltYWdlc3wxNDA1M3xpbWFnZS9qcGVnfGFHWm1MMmd6TUM4NU56SXlOamM0TnpjeE56UXlMekl6T0RFM05EUmZNUzVxY0dWbnwxZDliNWI3YmY3M2E2YTZlZTk0MTYzYWQxZWZmNzU4M2M2YmZkMjA2NWVhOTA1MTI3OWMyNzM0MDYxYjRlZTdi",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/p/2381744",
+        "imagePartNumber": "2381744",
+        "note": "Official GE photo for documented alternate SCSI tower part number 2381744.",
+        "localPath": "data/MRI/GE/common-images/SC8C4668C998E0.jpg",
+        "storagePath": "Parts/SC8C4668C998E0/SC8C4668C998E0.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "SCSI Tower MRI",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5116657/5750718"
+        },
+        "partssource": {
+          "name": "SCSI TOWER",
+          "url": "https://www.partssource.com/parts/ge-healthcare/5116657"
+        },
+        "block": {
+          "name": "Scsi Tower",
+          "url": "https://www.blockimaging.com/parts/5116657-ge-mri-scsi-tower"
+        }
+      }
+    },
+    {
+      "sequence": 31,
+      "id": "SC025C79065B21",
+      "partNumber": "5112668-2",
+      "normalizedPartNumber": "51126682",
+      "name": "Physiological Acquisition Controller with Vector Gating",
+      "machine": "GE MRI",
+      "image": {
+        "url": "https://services.gehealthcare.com/medias/5112668-2.jpeg?context=bWFzdGVyfHJvb3R8MjcyMDd8aW1hZ2UvanBlZ3xhR00xTDJoaVlpODVOelExTnpBeU9UUTBOems0THpVeE1USTJOamd0TWk1cWNHVm58YWU4OTM1ODE0M2QxOGYzZjA4NzZmZGMzZDNiN2JkMTdiY2QyZDQyODY5YjNjMmVmMGI0ZDBjYjZjMjJiOTg4Yw",
+        "source": "GE HealthCare Service Shop",
+        "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5112668-2",
+        "imagePartNumber": "5112668-2",
+        "localPath": "data/MRI/GE/common-images/SC025C79065B21.jpg",
+        "storagePath": "Parts/SC025C79065B21/SC025C79065B21.jpg"
+      },
+      "sources": {
+        "dotmed": {
+          "name": "PAC ASSEMBLY",
+          "url": "https://www.dotmed.com/listing/mri-scanner/ge/various/5112668-2/5750701"
+        },
+        "partssource": {
+          "name": "PHYSIOLOGICAL ACQUISITION CONTROLLER WITH VECTOR GATING",
+          "url": "https://www.partssource.com/parts/ge-healthcare/51126682"
+        },
+        "block": {
+          "name": "Pac Assembly",
+          "url": "https://www.blockimaging.com/parts/5112668-2-ge-mri-pac-assembly"
+        }
+      }
+    }
+  ],
+  "liveResult": {
+    "verifiedAt": "2026-07-17T21:10:35.537Z",
+    "imported": 28,
+    "preserved": 3,
+    "records": [
+      {
+        "partNumber": "5911000-8",
+        "status": "preexisting-preserved",
+        "catalogId": "9f3c17403456"
+      },
+      {
+        "partNumber": "5438959",
+        "status": "imported",
+        "catalogId": "SCC59D11091232",
+        "imagePath": "Parts/SCC59D11091232/SCC59D11091232.jpg"
+      },
+      {
+        "partNumber": "5393370-2",
+        "status": "imported",
+        "catalogId": "SCE0650F8D6785",
+        "imagePath": "Parts/SCE0650F8D6785/SCE0650F8D6785.jpg"
+      },
+      {
+        "partNumber": "5371622-2",
+        "status": "preexisting-preserved",
+        "catalogId": "703bdf4bf4ee"
+      },
+      {
+        "partNumber": "5351002",
+        "status": "imported",
+        "catalogId": "SC3A8D204F6356",
+        "imagePath": "Parts/SC3A8D204F6356/SC3A8D204F6356.jpg"
+      },
+      {
+        "partNumber": "5343347",
+        "status": "imported",
+        "catalogId": "SC7AC0895364F8",
+        "imagePath": "Parts/SC7AC0895364F8/SC7AC0895364F8.jpg"
+      },
+      {
+        "partNumber": "5342680",
+        "status": "imported",
+        "catalogId": "SC9236B5FE2860",
+        "imagePath": "Parts/SC9236B5FE2860/SC9236B5FE2860.jpg"
+      },
+      {
+        "partNumber": "5342679",
+        "status": "imported",
+        "catalogId": "SC11168C24BA8D",
+        "imagePath": "Parts/SC11168C24BA8D/SC11168C24BA8D.jpg"
+      },
+      {
+        "partNumber": "5309197",
+        "status": "imported",
+        "catalogId": "SCC68C17B8FF25",
+        "imagePath": "Parts/SCC68C17B8FF25/SCC68C17B8FF25.jpg"
+      },
+      {
+        "partNumber": "5250214",
+        "status": "imported",
+        "catalogId": "SC2EBB049DE4E2",
+        "imagePath": "Parts/SC2EBB049DE4E2/SC2EBB049DE4E2.jpg"
+      },
+      {
+        "partNumber": "5250122",
+        "status": "imported",
+        "catalogId": "SC344B5D19C719",
+        "imagePath": "Parts/SC344B5D19C719/SC344B5D19C719.jpg"
+      },
+      {
+        "partNumber": "5250106",
+        "status": "imported",
+        "catalogId": "SC294829C8494A",
+        "imagePath": "Parts/SC294829C8494A/SC294829C8494A.jpg"
+      },
+      {
+        "partNumber": "5250066",
+        "status": "imported",
+        "catalogId": "SC5A112952497D",
+        "imagePath": "Parts/SC5A112952497D/SC5A112952497D.jpg"
+      },
+      {
+        "partNumber": "5250028",
+        "status": "imported",
+        "catalogId": "SC0C4E43CE16DC",
+        "imagePath": "Parts/SC0C4E43CE16DC/SC0C4E43CE16DC.jpg"
+      },
+      {
+        "partNumber": "5215012",
+        "status": "imported",
+        "catalogId": "SCDD2267856A93",
+        "imagePath": "Parts/SCDD2267856A93/SCDD2267856A93.jpg"
+      },
+      {
+        "partNumber": "5196918",
+        "status": "imported",
+        "catalogId": "SCE3EF3FFCB715",
+        "imagePath": "Parts/SCE3EF3FFCB715/SCE3EF3FFCB715.jpg"
+      },
+      {
+        "partNumber": "5179918",
+        "status": "preexisting-preserved",
+        "catalogId": "80b6862bc76b"
+      },
+      {
+        "partNumber": "5177062-20",
+        "status": "imported",
+        "catalogId": "SC7808FFB244E1",
+        "imagePath": "Parts/SC7808FFB244E1/SC7808FFB244E1.jpg"
+      },
+      {
+        "partNumber": "5176921",
+        "status": "imported",
+        "catalogId": "SCA79783759390",
+        "imagePath": "Parts/SCA79783759390/SCA79783759390.jpg"
+      },
+      {
+        "partNumber": "5174169",
+        "status": "imported",
+        "catalogId": "SC24F9D7691718",
+        "imagePath": "Parts/SC24F9D7691718/SC24F9D7691718.jpg"
+      },
+      {
+        "partNumber": "5167035",
+        "status": "imported",
+        "catalogId": "SC03A915B0AC3E",
+        "imagePath": "Parts/SC03A915B0AC3E/SC03A915B0AC3E.jpg"
+      },
+      {
+        "partNumber": "5165957-51",
+        "status": "imported",
+        "catalogId": "SC7744C1BF5AC3",
+        "imagePath": "Parts/SC7744C1BF5AC3/SC7744C1BF5AC3.jpg"
+      },
+      {
+        "partNumber": "5160929-2",
+        "status": "imported",
+        "catalogId": "SC3CCEB3C09503",
+        "imagePath": "Parts/SC3CCEB3C09503/SC3CCEB3C09503.jpg"
+      },
+      {
+        "partNumber": "5154662",
+        "status": "imported",
+        "catalogId": "SC0E4F90929E07",
+        "imagePath": "Parts/SC0E4F90929E07/SC0E4F90929E07.jpg"
+      },
+      {
+        "partNumber": "5151531",
+        "status": "imported",
+        "catalogId": "SC700BEE3C8E0A",
+        "imagePath": "Parts/SC700BEE3C8E0A/SC700BEE3C8E0A.jpg"
+      },
+      {
+        "partNumber": "5148389-2",
+        "status": "imported",
+        "catalogId": "SC54B482F2507A",
+        "imagePath": "Parts/SC54B482F2507A/SC54B482F2507A.jpg"
+      },
+      {
+        "partNumber": "5146875",
+        "status": "imported",
+        "catalogId": "SC72AF06D02630",
+        "imagePath": "Parts/SC72AF06D02630/SC72AF06D02630.jpg"
+      },
+      {
+        "partNumber": "5138527",
+        "status": "imported",
+        "catalogId": "SC1372B47302D8",
+        "imagePath": "Parts/SC1372B47302D8/SC1372B47302D8.jpg"
+      },
+      {
+        "partNumber": "5135723",
+        "status": "imported",
+        "catalogId": "SC906F3873B149",
+        "imagePath": "Parts/SC906F3873B149/SC906F3873B149.jpg"
+      },
+      {
+        "partNumber": "5116657",
+        "status": "imported",
+        "catalogId": "SC8C4668C998E0",
+        "imagePath": "Parts/SC8C4668C998E0/SC8C4668C998E0.jpg"
+      },
+      {
+        "partNumber": "5112668-2",
+        "status": "imported",
+        "catalogId": "SC025C79065B21",
+        "imagePath": "Parts/SC025C79065B21/SC025C79065B21.jpg"
+      }
+    ]
+  }
+}

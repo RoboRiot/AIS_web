@@ -1,0 +1,197 @@
+{
+  "reviewedAt": "2026-07-17T23:30:00.000Z",
+  "reviewMethod": "Exact product images were checked across DOTmed, PartsSource, and Block Imaging first. Watermarked and placeholder images were rejected. Clean official GE or exact third-party product photos were selected as fallbacks.",
+  "images": {
+    "5112668-2": {
+      "url": "https://services.gehealthcare.com/medias/5112668-2.jpeg?context=bWFzdGVyfHJvb3R8MjcyMDd8aW1hZ2UvanBlZ3xhR00xTDJoaVlpODVOelExTnpBeU9UUTBOems0THpVeE1USTJOamd0TWk1cWNHVm58YWU4OTM1ODE0M2QxOGYzZjA4NzZmZGMzZDNiN2JkMTdiY2QyZDQyODY5YjNjMmVmMGI0ZDBjYjZjMjJiOTg4Yw",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5112668-2",
+      "imagePartNumber": "5112668-2"
+    },
+    "5116657": {
+      "url": "https://services.gehealthcare.com/medias/2381744-1.jpeg?context=bWFzdGVyfGltYWdlc3wxNDA1M3xpbWFnZS9qcGVnfGFHWm1MMmd6TUM4NU56SXlOamM0TnpjeE56UXlMekl6T0RFM05EUmZNUzVxY0dWbnwxZDliNWI3YmY3M2E2YTZlZTk0MTYzYWQxZWZmNzU4M2M2YmZkMjA2NWVhOTA1MTI3OWMyNzM0MDYxYjRlZTdi",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/2381744",
+      "imagePartNumber": "2381744",
+      "note": "Official GE photo for documented alternate SCSI tower part number 2381744."
+    },
+    "5135723": {
+      "url": "https://services.gehealthcare.com/medias/5135723-1.jpeg?context=bWFzdGVyfHJvb3R8OTk2MHxpbWFnZS9qcGVnfGFERXhMMmczT0M4NU56STBNekV6TWpjeU16VXdMelV4TXpVM01qTmZNUzVxY0dWbnxmODI0Y2NiZTJhOGUxNzUxODlmMDM0NzE5OTZjZmVmMDIxN2U4NDViZmVmNWJlYzMwYzVkZTE1YzVkZTgzYWFh",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5135723",
+      "imagePartNumber": "5135723"
+    },
+    "5138527": {
+      "url": "https://services.gehealthcare.com/medias/5138527-1.jpeg?context=bWFzdGVyfHJvb3R8MTI5NTd8aW1hZ2UvanBlZ3xhR1ZoTDJnd015ODVOekkwTXpFME5UZ3pNRGN3THpVeE16ZzFNamRmTVM1cWNHVm58MDlkNmFlYjM5N2RjNTQ4ZTA1N2Q4ZmZmMzVkOWY4NjI2MDRlNjg0MzA3YTY0MjBkYmQxODFlMzM5OTFlMzBhYg",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5138527",
+      "imagePartNumber": "5138527"
+    },
+    "5146875": {
+      "url": "https://services.gehealthcare.com/medias/5146875-1.jpeg?context=bWFzdGVyfGltYWdlc3wxNDIyNXxpbWFnZS9qcGVnfGFEazNMMmhtWkM4NU56SXpNalE0TkRRek5ESXlMelV4TkRZNE56VmZNUzVxY0dWbnw2ZDQwM2RlZWUxODUzNTQxODljMjMxNjdkYTQxZmM1ZmE3OWI0ZmMxZjU3YWY0ZjdmMzg1OTc1ZjM3NzA5Y2Mw",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5146875",
+      "imagePartNumber": "5146875"
+    },
+    "5148389-2": {
+      "url": "https://services.gehealthcare.com/medias/5393370-2.jpeg?context=bWFzdGVyfHJvb3R8MjE2MTR8aW1hZ2UvanBlZ3xhRE0wTDJnMVlTODVOekl5T1RRMk16ZzNPVGs0THpVek9UTXpOekF0TWk1cWNHVm58MWVkOGM4MWJkMzk3NGE0OTgzYWMwZjc2YzNlNGRmMGNmZDg0MWE0OTU4ZDI0MmNlMTUyY2QzNTc5MzI3YjYxNA",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5148389-2",
+      "imagePartNumber": "5393370-2",
+      "note": "Official GE photo for the replacement SCIM part number shown for 5148389-2."
+    },
+    "5151531": {
+      "url": "https://services.gehealthcare.com/medias/5151531-1.jpeg?context=bWFzdGVyfHJvb3R8MTU5NDA4fGltYWdlL2pwZWd8YUdFMkwyZzBNQzg1TnpRMU56QTRPVGMwTVRFd0x6VXhOVEUxTXpGZk1TNXFjR1ZufDA0MzU3YWVhMzY0ZjlhMDI0YjEwMTk5MjZiNzExNzFjOWJmMzViYzc2N2VmZDMwNDkyZTMxMTkyNTIzODZmOGI",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5151531",
+      "imagePartNumber": "5151531"
+    },
+    "5154662": {
+      "url": "https://store.dex.com/cdn/shop/files/hdv-15t-reference-clock-and-nb-exciter-module-105981454-medical-ge-healthcare-666009.jpg?v=1720146704",
+      "source": "DEX",
+      "page": "https://store.dex.com/products/hdv-1-5t-reference-clock-and-nb-exciter-module-105981454",
+      "imagePartNumber": "5154662"
+    },
+    "5160929-2": {
+      "url": "https://services.gehealthcare.com/medias/5160929-2.jpeg?context=bWFzdGVyfHJvb3R8Mjk1Nzd8aW1hZ2UvanBlZ3xhRGhrTDJoa1pTODVOelExTnpFd01ESXlOamcyTHpVeE5qQTVNamt0TWk1cWNHVm58MmMzMGU3YTUwZWY3MGMyNWI1YTEzMjFjOWE5YWMxZWJiOWRlMmIxYzk1YTVlZGIzZDQ4NGU2NjgwZDFmZjlmMQ",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5160929-2",
+      "imagePartNumber": "5160929-2"
+    },
+    "5165957-51": {
+      "url": "https://services.gehealthcare.com/medias/5165957-51-1.jpeg?context=bWFzdGVyfHJvb3R8NjcyNzZ8aW1hZ2UvanBlZ3xhR0ppTDJnMk15ODVOekl6TnpnME5UWXdOamN3THpVeE5qVTVOVGN0TlRGZk1TNXFjR1ZufDNiYTdiY2M1NTBiYjRmMmZiM2ZiYzIzNGZlMjFjZDgxNzczODZlOTdiMWNmOWQzZmM4OWRkZmQzZmQ3NDdiMzk",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5165957-51",
+      "imagePartNumber": "5165957-51"
+    },
+    "5167035": {
+      "url": "https://services.gehealthcare.com/medias/5167035-51-1.jpeg?context=bWFzdGVyfHJvb3R8MTAyMjkyfGltYWdlL2pwZWd8YUdFeEwyZ3pNeTg1TnpFNU1ETTRPREF6T1RrNEx6VXhOamN3TXpVdE5URmZNUzVxY0dWbnw3ZmE0YzE5OTJlZjhiZTYyM2Y4NzY0YTJjYzg0YmVjYjE5ZmE3YzhjMDE0ODc2MzMwOWYyMjdkNDYyOTgxZTFi",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5167035-51",
+      "imagePartNumber": "5167035-51",
+      "note": "Official GE exact-replacement photo for 5167035."
+    },
+    "5174169": {
+      "url": "https://services.gehealthcare.com/medias/5174169-1.jpg?context=bWFzdGVyfGltYWdlc3wxMDgwN3xpbWFnZS9qcGVnfGFEWXhMMmcxT1M4NU9EYzFNalk0TnprMk5EUTJMelV4TnpReE5qbGZNUzVxY0djfGJjMGNlNTIxMzA1YzU2NzBmYzdlZjQyMzNlYmZiNTUxOTk3Y2E1YTZiYzk3YTFhNGFmODAzYmJhNjY5NjcwYTA",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5174169",
+      "imagePartNumber": "5174169"
+    },
+    "5176921": {
+      "url": "https://pmimagingmgmt.com/wp-content/uploads/2023/04/IMG_8581-scaled.jpg",
+      "source": "PM Imaging Management",
+      "page": "https://pmimagingmgmt.com/product/hfa-gradient-amplifier-5176921/",
+      "imagePartNumber": "5176921"
+    },
+    "5177062-20": {
+      "url": "https://services.gehealthcare.com/medias/5177062-20-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMjk5NXxpbWFnZS9qcGVnfGFHVXpMMmd6WXk4NU56SXpNalU0TVRReU56VXdMelV4Tnpjd05qSXRNakJmTVM1cWNHVm58YzlhZWEzMmY0ZThiODhkMzlmMzA5NjY3ZGVkNmNjYWU3YTI4NWIzOGYyNzUxNmI0OGU2OGEyYWFkYjQ3MjA1Mg",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5177062-20",
+      "imagePartNumber": "5177062-20"
+    },
+    "5179918": {
+      "url": "https://services.gehealthcare.com/medias/5179918-1.jpeg?context=bWFzdGVyfHJvb3R8NDExNTB8aW1hZ2UvanBlZ3xhRFF6TDJnMk9DODVOekkwTXpNME5EUXdORGM0THpVeE56azVNVGhmTVM1cWNHVm58OTdiYjhiZmE4ZmFlYjBkMjZkNmY1MDI2N2VlYWY2OWZmMTcxMTkwY2M1NmQ5YTRiM2IwNDdkOTI2MzkwYzgxZg",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5179918",
+      "imagePartNumber": "5179918"
+    },
+    "5196918": {
+      "url": "https://services.gehealthcare.com/medias/5196918-2-1.jpeg?context=bWFzdGVyfHJvb3R8MTAyMDU3fGltYWdlL2pwZWd8YURRd0wyZzBaUzg1TnpFNU1EUTFNakkyTlRJMkx6VXhPVFk1TVRndE1sOHhMbXB3WldjfGNiYzdkY2JjYmUzZTAzMjMzNDI3NmQ1MjZiZWZlYzU2YTUzYjdiZjJkNmIyZTFlZmQ1YmIxNDliYmQxNGZlZDU",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5196918",
+      "imagePartNumber": "5196918-2",
+      "note": "Official GE exact-replacement photo for 5196918."
+    },
+    "5215012": {
+      "url": "https://services.gehealthcare.com/medias/5215012-1.jpeg?context=bWFzdGVyfHJvb3R8NzcxMzN8aW1hZ2UvanBlZ3xhRGt4TDJoak9DODVOekkwTXpReE9ERXpNamM0THpVeU1UVXdNVEpmTVM1cWNHVm58YmEzYmFhZjE0NzIxYTFjMDdlMzc1ODAyMDBlYmY3ZjA2MzA5NTJhMzZlNjBlNWE4NGE5ZWYyYTk4NzczZWM1NQ",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5215012",
+      "imagePartNumber": "5215012"
+    },
+    "5250028": {
+      "url": "https://services.gehealthcare.com/medias/5250028-2-1.jpeg?context=bWFzdGVyfHJvb3R8MTAxOTgzfGltYWdlL2pwZWd8YUdOaUwyaGpNQzg1TnpJMU9EY3hNRFl6TURjd0x6VXlOVEF3TWpndE1sOHhMbXB3WldjfDljY2UwOTI2ZmViOTc2YjliODhjYjQwMzhiZjQ0ZTVhNjRjOWE1YTA0OGRiODNhMTZkMDI5ZjI3ZWU3MDk1NWQ",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5250028",
+      "imagePartNumber": "5250028-2",
+      "note": "Official GE exact-replacement photo for 5250028."
+    },
+    "5250066": {
+      "url": "https://services.gehealthcare.com/medias/5250066-1.jpeg?context=bWFzdGVyfGltYWdlc3w5NzU3fGltYWdlL2pwZWd8YURKakwyZzROaTg1TnpJeU9URXdOak00TVRFd0x6VXlOVEF3TmpaZk1TNXFjR1ZufDA1ZWIzNzExMjE0Mjg5Y2YwYTkzN2I0NDFlMTZiZjEwYjViZTRjZTE5ZGRjMzE5OWE3ZGRhMWY1ZjA4YWM4M2Q",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5250066",
+      "imagePartNumber": "5250066"
+    },
+    "5250106": {
+      "url": "https://services.gehealthcare.com/medias/5250106.jpeg?context=bWFzdGVyfHJvb3R8MjY3Njl8aW1hZ2UvanBlZ3xhR015TDJnNE5TODVOekl5T1RFd05qY3dPRGM0THpVeU5UQXhNRFl1YW5CbFp3fGVjZWI4MTA5YTdjMzdjZTEyOGQyOTM4M2Y1N2VjYTBhNGZlODJjYmNiNWRlMjg4ODIwMzMzNDFiNzdiMTVlN2Y",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5250106",
+      "imagePartNumber": "5250106"
+    },
+    "5250122": {
+      "url": "https://services.gehealthcare.com/medias/5250122-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMTQ5OTZ8aW1hZ2UvanBlZ3xhRFZoTDJoa01DODVOekl6TnprME5ESXpPRE00THpVeU5UQXhNakpmTVM1cWNHVm58YjEyMWZkZjI0OTU3YzAzMzM1YjEwYzQzNTBlMTJiOWZhMDNhY2YwZTAxOTBlZTg0ZWJmOGRhZTQwMGNjMmU2Zg",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5250122",
+      "imagePartNumber": "5250122"
+    },
+    "5250214": {
+      "url": "https://services.gehealthcare.com/medias/5250214-1.jpeg?context=bWFzdGVyfHJvb3R8ODkzMXxpbWFnZS9qcGVnfGFESTRMMmhqWXk4NU56STBNelEyTWpBME1Ua3dMelV5TlRBeU1UUmZNUzVxY0dWbnw5ZWQxMDBiZmIwODZlMmUyZmFlZTg5Zjk5OWU1NzBkMzY4M2MyMzQ1ODUzZmFlZDAzY2VjMjVlODk0MmM2NzVm",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5250214",
+      "imagePartNumber": "5250214"
+    },
+    "5309197": {
+      "url": "https://services.gehealthcare.com/medias/5309197-1.jpeg?context=bWFzdGVyfHJvb3R8ODMwOHxpbWFnZS9qcGVnfGFERTFMMmhpT0M4NU56SXpOems1TmpZMk56RTRMelV6TURreE9UZGZNUzVxY0dWbnw4NmY0MzIwYTVjOTEwMGQ0YjlmODJjNmU0ZjA1Yzg1NWJiMTU3YzQ2N2M3ODY1Y2YxY2Y3OTcyN2M5ZjI0NzE2",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5309197",
+      "imagePartNumber": "5309197"
+    },
+    "5342679": {
+      "url": "https://services.gehealthcare.com/medias/5342679-1.jpeg?context=bWFzdGVyfGltYWdlc3w3Nzc4fGltYWdlL2pwZWd8YURjMEwyaGhaaTg1TnpJeU9UTTBNVE15TnpZMkx6VXpOREkyTnpsZk1TNXFjR1ZufDUxZTYwN2RiOWVmOTJlMmM4ZmFhOTJiMmNkNmM5NmJjNzUxZGFkNzgzNTdkODJlZDFjNGI3MjY5NzFhMjQ2MjI",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5342679",
+      "imagePartNumber": "5342679"
+    },
+    "5342680": {
+      "url": "https://services.gehealthcare.com/medias/5342680-1.jpeg?context=bWFzdGVyfHJvb3R8NzUxNHxpbWFnZS9qcGVnfGFHWmlMMmcxWkM4NU56SXlPVE16T0Rjd05qSXlMelV6TkRJMk9EQmZNUzVxY0dWbnwxMWQ3NDVkMmJiMTEwMTliNGYwYmI2MTJlZDYxODY1MzczNTU5Y2E0ZGFhOGU2NjVkYjhhNDRlYjQ4MmEyZGI4",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5342680",
+      "imagePartNumber": "5342680"
+    },
+    "5343347": {
+      "url": "https://services.gehealthcare.com/medias/5343347-1.jpeg?context=bWFzdGVyfGltYWdlc3w4MjUyfGltYWdlL2pwZWd8YUdNeEwyaGpNQzg1TnpJeU9UTTBOalUzTURVMEx6VXpORE16TkRkZk1TNXFjR1ZufDQyZjhiZjdhYzY3ZDdjYzk3ZDM4YjNmMTNiMGQxZjVlMWUzYzNjNjRkZWFiYTk1Yzg5MzE3NzI5MzVhOTFlMGI",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5343347",
+      "imagePartNumber": "5343347"
+    },
+    "5351002": {
+      "url": "https://services.gehealthcare.com/medias/5351002-1.jpeg?context=bWFzdGVyfHJvb3R8ODk3N3xpbWFnZS9qcGVnfGFEYzBMMmczTlM4NU56SXlPVE0yTXprek56VTRMelV6TlRFd01ESmZNUzVxY0dWbnw1Yjc5MDUzZTI2NzkxYzBhYTA5ZWFjOGE4YmU2OTRhOGI4MmI4ZWVjYmM1YjA1ZTQ5YmQxMjMwNWQwZDM5MDcy",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5351002",
+      "imagePartNumber": "5351002"
+    },
+    "5371622-2": {
+      "url": "https://services.gehealthcare.com/medias/5371622-2-1.jpeg?context=bWFzdGVyfGltYWdlc3wxMDA3N3xpbWFnZS9qcGVnfGFERTRMMmhpTXk4NU56SXlPVFF5TXprd016QXlMelV6TnpFMk1qSXRNbDh4TG1wd1pXY3wwZDZkOWMxNjkyNTZiMGM5OWY0ODk5ZWE2NTg0YzJhYWQ4ZDk4MDE3OWNhZGVjZWM2ODA5ZWU2MWZhZjZkYjMz",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5371622-2",
+      "imagePartNumber": "5371622-2"
+    },
+    "5393370-2": {
+      "url": "https://services.gehealthcare.com/medias/5393370-2.jpeg?context=bWFzdGVyfHJvb3R8MjE2MTR8aW1hZ2UvanBlZ3xhRE0wTDJnMVlTODVOekl5T1RRMk16ZzNPVGs0THpVek9UTXpOekF0TWk1cWNHVm58MWVkOGM4MWJkMzk3NGE0OTgzYWMwZjc2YzNlNGRmMGNmZDg0MWE0OTU4ZDI0MmNlMTUyY2QzNTc5MzI3YjYxNA",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/p/5393370-2",
+      "imagePartNumber": "5393370-2"
+    },
+    "5438959": {
+      "url": "https://services.gehealthcare.com/medias/5438959.jpeg?context=bWFzdGVyfGltYWdlc3wxMzkyMHxpbWFnZS9qcGVnfGFEazRMMmhqTkM4NU56UTFOek13TVRReU1qTTRMelUwTXpnNU5Ua3VhbkJsWnd8NzZmZjAwMzhhNTA2YjJhNmRiOTNmNjY0MGQ0MDg3MTBiZjUxN2M5ZGE4ZmVjOWMxOGFmMmRjNTUwMmQ5NzliYw",
+      "source": "GE HealthCare Service Shop",
+      "page": "https://services.gehealthcare.com/gehcstorefront/c/Parts?q=5438959",
+      "imagePartNumber": "5438959"
+    },
+    "5911000-8": {
+      "url": "https://pmimagingmgmt.com/wp-content/uploads/2023/02/IMG_7437-scaled.jpg",
+      "source": "PM Imaging Management",
+      "page": "https://pmimagingmgmt.com/product/icn-sun-x4170-5911000-8/",
+      "imagePartNumber": "5911000-8"
+    }
+  }
+}

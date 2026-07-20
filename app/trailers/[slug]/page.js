@@ -10,6 +10,7 @@ import {
   trailerLandingPages,
   serviceLandingPages,
 } from "@/app/data/serviceLandingPages";
+import { getTrailerImages } from "@/app/data/trailerImages";
 import styles from "@/app/services/landingPage.module.scss";
 
 export const revalidate = 3600;
@@ -42,6 +43,7 @@ export default function TrailerLandingPage({ params }) {
   const page = getTrailerLandingPage(params.slug);
   if (!page) notFound();
 
+  const trailerImages = getTrailerImages(page.slug);
   const brandLabel = page.brand || "Mobile";
   const modelCoverage = page.modelCoverage || [];
   const modelCoverageItems = modelCoverage.flatMap((group) => group.models);
@@ -69,6 +71,12 @@ export default function TrailerLandingPage({ params }) {
       title: "Support",
       text: "Back the trailer rental with technical service planning and parts coordination where needed.",
     },
+  ];
+  const rentalUseCaseDescriptions = [
+    "Plan around scanner downtime, project schedules, site readiness, and the clinical capacity your team needs to maintain.",
+    "Choose interim coverage sized for the expected term, patient volume, and transition back to your permanent system.",
+    "Coordinate technical support, uptime communication, and response planning throughout the rental period.",
+    "Align equipment availability, delivery sequencing, site access, and replacement-parts support before deployment.",
   ];
   const fleetPricing = [
     ["GE HDxt", "$25,000"],
@@ -150,7 +158,7 @@ export default function TrailerLandingPage({ params }) {
                 <a href="#related">Related Pages</a>
               </nav>
             </article>
-            <TrailerImageCarousel title={page.h1} />
+            <TrailerImageCarousel title={page.h1} galleryKey={page.slug} slides={trailerImages} />
           </div>
         </div>
       </section>
@@ -164,8 +172,7 @@ export default function TrailerLandingPage({ params }) {
                 <p className={styles.sectionCopy}>
                   Mobile MRI trailer programs are built around 1.5T systems, so this list focuses on the
                   {` ${brandLabel} MRI platforms`} that fit mobile rental, lease availability, replacement coverage, and
-                  trailer service searches. Higher-field {brandLabel} 3.0T and 7T systems are handled on our {brandLabel} MRI
-                  service page instead.
+                  trailer service searches.
                 </p>
               </div>
               <aside className={styles.modelStats} aria-label={`${brandLabel} MRI model coverage summary`}>
@@ -234,7 +241,10 @@ export default function TrailerLandingPage({ params }) {
               <article key={point} className={styles.systemTile}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{point}</h3>
-                <p>Rental planning with service communication, uptime support, and deployment timing in mind.</p>
+                <p>
+                  {rentalUseCaseDescriptions[index] ||
+                    "Coordinate rental timing, site requirements, and service support around your clinical schedule."}
+                </p>
               </article>
             ))}
           </div>

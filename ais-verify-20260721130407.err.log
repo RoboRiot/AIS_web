@@ -1,0 +1,52 @@
+Lead submission failed: Error: Invalid JSON request.
+    at w (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\parts\search\route.js:1:5455)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async c (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\lead\route.js:1:3107)
+    at async C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38411
+    at async e_.execute (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:27880)
+    at async e_.handle (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:39943)
+    at async doRender (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1588:28)
+    at async NextNodeServer.renderToResponseWithComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1496:28)
+    at async NextNodeServer.renderPageComponent (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1924:24) {
+  statusCode: 400
+}
+Lead submission failed: Error: Request is too large.
+    at w (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\parts\search\route.js:1:5239)
+    at c (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\lead\route.js:1:3121)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19) {
+  statusCode: 413
+}
+Website analytics event failed: Error: Invalid JSON request.
+    at w (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\parts\search\route.js:1:5455)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async l (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\analytics\route.js:1:2425)
+    at async C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38411
+    at async e_.execute (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:27880)
+    at async e_.handle (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:39943)
+    at async doRender (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1588:28)
+    at async NextNodeServer.renderToResponseWithComponentsImpl (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1496:28)
+    at async NextNodeServer.renderPageComponent (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\base-server.js:1924:24) {
+  statusCode: 400
+}
+Website analytics event failed: Error: Request is too large.
+    at w (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\parts\search\route.js:1:5239)
+    at l (C:\Users\mack2\Desktop\AIS_web\.next\server\app\api\analytics\route.js:1:2439)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mack2\Desktop\AIS_web\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19) {
+  statusCode: 413
+}

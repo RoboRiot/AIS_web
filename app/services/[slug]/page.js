@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
-import serviceImage from "@/public/assets/images/e-mri.jpg";
-import MriServiceCarousel from "./MriServiceCarousel";
+import ServiceImageCarousel from "./ServiceImageCarousel";
 import { BASE_URL } from "@/app/data/seoProducts";
+import { getServiceImages } from "@/app/data/serviceImages";
 import {
   getServiceLandingPage,
   serviceLandingPages,
@@ -42,7 +41,7 @@ export default function ServiceLandingPage({ params }) {
   if (!page) notFound();
 
   const brandLabel = page.brand || "Imaging";
-  const isMriPage = page.modality === "mri";
+  const serviceImages = getServiceImages(page);
   const modelCoverage = page.modelCoverage || [];
   const modelCoverageItems = modelCoverage.flatMap((group) => group.models);
   const relatedServices = serviceLandingPages.filter((item) => {
@@ -119,7 +118,7 @@ export default function ServiceLandingPage({ params }) {
               <h2 className={styles.title}>{page.h1}</h2>
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
-                <Link href="/contact" className="simple-btn">Request Service</Link>
+                <Link href={`/contact?inquiry=service&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Request Service</Link>
                 <Link href="/services">View All Services</Link>
               </div>
               <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
@@ -129,13 +128,7 @@ export default function ServiceLandingPage({ params }) {
                 <a href="#related">Related Pages</a>
               </nav>
             </article>
-            {isMriPage ? (
-              <MriServiceCarousel title={page.h1} />
-            ) : (
-              <figure className={styles.figure}>
-                <Image src={serviceImage} alt={`${page.h1} engineers and imaging equipment support`} priority />
-              </figure>
-            )}
+            <ServiceImageCarousel title={page.h1} slides={serviceImages} />
           </div>
         </div>
       </section>
@@ -153,10 +146,6 @@ export default function ServiceLandingPage({ params }) {
                   they are not candidates for mobile trailer deployment.
                 </p>
               </div>
-              <aside className={styles.modelStats} aria-label={`${brandLabel} MRI service model coverage summary`}>
-                <strong>{modelCoverageItems.length}</strong>
-                <span>{brandLabel} MRI service model names represented</span>
-              </aside>
             </div>
             <div className={`${styles.modelGroups} ${modelCoverage.length === 1 ? styles.modelGroupsSingle : ""}`}>
               {modelCoverage.map((group) => (

@@ -1,0 +1,3045 @@
+{
+  "generatedAt": "2026-07-21T18:09:02.182Z",
+  "projectId": "magmo-ac10c",
+  "policy": {
+    "testRemoval": "Non-AIS ID, visible=false, and exact same ID already present in Parts.",
+    "duplicateWinner": "AIS ID with image, then any image-bearing record, then AIS ID, then most complete record."
+  },
+  "before": {
+    "test": 3316,
+    "parts": 325
+  },
+  "testRemovalCandidates": [
+    {
+      "id": "0087b172fa6f",
+      "name": "BREAST ARRAY COIL",
+      "pn": "2246360",
+      "visible": false,
+      "websiteIds": [
+        "0087b172fa6f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0dc37133db8f",
+      "name": "power brush tip set for HSDCD slipring",
+      "pn": "2245479",
+      "visible": false,
+      "websiteIds": [
+        "0dc37133db8f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0de42e009071",
+      "name": "RoHS Helios Filter Assembly FRU",
+      "pn": "6426307",
+      "visible": false,
+      "websiteIds": [
+        "0de42e009071"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0ece60c393ab",
+      "name": "Hercules Heat Exchanger Power Supply Assembly with Cover, part numbers and",
+      "pn": "5151365",
+      "visible": false,
+      "websiteIds": [
+        "0ece60c393ab"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0f04c41f1adc",
+      "name": "STC BOARD",
+      "pn": "14390544",
+      "visible": false,
+      "websiteIds": [
+        "0f04c41f1adc"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0f1bc422dd0b",
+      "name": "VCT DIFB PWA",
+      "pn": "5955048",
+      "visible": false,
+      "websiteIds": [
+        "0f1bc422dd0b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0f794eb65008",
+      "name": "Signal Interface Board",
+      "pn": "5128204",
+      "visible": false,
+      "websiteIds": [
+        "0f794eb65008"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0f7fc86d4d79",
+      "name": "HPOWER GTFR",
+      "pn": "2340233",
+      "visible": false,
+      "websiteIds": [
+        "0f7fc86d4d79"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "0fb5612eaccc",
+      "name": "4 Slice PCI Dip",
+      "pn": "2378286",
+      "visible": false,
+      "websiteIds": [
+        "0fb5612eaccc"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "10070d4debe9",
+      "name": "Detector Cable -8",
+      "pn": "2306369-8",
+      "visible": false,
+      "websiteIds": [
+        "10070d4debe9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "1024d6b24c61",
+      "name": "-2 Absolute Encoder",
+      "pn": "5122207-2",
+      "visible": false,
+      "websiteIds": [
+        "1024d6b24c61"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "10e9838aa641",
+      "name": "NEW ARM BOARD BUMPERS FRU KITFOR HD",
+      "pn": "5257698",
+      "visible": false,
+      "websiteIds": [
+        "10e9838aa641"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "11255",
+      "name": "Exciter 2",
+      "pn": "2361471",
+      "visible": false,
+      "websiteIds": [
+        "11255"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "11395385fd14",
+      "name": "KGTSP PX77-",
+      "pn": "PX77-96262",
+      "visible": false,
+      "websiteIds": [
+        "11395385fd14"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "1242c9ecae99",
+      "name": "PWB, MHR FC PX74-",
+      "pn": "PX74-06047",
+      "visible": false,
+      "websiteIds": [
+        "1242c9ecae99",
+        "AIS30707"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "12a3a1b2d8ac",
+      "name": "EXCITE III DVD-RW UPGRADE KIT",
+      "pn": "5119212",
+      "visible": false,
+      "websiteIds": [
+        "12a3a1b2d8ac"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "12b1780ff99d",
+      "name": "HELIOS 02 TO SIDE BULKHEAD",
+      "pn": "2191422",
+      "visible": false,
+      "websiteIds": [
+        "12b1780ff99d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "149f1419b840",
+      "name": "ECG-IF PX77-",
+      "pn": "PX77-96871",
+      "visible": false,
+      "websiteIds": [
+        "149f1419b840"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "15a09ac7e854",
+      "name": "4QO8",
+      "pn": "2297574",
+      "visible": false,
+      "websiteIds": [
+        "15a09ac7e854"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "1ba963141b0b",
+      "name": "16 Slice Dip",
+      "pn": "2326523",
+      "visible": false,
+      "websiteIds": [
+        "1ba963141b0b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "1ca86ade0485",
+      "name": "GCIFA PX79-",
+      "pn": "PX79-08651",
+      "visible": false,
+      "websiteIds": [
+        "1ca86ade0485"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "1db775068fcf",
+      "name": "MDAS CONVERTER CARD",
+      "pn": "2258273",
+      "visible": false,
+      "websiteIds": [
+        "1db775068fcf"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "21d2a59a55e8",
+      "name": "GFI CIRCUIT BREAKER",
+      "pn": "5126460",
+      "visible": false,
+      "websiteIds": [
+        "21d2a59a55e8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "231faf935387",
+      "name": "MDAS PCI DIP",
+      "pn": "2363229",
+      "visible": false,
+      "websiteIds": [
+        "231faf935387"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "237843e9850e",
+      "name": "GEAR 16 MM 46-282359P2",
+      "pn": "46-282359P2",
+      "visible": false,
+      "websiteIds": [
+        "237843e9850e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "24683bbcf681",
+      "name": "RSV5 PM43-",
+      "pn": "PM43-08044",
+      "visible": false,
+      "websiteIds": [
+        "24683bbcf681"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "27d589acc666",
+      "name": "SS/ADIS PX74-",
+      "pn": "PX74-08902",
+      "visible": false,
+      "websiteIds": [
+        "27d589acc666"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "281d210ce35c",
+      "name": "H2/HPOWER SIGNAL BRUSH KIT SET OF 4",
+      "pn": "5270886",
+      "visible": false,
+      "websiteIds": [
+        "281d210ce35c"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "289346678c09",
+      "name": "160GB HD -19",
+      "pn": "2368697-19",
+      "visible": false,
+      "websiteIds": [
+        "289346678c09"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2ac5ec376a43",
+      "name": "SIGNAL BRUSH TIP COLLECTOR FOR H-PWR",
+      "pn": "2349604",
+      "visible": false,
+      "websiteIds": [
+        "2ac5ec376a43"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2ac75c88bbc2",
+      "name": "P9237SB SV AMP",
+      "pn": "2241899",
+      "visible": false,
+      "websiteIds": [
+        "2ac75c88bbc2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2acf5cd7ce78",
+      "name": "BRACKET 46-296004P1",
+      "pn": "46-296004P1",
+      "visible": false,
+      "websiteIds": [
+        "2acf5cd7ce78"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2d2d65981619",
+      "name": "FUSE 25 AMPS VOLTS 2.5M SECONDS -2",
+      "pn": "2336517-2",
+      "visible": false,
+      "websiteIds": [
+        "2d2d65981619"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2dd21d9192fa",
+      "name": "SDAS -5VDC power supply",
+      "pn": "2218158",
+      "visible": false,
+      "websiteIds": [
+        "2dd21d9192fa"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "2f265ce36177",
+      "name": "QV2 PWB BSX73-0978E",
+      "pn": "BSX73-0978E",
+      "visible": false,
+      "websiteIds": [
+        "2f265ce36177"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3.47787E+11",
+      "name": "BRAKE ASSY, H2 AX DRIVE MOTOR",
+      "pn": "2277225",
+      "visible": false,
+      "websiteIds": [
+        "3.47787E+11"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "30f4b2b1745f",
+      "name": "HSDCD Slipring Antenna",
+      "pn": "2245897",
+      "visible": false,
+      "websiteIds": [
+        "30f4b2b1745f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "319a328d9788",
+      "name": "HV CABLE -3",
+      "pn": "2201185-3",
+      "visible": false,
+      "websiteIds": [
+        "319a328d9788"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "324f00c393b9",
+      "name": "HP-DAS CONVERTER BOARD",
+      "pn": "2102234",
+      "visible": false,
+      "websiteIds": [
+        "324f00c393b9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "32b4141cab36",
+      "name": "Mid Power Inverter",
+      "pn": "2215814",
+      "visible": false,
+      "websiteIds": [
+        "32b4141cab36"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "363ca7c5c2d7",
+      "name": "TGPHD BOARD ASSY",
+      "pn": "5370000",
+      "visible": false,
+      "websiteIds": [
+        "363ca7c5c2d7"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "36fa64030b18",
+      "name": "P9231ZR FRONT PNL ASSY -2",
+      "pn": "2136996-2",
+      "visible": false,
+      "websiteIds": [
+        "36fa64030b18"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "37d9a47267e9",
+      "name": "P9401XE ETC2 Assembly",
+      "pn": "2122223",
+      "visible": false,
+      "websiteIds": [
+        "37d9a47267e9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "38746163b1e6",
+      "name": "S-DAS2 Controller Board BSX73-0979E",
+      "pn": "BSX73-0979E",
+      "visible": false,
+      "websiteIds": [
+        "38746163b1e6"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "38cbf39bfab4",
+      "name": "OPCONTM PWB PX79-",
+      "pn": "PX79-07205",
+      "visible": false,
+      "websiteIds": [
+        "38cbf39bfab4"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "39abd5a86486",
+      "name": "PROPORTIOAL VALVE ASSY Positoning GT -4",
+      "pn": "5127284-4",
+      "visible": false,
+      "websiteIds": [
+        "39abd5a86486"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3a8138615a0a",
+      "name": "ETC Board 46-264368G1",
+      "pn": "46-264368G1",
+      "visible": false,
+      "websiteIds": [
+        "3a8138615a0a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3b78d93d12d2",
+      "name": "POWER SUPPLY – GE IMAGE IDENSIFIER 46-302316P2",
+      "pn": "46-302316P2",
+      "visible": false,
+      "websiteIds": [
+        "3b78d93d12d2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3c00dfa56d1e",
+      "name": "-4 Jedi H4 MP HV tank",
+      "pn": "2266521-4",
+      "visible": false,
+      "websiteIds": [
+        "3c00dfa56d1e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3cb8df304fce",
+      "name": "200A FUSE",
+      "pn": "2351492",
+      "visible": false,
+      "websiteIds": [
+        "3cb8df304fce"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "3da70e75a6f1",
+      "name": "TS_IMS_RIGHT Positioning GT",
+      "pn": "5120577",
+      "visible": false,
+      "websiteIds": [
+        "3da70e75a6f1"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "41424fa31433",
+      "name": "REMOTE INTERCOM II BOARD",
+      "pn": "6250012",
+      "visible": false,
+      "websiteIds": [
+        "41424fa31433"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "427e2e4d3f51",
+      "name": "PX79- KGTSM",
+      "pn": "11147",
+      "visible": false,
+      "websiteIds": [
+        "427e2e4d3f51"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "44a64d1ec847",
+      "name": "Digital Detector",
+      "pn": "5206399",
+      "visible": false,
+      "websiteIds": [
+        "44a64d1ec847"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "45a5876551ba",
+      "name": "Three Button Optical Mouse",
+      "pn": "5132092",
+      "visible": false,
+      "websiteIds": [
+        "45a5876551ba"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "463d38d2254e",
+      "name": "ROTATING BUFFER PWB",
+      "pn": "2118208",
+      "visible": false,
+      "websiteIds": [
+        "463d38d2254e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "46ad25e19498",
+      "name": "P9225UT DRIVER",
+      "pn": "2135540",
+      "visible": false,
+      "websiteIds": [
+        "46ad25e19498"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4952bf0afff5",
+      "name": "VCT Collimator MDrive 23 Motor",
+      "pn": "5240986",
+      "visible": false,
+      "websiteIds": [
+        "4952bf0afff5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "49ff332f06d9",
+      "name": "Peripheral Tower, dual-bay, MOD-DVDram",
+      "pn": "5167410",
+      "visible": false,
+      "websiteIds": [
+        "49ff332f06d9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4a864487dab0",
+      "name": "TERMINAL SERVRER/PWR SUPPLY",
+      "pn": "2379186",
+      "visible": false,
+      "websiteIds": [
+        "4a864487dab0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4ab69629c071",
+      "name": "GTCB2 BOARD ASSY Positioning GT -3",
+      "pn": "5142177-3",
+      "visible": false,
+      "websiteIds": [
+        "4ab69629c071"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4adf2d506ab2",
+      "name": "TS MID SIDE-R ASSY positioning GT",
+      "pn": "5134666",
+      "visible": false,
+      "websiteIds": [
+        "4adf2d506ab2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4b2f59d5d9c8",
+      "name": "GTCN BOARD ASSY Positioning GT -3",
+      "pn": "5112471-3",
+      "visible": false,
+      "websiteIds": [
+        "4b2f59d5d9c8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4c671ffb6eb4",
+      "name": "GANTRY FAN AND HARNESS",
+      "pn": "5340738",
+      "visible": false,
+      "websiteIds": [
+        "4c671ffb6eb4"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4cf8a4850db0",
+      "name": "OPCONTA PX79-",
+      "pn": "PX79-11179",
+      "visible": false,
+      "websiteIds": [
+        "4cf8a4850db0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4d6251133ae0",
+      "name": "P9234YS CAM ASSY",
+      "pn": "2248943",
+      "visible": false,
+      "websiteIds": [
+        "4d6251133ae0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4fbbd371ee0a",
+      "name": "P9234YJ CIF ASSY",
+      "pn": "2169221",
+      "visible": false,
+      "websiteIds": [
+        "4fbbd371ee0a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "4fe672c28f53",
+      "name": "BALANCE SENSOR BUFFER BOARD",
+      "pn": "2354132",
+      "visible": false,
+      "websiteIds": [
+        "4fe672c28f53"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "518335fa996d",
+      "name": "PX74- Power Assembly",
+      "pn": "07690",
+      "visible": false,
+      "websiteIds": [
+        "518335fa996d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "52aa061d87c4",
+      "name": "RFIF/XLB PM42-",
+      "pn": "PM42-01406",
+      "visible": false,
+      "websiteIds": [
+        "52aa061d87c4"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "52d5378df240",
+      "name": "P9234YN DDP ASSY -3",
+      "pn": "2169223-3",
+      "visible": false,
+      "websiteIds": [
+        "52d5378df240"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "533b635fa8d6",
+      "name": "AXIAL INTERFACE 46-321139P1",
+      "pn": "46-321139P1",
+      "visible": false,
+      "websiteIds": [
+        "533b635fa8d6"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "54d12e5a9e73",
+      "name": "CABLE ASSY- SPYDER TO HORNET",
+      "pn": "5557001",
+      "visible": false,
+      "websiteIds": [
+        "54d12e5a9e73"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "54dfbe06d914",
+      "name": "BASE and CATCH FOR SELF-CATCHING LATCH -3",
+      "pn": "2222889-3",
+      "visible": false,
+      "websiteIds": [
+        "54dfbe06d914"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "55b169b88a02",
+      "name": "SHUT OFF VALVE ASSY Positoning GT",
+      "pn": "5127285",
+      "visible": false,
+      "websiteIds": [
+        "55b169b88a02"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "56a6b76327d5",
+      "name": "pre amp box 46-287124P1",
+      "pn": "46-287124P1",
+      "visible": false,
+      "websiteIds": [
+        "56a6b76327d5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "56e1226db308",
+      "name": "WGV3 PM43-",
+      "pn": "PM43-07141",
+      "visible": false,
+      "websiteIds": [
+        "56e1226db308"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "58709b57d154",
+      "name": "HV TANK",
+      "pn": "2152294",
+      "visible": false,
+      "websiteIds": [
+        "58709b57d154"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "5e7da77398f5",
+      "name": "SCSI CABLE -2",
+      "pn": "2315116-2",
+      "visible": false,
+      "websiteIds": [
+        "5e7da77398f5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "5eac3330871e",
+      "name": "TEMP SENSOR BOARD",
+      "pn": "2326192",
+      "visible": false,
+      "websiteIds": [
+        "5eac3330871e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "5fb1e4cd74dd",
+      "name": "RF MODULE FRONT FAN ASM",
+      "pn": "2336087",
+      "visible": false,
+      "websiteIds": [
+        "5fb1e4cd74dd"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "5fdfc11fb635",
+      "name": "Backplane to Backplane Cable, VCT, One ferrite",
+      "pn": "5166832",
+      "visible": false,
+      "websiteIds": [
+        "5fdfc11fb635"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "5ffa8e9f765e",
+      "name": "FUSE – V, A, FAST SEMI",
+      "pn": "2379651",
+      "visible": false,
+      "websiteIds": [
+        "5ffa8e9f765e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "62d36dacbf87",
+      "name": "HP NC360T network card",
+      "pn": "570000027",
+      "visible": false,
+      "websiteIds": [
+        "62d36dacbf87"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "642eb1a8d389",
+      "name": "ENCODER CRADLE DANAHER -3",
+      "pn": "2342727-3",
+      "visible": false,
+      "websiteIds": [
+        "642eb1a8d389"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "661122eaa4bd",
+      "name": "MDAS 5V POWER SUPPLY",
+      "pn": "2291847",
+      "visible": false,
+      "websiteIds": [
+        "661122eaa4bd"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "662abb5b2ada",
+      "name": "RF shoe assy",
+      "pn": "2168021",
+      "visible": false,
+      "websiteIds": [
+        "662abb5b2ada"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "67c6c906400d",
+      "name": "CKT BD -2",
+      "pn": "4618646-2",
+      "visible": false,
+      "websiteIds": [
+        "67c6c906400d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "68f13b2c1ee3",
+      "name": "DYNAMIC DISABLE SWITCH BOX 46-264788G1",
+      "pn": "46-264788G1",
+      "visible": false,
+      "websiteIds": [
+        "68f13b2c1ee3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "6ae4799989a3",
+      "name": "BUSSMANN KBC80 46-296221P15",
+      "pn": "46-296221P15",
+      "visible": false,
+      "websiteIds": [
+        "6ae4799989a3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "6d68562629e1",
+      "name": "BRUSH ASSY BSX77-",
+      "pn": "BSX77-3487",
+      "visible": false,
+      "websiteIds": [
+        "6d68562629e1"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "6d9c40cc4e4c",
+      "name": "CABLE FROM SIDE BULKHEAD TO BIT 3 -6",
+      "pn": "2124215-6",
+      "visible": false,
+      "websiteIds": [
+        "6d9c40cc4e4c"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "6ebe07143692",
+      "name": "FRU – GEAR-MOTOR AND CLUTCH ASSEMBLY",
+      "pn": "5134463",
+      "visible": false,
+      "websiteIds": [
+        "6ebe07143692"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "6f57055af475",
+      "name": "ETC INTERFACE",
+      "pn": "2229871",
+      "visible": false,
+      "websiteIds": [
+        "6f57055af475"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "703bdf4bf4ee",
+      "name": "B-BEZEL CABLE HARNESS HYPERTRONICS -2",
+      "pn": "5371622-2",
+      "visible": false,
+      "websiteIds": [
+        "703bdf4bf4ee"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "715c6a1006cc",
+      "name": "LOW POWER BRUSHTIP MODULE FORDRUM 1 MODULE / 4 BRUSH TIPS",
+      "pn": "2257520",
+      "visible": false,
+      "websiteIds": [
+        "715c6a1006cc"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "72289a64e0d8",
+      "name": "FUSE 20 AMPS VOLTS .3 SECONDS -5",
+      "pn": "2106993-5",
+      "visible": false,
+      "websiteIds": [
+        "72289a64e0d8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7283f15e3f18",
+      "name": "Ethernet Switch with power supply and power cord.",
+      "pn": "5270193",
+      "visible": false,
+      "websiteIds": [
+        "7283f15e3f18"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "747a79f9fede",
+      "name": "P9234WM TEMP CONT ASSY",
+      "pn": "2171572",
+      "visible": false,
+      "websiteIds": [
+        "747a79f9fede"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "756bd7d0c308",
+      "name": "Harness Top Cover DC Fans",
+      "pn": "5130600",
+      "visible": false,
+      "websiteIds": [
+        "756bd7d0c308"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "782a42ec330f",
+      "name": "Left Control",
+      "pn": "2256729",
+      "visible": false,
+      "websiteIds": [
+        "782a42ec330f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "79b06ab4b514",
+      "name": "STIF MEZZANINE BOARD",
+      "pn": "2275966",
+      "visible": false,
+      "websiteIds": [
+        "79b06ab4b514"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7a32742d0594",
+      "name": "CONSOLE IST BOARD ASSY",
+      "pn": "2217669",
+      "visible": false,
+      "websiteIds": [
+        "7a32742d0594"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7aa4615a6b0f",
+      "name": "-3 5 Connectors",
+      "pn": "2318808-3",
+      "visible": false,
+      "websiteIds": [
+        "7aa4615a6b0f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7b0f8e744c14",
+      "name": "TOTAL LOCK CASTER",
+      "pn": "2330261",
+      "visible": false,
+      "websiteIds": [
+        "7b0f8e744c14"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7db17da4c96b",
+      "name": "HERMC Interface Board",
+      "pn": "2145832",
+      "visible": false,
+      "websiteIds": [
+        "7db17da4c96b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7f03f708e7b0",
+      "name": "BOX OF FUSES",
+      "pn": "2218570",
+      "visible": false,
+      "websiteIds": [
+        "7f03f708e7b0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "7f64690ef52e",
+      "name": "Cable Assy – Exhaust Fan Power",
+      "pn": "5127629",
+      "visible": false,
+      "websiteIds": [
+        "7f64690ef52e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8.15224E+11",
+      "name": "GDAS CONVERTOR – THICK PWA",
+      "pn": "6750066",
+      "visible": false,
+      "websiteIds": [
+        "8.15224E+11"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8.67319E+11",
+      "name": "CFC ASM",
+      "pn": "5150071",
+      "visible": false,
+      "websiteIds": [
+        "8.67319E+11"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8.83919E+11",
+      "name": "46-271203P1 Latch Set",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "8.83919E+11"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "80b6862bc76b",
+      "name": "NEW CRADLE WHEEL WITH HOUSING-FRU K KIT INCLUDES 6 WHEELS/HOUSING",
+      "pn": "5179918",
+      "visible": false,
+      "websiteIds": [
+        "80b6862bc76b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "82c010cd6051",
+      "name": "WHEEL 46-243494P1",
+      "pn": "46-243494P1",
+      "visible": false,
+      "websiteIds": [
+        "82c010cd6051"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "84ff51491561",
+      "name": "Track and Cable Assy",
+      "pn": "5115097",
+      "visible": false,
+      "websiteIds": [
+        "84ff51491561"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "855f65f3c122",
+      "name": "SRM Tested Common Filter FRU",
+      "pn": "5395258",
+      "visible": false,
+      "websiteIds": [
+        "855f65f3c122"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "85a35dfca8f6",
+      "name": "Jedi Standard tank",
+      "pn": "2186730",
+      "visible": false,
+      "websiteIds": [
+        "85a35dfca8f6"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "85d218bcd693",
+      "name": "LPCA Latch Hook",
+      "pn": "5193863",
+      "visible": false,
+      "websiteIds": [
+        "85d218bcd693"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "87f76eaa7837",
+      "name": "ABB A110 Contactor",
+      "pn": "5337228",
+      "visible": false,
+      "websiteIds": [
+        "87f76eaa7837"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "87fb5886b1f3",
+      "name": "H3 PMC DIP",
+      "pn": "2259530",
+      "visible": false,
+      "websiteIds": [
+        "87fb5886b1f3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "89df5abd5b50",
+      "name": "JH4 INVERTER WITH SHIELDS -4",
+      "pn": "2281950-4",
+      "visible": false,
+      "websiteIds": [
+        "89df5abd5b50"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "89f2398b53f0",
+      "name": "H-POWER TABLE SERVO DRIVE, EMC EDITI -3",
+      "pn": "2342729-3",
+      "visible": false,
+      "websiteIds": [
+        "89f2398b53f0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8abbfbcc8557",
+      "name": "DOCK LIMIT SWITCH",
+      "pn": "5134465",
+      "visible": false,
+      "websiteIds": [
+        "8abbfbcc8557"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8c9485fdb3cf",
+      "name": "Fuse Kit, HDCT -2",
+      "pn": "5125429-2",
+      "visible": false,
+      "websiteIds": [
+        "8c9485fdb3cf"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8d5c57fbed27",
+      "name": "KEYBOARD W SCIM COLLECTOR-ENGLISH",
+      "pn": "2275758",
+      "visible": false,
+      "websiteIds": [
+        "8d5c57fbed27"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8d681b73850a",
+      "name": "-50 Bezel Cable Harness",
+      "pn": "5371622-50",
+      "visible": false,
+      "websiteIds": [
+        "8d681b73850a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "8dcbfcb187ed",
+      "name": "P9230TP HV CABLE CATHODE 2.3M",
+      "pn": "2201185",
+      "visible": false,
+      "websiteIds": [
+        "8dcbfcb187ed"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "908a7eaa5e22",
+      "name": "ELEVATION ENCODER 46-296854P2",
+      "pn": "46-296854P2",
+      "visible": false,
+      "websiteIds": [
+        "908a7eaa5e22"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9194e5886d91",
+      "name": "GCIF-D2 PWB PX74-",
+      "pn": "PX74-10473",
+      "visible": false,
+      "websiteIds": [
+        "9194e5886d91"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "937b93ab92d2",
+      "name": "ORP2 BOARD ASSY Positioning HP60 -3",
+      "pn": "2389885-3",
+      "visible": false,
+      "websiteIds": [
+        "937b93ab92d2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "93f2a1f49423",
+      "name": "CYLINDER ASSEMBLY WITH PACKING",
+      "pn": "5132700",
+      "visible": false,
+      "websiteIds": [
+        "93f2a1f49423"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9420feefb019",
+      "name": "MARS PWB PX74-",
+      "pn": "PX74-05799",
+      "visible": false,
+      "websiteIds": [
+        "9420feefb019"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9575f251d84a",
+      "name": "BRACKET – RECEIVER MOUNT",
+      "pn": "2333293",
+      "visible": false,
+      "websiteIds": [
+        "9575f251d84a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "96452493cd49",
+      "name": "LEFT SIDE CONTROL -2",
+      "pn": "2114535-2",
+      "visible": false,
+      "websiteIds": [
+        "96452493cd49"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9656307e6cff",
+      "name": "HV TANK HEMIT JEDI -2",
+      "pn": "2237336-2",
+      "visible": false,
+      "websiteIds": [
+        "9656307e6cff"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "97352cf7c8ab",
+      "name": "-31 VeRB2",
+      "pn": "5255299-31",
+      "visible": false,
+      "websiteIds": [
+        "97352cf7c8ab"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "97352cf7c8ab1",
+      "name": "Lightspeed Performix MX200 CT Tube",
+      "pn": "D3186t",
+      "visible": false,
+      "websiteIds": [
+        "97352cf7c8ab1"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9770648c71b5",
+      "name": "VME BASED POWER PC CIRCUIT BRD-H1.2 -2",
+      "pn": "2197234-2",
+      "visible": false,
+      "websiteIds": [
+        "9770648c71b5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9a0278eb17b7",
+      "name": "HEAD T/R ASSY. 46-264988G1",
+      "pn": "46-264988G1",
+      "visible": false,
+      "websiteIds": [
+        "9a0278eb17b7"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9d88ff0255b6",
+      "name": "FDIP PWA -2",
+      "pn": "5335963-2",
+      "visible": false,
+      "websiteIds": [
+        "9d88ff0255b6"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9e2f55d625f0",
+      "name": "Fan, Tube Axial – 115VAC, 50-60Hz",
+      "pn": "5124071",
+      "visible": false,
+      "websiteIds": [
+        "9e2f55d625f0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9e3c17403675",
+      "name": "-21 VDIG2",
+      "pn": "5255299-21",
+      "visible": false,
+      "websiteIds": [
+        "9e3c17403675"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9e53c6749f96",
+      "name": "48V DC Power Supply",
+      "pn": "5125186",
+      "visible": false,
+      "websiteIds": [
+        "9e53c6749f96"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9f27cda675d8",
+      "name": "46-282360P1 Long Drive Motor",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "9f27cda675d8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "9f3c17403456",
+      "name": "Image Computer Node ICN Gen 4.1 16 Channel -8",
+      "pn": "5911000-8",
+      "visible": false,
+      "websiteIds": [
+        "9f3c17403456"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a00849f01785",
+      "name": "-13 3PH Diode Bridge",
+      "pn": "2133533-13",
+      "visible": false,
+      "websiteIds": [
+        "a00849f01785"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a0acdc516232",
+      "name": "JH4 AUXILIARY EQUIPED V2",
+      "pn": "2324118",
+      "visible": false,
+      "websiteIds": [
+        "a0acdc516232"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a0bb6bcf3e9f",
+      "name": "H2/HPOWER POWER BRUSH SET OF 9",
+      "pn": "5415778",
+      "visible": false,
+      "websiteIds": [
+        "a0bb6bcf3e9f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a440225c56a2",
+      "name": "SIGNAL IF BOARD FOR H-POWER",
+      "pn": "2349591",
+      "visible": false,
+      "websiteIds": [
+        "a440225c56a2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a4d76bdfcb01",
+      "name": "SONY MOD SMO-F551-SD",
+      "pn": "2318598",
+      "visible": false,
+      "websiteIds": [
+        "a4d76bdfcb01"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a60097f343dc",
+      "name": "BSX73-0893E Converter-16",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "a60097f343dc"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a761c231a605",
+      "name": "-3 Center Digital Module Kit",
+      "pn": "5136400-3",
+      "visible": false,
+      "websiteIds": [
+        "a761c231a605"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "a986060bdc47",
+      "name": "PWB,GCIFA-D PX74-",
+      "pn": "PX74-06056",
+      "visible": false,
+      "websiteIds": [
+        "a986060bdc47"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ab844fe24b0f",
+      "name": "-2 Cable-H2 Octopus",
+      "pn": "2269874-2",
+      "visible": false,
+      "websiteIds": [
+        "ab844fe24b0f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "acdf00d35799",
+      "name": "LONGITUDINAL ENCODER ASSEMBLY -3",
+      "pn": "2269175-3",
+      "visible": false,
+      "websiteIds": [
+        "acdf00d35799"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "aebc8e927ff3",
+      "name": "GP MODULE -3",
+      "pn": "2248992-3",
+      "visible": false,
+      "websiteIds": [
+        "aebc8e927ff3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b08df67689f1",
+      "name": "GCIFM PX79-",
+      "pn": "PX79-11267",
+      "visible": false,
+      "websiteIds": [
+        "b08df67689f1"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b0e72b40b585",
+      "name": "HEMRC CONTROL BOARD -2",
+      "pn": "2179860-2",
+      "visible": false,
+      "websiteIds": [
+        "b0e72b40b585"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b2bc3de6ed58",
+      "name": "P9231VS PCI TRAY",
+      "pn": "2204424",
+      "visible": false,
+      "websiteIds": [
+        "b2bc3de6ed58"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b2ede27a56cb",
+      "name": "BSX73-*E ADC2 Board",
+      "pn": "0977",
+      "visible": false,
+      "websiteIds": [
+        "b2ede27a56cb"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b506eabe6761",
+      "name": "FOR HLA AND HSA GANTRY AXIAL MT",
+      "pn": "2102012",
+      "visible": false,
+      "websiteIds": [
+        "b506eabe6761"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b531fffb8076",
+      "name": "HELIOS_QA PHANTOM",
+      "pn": "2144715",
+      "visible": false,
+      "websiteIds": [
+        "b531fffb8076"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b5bfc512f596",
+      "name": "P9237HM RF SLIPRING RECEIVER",
+      "pn": "2167012",
+      "visible": false,
+      "websiteIds": [
+        "b5bfc512f596"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "b73f9b979f2d",
+      "name": "10Gig SFP Receiver and Antenna Assembly -2",
+      "pn": "5311645-2",
+      "visible": false,
+      "websiteIds": [
+        "b73f9b979f2d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ba20c2976db9",
+      "name": "CONTROL ASM RIGHT H2 GANTRY",
+      "pn": "2256728",
+      "visible": false,
+      "websiteIds": [
+        "ba20c2976db9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ba2f53aae048",
+      "name": "ASTEC Analog PS Assembly",
+      "pn": "5126617",
+      "visible": false,
+      "websiteIds": [
+        "ba2f53aae048"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ba4d7fe8d9cd",
+      "name": "850MB transmitter",
+      "pn": "2333615",
+      "visible": false,
+      "websiteIds": [
+        "ba4d7fe8d9cd"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "bbebb2371560",
+      "name": "46-264442G3 1.5T Preamp",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "bbebb2371560"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "bd1b36a1ab69",
+      "name": "KGTSM PX79-",
+      "pn": "PX79-11217",
+      "visible": false,
+      "websiteIds": [
+        "bd1b36a1ab69"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c001d5ead5cc",
+      "name": "OPCONTA PX79-",
+      "pn": "PX79-08650",
+      "visible": false,
+      "websiteIds": [
+        "c001d5ead5cc"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c05d43303593",
+      "name": "COLLIMATOR CONTROL BOARD",
+      "pn": "2159578",
+      "visible": false,
+      "websiteIds": [
+        "c05d43303593"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c07969d40ac9",
+      "name": "POWER SUPPLY ASSY Positioning GT",
+      "pn": "5127384",
+      "visible": false,
+      "websiteIds": [
+        "c07969d40ac9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c0ffde37b3df",
+      "name": "HELIOS SIDE BULKHEAD TO ETHER SWITCH",
+      "pn": "2199634",
+      "visible": false,
+      "websiteIds": [
+        "c0ffde37b3df"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c1afc40eafca",
+      "name": "P9233YG SUB BD ASSY -2",
+      "pn": "2156512-2",
+      "visible": false,
+      "websiteIds": [
+        "c1afc40eafca"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c2980f24881d",
+      "name": "GCIFM PWB PX79-",
+      "pn": "PX79-07206",
+      "visible": false,
+      "websiteIds": [
+        "c2980f24881d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c3c507cf7efb",
+      "name": "MDAS 16 SLICE DCB",
+      "pn": "2318704",
+      "visible": false,
+      "websiteIds": [
+        "c3c507cf7efb"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c529a0872414",
+      "name": "TS_IMS_LEFT Positioning GT",
+      "pn": "5120579",
+      "visible": false,
+      "websiteIds": [
+        "c529a0872414"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c573dd5afd2e",
+      "name": "GRCV7 PM43-",
+      "pn": "PM43-08045",
+      "visible": false,
+      "websiteIds": [
+        "c573dd5afd2e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c58651774651",
+      "name": "KGTSM AQ4 PX79-",
+      "pn": "PX79-02800",
+      "visible": false,
+      "websiteIds": [
+        "c58651774651"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c6332082538d",
+      "name": "HIGH POWER BRUSHTIP MODULE",
+      "pn": "2257517",
+      "visible": false,
+      "websiteIds": [
+        "c6332082538d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c66d09c67242",
+      "name": "P9235WG TBLCON BD ASSY",
+      "pn": "2210919",
+      "visible": false,
+      "websiteIds": [
+        "c66d09c67242"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c6ba21769dfe",
+      "name": "DCB CONTROLLER",
+      "pn": "2138468",
+      "visible": false,
+      "websiteIds": [
+        "c6ba21769dfe"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c71e14665b9a",
+      "name": "-2 ORPV Board",
+      "pn": "5115622-2",
+      "visible": false,
+      "websiteIds": [
+        "c71e14665b9a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c88ec872c533",
+      "name": "RF MODULE FRONT MOUNT FAN ASSEMBLY",
+      "pn": "2334934",
+      "visible": false,
+      "websiteIds": [
+        "c88ec872c533"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "c9b68a8eeac4",
+      "name": "LOW VOLTAGE POWER SUPPLY -6",
+      "pn": "2325360-6",
+      "visible": false,
+      "websiteIds": [
+        "c9b68a8eeac4"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ca1df3517b1b",
+      "name": "5X ENCODER – GE -4",
+      "pn": "2342727-4",
+      "visible": false,
+      "websiteIds": [
+        "ca1df3517b1b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "cb3563dde7c4",
+      "name": "GCIFM PWB PX77-",
+      "pn": "PX77-99455",
+      "visible": false,
+      "websiteIds": [
+        "cb3563dde7c4"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "cd3b5cd4c520",
+      "name": "KGTSP4 PX79-",
+      "pn": "PX79-32152",
+      "visible": false,
+      "websiteIds": [
+        "cd3b5cd4c520"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ceca6200c7aa",
+      "name": "HEAD T/R SWITCH 46-264988G2",
+      "pn": "46-264988G2",
+      "visible": false,
+      "websiteIds": [
+        "ceca6200c7aa"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "cedffbe30b1b",
+      "name": "GANTRY OPTION BOARD",
+      "pn": "2280889",
+      "visible": false,
+      "websiteIds": [
+        "cedffbe30b1b"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d01142347e1e",
+      "name": "HP INVERTER RHAPSODE",
+      "pn": "2208852",
+      "visible": false,
+      "websiteIds": [
+        "d01142347e1e"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d0bdfcb565ac",
+      "name": "S GOMU PLATE BSX71-",
+      "pn": "BSX71-0662",
+      "visible": false,
+      "websiteIds": [
+        "d0bdfcb565ac"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d1f024eb3aef",
+      "name": "X-Ray Controller PWB PX71-",
+      "pn": "PX71-07030",
+      "visible": false,
+      "websiteIds": [
+        "d1f024eb3aef"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d2c6bc8240ad",
+      "name": "SIGNAL BRUSHBLOCK – REPLACEMEN HELI",
+      "pn": "2302509",
+      "visible": false,
+      "websiteIds": [
+        "d2c6bc8240ad"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d4a98ac6f330",
+      "name": "-5 Octane Kit",
+      "pn": "2199806-5",
+      "visible": false,
+      "websiteIds": [
+        "d4a98ac6f330",
+        "temp-16"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d4da9b3f66bd",
+      "name": "SCSI CABLE, VHD68 TO CENT 50, LINUX -2",
+      "pn": "2324697-2",
+      "visible": false,
+      "websiteIds": [
+        "d4da9b3f66bd"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d4fc211747b8",
+      "name": "HV CABLE -7",
+      "pn": "5128609-7",
+      "visible": false,
+      "websiteIds": [
+        "d4fc211747b8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d5f0c4106f94",
+      "name": "KGTSM PX77-",
+      "pn": "PX77-98400",
+      "visible": false,
+      "websiteIds": [
+        "d5f0c4106f94"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d71a15d4d849",
+      "name": "-2 HD NV Array",
+      "pn": "5117092-2",
+      "visible": false,
+      "websiteIds": [
+        "d71a15d4d849"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d7defaf0d5cb",
+      "name": "Cathode Tank",
+      "pn": "2161306",
+      "visible": false,
+      "websiteIds": [
+        "d7defaf0d5cb"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d8a5516234e2",
+      "name": "Allen Bradley Drive Board Rev 01 With Language Module",
+      "pn": "4233622151",
+      "visible": false,
+      "websiteIds": [
+        "d8a5516234e2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d94bd6913802",
+      "name": "BODY COIL COOLANT",
+      "pn": "2260427",
+      "visible": false,
+      "websiteIds": [
+        "d94bd6913802"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d96dd9a0e07d",
+      "name": "ENHANCED TABLE CONTROL -8",
+      "pn": "4626436-8",
+      "visible": false,
+      "websiteIds": [
+        "d96dd9a0e07d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d9a8b1724846",
+      "name": "FLEX RIBBON",
+      "pn": "5118556",
+      "visible": false,
+      "websiteIds": [
+        "d9a8b1724846"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "d9f58cb20eab",
+      "name": "VCT 64 DIFB- Sherlock",
+      "pn": "5151006",
+      "visible": false,
+      "websiteIds": [
+        "d9f58cb20eab"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "da49c76bd160",
+      "name": "Image Generator",
+      "pn": "2362872",
+      "visible": false,
+      "websiteIds": [
+        "da49c76bd160"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "da9f4f82ae41",
+      "name": "Elevation Potentiometer",
+      "pn": "5127774",
+      "visible": false,
+      "websiteIds": [
+        "da9f4f82ae41"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "dbba0432b7f6",
+      "name": "H-POWER, AC ELEVATION MOTOR, EMC2 -2",
+      "pn": "2342733-2",
+      "visible": false,
+      "websiteIds": [
+        "dbba0432b7f6"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "dc6656cc138a",
+      "name": "46-321053P1 Stationary Terminal",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "dc6656cc138a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "dcbeb2a671ca",
+      "name": "4CH Cardiac Array",
+      "pn": "5154685",
+      "visible": false,
+      "websiteIds": [
+        "dcbeb2a671ca"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ddba4fb61233",
+      "name": "MDAS 16 ANALOG POWER SUPPLY 5V",
+      "pn": "2334455",
+      "visible": false,
+      "websiteIds": [
+        "ddba4fb61233"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e2ab8dcbe952",
+      "name": "Left CT Control Panel – Mist Gray Bezel with Green LEDs",
+      "pn": "5139590",
+      "visible": false,
+      "websiteIds": [
+        "e2ab8dcbe952"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e4316eacadf5",
+      "name": "LSCOM BOARD",
+      "pn": "2233488",
+      "visible": false,
+      "websiteIds": [
+        "e4316eacadf5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e4f4bf013fe8",
+      "name": "Light Assembly",
+      "pn": "2222547",
+      "visible": false,
+      "websiteIds": [
+        "e4f4bf013fe8"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e60cac6b7f74",
+      "name": "NEW PINCH GUARD AND ARM BOARDBUMPER",
+      "pn": "5215476",
+      "visible": false,
+      "websiteIds": [
+        "e60cac6b7f74"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e65477354677",
+      "name": "GLASS FUSE",
+      "pn": "2364059",
+      "visible": false,
+      "websiteIds": [
+        "e65477354677"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e66e191dc2d3",
+      "name": "CERVICAL ANTERIOR BRIDGE 8-CH CTL",
+      "pn": "2418267",
+      "visible": false,
+      "websiteIds": [
+        "e66e191dc2d3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e6fed50ba75d",
+      "name": "PROGRAMMED ROTATION BOARD",
+      "pn": "2242440",
+      "visible": false,
+      "websiteIds": [
+        "e6fed50ba75d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e7a82c6ba78a",
+      "name": "-2 Absolute Encoder",
+      "pn": "2342726-2",
+      "visible": false,
+      "websiteIds": [
+        "e7a82c6ba78a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e7efa173f606",
+      "name": "GTTS Positioning GT",
+      "pn": "5116570",
+      "visible": false,
+      "websiteIds": [
+        "e7efa173f606"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e801681e2818",
+      "name": "PDU CONTROL BOARD -2",
+      "pn": "2334820-2",
+      "visible": false,
+      "websiteIds": [
+        "e801681e2818"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e848f39cefe1",
+      "name": "3″ Round Coil",
+      "pn": "2127315",
+      "visible": false,
+      "websiteIds": [
+        "e848f39cefe1"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "e90a062096a7",
+      "name": "VDIP64 PWA",
+      "pn": "2382000",
+      "visible": false,
+      "websiteIds": [
+        "e90a062096a7"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ea56db895371",
+      "name": "-2 8CH NV Array",
+      "pn": "2317115-2",
+      "visible": false,
+      "websiteIds": [
+        "ea56db895371"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ed6f98f7fee3",
+      "name": "KGTSM PX79-",
+      "pn": "PX79-11215",
+      "visible": false,
+      "websiteIds": [
+        "ed6f98f7fee3"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "eeeb1bdd34b0",
+      "name": "GAS SPRING",
+      "pn": "2100671",
+      "visible": false,
+      "websiteIds": [
+        "eeeb1bdd34b0"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "ef340d99318c",
+      "name": "Scan Room Interface BOX 46-288016G6",
+      "pn": "46-288016G6",
+      "visible": false,
+      "websiteIds": [
+        "ef340d99318c"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "efbaaa3fbc9f",
+      "name": "Gantry Keypad",
+      "pn": "2330695",
+      "visible": false,
+      "websiteIds": [
+        "efbaaa3fbc9f"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f0103e342f17",
+      "name": "RFCV5 PM43-",
+      "pn": "PM43-08043",
+      "visible": false,
+      "websiteIds": [
+        "f0103e342f17"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f1002a70b12d",
+      "name": "-3 Converter Board",
+      "pn": "2137958-3",
+      "visible": false,
+      "websiteIds": [
+        "f1002a70b12d"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f2f0297a33d5",
+      "name": "ASTEC Digital PS Assembly",
+      "pn": "5126615",
+      "visible": false,
+      "websiteIds": [
+        "f2f0297a33d5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f319764ea367",
+      "name": "VCT, W1G200-HH01-52 Fan and Harness Assembly",
+      "pn": "5114588",
+      "visible": false,
+      "websiteIds": [
+        "f319764ea367"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f4b51216f2f2",
+      "name": "MDAS THIN COVERTOR CARD",
+      "pn": "2322994",
+      "visible": false,
+      "websiteIds": [
+        "f4b51216f2f2"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f51a5cc6a9df",
+      "name": "PPC, -1 WITH HAWK 3 CHIP",
+      "pn": "2339284",
+      "visible": false,
+      "websiteIds": [
+        "f51a5cc6a9df"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f70c573f3a29",
+      "name": "ELEVATION HYDRAULIC PUMP Positoning GT",
+      "pn": "5127287",
+      "visible": false,
+      "websiteIds": [
+        "f70c573f3a29"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f7dea8668768",
+      "name": "Hemit Tank",
+      "pn": "2161307",
+      "visible": false,
+      "websiteIds": [
+        "f7dea8668768"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f8be646b602a",
+      "name": "Console Network Switch",
+      "pn": "5263798",
+      "visible": false,
+      "websiteIds": [
+        "f8be646b602a"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f92863ca64d5",
+      "name": "KGTSM PX79-",
+      "pn": "PX79-07202",
+      "visible": false,
+      "websiteIds": [
+        "f92863ca64d5"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f94d251efdf9",
+      "name": "OPCONTM PX79-",
+      "pn": "PX79-11266",
+      "visible": false,
+      "websiteIds": [
+        "f94d251efdf9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f97b6f8f8400",
+      "name": "FAN TUBEAXIAL LITERS/SEC .5 M",
+      "pn": "2287974",
+      "visible": false,
+      "websiteIds": [
+        "f97b6f8f8400"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "f9cd792ffa43",
+      "name": "GOC AUDIO BOX -2",
+      "pn": "2395043-2",
+      "visible": false,
+      "websiteIds": [
+        "f9cd792ffa43"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "fa076f67a80c",
+      "name": "GDAS CONVERTER -2",
+      "pn": "5955032-2",
+      "visible": false,
+      "websiteIds": [
+        "fa076f67a80c"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "fd95de0c7fbd",
+      "name": "Right CT Control Panel – Mist Gray Bezel with Green LEDs",
+      "pn": "5139591",
+      "visible": false,
+      "websiteIds": [
+        "fd95de0c7fbd"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-10",
+      "name": "-2 Rear CN1 Assembly",
+      "pn": "2140183-2",
+      "visible": false,
+      "websiteIds": [
+        "temp-10"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-102",
+      "name": "Bsx74- Infiniband Adapter",
+      "pn": "2072",
+      "visible": false,
+      "websiteIds": [
+        "temp-102"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-112",
+      "name": "Collimator Filter Assembly GE",
+      "pn": "5335446",
+      "visible": false,
+      "websiteIds": [
+        "temp-112"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-116",
+      "name": "Coolix GE Innova Cath Lab",
+      "pn": "5416114",
+      "visible": false,
+      "websiteIds": [
+        "temp-116"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-13",
+      "name": "-2 Expander Box",
+      "pn": "2174053-2",
+      "visible": false,
+      "websiteIds": [
+        "temp-13"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-14",
+      "name": "-2 P9183XC TGP Board",
+      "pn": "2176944-2",
+      "visible": false,
+      "websiteIds": [
+        "temp-14"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-15",
+      "name": "-2 P9231WL NPRS",
+      "pn": "2177247-2",
+      "visible": false,
+      "websiteIds": [
+        "temp-15"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-154",
+      "name": "GE RT4 Mini Hercules / Snowbird CT Tube D3634T",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-154"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-16",
+      "name": "-5 2X 128MB Octane Kit",
+      "pn": "2199806-5",
+      "visible": false,
+      "websiteIds": [
+        "temp-16",
+        "d4a98ac6f330"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-189",
+      "name": "Jedi 80 Generator, GE Precision 500D",
+      "pn": "2290800",
+      "visible": false,
+      "websiteIds": [
+        "temp-189"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-20",
+      "name": "-4 18 GB Scan Data Disk Board",
+      "pn": "2225004-4",
+      "visible": false,
+      "websiteIds": [
+        "temp-20"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-203",
+      "name": "Lightspeed Performix 40 CT Tube",
+      "pn": "D3187t",
+      "visible": false,
+      "websiteIds": [
+        "temp-203"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-204",
+      "name": "Lightspeed Performix 40 Plus CT Tube – Liquid Bearing",
+      "pn": "D3887t",
+      "visible": false,
+      "websiteIds": [
+        "temp-204"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-206",
+      "name": "Lightspeed VCT64/32 MX240 CT Tube",
+      "pn": "D3194t",
+      "visible": false,
+      "websiteIds": [
+        "temp-206"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-21",
+      "name": "-3 High Voltage Tank",
+      "pn": "2241515-3",
+      "visible": false,
+      "websiteIds": [
+        "temp-21"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-218",
+      "name": "MRC ROT GS --",
+      "pn": "9890-000",
+      "visible": false,
+      "websiteIds": [
+        "temp-218",
+        "temp-219"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-219",
+      "name": "MRC ROT GS --",
+      "pn": "9890-000",
+      "visible": false,
+      "websiteIds": [
+        "temp-219",
+        "temp-218"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-249",
+      "name": "Power Supply 460W PSU CP-1289R2",
+      "pn": "CP-1289r2",
+      "visible": false,
+      "websiteIds": [
+        "temp-249"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-261",
+      "name": "Rear Tilt Sensor Assy SG, GE LightSpeed RT 4",
+      "pn": "2377277",
+      "visible": false,
+      "websiteIds": [
+        "temp-261"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-276",
+      "name": "SC-Fast HV Tank, HD750T",
+      "pn": "5332530",
+      "visible": false,
+      "websiteIds": [
+        "temp-276"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-28",
+      "name": "DAS Duct Filter Assembly",
+      "pn": "2277359",
+      "visible": false,
+      "websiteIds": [
+        "temp-28"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-290",
+      "name": "Straton Z",
+      "pn": "7737807",
+      "visible": false,
+      "websiteIds": [
+        "temp-290"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-295",
+      "name": "Toshiba Aquilion CXB750D CT Tube",
+      "pn": "CXB750D",
+      "visible": false,
+      "websiteIds": [
+        "temp-295"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-296",
+      "name": "Toshiba CXB – 400C CT Tube",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-296"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-32",
+      "name": "MB Receiver",
+      "pn": "2333611",
+      "visible": false,
+      "websiteIds": [
+        "temp-32"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-35",
+      "name": "Front Tilt Sensor",
+      "pn": "2377217",
+      "visible": false,
+      "websiteIds": [
+        "temp-35"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-36",
+      "name": "8 Channel CTL Coil",
+      "pn": "23774262",
+      "visible": false,
+      "websiteIds": [
+        "temp-36"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-39",
+      "name": "Sagital Laser Assembly",
+      "pn": "2382217",
+      "visible": false,
+      "websiteIds": [
+        "temp-39"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-40",
+      "name": "-01 Acceleport XP PCI",
+      "pn": "30004022-01",
+      "visible": false,
+      "websiteIds": [
+        "temp-40"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-41",
+      "name": "46-170021p10 Fuse",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-41"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-42",
+      "name": "46--p2 – Relay K2 Back-up Connection",
+      "pn": "186852",
+      "visible": false,
+      "websiteIds": [
+        "temp-42"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-44",
+      "name": "46-264776G1 Dynamic Disable Filter Module",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-44"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-47",
+      "name": "46-307878G1 – Hydraulic Oil Filter",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-47"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-48",
+      "name": "46-317758P18 Squeeze Bulb and Tubing",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-48"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-50",
+      "name": "46-321056G1 Stationary Buffer",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-50"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-51",
+      "name": "46-321312G3 Hybrid Splitter",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-51"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-52",
+      "name": "46288512G1 Gentry I/O Board",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-52"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-53",
+      "name": "46305000P3 Tube",
+      "pn": "51001",
+      "visible": false,
+      "websiteIds": [
+        "temp-53"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-55",
+      "name": "Detector Module",
+      "pn": "5112238",
+      "visible": false,
+      "websiteIds": [
+        "temp-55"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-56",
+      "name": "DAS I/F Board",
+      "pn": "5113710",
+      "visible": false,
+      "websiteIds": [
+        "temp-56"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-57",
+      "name": "VDAS DARC",
+      "pn": "5114523",
+      "visible": false,
+      "websiteIds": [
+        "temp-57"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-58",
+      "name": "VCT IG",
+      "pn": "5114533",
+      "visible": false,
+      "websiteIds": [
+        "temp-58"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-62",
+      "name": "Transmitter",
+      "pn": "5120815",
+      "visible": false,
+      "websiteIds": [
+        "temp-62"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-65",
+      "name": "-5 Inverter Positioning",
+      "pn": "5127381-5",
+      "visible": false,
+      "websiteIds": [
+        "temp-65"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-69",
+      "name": "-2 HD 4CH NV",
+      "pn": "5145566-2",
+      "visible": false,
+      "websiteIds": [
+        "temp-69"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-76",
+      "name": "CPU Workstation",
+      "pn": "5272650",
+      "visible": false,
+      "websiteIds": [
+        "temp-76"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-82",
+      "name": "AP Board Dual, GE Healthcare 9x -5",
+      "pn": "2222532-5",
+      "visible": false,
+      "websiteIds": [
+        "temp-82"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-83",
+      "name": "Aquilion 4 – CXL CXB750D CT Tube",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-83"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-84",
+      "name": "Aquilion ONE CXB750E CT Tube",
+      "pn": "",
+      "visible": false,
+      "websiteIds": [
+        "temp-84"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-9",
+      "name": "SDAS Card",
+      "pn": "21379582",
+      "visible": false,
+      "websiteIds": [
+        "temp-9"
+      ],
+      "exactWebsiteIdMatch": true
+    },
+    {
+      "id": "temp-98",
+      "name": "Brilliance MRC –",
+      "pn": "989000085921",
+      "visible": false,
+      "websiteIds": [
+        "temp-98"
+      ],
+      "exactWebsiteIdMatch": true
+    }
+  ],
+  "flaggedNonAisTestRecords": [
+    {
+      "id": "20598",
+      "name": "Coldhead",
+      "pn": "RDK-408L3",
+      "visible": false,
+      "websiteIds": [],
+      "exactWebsiteIdMatch": false,
+      "reasons": [
+        "not-on-website"
+      ]
+    },
+    {
+      "id": "JpOQVGOleSDwcganC0ff",
+      "name": "Interior SoCal",
+      "pn": "PHC21,PHC22,PHC23",
+      "visible": true,
+      "websiteIds": [],
+      "exactWebsiteIdMatch": false,
+      "reasons": [
+        "not-hidden",
+        "not-on-website"
+      ]
+    },
+    {
+      "id": "P5kV6vaqOUVCc55Phe1X",
+      "name": "Interior SoCal",
+      "pn": "PHC21,PHC22,PHC23",
+      "visible": true,
+      "websiteIds": [],
+      "exactWebsiteIdMatch": false,
+      "reasons": [
+        "not-hidden",
+        "not-on-website"
+      ]
+    }
+  ],
+  "duplicatePartNumberGroups": [
+    {
+      "normalizedPN": "PX7406047",
+      "winner": {
+        "id": "AIS30707",
+        "name": "BP board ",
+        "pn": "Px74-06047",
+        "usableImages": 2,
+        "tier": 4
+      },
+      "losers": [
+        {
+          "id": "1242c9ecae99",
+          "name": "PWB, MHR FC  PX74-",
+          "pn": "PX74-06047",
+          "usableImages": 1,
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "normalizedPN": "21998065",
+      "winner": {
+        "id": "d4a98ac6f330",
+        "name": "-5 Octane Kit",
+        "pn": "2199806-5",
+        "usableImages": 1,
+        "tier": 3
+      },
+      "losers": [
+        {
+          "id": "temp-16",
+          "name": "-5 2X 128MB Octane Kit",
+          "pn": "2199806-5",
+          "usableImages": 1,
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "normalizedPN": "9890000",
+      "winner": {
+        "id": "temp-219",
+        "name": "MRC   ROT GS  --",
+        "pn": "9890-000",
+        "usableImages": 5,
+        "tier": 3
+      },
+      "losers": [
+        {
+          "id": "temp-218",
+          "name": "MRC   ROT GS  --",
+          "pn": "9890-000",
+          "usableImages": 3,
+          "tier": 3
+        }
+      ]
+    }
+  ]
+}

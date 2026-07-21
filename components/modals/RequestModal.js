@@ -3,6 +3,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
+import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function RequestModal({ closeModal }) {
     const [name, setName] = useState("");
@@ -24,6 +25,7 @@ export default function RequestModal({ closeModal }) {
             setPartNumber("");
         }
         ensureRecaptchaScript(recaptchaSiteKey);
+        announceFormOpen("part_request", "product_modal");
     }, [recaptchaSiteKey]);
 
     const handleSubmit = async (e) => {
@@ -63,12 +65,17 @@ export default function RequestModal({ closeModal }) {
                 token,
                 action: "part_request",
                 formType: "part_request",
+                startedAt: formStartedAt,
+                website: honeypot,
+                context: partNumber,
             });
             setIsError(false);
+            trackWebsiteEvent("form_submit", { form_type: "part_request", context: partNumber });
             setFeedbackMessage("Thank you! We have received your message. We will contact you soon.");
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);
+            trackWebsiteEvent("form_error", { form_type: "part_request" });
             setFeedbackMessage("Error sending email. Please try again.");
         }
 
@@ -82,7 +89,7 @@ export default function RequestModal({ closeModal }) {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} data-form-type="part_request">
                 <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">

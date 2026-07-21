@@ -1,0 +1,33 @@
+{
+  "verifiedAt": "2026-07-21T18:10:36.664Z",
+  "after": {
+    "test": 3023,
+    "parts": 322
+  },
+  "removed": {
+    "test": 293,
+    "partsDuplicates": 3
+  },
+  "remainingDuplicatePNGroups": [],
+  "failedTestDeletes": [],
+  "remainingNonAisTestRecords": [
+    {
+      "id": "20598",
+      "name": "Coldhead",
+      "pn": "RDK-408L3",
+      "visible": false
+    },
+    {
+      "id": "JpOQVGOleSDwcganC0ff",
+      "name": "Interior SoCal",
+      "pn": "PHC21,PHC22,PHC23",
+      "visible": true
+    },
+    {
+      "id": "P5kV6vaqOUVCc55Phe1X",
+      "name": "Interior SoCal",
+      "pn": "PHC21,PHC22,PHC23",
+      "visible": true
+    }
+  ]
+}

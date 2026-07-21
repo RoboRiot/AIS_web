@@ -1,0 +1,68 @@
+[
+  {
+    "id": "AIS30707",
+    "data": {
+      "Description": "Good BP board that got shipped to me from Lathrop with a bunch of others",
+      "OEM": "TOSHIBA",
+      "Images": [
+        "Parts/AIS30707/AIS30707",
+        "Parts/AIS30707/AIS30707.2"
+      ],
+      "Available": true,
+      "SN": "19497510",
+      "Modality": "CT",
+      "PM": "Px74-06047",
+      "PN": "Px74-06047",
+      "Machine": "CT Aquilion 64",
+      "Name": "BP board ",
+      "PNNormalized": "PX7406047",
+      "PrimaryImage": "Parts/AIS30707/AIS30707",
+      "NameNormalized": "bp board",
+      "Slug": "bp-board-px74-06047-ais30707"
+    }
+  },
+  {
+    "id": "d4a98ac6f330",
+    "data": {
+      "Name": "-5 Octane Kit",
+      "Images": [
+        "Parts/d4a98ac6f330/d4a98ac6f330.jpg"
+      ],
+      "PN": "2199806-5",
+      "Date": "2024-12-05",
+      "OEM": "GE",
+      "Modality": "CT",
+      "Available": true,
+      "Description": "2199806-5 2 X 128 MB Octane Kit\n\n\nIn stock\n\n90 days warranty",
+      "Sold": 0,
+      "PNNormalized": "21998065",
+      "PrimaryImage": "Parts/d4a98ac6f330/d4a98ac6f330.jpg",
+      "NameNormalized": "5 octane kit",
+      "Slug": "5-octane-kit-2199806-5-d4a98ac6f330"
+    }
+  },
+  {
+    "id": "temp-219",
+    "data": {
+      "Name": "MRC   ROT GS  --",
+      "Images": [
+        "Parts/temp-219/temp-219.jpg",
+        "Parts/temp-219/temp-219.2.jpg",
+        "Parts/temp-219/temp-219.3.jpg",
+        "Parts/temp-219/temp-219.4.jpg",
+        "Parts/temp-219/temp-219.5.jpg"
+      ],
+      "PN": "9890-000",
+      "Date": "2024-12-05",
+      "OEM": "Philips",
+      "Modality": "R/F",
+      "Available": true,
+      "Description": "2013 Cath Lab Tube\n\nPart Number: 9890-000-85142\n\nSystem Model: FD-10\n\nSystem Manufacturer: Philips\n\nCategory: Cath Lab\n\n\nCall for Pricing: (800) 200-3583",
+      "Sold": 0,
+      "PNNormalized": "9890000",
+      "PrimaryImage": "Parts/temp-219/temp-219.jpg",
+      "NameNormalized": "mrc rot gs",
+      "Slug": "mrc-rot-gs-9890-000-temp-219"
+    }
+  }
+]

@@ -5,6 +5,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
+import { trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function SidebarFoundYourPart() {
     const [name, setName] = useState("");
@@ -59,12 +60,17 @@ export default function SidebarFoundYourPart() {
                 token,
                 action: "part_request",
                 formType: "part_request",
+                startedAt: formStartedAt,
+                website: honeypot,
+                context: partNumber,
             });
             setIsError(false);
+            trackWebsiteEvent("form_submit", { form_type: "part_request", context: partNumber });
             setFeedbackMessage("Thank you! We have received your message. We will contact you soon.");
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);
+            trackWebsiteEvent("form_error", { form_type: "part_request" });
             setFeedbackMessage("Error sending email. Please try again.");
         }
 
@@ -81,7 +87,7 @@ export default function SidebarFoundYourPart() {
                 <div className="container">
                     <h2>Haven’t found your item yet?</h2>
                     <p>Let us know what you are looking for.</p>
-                    <form className="flex w-100" onSubmit={handleSubmit}>
+                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request">
                         <ul className="list-none">
                             <li className="bot-field" aria-hidden="true">
                                 <label htmlFor="sidebar-part-website">Website</label>

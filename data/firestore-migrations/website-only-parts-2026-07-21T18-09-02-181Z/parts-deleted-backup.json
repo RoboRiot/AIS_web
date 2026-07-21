@@ -1,0 +1,64 @@
+[
+  {
+    "id": "1242c9ecae99",
+    "data": {
+      "Name": "PWB, MHR FC  PX74-",
+      "Images": [
+        "Parts/1242c9ecae99/1242c9ecae99.jpg"
+      ],
+      "PN": "PX74-06047",
+      "Date": "2024-12-05",
+      "OEM": "TOSHIBA",
+      "Modality": "CT",
+      "Available": true,
+      "Description": "PWB, MHR FC\n\nPart Number: PX74-06047\n\nSystem Model: Aquilion\n\nSystem Manufacturer: TOSHIBA\n\nCategory: CT Scanner\n\n\nCall for Pricing: (800) 200-3583",
+      "Sold": 0,
+      "PNNormalized": "PX7406047",
+      "PrimaryImage": "Parts/1242c9ecae99/1242c9ecae99.jpg",
+      "NameNormalized": "pwb mhr fc px74",
+      "Slug": "pwb-mhr-fc-px74-px74-06047-1242c9ecae99"
+    }
+  },
+  {
+    "id": "temp-16",
+    "data": {
+      "Name": "-5 2X 128MB Octane Kit",
+      "Images": [
+        "Parts/temp-16/temp-16.jpg"
+      ],
+      "PN": "2199806-5",
+      "Date": "2024-12-05",
+      "OEM": "GE",
+      "Modality": "CT",
+      "Available": true,
+      "Description": "2199806-5 2X 128MB Octane Kit\n\n\nIn stock\n\n90 days warranty",
+      "Sold": 0,
+      "PNNormalized": "21998065",
+      "PrimaryImage": "Parts/temp-16/temp-16.jpg",
+      "NameNormalized": "5 2x 128mb octane kit",
+      "Slug": "5-2x-128mb-octane-kit-2199806-5-temp-16"
+    }
+  },
+  {
+    "id": "temp-218",
+    "data": {
+      "Name": "MRC   ROT GS  --",
+      "Images": [
+        "Parts/temp-218/temp-218.jpg",
+        "Parts/temp-218/temp-218.2.jpg",
+        "Parts/temp-218/temp-218.3.jpg"
+      ],
+      "PN": "9890-000",
+      "Date": "2024-12-05",
+      "OEM": "Philips",
+      "Modality": "Cath Lab",
+      "Available": true,
+      "Description": "2014 Cath Lab Tube\n\nPart Number: 9890-000-85103\n\nSystem Model: FD-20\n\nSystem Manufacturer: Philips\n\nCategory: Cath Lab\n\n\nCall for Pricing: (800) 200-3583",
+      "Sold": 0,
+      "PNNormalized": "9890000",
+      "PrimaryImage": "Parts/temp-218/temp-218.jpg",
+      "NameNormalized": "mrc rot gs",
+      "Slug": "mrc-rot-gs-9890-000-temp-218"
+    }
+  }
+]

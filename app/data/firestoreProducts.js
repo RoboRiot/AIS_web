@@ -41,6 +41,32 @@ export const fetchProductById = async (id) => {
   return parseFirestoreDoc(doc);
 };
 
+export const fetchProductBySlug = async (slug) => {
+  if (!slug) return null;
+  const url = `${FIRESTORE_BASE_URL}:runQuery?key=${FIREBASE_API_KEY}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      structuredQuery: {
+        from: [{ collectionId: "Parts" }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: "Slug" },
+            op: "EQUAL",
+            value: { stringValue: slug },
+          },
+        },
+        limit: 1,
+      },
+    }),
+    next: { revalidate: 3600 },
+  });
+  if (!res.ok) return null;
+  const results = await res.json();
+  return parseFirestoreDoc(results.find((result) => result.document)?.document);
+};
+
 export const fetchAllProducts = async () => {
   const products = [];
   let pageToken = "";

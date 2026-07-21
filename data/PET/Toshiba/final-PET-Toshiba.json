@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "generatedAt": "2026-07-21T16:39:00.936Z",
+    "manufacturer": "Toshiba / Canon Medical",
+    "catalogPurpose": "Website sourcing catalog; separate from tracked inventory.",
+    "itemCount": 0,
+    "representedPartNumberCount": 0,
+    "candidateSourceRecordCount": 1872,
+    "rejectedSourceRecordCount": 26,
+    "legitimacyCounts": {},
+    "thumbnailCount": 0,
+    "missingThumbnailCount": 0,
+    "duplicateCheck": "Passed across canonical and alternate normalized part numbers.",
+    "idRule": "Existing AIS IDs are preserved; new IDs use SC plus 12 uppercase SHA-256 characters from Toshiba|canonical group.",
+    "legitimacyRule": "AIS, reviewed cross-source, official manufacturer, PartsSource, Block Imaging, and DOTmed modality records are accepted after manufacturer, part-number, and name validation.",
+    "thumbnailRule": "Known placeholders are rejected. Exact reviewed, manufacturer, AIS, and source product images are retained; missing is preferred over an unrelated image.",
+    "sourceFiles": [
+      "data/MRI/Toshiba/block-MRI-Toshiba.json",
+      "data/MRI/Toshiba/partssource-canon-MRI-Toshiba.json",
+      "data/MRI/Toshiba/partssource-MRI-Toshiba.json",
+      "data/CT/Toshiba/block-CT-Toshiba.json",
+      "data/CT/Toshiba/partssource-canon-CT-Toshiba.json",
+      "data/CT/Toshiba/partssource-CT-Toshiba.json",
+      "public/assets/data/parts.json"
+    ],
+    "modality": "PET/CT",
+    "canonicalCombinedCatalog": "data/Toshiba/final-Toshiba-catalog.json"
+  },
+  "items": []
+}

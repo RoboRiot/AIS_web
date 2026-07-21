@@ -14,7 +14,7 @@ import Link from 'next/link';
 import RequestModal from '@/components/modals/RequestModal';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { getImageUrl } from '@/components/fetchImages/Image';
+import { getPrimaryImagePath, resolveImageUrl } from '@/components/fetchImages/Image';
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
@@ -26,8 +26,6 @@ import {
     getProductPartNumbers,
     parseProductSpecs,
 } from '@/app/data/seoProducts';
-
-const IMAGE_TYPES = ['.png', '.jpg', '.jpeg', 'JPEG', 'JPG'];
 
 export default function Product({ clickedProduct }) {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -61,18 +59,22 @@ export default function Product({ clickedProduct }) {
         const processImageUrls = async () => {
             const images = [];
             const productImages = Array.isArray(clickedProduct?.Images) ? clickedProduct.Images : [];
+            const imagePaths = Array.isArray(clickedProduct?.ImagePaths) ? clickedProduct.ImagePaths : [];
+            const candidates = [...productImages, ...imagePaths];
 
-            for (const img of productImages) {
-                for (const x of IMAGE_TYPES) {
-                    const url = await getImageUrl(img.endsWith("g") ? `${img}` : `${img}${x}`);
+            if (candidates.length === 0) {
+                candidates.push(getPrimaryImagePath(clickedProduct));
+            }
 
-                    if (url && !images.includes(url)) {
-                        images.push(url);
-                    }
+            for (const imagePath of candidates) {
+                const url = await resolveImageUrl(imagePath);
+                if (url && !images.includes(url)) {
+                    images.push(url);
                 }
             }
 
-            setUniqueImages(images); // Set the unique images state with fetched URLs
+            setUniqueImages(images);
+            if (images[0]) setEnlargedImage(images[0]);
         };
 
         if (clickedProduct?.id) {

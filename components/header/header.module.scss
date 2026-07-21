@@ -134,12 +134,17 @@
     .navigation_list {
         @media (max-width: $breakpoint_tablet) {
             background-color: #F9F9FD;
+            box-shadow: 0 18px 30px rgba(0, 0, 0, 0.1);
             display: none;
             position: absolute;
+            left: 0;
             right: 0;
-            top: 66px;
+            top: 100%;
             width: 100%;
-            padding: 115px 0 35px;
+            height: calc(100dvh - 100%);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 82px clamp(18px, 5vw, 32px) 32px;
             &.active {
                 display: block;
             }
@@ -150,12 +155,15 @@
                 gap: 22px;
             }
             @media (max-width: $breakpoint_tablet) {
+                align-items: stretch;
                 flex-direction: column;
-                gap: 40px;
+                gap: 12px;
             }
             li {
                 &.hidebtn { pointer-events: none; opacity: 0.3; display: none;}
                 @media (max-width: $breakpoint_tablet) {
+                    text-align: center;
+                    width: 100%;
                     &:last-child { display: none;}
                 }
                 a {
@@ -187,6 +195,16 @@
                             border-radius: 100% !important;
                             width: 10px !important;
                             opacity: 1;
+                        }
+                    }
+                    @media (max-width: $breakpoint_tablet) {
+                        align-items: center;
+                        display: inline-flex;
+                        justify-content: center;
+                        min-height: 44px;
+
+                        &::before {
+                            bottom: 0;
                         }
                     }
                 }
@@ -288,14 +306,15 @@
         border: 1px solid #e7e7ef;
         border-radius: 14px;
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+        display: none;
         left: auto;
-        margin-top: 18px;
+        margin: 8px auto 6px;
         min-width: 0;
-        opacity: 0;
+        opacity: 1;
         padding: 16px;
         pointer-events: none;
         position: static;
-        transform: translateY(8px);
+        transform: none;
         visibility: hidden;
         width: min(100%, 560px);
     }
@@ -308,7 +327,8 @@
     visibility: visible;
 
     @media (max-width: $breakpoint_tablet) {
-        transform: translateY(0);
+        display: block;
+        transform: none;
     }
 }
 
@@ -555,12 +575,17 @@
     opacity: 0;
     visibility: hidden;
     @media (max-width: $breakpoint_tablet) {
+        background: transparent;
+        left: clamp(18px, 5vw, 32px);
         opacity: 1;
         visibility: visible;
-        max-width: 100%;
+        max-width: none;
+        padding: 0;
+        right: clamp(18px, 5vw, 32px);
+        width: auto;
         box-shadow: none;
         border-radius: 0;
-        top: 0;
+        top: 16px;
     }
     &.active {
         opacity: 1;

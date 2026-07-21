@@ -1,37 +1,43 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './search.module.scss';
 import searchIcon from "@/public/assets/images/search.svg";
 import sortArrowIcon from "@/public/assets/images/sort_arrow.svg";
-import Link from 'next/link';
 import brandsModels from "@/firebase/models.json";
-import { ImageComponent } from '@/components/fetchImages/Image';
-import { db } from '@/firebase/Firebase';
+import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import SidebarFoundYourPart from '../product-detail/found-your-part/SidebarFoundYourPart';
 import RecentProducts from './RecentProducts';
 import { buildProductHref, slugify } from '@/app/data/seoProducts';
+import { trackWebsiteEvent } from '@/components/utils/analytics';
 
-const normalize = (value) => (value ?? '').toString().toLowerCase().trim();
+const ITEMS_PER_PAGE = 12;
 
-const includesText = (value, query) => normalize(value).includes(normalize(query));
+const normalizeSearchValue = (value) => (value ?? '')
+    .toString()
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
 
-const getProductSearchText = (product) => [
-    product?.Name,
-    product?.id,
-    product?.PN,
-    product?.OEM,
-    product?.Modality,
-    product?.Machine,
-    product?.Description,
-].filter(Boolean).join(' ');
+const normalizePartNumber = (value) => (value ?? '')
+    .toString()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '');
 
-const getPartNumberSearchText = (product) => [
-    product?.id,
-    product?.PN,
-    product?.Name,
-    product?.Description,
-].filter(Boolean).join(' ');
+const useDebouncedValue = (value, delay = 350) => {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+        const timeout = window.setTimeout(() => setDebounced(value), delay);
+        return () => window.clearTimeout(timeout);
+    }, [value, delay]);
+
+    return debounced;
+};
 
 const getModelsForType = (brand, type) => {
     if (!type) return [];
@@ -46,146 +52,152 @@ const getModelsForType = (brand, type) => {
 };
 
 export default function ProductsPage() {
-    const [sortQuery, setSortQuery] = useState(true);
+    const brands = Object.keys(brandsModels);
+    const allTypes = [...new Set(
+        Object.values(brandsModels).flatMap((typesByBrand) => Object.keys(typesByBrand))
+    )];
+
     const [searchQuery, setSearchQuery] = useState('');
     const [skuQuery, setSkuQuery] = useState('');
-    const [searchResult, setSearchResult] = useState([]);
-    const [suggestions, setSuggestions] = useState([]);
     const [showMenu, setShowMenu] = useState(false);
     const [products, setProducts] = useState([]);
     const [isLoadingProducts, setIsLoadingProducts] = useState(true);
     const [productsError, setProductsError] = useState('');
-    const [sortOrder, setSortOrder] = useState('a-z'); // Added state for sorting order
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
-
+    const [sortOrder, setSortOrder] = useState('a-z');
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageCursors, setPageCursors] = useState([null]);
+    const [nextCursor, setNextCursor] = useState(null);
+    const [hasNextPage, setHasNextPage] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
-
-    const brands = Object.keys(brandsModels);
-    const allKeys = Object.keys(brandsModels).flatMap(brand => Object.keys(brandsModels[brand]));
-    const uniqueKeys = [...new Set(allKeys)];
-
-    const [types, setTypes] = useState(uniqueKeys);
+    const [types, setTypes] = useState(allTypes);
     const [models, setModels] = useState([]);
+    const requestId = useRef(0);
+
+    const debouncedSearch = useDebouncedValue(searchQuery);
+    const debouncedSku = useDebouncedValue(skuQuery);
+
 
     useEffect(() => {
+        if (!debouncedSearch && !debouncedSku && !selectedBrand && !selectedType && !selectedModel) return;
+        trackWebsiteEvent('search', {
+            search_term: (debouncedSku || debouncedSearch).slice(0, 100),
+            search_location: 'parts_catalog',
+            oem: selectedBrand,
+            modality: selectedType,
+            model: selectedModel,
+        });
+    }, [debouncedSearch, debouncedSku, selectedBrand, selectedType, selectedModel]);
+    useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const query = params.get('q') || '';
-        setSearchQuery(query);
+        setSearchQuery(params.get('q') || '');
+        setSelectedBrand(params.get('OEM') || params.get('clickedOEM') || '');
     }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
+        setPageIndex(0);
+        setPageCursors([null]);
+    }, [debouncedSearch, debouncedSku, selectedBrand, selectedType, selectedModel, sortOrder]);
+
+    useEffect(() => {
+        let active = true;
+        const currentRequest = ++requestId.current;
+
+        const fetchPage = async () => {
             setIsLoadingProducts(true);
             setProductsError('');
+
             try {
-                const snapshot = await db.collection('Parts').get();
-                const datam = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setProducts(datam);
+                const searchParams = new URLSearchParams();
+                if (debouncedSearch) searchParams.set('q', debouncedSearch);
+                if (debouncedSku) searchParams.set('pn', debouncedSku);
+                if (selectedBrand) searchParams.set('oem', selectedBrand);
+                if (selectedType) searchParams.set('modality', selectedType);
+                if (selectedModel) searchParams.set('model', selectedModel);
+                searchParams.set('sort', sortOrder === 'z-a' ? 'desc' : 'asc');
+                const cursor = pageCursors[pageIndex];
+                if (cursor) searchParams.set('cursor', cursor);
+
+                const response = await fetch(`/api/parts/search?${searchParams.toString()}`, {
+                    headers: { Accept: 'application/json' },
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.error || 'Unable to load products.');
+                }
+                if (!active || currentRequest !== requestId.current) return;
+
+                setProducts(Array.isArray(data.products) ? data.products : []);
+                setHasNextPage(Boolean(data.hasNextPage));
+                setNextCursor(data.nextCursor || null);
             } catch (error) {
                 console.error(error);
-                setProductsError('Unable to load products right now. Please refresh the page or contact us for help finding a part.');
+                if (!active || currentRequest !== requestId.current) return;
+                setProducts([]);
+                setHasNextPage(false);
+                setNextCursor(null);
+                setProductsError(
+                    'Unable to load this catalog view right now. Please refresh the page or contact us for help finding a part.'
+                );
             } finally {
-                setIsLoadingProducts(false);
+                if (active && currentRequest === requestId.current) {
+                    setIsLoadingProducts(false);
+                }
             }
         };
 
-        fetchData();
-    }, []);
+        fetchPage();
 
-    useEffect(() => {
-        const nameQuery = normalize(searchQuery);
-        const partQuery = normalize(skuQuery);
-        const brandQuery = normalize(selectedBrand);
-        const typeQuery = normalize(selectedType);
-        const modelQuery = normalize(selectedModel);
-
-        let results = products.filter((product) => {
-            const matchesName = !nameQuery || includesText(getProductSearchText(product), nameQuery);
-            const matchesPart = !partQuery || includesText(getPartNumberSearchText(product), partQuery);
-            const matchesBrand = !brandQuery || normalize(product.OEM) === brandQuery;
-            const matchesType = !typeQuery || normalize(product.Modality) === typeQuery;
-            const matchesModel = !modelQuery || normalize(product.Machine) === modelQuery;
-
-            return matchesName && matchesPart && matchesBrand && matchesType && matchesModel;
-        });
-
-        if (sortOrder === 'a-z') {
-            results.sort((a, b) => normalize(a.Name).localeCompare(normalize(b.Name)));
-        } else if (sortOrder === 'z-a') {
-            results.sort((a, b) => normalize(b.Name).localeCompare(normalize(a.Name)));
-        }
-
-        setSearchResult(results);
-    }, [searchQuery, skuQuery, selectedBrand, selectedType, selectedModel, products, sortOrder]);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery, skuQuery, selectedBrand, selectedType, selectedModel, sortOrder]);
-
-    const handleSortArrowClick = () => {
-        setSortOrder((prevOrder) => (prevOrder === 'a-z' ? 'z-a' : 'a-z'));
-        setSortQuery(!sortQuery)
-    };
-
-    const handleInputChange = (e) => {
-        setSearchQuery(e.target.value);
-    };
+        return () => {
+            active = false;
+        };
+    }, [
+        debouncedSearch,
+        debouncedSku,
+        selectedBrand,
+        selectedType,
+        selectedModel,
+        sortOrder,
+        pageIndex,
+        pageCursors,
+    ]);
 
     const handleBrandChange = (event) => {
         const brand = event.target.value;
         setSelectedBrand(brand);
-        setSelectedType("");
-        setSelectedModel("");
-        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : uniqueKeys);
+        setSelectedType('');
+        setSelectedModel('');
+        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : allTypes);
         setModels([]);
     };
 
     const handleTypeChange = (event) => {
         const type = event.target.value;
         setSelectedType(type);
-        setSelectedModel("");
+        setSelectedModel('');
         setModels(getModelsForType(selectedBrand, type));
     };
 
-    const handleModelChange = (event) => {
-        setSelectedModel(event.target.value);
-    };
-
-    const handleSuggestionClick = (suggestion) => {
-        setSearchQuery(suggestion.name);
-        setSuggestions([]);
-    };
-
-    const openMenu = () => {
-        setShowMenu(!showMenu);
-    };
-
     const handleClick = (product) => {
+        trackWebsiteEvent('product_select', {
+            item_id: product.id || '',
+            item_name: product.Name || '',
+            part_number: product.PN || '',
+        });
+
         localStorage.setItem('product', JSON.stringify(product));
 
         let recentProducts = [];
         try {
-            const storedRecentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
-            recentProducts = Array.isArray(storedRecentProducts) ? storedRecentProducts : [];
+            const stored = JSON.parse(localStorage.getItem('recentProducts')) || [];
+            recentProducts = Array.isArray(stored) ? stored : [];
         } catch {
             recentProducts = [];
         }
 
-        recentProducts.push(product);
-
-        if (recentProducts.length > 4) {
-            recentProducts.shift();
-        }
-
-        localStorage.setItem('recentProducts', JSON.stringify(recentProducts));
-    };
-
-    const handleSkuChange = (e) => {
-        setSkuQuery(e.target.value);
+        const deduplicated = recentProducts.filter((item) => item?.id !== product.id);
+        localStorage.setItem('recentProducts', JSON.stringify([...deduplicated, product].slice(-4)));
     };
 
     const handleClear = () => {
@@ -194,47 +206,56 @@ export default function ProductsPage() {
         setSelectedModel('');
         setSearchQuery('');
         setSkuQuery('');
-        setTypes(uniqueKeys);
+        setTypes(allTypes);
         setModels([]);
         setSortOrder('a-z');
     };
 
-    const totalPages = Math.ceil(searchResult.length / itemsPerPage);
-    const firstVisibleResult = searchResult.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-    const lastVisibleResult = Math.min(currentPage * itemsPerPage, searchResult.length);
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
+    const handleNextPage = () => {
+        if (!hasNextPage || !nextCursor) return;
+        setPageCursors((current) => {
+            const updated = current.slice(0, pageIndex + 1);
+            updated[pageIndex + 1] = nextCursor;
+            return updated;
+        });
+        setPageIndex((current) => current + 1);
     };
 
-    const currentProducts = searchResult.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const firstVisibleResult = products.length > 0 ? pageIndex * ITEMS_PER_PAGE + 1 : 0;
+    const lastVisibleResult = pageIndex * ITEMS_PER_PAGE + products.length;
 
     return (
         <div className={styles.search_wrapper}>
             <div className='container'>
                 <div className={styles.sorting}>
                     <p>
-                        <span>{searchQuery}Parts</span>
+                        <span>Parts</span>
                         {isLoadingProducts
                             ? 'Loading products...'
-                            : `Showing ${firstVisibleResult}-${lastVisibleResult} of ${searchResult.length} results`}
+                            : products.length > 0
+                                ? `Showing ${firstVisibleResult}-${lastVisibleResult} results`
+                                : 'No matching results'}
                     </p>
                     <section>
-                        <button onClick={openMenu} className={`${styles.menu_btn} ${showMenu ? styles.active : ''}`}>
+                        <button
+                            type="button"
+                            aria-label="Toggle filters"
+                            onClick={() => setShowMenu((current) => !current)}
+                            className={`${styles.menu_btn} ${showMenu ? styles.active : ''}`}
+                        >
                             <span></span>
                         </button>
-                        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                            {/* <option value="">SORT BY</option> */}
-                            <option value="a-z">Sort by Alphabetically</option>
-                            {/* <option value="z-a">Sort Z-A</option> */}
-                            <option>Sort by Popularity</option>
-                            <option>Sort by Newness</option>
+                        <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                            <option value="a-z">Name: A to Z</option>
+                            <option value="z-a">Name: Z to A</option>
                         </select>
-                        <button 
-                            className={`sorting_button ${sortQuery ? "active" : ""}`} 
-                            onClick={handleSortArrowClick}>
-                            <Image src={sortArrowIcon} alt="sortArrowIcon" />
+                        <button
+                            type="button"
+                            aria-label="Reverse sort order"
+                            className={`sorting_button ${sortOrder === 'a-z' ? 'active' : ''}`}
+                            onClick={() => setSortOrder((current) => current === 'a-z' ? 'z-a' : 'a-z')}
+                        >
+                            <Image src={sortArrowIcon} alt="" />
                         </button>
                     </section>
                 </div>
@@ -245,60 +266,53 @@ export default function ProductsPage() {
                         <form onSubmit={(event) => event.preventDefault()}>
                             <ul className='list-none'>
                                 <li>
-                                    <Image src={searchIcon} alt="search" />
+                                    <Image src={searchIcon} alt="" />
                                     <input
-                                        type="text"
+                                        type="search"
                                         placeholder='SEARCH BY NAME'
                                         value={searchQuery}
                                         maxLength={120}
-                                        onChange={handleInputChange}
+                                        onChange={(event) => setSearchQuery(event.target.value)}
                                     />
                                 </li>
                                 <li>
-                                    <Image src={searchIcon} alt="search" />
+                                    <Image src={searchIcon} alt="" />
                                     <input
-                                        type="text"
-                                        placeholder='SEARCH BY SKU NUMBER'
+                                        type="search"
+                                        placeholder='SEARCH BY PART NUMBER'
                                         value={skuQuery}
                                         maxLength={120}
-                                        onChange={handleSkuChange}
+                                        onChange={(event) => setSkuQuery(event.target.value)}
                                     />
                                 </li>
                             </ul>
                         </form>
-                        {suggestions.length > 0 && (
-                            <div className={styles.suggestion_wrap}>
-                                <ul className='list-none flex direction-column'>
-                                    {suggestions.map((suggestion, index) => (
-                                        <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                                            {suggestion.name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
                         <select value={selectedBrand} onChange={handleBrandChange}>
                             <option value="">Select Brand</option>
-                            {brands.map(brand => (
+                            {brands.map((brand) => (
                                 <option key={brand} value={brand}>{brand}</option>
                             ))}
                         </select>
                         <select value={selectedType} onChange={handleTypeChange}>
                             <option value="">Select Type</option>
-                            {types.map(type => (
+                            {types.map((type) => (
                                 <option key={type} value={type}>{type}</option>
                             ))}
                         </select>
-                        <select disabled={!selectedType} value={selectedModel} onChange={handleModelChange}>
+                        <select
+                            disabled={!selectedType}
+                            value={selectedModel}
+                            onChange={(event) => setSelectedModel(event.target.value)}
+                        >
                             <option value="">Select Model</option>
-                            {models.map(model => (
+                            {models.map((model) => (
                                 <option key={model} value={model}>{model}</option>
                             ))}
                         </select>
-                        <button className="simple-btn white-btn" onClick={handleClear}>Clear</button>
+                        <button className="simple-btn white-btn" type="button" onClick={handleClear}>Clear</button>
                     </div>
-                    <RecentProducts/>
-                    <SidebarFoundYourPart/>
+                    <RecentProducts />
+                    <SidebarFoundYourPart />
                 </div>
                 <div className={styles.content_wrapper}>
                     <ul className='list-none flex flex-wrap'>
@@ -306,18 +320,19 @@ export default function ProductsPage() {
                             <li className={styles.no_product}>Loading products...</li>
                         ) : productsError ? (
                             <li className={styles.no_product}>{productsError}</li>
-                        ) : (products.length > 0) && searchResult.length > 0 ? (
-                            currentProducts.map((product, index) => (
-                                <li key={`part-${index}`} className="flex">
-                                    <div onClick={() => { handleClick(product) }}>
+                        ) : products.length > 0 ? (
+                            products.map((product) => (
+                                <li key={product.id} className="flex">
+                                    <div onClick={() => handleClick(product)}>
                                         <Link
-                                            href={
-                                                buildProductHref(product) ||
-                                                (product?.Name ? `/products/${slugify(product.Name)}` : "/parts")
-                                            }
+                                            href={buildProductHref(product) ||
+                                                (product?.Name ? `/products/${slugify(product.Name)}` : '/parts')}
                                         >
                                             <figure>
-                                                <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} alt={`${product.Name || "Medical imaging part"} ${product.id || ""}`} />
+                                                <ImageComponent
+                                                    imagePath={getPrimaryImagePath(product)}
+                                                    alt={`${product.Name || 'Medical imaging part'} ${product.PN || product.id || ''}`}
+                                                />
                                                 <h3>{product.Name}</h3>
                                             </figure>
                                         </Link>
@@ -328,51 +343,21 @@ export default function ProductsPage() {
                             <li className={styles.no_product}>No products match your current search or filters.</li>
                         )}
                     </ul>
-                    {(products.length > 0 && searchResult.length > 0) &&
+                    {!isLoadingProducts && !productsError && (pageIndex > 0 || hasNextPage) && (
                         <div className={styles.pagination}>
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        {currentPage > 3 && (
-                            <>
-                                <button onClick={() => handlePageChange(1)} className={currentPage === 1 ? styles.active : ''}>1</button>
-                                {currentPage > 4 && <span>...</span>}
-                            </>
-                        )}
-                        {Array.from(
-                            { length: 5 }, 
-                            (_, i) => currentPage - 2 + i
-                        ).map(page => (
-                            page > 0 && page <= totalPages && (
-                                <button
-                                    key={page}
-                                    onClick={() => handlePageChange(page)}
-                                    className={currentPage === page ? styles.active : ''}
-                                >
-                                    {page}
-                                </button>
-                            )
-                        ))}
-                        {currentPage < totalPages - 2 && (
-                            <>
-                                {currentPage < totalPages - 3 && <span>...</span>}
-                                <button onClick={() => handlePageChange(totalPages)} className={currentPage === totalPages ? styles.active : ''}>
-                                    {totalPages}
-                                </button>
-                            </>
-                        )}
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Next
-                        </button>
-                    </div>
-                    
-                    }
+                            <button
+                                type="button"
+                                onClick={() => setPageIndex((current) => Math.max(0, current - 1))}
+                                disabled={pageIndex === 0}
+                            >
+                                Previous
+                            </button>
+                            <span className={styles.page_status}>Page {pageIndex + 1}</span>
+                            <button type="button" onClick={handleNextPage} disabled={!hasNextPage}>
+                                Next
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

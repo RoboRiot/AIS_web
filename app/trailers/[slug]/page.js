@@ -147,7 +147,7 @@ export default function TrailerLandingPage({ params }) {
                 </ul>
               </div>
               <div className={styles.ctaRow}>
-                <Link href="/contact" className="simple-btn">Request Rental Support</Link>
+                <Link href={`/contact?inquiry=trailer&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Request Rental Support</Link>
                 <Link href="/trailers">All Trailer Rentals</Link>
               </div>
               <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
@@ -175,10 +175,6 @@ export default function TrailerLandingPage({ params }) {
                   trailer service searches.
                 </p>
               </div>
-              <aside className={styles.modelStats} aria-label={`${brandLabel} MRI model coverage summary`}>
-                <strong>{modelCoverageItems.length}</strong>
-                <span>1.5T {brandLabel} MRI model names represented</span>
-              </aside>
             </div>
             <div className={`${styles.modelGroups} ${modelCoverage.length === 1 ? styles.modelGroupsSingle : ""}`}>
               {modelCoverage.map((group) => (

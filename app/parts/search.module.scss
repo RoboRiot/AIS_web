@@ -344,9 +344,17 @@
 
 .pagination {
     display: flex;
+    align-items: center;
     gap: 10px;
     justify-content: center;
     margin-top: 20px;
+}
+
+.page_status {
+    min-width: 80px;
+    text-align: center;
+    color: #48596d;
+    font-weight: 600;
 }
 
 .pagination button {

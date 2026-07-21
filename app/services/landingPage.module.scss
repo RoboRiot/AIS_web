@@ -265,6 +265,11 @@
     margin: 0 0 10px;
     text-transform: uppercase;
   }
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    max-height: 330px;
+    padding: 10px;
+  }
 }
 
 .carouselThumbGrid {
@@ -308,8 +313,14 @@
   }
 
   @media (max-width: $breakpoint_mobile_portrait) {
-    grid-template-columns: 1fr;
-    max-height: 520px;
+    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: 260px;
+    padding-right: 3px;
+
+    .carouselThumbButton {
+      padding: 4px;
+    }
   }
 }
 
@@ -708,48 +719,10 @@
 }
 
 .modelIntro {
-  align-items: end;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: minmax(0, 1fr) 220px;
   margin-bottom: 34px;
 
   .sectionCopy {
     margin-bottom: 0;
-  }
-
-  @media (max-width: $breakpoint_tablet) {
-    align-items: start;
-    grid-template-columns: 1fr;
-  }
-}
-
-.modelStats {
-  background: #506381;
-  border-radius: 12px;
-  color: #fff;
-  padding: 22px;
-  text-align: center;
-
-  strong {
-    display: block;
-    font-size: 48px;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  span {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.35;
-    text-transform: uppercase;
-  }
-
-  @media (max-width: $breakpoint_tablet) {
-    max-width: 260px;
-    text-align: left;
   }
 }
 

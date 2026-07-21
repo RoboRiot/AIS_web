@@ -1,0 +1,140 @@
+
+> advanced-imaging@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1472ms
+ ✓ Compiled /middleware in 157ms (115 modules)
+ ○ Compiling /services/[slug] ...
+ ✓ Compiled /services/[slug] in 1324ms (978 modules)
+ GET /services/ge-ct-service 200 in 2052ms
+ GET /services/ge-ct-service 200 in 60ms
+ GET /services/siemens-ct-service 200 in 48ms
+ GET /services/toshiba-ct-service 200 in 73ms
+ GET /services/ge-mri-service 200 in 40ms
+ GET /services/ge-pet-ct-service 200 in 76ms
+ GET /services/ct-service 200 in 32ms
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1324ms
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ✓ Compiled /middleware in 136ms (115 modules)
+ ○ Compiling /services/[slug] ...
+ ✓ Compiled /services/[slug] in 802ms (978 modules)
+ GET /services/toshiba-ct-service 200 in 1586ms
+ ○ Compiling /parts ...
+ ✓ Compiled /parts in 1806ms (1178 modules)
+ GET /parts 200 in 2244ms
+ ✓ Compiled /_not-found in 384ms (1181 modules)
+ GET /_next/static/css/app/layout.css?v=1784586381613 404 in 709ms
+ GET /_next/static/media/service_subheader.1119bbaf.jpg 404 in 626ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 650ms
+ GET /_next/static/chunks/app/layout.js 404 in 649ms
+ GET /_next/static/chunks/main-app.js?v=1784586381613 404 in 723ms
+ GET /_next/static/media/phoneicon.c256d0d5.svg 404 in 63ms
+ GET /_next/static/media/emailicon.5bbb4a42.svg 404 in 98ms
+ GET /_next/static/media/logo.1aab4bf8.svg 404 in 81ms
+ GET /_next/static/media/search.c13b9bd4.svg 404 in 82ms
+ GET /_next/static/media/location.36de9cf7.svg 404 in 89ms
+ GET /_next/static/media/facebook.9232f4fc.svg 404 in 60ms
+ GET /_next/static/media/linkedin.25ad2b8a.svg 404 in 62ms
+ GET /_next/static/media/heart.1baac94b.svg 404 in 55ms
+ GET /_next/static/media/twitter.ff1b0716.svg 404 in 64ms
+ GET /sw.js 404 in 51ms
+ ✓ Compiled /favicon.ico in 303ms (717 modules)
+ GET /favicon.ico 200 in 413ms
+ GET /parts 200 in 255ms
+ GET /_next/static/css/app/layout.css?v=1784586390276 404 in 55ms
+ GET /_next/static/chunks/main-app.js?v=1784586390276 404 in 111ms
+ GET /_next/static/media/service_subheader.1119bbaf.jpg 404 in 54ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 78ms
+ GET /_next/static/chunks/app/layout.js 404 in 79ms
+ GET /_next/static/media/phoneicon.c256d0d5.svg 404 in 66ms
+ GET /_next/static/media/emailicon.5bbb4a42.svg 404 in 70ms
+ GET /_next/static/media/logo.1aab4bf8.svg 404 in 71ms
+ GET /_next/static/media/search.c13b9bd4.svg 404 in 72ms
+ GET /_next/static/media/location.36de9cf7.svg 404 in 74ms
+ GET /_next/static/media/linkedin.25ad2b8a.svg 404 in 55ms
+ GET /_next/static/media/facebook.9232f4fc.svg 404 in 58ms
+ GET /_next/static/media/twitter.ff1b0716.svg 404 in 54ms
+ GET /_next/static/media/heart.1baac94b.svg 404 in 54ms
+ GET /sw.js 404 in 33ms
+ GET /favicon.ico 200 in 9ms
+ GET /parts 200 in 56ms
+ GET /_next/static/css/app/layout.css?v=1784586397382 404 in 39ms
+ GET /_next/static/chunks/main-app.js?v=1784586397382 404 in 53ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 50ms
+ GET /_next/static/chunks/app/layout.js 404 in 55ms
+ GET /_next/static/media/service_subheader.1119bbaf.jpg 404 in 21ms
+ GET /_next/static/media/phoneicon.c256d0d5.svg 404 in 53ms
+ GET /_next/static/media/emailicon.5bbb4a42.svg 404 in 53ms
+ GET /_next/static/media/logo.1aab4bf8.svg 404 in 54ms
+ GET /_next/static/media/search.c13b9bd4.svg 404 in 53ms
+ GET /_next/static/media/location.36de9cf7.svg 404 in 54ms
+ GET /_next/static/media/facebook.9232f4fc.svg 404 in 40ms
+ GET /_next/static/media/linkedin.25ad2b8a.svg 404 in 41ms
+ GET /_next/static/media/heart.1baac94b.svg 404 in 41ms
+ GET /_next/static/media/twitter.ff1b0716.svg 404 in 42ms
+ GET /favicon.ico 200 in 9ms
+ GET /sw.js 404 in 60ms
+ ○ Compiling / ...
+ ✓ Compiled / in 563ms (1386 modules)
+ GET / 200 in 901ms
+ GET /_next/static/css/app/layout.css?v=1784586402868 404 in 41ms
+ GET /_next/static/chunks/main-app.js?v=1784586402868 404 in 93ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 86ms
+ GET /_next/static/media/phoneicon.c256d0d5.svg 404 in 39ms
+ GET /_next/static/media/logo.1aab4bf8.svg 404 in 41ms
+ GET /_next/static/chunks/app/layout.js 404 in 85ms
+ GET /_next/static/media/emailicon.5bbb4a42.svg 404 in 33ms
+ GET /_next/static/media/search.c13b9bd4.svg 404 in 52ms
+ GET /_next/static/media/polygon.94006c39.svg 404 in 48ms
+ GET /sw.js 404 in 33ms
+ GET /sw.js 404 in 46ms
+ GET / 200 in 56ms
+ GET /_next/static/css/app/layout.css?v=1784586478354 404 in 32ms
+ GET /_next/static/chunks/main-app.js?v=1784586478354 404 in 47ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 60ms
+ ✓ Compiled /_error in 497ms (1295 modules)
+ GET /api/ops/work-orders 404 in 637ms
+ ✓ Compiled / in 181ms (788 modules)
+ GET / 200 in 450ms
+ GET / 200 in 66ms
+ ✓ Compiled /favicon.ico in 134ms (820 modules)
+ GET /favicon.ico 200 in 229ms
+ ○ Compiling /services/[slug] ...
+ ✓ Compiled /services/[slug] in 1011ms (838 modules)
+ ✓ Compiled /_not-found in 354ms (1608 modules)
+ GET /_next/static/chunks/app/services/%5Bslug%5D/page.js 404 in 621ms
+ GET /services/ge-mri-service 200 in 106ms
+ GET /_next/static/css/app/services/%5Bslug%5D/page.css?v=1784587311402 404 in 66ms
+ GET /_next/static/chunks/app/services/%5Bslug%5D/page.js 404 in 65ms
+ GET /favicon.ico 200 in 32ms
+ GET /sw.js 404 in 35ms
+ GET /services/ge-mri-service 200 in 63ms
+ GET /_next/static/css/app/services/%5Bslug%5D/page.css?v=1784587315048 404 in 46ms
+ GET /_next/static/chunks/app/services/%5Bslug%5D/page.js 404 in 52ms
+ GET /favicon.ico 200 in 12ms
+ GET /sw.js 404 in 41ms
+ GET /services/ge-mri-service 200 in 62ms
+ GET /_next/static/css/app/services/%5Bslug%5D/page.css?v=1784587325546 404 in 52ms
+ GET /_next/static/chunks/app/services/%5Bslug%5D/page.js 404 in 59ms
+ GET /favicon.ico 200 in 11ms
+ GET /sw.js 404 in 32ms
+ ○ Compiling /trailers ...
+ ✓ Compiled /trailers in 1003ms (1634 modules)
+ GET /trailers 200 in 1229ms
+ GET /_next/static/media/service_subheader.1119bbaf.jpg 404 in 40ms
+ GET /sw.js 404 in 48ms
+ GET /_next/static/chunks/app/services/%5Bslug%5D/page.js 404 in 58ms
+ GET /sw.js 404 in 32ms
+[?25h

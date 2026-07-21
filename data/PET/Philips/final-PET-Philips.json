@@ -1,0 +1,1122 @@
+{
+  "metadata": {
+    "generatedAt": "2026-07-21T17:02:01.424Z",
+    "manufacturer": "Philips Healthcare",
+    "catalogPurpose": "Website sourcing catalog; separate from tracked inventory.",
+    "itemCount": 23,
+    "representedPartNumberCount": 23,
+    "candidateSourceRecordCount": 8430,
+    "rejectedSourceRecordCount": 12,
+    "legitimacyCounts": {
+      "verified": 6,
+      "accepted": 17
+    },
+    "thumbnailCount": 2,
+    "missingThumbnailCount": 21,
+    "duplicateCheck": "Passed across canonical and alternate normalized part numbers.",
+    "idRule": "Existing AIS IDs are preserved; new IDs use SC plus 12 uppercase SHA-256 characters from Philips|canonical group.",
+    "legitimacyRule": "AIS, reviewed cross-source, official manufacturer, PartsSource, Block Imaging, and DOTmed modality records are accepted after manufacturer, part-number, and name validation.",
+    "thumbnailRule": "Known placeholders are rejected. Exact reviewed, manufacturer, AIS, and source product images are retained; missing is preferred over an unrelated image.",
+    "sourceFiles": [
+      "data/MRI/Philips/block-MRI-Philips.json",
+      "data/MRI/Philips/partssource-MRI-Philips.json",
+      "data/CT/Philips/block-CT-Philips.json",
+      "data/CT/Philips/partssource-CT-Philips.json",
+      "data/PET/Philips/partssource-PET-Philips.json",
+      "public/assets/data/parts.json"
+    ],
+    "modality": "PET/CT",
+    "canonicalCombinedCatalog": "data/Philips/final-Philips-catalog.json"
+  },
+  "items": [
+    {
+      "id": "SC76E75A588CA8",
+      "PN": "459801140821",
+      "PNNormalized": "459801140821",
+      "AlternatePartNumbers": [],
+      "Name": "19\" LCD DISPLAY MONITOR",
+      "NameNormalized": "19 lcd display monitor",
+      "Slug": "19-lcd-display-monitor-459801140821-sc76e75a588ca8",
+      "Description": "19\" LCD DISPLAY MONITOR is a Philips Healthcare CT and PET/CT replacement part identified by part number 459801140821. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [
+        "BRILLIANCE 64",
+        "BRILLIANCE BIG BORE",
+        "BRILLIANCE CT AIR",
+        "BRILLIANCE CT WATER",
+        "BRILLIANCE ICT 128"
+      ],
+      "Machine": "BRILLIANCE 64",
+      "PrimaryImage": "https://dam.partssource.com/m/237b827c2492c88b/Web_300-459801140821_Prime-jpg.jpg",
+      "Images": [
+        "https://dam.partssource.com/m/237b827c2492c88b/Web_300-459801140821_Prime-jpg.jpg"
+      ],
+      "Thumbnail": {
+        "url": "https://dam.partssource.com/m/237b827c2492c88b/Web_300-459801140821_Prime-jpg.jpg",
+        "provider": "PartsSource",
+        "sourcePage": "https://www.partssource.com/parts/philips/459801140821",
+        "reviewStatus": "source-product-image",
+        "remoteSource": true
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 2
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "459801140821",
+          "name": "19\" LCD DISPLAY MONITOR",
+          "url": "https://www.partssource.com/parts/philips/459801140821",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "4598-011-40821",
+          "name": "19 Lcd Display Monitor",
+          "url": "https://www.blockimaging.com/parts/4598-011-40821-philips-ct-19-lcd-display-monitor",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC565059668EB3",
+      "PN": "453567990051",
+      "PNNormalized": "453567990051",
+      "AlternatePartNumbers": [],
+      "Name": "35-120A 3-5V POWER SUPPLY",
+      "NameNormalized": "35 120a 3 5v power supply",
+      "Slug": "35-120a-3-5v-power-supply-453567990051-sc565059668eb3",
+      "Description": "35-120A 3-5V POWER SUPPLY is a Philips Healthcare PET/CT replacement part identified by part number 453567990051. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567990051",
+          "name": "35-120A 3-5V POWER SUPPLY",
+          "url": "https://www.partssource.com/parts/philips/453567990051",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC6DEEAD0974FA",
+      "PN": "453567933511",
+      "PNNormalized": "453567933511",
+      "AlternatePartNumbers": [],
+      "Name": "AMPL, DIG SERVO CANBUS INTERFA",
+      "NameNormalized": "ampl dig servo canbus interfa",
+      "Slug": "ampl-dig-servo-canbus-interfa-453567933511-sc6deead0974fa",
+      "Description": "AMPL, DIG SERVO CANBUS INTERFA is a Philips Healthcare CT and PET/CT replacement part identified by part number 453567933511. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [
+        "GEMINI GXL"
+      ],
+      "Machine": "GEMINI GXL",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 2
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567933511",
+          "name": "AMPL, DIG SERVO CANBUS INTERFA",
+          "url": "https://www.partssource.com/parts/philips/453567933511",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "4535-679-33511",
+          "name": "Amplifier Dig Servo",
+          "url": "https://www.blockimaging.com/parts/4535-679-33511-philips-ct-amplifier-dig-servo",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC0EDD43A59DD3",
+      "PN": "453567993831",
+      "PNNormalized": "453567993831",
+      "AlternatePartNumbers": [],
+      "Name": "ASS'Y LH PANEL",
+      "NameNormalized": "ass y lh panel",
+      "Slug": "ass-y-lh-panel-453567993831-sc0edd43a59dd3",
+      "Description": "ASS'Y LH PANEL is a Philips Healthcare PET/CT replacement part identified by part number 453567993831. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567993831",
+          "name": "ASS'Y LH PANEL",
+          "url": "https://www.partssource.com/parts/philips/453567993831",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCEED3FEAB70CF",
+      "PN": "459800971581",
+      "PNNormalized": "459800971581",
+      "AlternatePartNumbers": [],
+      "Name": "ASSY, VME SINGLE BOARD, HTACQ SERVER",
+      "NameNormalized": "assy vme single board htacq server",
+      "Slug": "assy-vme-single-board-htacq-server-459800971581-sceed3feab70cf",
+      "Description": "ASSY, VME SINGLE BOARD, HTACQ SERVER is a Philips Healthcare PET/CT replacement part identified by part number 459800971581. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "459800971581",
+          "name": "ASSY, VME SINGLE BOARD, HTACQ SERVER",
+          "url": "https://www.partssource.com/parts/philips/459800971581",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCA2AFB1732C7E",
+      "PN": "453567944041",
+      "PNNormalized": "453567944041",
+      "AlternatePartNumbers": [],
+      "Name": "ASSY,MULTI-PT SOURCE PHANTOM",
+      "NameNormalized": "assy multi pt source phantom",
+      "Slug": "assy-multi-pt-source-phantom-453567944041-sca2afb1732c7e",
+      "Description": "ASSY,MULTI-PT SOURCE PHANTOM is a Philips Healthcare PET/CT replacement part identified by part number 453567944041. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567944041",
+          "name": "ASSY,MULTI-PT SOURCE PHANTOM",
+          "url": "https://www.partssource.com/parts/philips/453567944041",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC65C19A10141C",
+      "PN": "453567993841",
+      "PNNormalized": "453567993841",
+      "AlternatePartNumbers": [],
+      "Name": "ASSY,RH PANEL",
+      "NameNormalized": "assy rh panel",
+      "Slug": "assy-rh-panel-453567993841-sc65c19a10141c",
+      "Description": "ASSY,RH PANEL is a Philips Healthcare PET/CT replacement part identified by part number 453567993841. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567993841",
+          "name": "ASSY,RH PANEL",
+          "url": "https://www.partssource.com/parts/philips/453567993841",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC234C898913A5",
+      "PN": "453566501961",
+      "PNNormalized": "453566501961",
+      "AlternatePartNumbers": [],
+      "Name": "CARD",
+      "NameNormalized": "card",
+      "Slug": "card-453566501961-sc234c898913a5",
+      "Description": "CARD is a Philips Healthcare PET/CT replacement part identified by part number 453566501961. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [
+        "GEMINI DUAL GS"
+      ],
+      "Machine": "GEMINI DUAL GS",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453566501961",
+          "name": "CARD",
+          "url": "https://www.partssource.com/parts/philips/453566501961",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC244D4EB2AC1E",
+      "PN": "453567939621",
+      "PNNormalized": "453567939621",
+      "AlternatePartNumbers": [],
+      "Name": "CH/*ASSM, ARP,& MMI BOTTOM PALLET",
+      "NameNormalized": "ch assm arp mmi bottom pallet",
+      "Slug": "ch-assm-arp-mmi-bottom-pallet-453567939621-sc244d4eb2ac1e",
+      "Description": "CH/*ASSM, ARP,& MMI BOTTOM PALLET is a Philips Healthcare PET/CT replacement part identified by part number 453567939621. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567939621",
+          "name": "CH/*ASSM, ARP,& MMI BOTTOM PALLET",
+          "url": "https://www.partssource.com/parts/philips/453567939621",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCC3373CD0B4A0",
+      "PN": "459800011821",
+      "PNNormalized": "459800011821",
+      "AlternatePartNumbers": [],
+      "Name": "DETECTOR TOP COVER FOR MRI SCANNER",
+      "NameNormalized": "detector top cover for mri scanner",
+      "Slug": "detector-top-cover-for-mri-scanner-459800011821-scc3373cd0b4a0",
+      "Description": "DETECTOR TOP COVER FOR MRI SCANNER is a Philips Healthcare PET/CT replacement part identified by part number 459800011821. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "459800011821",
+          "name": "DETECTOR TOP COVER FOR MRI SCANNER",
+          "url": "https://www.partssource.com/parts/philips/459800011821",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC66E72D302099",
+      "PN": "453567135962",
+      "PNNormalized": "453567135962",
+      "AlternatePartNumbers": [],
+      "Name": "EXTENDED PHANTOM PERFORMANCE KIT FOR MRI SCANNER",
+      "NameNormalized": "extended phantom performance kit for mri scanner",
+      "Slug": "extended-phantom-performance-kit-for-mri-scanner-453567135962-sc66e72d302099",
+      "Description": "EXTENDED PHANTOM PERFORMANCE KIT FOR MRI SCANNER is a Philips Healthcare CT and PET/CT replacement part identified by part number 453567135962. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [
+        "BRILLIANCE",
+        "BRILLIANCE 64",
+        "BRILLIANCE BIG BORE",
+        "BRILLIANCE CT AIR",
+        "GEMINI DUAL GS"
+      ],
+      "Machine": "BRILLIANCE",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 2
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567135962",
+          "name": "EXTENDED PHANTOM PERFORMANCE KIT FOR MRI SCANNER",
+          "url": "https://www.partssource.com/parts/philips/453567135962",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "4535-671-35962",
+          "name": "Qc Phantom",
+          "url": "https://www.blockimaging.com/parts/4535-671-35962-philips-ct-qc-phantom",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC925C9A196360",
+      "PN": "453567973871",
+      "PNNormalized": "453567973871",
+      "AlternatePartNumbers": [],
+      "Name": "FLOOD TANK GEMINI",
+      "NameNormalized": "flood tank gemini",
+      "Slug": "flood-tank-gemini-453567973871-sc925c9a196360",
+      "Description": "FLOOD TANK GEMINI is a Philips Healthcare PET/CT replacement part identified by part number 453567973871. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567973871",
+          "name": "FLOOD TANK GEMINI",
+          "url": "https://www.partssource.com/parts/philips/453567973871",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCF27079AC66BA",
+      "PN": "453567027482",
+      "PNNormalized": "453567027482",
+      "AlternatePartNumbers": [],
+      "Name": "FRC ASSEMBLY FOR BRILLIANCE 6 10 16&16P",
+      "NameNormalized": "frc assembly for brilliance 6 10 16 16p",
+      "Slug": "frc-assembly-for-brilliance-6-10-16-16p-453567027482-scf27079ac66ba",
+      "Description": "FRC ASSEMBLY FOR BRILLIANCE 6 10 16&16P is a Philips Healthcare CT and PET/CT replacement part identified by part number 453567027482. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 2
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567027482",
+          "name": "FRC ASSEMBLY FOR BRILLIANCE 6 10 16&16P",
+          "url": "https://www.partssource.com/parts/philips/453567027482",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "4535-670-27482",
+          "name": "Frc Assembly",
+          "url": "https://www.blockimaging.com/parts/4535-670-27482-philips-ct-frc-assembly",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCBA5728F786A0",
+      "PN": "453567945931",
+      "PNNormalized": "453567945931",
+      "AlternatePartNumbers": [],
+      "Name": "GCCB W/CPM MODULE ASSY",
+      "NameNormalized": "gccb w cpm module assy",
+      "Slug": "gccb-w-cpm-module-assy-453567945931-scba5728f786a0",
+      "Description": "GCCB W/CPM MODULE ASSY is a Philips Healthcare PET/CT replacement part identified by part number 453567945931. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567945931",
+          "name": "GCCB W/CPM MODULE ASSY",
+          "url": "https://www.partssource.com/parts/philips/453567945931",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC577903F13F03",
+      "PN": "453567963021",
+      "PNNormalized": "453567963021",
+      "AlternatePartNumbers": [],
+      "Name": "HD,73GB,10K RPM, ULTRA",
+      "NameNormalized": "hd 73gb 10k rpm ultra",
+      "Slug": "hd-73gb-10k-rpm-ultra-453567963021-sc577903f13f03",
+      "Description": "HD,73GB,10K RPM, ULTRA is a Philips Healthcare PET/CT replacement part identified by part number 453567963021. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567963021",
+          "name": "HD,73GB,10K RPM, ULTRA",
+          "url": "https://www.partssource.com/parts/philips/453567963021",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC81D6FEB369CA",
+      "PN": "453567964461",
+      "PNNormalized": "453567964461",
+      "AlternatePartNumbers": [],
+      "Name": "HD,80GB,7200RPM,ULTRA",
+      "NameNormalized": "hd 80gb 7200rpm ultra",
+      "Slug": "hd-80gb-7200rpm-ultra-453567964461-sc81d6feb369ca",
+      "Description": "HD,80GB,7200RPM,ULTRA is a Philips Healthcare PET/CT replacement part identified by part number 453567964461. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567964461",
+          "name": "HD,80GB,7200RPM,ULTRA",
+          "url": "https://www.partssource.com/parts/philips/453567964461",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC52143FFA9370",
+      "PN": "453567500381",
+      "PNNormalized": "453567500381",
+      "AlternatePartNumbers": [],
+      "Name": "INTELLIGENT POWER CONTROLLER",
+      "NameNormalized": "intelligent power controller",
+      "Slug": "intelligent-power-controller-453567500381-sc52143ffa9370",
+      "Description": "INTELLIGENT POWER CONTROLLER is a Philips Healthcare PET/CT replacement part identified by part number 453567500381. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567500381",
+          "name": "INTELLIGENT POWER CONTROLLER",
+          "url": "https://www.partssource.com/parts/philips/453567500381",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCF111EB714FEE",
+      "PN": "453567467351",
+      "PNNormalized": "453567467351",
+      "AlternatePartNumbers": [],
+      "Name": "LOR PLANE SOURCE PHANTOM HOLDER",
+      "NameNormalized": "lor plane source phantom holder",
+      "Slug": "lor-plane-source-phantom-holder-453567467351-scf111eb714fee",
+      "Description": "LOR PLANE SOURCE PHANTOM HOLDER is a Philips Healthcare PET/CT replacement part identified by part number 453567467351. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567467351",
+          "name": "LOR PLANE SOURCE PHANTOM HOLDER",
+          "url": "https://www.partssource.com/parts/philips/453567467351",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC024419B05EAB",
+      "PN": "453560257521",
+      "PNNormalized": "453560257521",
+      "AlternatePartNumbers": [],
+      "Name": "PASY,RS232 SERIAL 2 PORT ISA",
+      "NameNormalized": "pasy rs232 serial 2 port isa",
+      "Slug": "pasy-rs232-serial-2-port-isa-453560257521-sc024419b05eab",
+      "Description": "PASY,RS232 SERIAL 2 PORT ISA is a Philips Healthcare PET/CT replacement part identified by part number 453560257521. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453560257521",
+          "name": "PASY,RS232 SERIAL 2 PORT ISA",
+          "url": "https://www.partssource.com/parts/philips/453560257521",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCCEDBFCAE99DA",
+      "PN": "453567970041",
+      "PNNormalized": "453567970041",
+      "AlternatePartNumbers": [],
+      "Name": "POWER SUPPLY FOR VME",
+      "NameNormalized": "power supply for vme",
+      "Slug": "power-supply-for-vme-453567970041-sccedbfcae99da",
+      "Description": "POWER SUPPLY FOR VME is a Philips Healthcare PET/CT replacement part identified by part number 453567970041. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567970041",
+          "name": "POWER SUPPLY FOR VME",
+          "url": "https://www.partssource.com/parts/philips/453567970041",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SCF6087B5EC7FF",
+      "PN": "453567400031",
+      "PNNormalized": "453567400031",
+      "AlternatePartNumbers": [],
+      "Name": "SERVER, V5 BRILLIANCE CIRS 2U, FOR USE WITH: FOR PET/CT SCANNER",
+      "NameNormalized": "server v5 brilliance cirs 2u for use with for pet ct scanner",
+      "Slug": "server-v5-brilliance-cirs-2u-for-use-with-for-pet-ct-scanner-453567400031-scf6087b5ec7ff",
+      "Description": "SERVER, V5 BRILLIANCE CIRS 2U, FOR USE WITH: FOR PET/CT SCANNER is a Philips Healthcare CT and PET/CT replacement part identified by part number 453567400031. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [
+        "BRILLIANCE",
+        "BRILLIANCE 64",
+        "BRILLIANCE BIG BORE",
+        "BRILLIANCE CT AIR"
+      ],
+      "Machine": "BRILLIANCE",
+      "PrimaryImage": "https://dam.partssource.com/m/12764e6e0b0b16f7/Web_300-453567400031-philips-jpg.jpg",
+      "Images": [
+        "https://dam.partssource.com/m/12764e6e0b0b16f7/Web_300-453567400031-philips-jpg.jpg"
+      ],
+      "Thumbnail": {
+        "url": "https://dam.partssource.com/m/12764e6e0b0b16f7/Web_300-453567400031-philips-jpg.jpg",
+        "provider": "PartsSource",
+        "sourcePage": "https://www.partssource.com/parts/philips/453567400031",
+        "reviewStatus": "source-product-image",
+        "remoteSource": true
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 3
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567400031",
+          "name": "SERVER, V5 BRILLIANCE CIRS 2U, FOR USE WITH: FOR PET/CT SCANNER",
+          "url": "https://www.partssource.com/parts/philips/453567400031",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "CT",
+          "partNumber": "453567400031",
+          "name": "SERVER, V5 BRILLIANCE CIRS 2U, FOR USE WITH: FOR PET/CT SCANNER",
+          "url": "https://www.partssource.com/parts/philips/453567400031",
+          "sourceFile": "partssource-CT-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "4535-674-00031",
+          "name": "Cirs 2U Server Version 5",
+          "url": "https://www.blockimaging.com/parts/4535-674-00031-philips-ct-cirs-2u-server-version-5",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC3D89B31FC450",
+      "PN": "459800693211",
+      "PNNormalized": "459800693211",
+      "AlternatePartNumbers": [],
+      "Name": "SKF INBORE LIFTER SUB ASSEMBLY",
+      "NameNormalized": "skf inbore lifter sub assembly",
+      "Slug": "skf-inbore-lifter-sub-assembly-459800693211-sc3d89b31fc450",
+      "Description": "SKF INBORE LIFTER SUB ASSEMBLY is a Philips Healthcare CT and PET/CT replacement part identified by part number 459800693211. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "CT",
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "verified",
+        "basis": "multiple-independent-catalogs",
+        "sourceCount": 2
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "459800693211",
+          "name": "SKF INBORE LIFTER SUB ASSEMBLY",
+          "url": "https://www.partssource.com/parts/philips/459800693211",
+          "sourceFile": "partssource-PET-Philips.json"
+        },
+        {
+          "provider": "Block Imaging",
+          "providerKey": "block",
+          "modality": "CT",
+          "partNumber": "459800693211",
+          "name": "Lifter",
+          "url": "https://www.blockimaging.com/parts/459800693211-philips-ct-lifter",
+          "sourceFile": "block-CT-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    },
+    {
+      "id": "SC7773DEA264BD",
+      "PN": "453567963041",
+      "PNNormalized": "453567963041",
+      "AlternatePartNumbers": [],
+      "Name": "WORKSTATION, BLADE 150 ACQUIS",
+      "NameNormalized": "workstation blade 150 acquis",
+      "Slug": "workstation-blade-150-acquis-453567963041-sc7773dea264bd",
+      "Description": "WORKSTATION, BLADE 150 ACQUIS is a Philips Healthcare PET/CT replacement part identified by part number 453567963041. Contact Advanced Imaging Services to confirm system compatibility, sourcing, condition, and current availability.",
+      "OEM": "Philips",
+      "Modalities": [
+        "PET/CT"
+      ],
+      "Models": [],
+      "Machine": "",
+      "PrimaryImage": "",
+      "Images": [],
+      "Thumbnail": {
+        "status": "missing",
+        "reviewStatus": "no-legitimate-image-found"
+      },
+      "CatalogOnly": true,
+      "InventoryTracked": false,
+      "Available": false,
+      "Condition": "Call for availability",
+      "Legitimacy": {
+        "status": "accepted",
+        "basis": "specialist-catalog-listing",
+        "sourceCount": 1
+      },
+      "Sources": [
+        {
+          "provider": "PartsSource",
+          "providerKey": "partssource",
+          "modality": "PET",
+          "partNumber": "453567963041",
+          "name": "WORKSTATION, BLADE 150 ACQUIS",
+          "url": "https://www.partssource.com/parts/philips/453567963041",
+          "sourceFile": "partssource-PET-Philips.json"
+        }
+      ],
+      "Modality": "PET/CT"
+    }
+  ]
+}

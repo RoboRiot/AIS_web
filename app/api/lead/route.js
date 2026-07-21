@@ -6,17 +6,41 @@ import {
   buildLeadText,
   sanitizeLeadForm,
 } from "@/components/utils/formSecurity";
+import {
+  cleanPath,
+  cleanText,
+  consumeRateLimit,
+  isTrustedOrigin,
+  readJsonBody,
+} from "@/app/data/requestSecurity";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 
 const FORM_CONFIG = {
   contact_form: {
     expectedAction: "contact_form",
-    subject: "Contact Form Submission | Advanced Imaging",
+    subject: "[AIS WEBSITE] General Contact Request",
     requiresPartNumber: false,
+    label: "General contact",
   },
   part_request: {
     expectedAction: "part_request",
-    subject: "Part Request Form | Advanced Imaging",
+    subject: "[AIS WEBSITE] Medical Imaging Part Request",
     requiresPartNumber: true,
+    label: "Part request",
+  },
+  service_request: {
+    expectedAction: "service_request",
+    subject: "[AIS WEBSITE] Imaging Service Request",
+    requiresPartNumber: false,
+    label: "Service request",
+  },
+  trailer_request: {
+    expectedAction: "trailer_request",
+    subject: "[AIS WEBSITE] Mobile Trailer Rental Request",
+    requiresPartNumber: false,
+    label: "Trailer rental request",
   },
 };
 
@@ -90,8 +114,32 @@ const verifyRecaptcha = async ({ token, expectedAction }) => {
 
 export async function POST(request) {
   try {
-    const payload = await request.json();
+    if (!isTrustedOrigin(request)) {
+      return NextResponse.json({ error: "Invalid submission origin." }, { status: 403 });
+    }
+
+    const payload = await readJsonBody(request, 16_384);
     const config = FORM_CONFIG[payload.formType];
+    const startedAt = Number(payload.startedAt || 0);
+    const elapsed = Date.now() - startedAt;
+    if (cleanText(payload.website, 200) || !startedAt || elapsed < 2_500 || elapsed > 86_400_000) {
+      return NextResponse.json({ error: "Submission blocked." }, { status: 403 });
+    }
+
+    const db = getAdminDb();
+    const allowed = await consumeRateLimit({
+      db,
+      request,
+      namespace: "website-lead",
+      limit: 5,
+      windowMs: 15 * 60_000,
+    });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please call (800) 200-3583 for immediate help." },
+        { status: 429, headers: { "Retry-After": "900" } }
+      );
+    }
     if (!config || payload.action !== config.expectedAction) {
       return NextResponse.json({ error: "Invalid form submission." }, { status: 400 });
     }
@@ -107,37 +155,50 @@ export async function POST(request) {
     const { sanitized, errors } = sanitizeLeadForm({
       name: payload.name,
       email: payload.email,
-      partNumber: config.requiresPartNumber ? payload.partNumber : null,
       message: payload.message,
+      ...(config.requiresPartNumber ? { partNumber: payload.partNumber } : {}),
     });
     if (errors.length) {
       return NextResponse.json({ error: errors[0] }, { status: 400 });
     }
+
+    const leadDetails = {
+      ...sanitized,
+      leadType: config.label,
+      sourcePage: cleanPath(payload.sourcePage),
+      context: cleanText(payload.context, 200),
+    };
 
     const to = getRecipients();
     if (!to.length) {
       return NextResponse.json({ error: "Email recipients are not configured." }, { status: 500 });
     }
 
-    const db = getAdminDb();
     await db.collection("mail").add({
       to,
       message: {
         subject: config.subject,
-        text: buildLeadText(sanitized),
+        text: buildLeadText(leadDetails),
+        replyTo: sanitized.email,
         email: sanitized.email,
         partNumber: sanitized.partNumber || null,
-        html: buildLeadEmailHtml(sanitized),
+        html: buildLeadEmailHtml(leadDetails),
       },
       metadata: {
         formType: payload.formType,
         createdAt: FieldValue.serverTimestamp(),
+        leadType: config.label,
+        sourcePage: leadDetails.sourcePage,
+        context: leadDetails.context || null,
       },
     });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Lead submission failed:", error);
-    return NextResponse.json({ error: "Submission failed. Please try again." }, { status: 500 });
+    return NextResponse.json(
+      { error: error.statusCode ? error.message : "Submission failed. Please try again." },
+      { status: error.statusCode || 500 }
+    );
   }
 }

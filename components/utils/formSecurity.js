@@ -40,7 +40,10 @@ const renderEmailRow = (label, value) => `
   </tr>
 `;
 
-export const sanitizeLeadForm = ({ name, email, message, partNumber = "" }) => {
+export const sanitizeLeadForm = (values = {}) => {
+  const { name, email, message, partNumber = "" } = values;
+  const partNumberRequired = Object.prototype.hasOwnProperty.call(values, "partNumber");
+
   const sanitized = {
     name: normalizeInput(name, FORM_LIMITS.name),
     email: normalizeInput(email, FORM_LIMITS.email).toLowerCase(),
@@ -52,15 +55,18 @@ export const sanitizeLeadForm = ({ name, email, message, partNumber = "" }) => {
   if (sanitized.name.length < 3) errors.push("Please enter a valid name.");
   if (!EMAIL_PATTERN.test(sanitized.email)) errors.push("Please enter a valid email address.");
   if (!sanitized.message) errors.push("Please enter a message.");
-  if (partNumber !== undefined && partNumber !== null && !sanitized.partNumber) {
+  if (partNumberRequired && !sanitized.partNumber) {
     errors.push("Please enter a part number.");
   }
 
   return { sanitized, errors };
 };
 
-export const buildLeadText = ({ name, email, message, partNumber }) =>
+export const buildLeadText = ({ name, email, message, partNumber, leadType, sourcePage, context }) =>
   [
+    `Source: AIS website - ${leadType || "Website inquiry"}`,
+    sourcePage ? `Page: ${sourcePage}` : null,
+    context ? `Context: ${context}` : null,
     `Name: ${name}`,
     `Email: ${email}`,
     partNumber ? `Part Number: ${partNumber}` : null,
@@ -71,8 +77,11 @@ export const buildLeadText = ({ name, email, message, partNumber }) =>
     .filter((line) => line !== null)
     .join("\n");
 
-export const buildLeadEmailHtml = ({ name, email, message, partNumber }) => {
+export const buildLeadEmailHtml = ({ name, email, message, partNumber, leadType, sourcePage, context }) => {
   const rows = [
+    renderEmailRow("Submission Source", `AIS website - ${leadType || "Website inquiry"}`),
+    sourcePage ? renderEmailRow("Page", sourcePage) : "",
+    context ? renderEmailRow("Context", context) : "",
     renderEmailRow("Name", name),
     renderEmailRow("Email Address", email),
     partNumber ? renderEmailRow("Part Number", partNumber) : "",

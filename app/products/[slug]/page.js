@@ -13,10 +13,9 @@ import {
   getProductPartNumbers,
   parseProductSlug,
   parseProductSpecs,
-  slugify,
 } from "@/app/data/seoProducts";
 import SeoProductClient from "./SeoProductClient";
-import { fetchAllProducts } from "@/app/data/firestoreProducts";
+import { fetchProductById, fetchProductBySlug } from "@/app/data/serverFirestoreProducts";
 
 export const revalidate = 3600;
 
@@ -24,22 +23,20 @@ export function generateStaticParams() {
   return [];
 }
 
-const getProductBySlug = cache(async (nameSlug) => {
+const getProductBySlug = cache(async (slug) => {
+  const { id, nameSlug } = parseProductSlug(slug);
   if (!nameSlug) return null;
-  const products = await fetchAllProducts();
-  return products.find((product) => {
-    const requestedSlug = slugify(nameSlug);
-    return (
-      buildProductSlug(product) === requestedSlug ||
-      slugify(product?.Name) === requestedSlug ||
-      slugify(product?.id) === requestedSlug
-    );
-  }) || null;
+
+  if (id) {
+    const product = await fetchProductById(id);
+    if (product) return product;
+  }
+
+  return fetchProductBySlug(nameSlug);
 });
 
 export async function generateMetadata({ params }) {
-  const { nameSlug } = parseProductSlug(params.slug);
-  const product = await getProductBySlug(nameSlug);
+  const product = await getProductBySlug(params.slug);
   if (!product) {
     return {};
   }
@@ -49,6 +46,9 @@ export async function generateMetadata({ params }) {
   const title = buildProductSeoTitle(product);
   const description = buildProductSeoDescription(product);
   const keywords = buildProductKeywords(product);
+  const images = Array.isArray(product.Images)
+    ? product.Images.filter((image) => typeof image === "string" && image.startsWith("http"))
+    : [];
 
   return {
     title,
@@ -62,18 +62,19 @@ export async function generateMetadata({ params }) {
       description,
       url,
       type: "website",
+      ...(images.length ? { images } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      ...(images.length ? { images } : {}),
     },
   };
 }
 
 export default async function ProductSeoPage({ params }) {
-  const { nameSlug } = parseProductSlug(params.slug);
-  const product = await getProductBySlug(nameSlug);
+  const product = await getProductBySlug(params.slug);
   if (!product) {
     notFound();
   }
@@ -136,17 +137,6 @@ export default async function ProductSeoPage({ params }) {
           }
         : null,
     ].filter(Boolean),
-    offers: {
-      "@type": "Offer",
-      url,
-      availability: product.Available === false
-        ? "https://schema.org/OutOfStock"
-        : "https://schema.org/InStock",
-      seller: {
-        "@type": "Organization",
-        name: "Advanced Imaging Services",
-      },
-    },
   };
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",

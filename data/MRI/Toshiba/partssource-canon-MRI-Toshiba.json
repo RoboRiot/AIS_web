@@ -1,0 +1,877 @@
+{
+  "source": "PartSource",
+  "sourceUrl": "https://www.partssource.com/shop/medical-imaging-and-glassware/mri?OEM=Canon%20Medical%20Systems%20USA%2C%20Inc.&_view=all",
+  "manufacturerPageUrl": "https://www.partssource.com/parts/ge-healthcare/",
+  "manufacturer": "Toshiba",
+  "modality": "MRI",
+  "collectedAt": "2026-07-21T16:23:13.458911+00:00",
+  "selectionMethod": "PartSource's public MRI category filtered to OEM GE Healthcare. Products can be cross-listed by PartSource in more than one category.",
+  "orderingMethod": "Items retain PartSource's default displayed catalog order. PartSource does not identify this order as sales volume or publish a popularity formula.",
+  "reportedResultCount": 17,
+  "apiPageSize": 200,
+  "catalogPageCount": 1,
+  "pagesCollected": 1,
+  "failedPages": [],
+  "rawListingCount": 17,
+  "nonGEListingsExcluded": 0,
+  "invalidPartNumbersExcluded": 0,
+  "duplicatesRemoved": 0,
+  "uniquePartCount": 17,
+  "items": [
+    {
+      "sourceOrder": 1,
+      "partNumber": "05226217",
+      "partName": "ARM REST GUIDE STRIP",
+      "title": "ARM REST GUIDE STRIP by Canon Medical Systems USA, Inc.",
+      "description": "ARM REST GUIDE STRIP",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "05226217",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 84.8,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS37HHBBCA9",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 101.56,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-05226217",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/05226217",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 2,
+      "partNumber": "04341744",
+      "partName": "LEFT BASE COVER",
+      "title": "LEFT BASE COVER by Canon Medical Systems USA, Inc.",
+      "description": "LEFT BASE COVER",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "04341744",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 564.45,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS86HWPXFAB",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 916.69,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-04341744",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/04341744",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 3,
+      "partNumber": "10909856",
+      "partName": "COLLIMATOR TOUCH PAD, FRU",
+      "title": "COLLIMATOR TOUCH PAD, FRU by Canon Medical Systems USA, Inc.",
+      "description": "COLLIMATOR TOUCH PAD, FRU",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "4381468",
+          "manufacturer": "Canon Medical Systems USA, Inc."
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/58f9547664681b7/Web_300-83553_10909856_Canon-Medical-Systems-USA-Inc-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 1120.28,
+      "buyingOptionCount": 2,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS49PBUTRCC",
+          "conditionCode": 6,
+          "warrantyCode": 8,
+          "price": 930.0,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS49PBUTRAA",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 1315.43,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-10909856",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/10909856",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 4,
+      "partNumber": "1789960",
+      "partName": "ECAM DUAL HEAD GEL",
+      "title": "ECAM DUAL HEAD GEL by Canon Medical Systems USA, Inc.",
+      "description": "ECAM DUAL HEAD GEL",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "1789960",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/131381fd745a63ba/Web_300-18860_01789960-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 41.46,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS68GMHWNAU",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 66.03,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-1789960",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/1789960",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 5,
+      "partNumber": "4353962",
+      "partName": "HAND CONTROL ASSEMBLY",
+      "title": "HAND CONTROL ASSEMBLY by Canon Medical Systems USA, Inc.",
+      "description": "HAND CONTROL ASSEMBLY",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "4353962",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/9ce56c0e35e7dee/Web_300-4353962-siemens-jpg.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 1046.76,
+      "buyingOptionCount": 3,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS63CMWBPHM",
+          "conditionCode": 2,
+          "warrantyCode": 8,
+          "price": 988.73,
+          "purchaseChoice": 2,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS63CMWBPGL",
+          "conditionCode": 2,
+          "warrantyCode": 8,
+          "price": 1364.23,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS63CMWBPAE",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 1405.16,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-4353962",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/4353962",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 6,
+      "partNumber": "MJAH-137A",
+      "partName": "SPEEDER HEAD COIL",
+      "title": "SPEEDER HEAD COIL by Canon Medical Systems USA, Inc.",
+      "description": "SPEEDER HEAD COIL",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [],
+      "compatibleWith": [
+        {
+          "partNumber": "MJAH-137A",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/asset/de8b5d2e-1046-4af6-b921-16d55adba3da/Web_300/MJAH-137A-Toshiba-1-5T-QED-Neurovascular-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 133973.75,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS34EHLGXAB",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 0.0,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-MJAH137A",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/MJAH137A",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 7,
+      "partNumber": "05239202",
+      "partName": "COVER",
+      "title": "COVER by Canon Medical Systems USA, Inc.",
+      "description": "COVER",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "05239202",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 874.5,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS66LMRQHAV",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 1069.13,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-05239202",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/05239202",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 8,
+      "partNumber": "4357237",
+      "partName": "CARRIAGE DOWN MICRO SWITCH",
+      "title": "CARRIAGE DOWN MICRO SWITCH by Canon Medical Systems USA, Inc.",
+      "description": "CARRIAGE DOWN MICRO SWITCH",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [],
+      "compatibleWith": [
+        {
+          "partNumber": "4357237",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 35.78,
+      "buyingOptionCount": 3,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS64JECTUAH",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 44.61,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS64JECTUHQ",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 58.88,
+          "purchaseChoice": 2,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS64JECTUGP",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 117.77,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-4357237",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/4357237",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 9,
+      "partNumber": "9489287",
+      "partName": "2\" PMT COUPLING GEL",
+      "title": "2\" PMT COUPLING GEL by Canon Medical Systems USA, Inc.",
+      "description": "2\" PMT COUPLING GEL",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "9489287",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/asset/882796ef-23ab-44ac-a11b-1658e7a2da4d/Web_300/18860_09489287-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 45.37,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS47DLDDFAH",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 56.09,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-9489287",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/9489287",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 10,
+      "partNumber": "RHC11S-12-P",
+      "partName": "REMOTE HEAD CABLE, 12 M",
+      "title": "REMOTE HEAD CABLE, 12 M by Canon Medical Systems USA, Inc.",
+      "description": "REMOTE HEAD CABLE, 12 M",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [],
+      "compatibleWith": [
+        {
+          "partNumber": "RHC11S-12-P",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/61993e5b9a38e857/Web_300-PS-1004919739-jpg.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 479.0,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS67PTGJFCN",
+          "conditionCode": 6,
+          "warrantyCode": 2,
+          "price": 1429.19,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-RHC11S12P",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/RHC11S12P",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 11,
+      "partNumber": "04341009",
+      "partName": "RIGHT BASE COVER",
+      "title": "RIGHT BASE COVER by Canon Medical Systems USA, Inc.",
+      "description": "RIGHT BASE COVER",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "04341009",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 598.9,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS74NLTXHA9",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 829.14,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-04341009",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/04341009",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 12,
+      "partNumber": "07319168",
+      "partName": "ASM - REPLACEMENT DOCKER RT",
+      "title": "ASM - REPLACEMENT DOCKER RT by Canon Medical Systems USA, Inc.",
+      "description": "ASM - REPLACEMENT DOCKER RT",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "07319168",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 2567.19,
+      "buyingOptionCount": 2,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS87GHCREA3",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 3074.48,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS87GHCREGA",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 4000.0,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-07319168",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/07319168",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 13,
+      "partNumber": "04341736",
+      "partName": "CAP PHS POST",
+      "title": "CAP PHS POST by Canon Medical Systems USA, Inc.",
+      "description": "CAP PHS POST",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [],
+      "compatibleWith": [
+        {
+          "partNumber": "04341736",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 124.55,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS43KQJEVAL",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 152.29,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-04341736",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/04341736",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 14,
+      "partNumber": "5982314",
+      "partName": "FRU UNIT WITH 3 IN PAD",
+      "title": "FRU UNIT WITH 3 IN PAD by Canon Medical Systems USA, Inc.",
+      "description": "FRU UNIT WITH 3 IN PAD",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "5982314",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/4f7d864f71e38be6/Web_300-83553_5982314_Canon-Medical-Systems-USA-Inc-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 795.0,
+      "buyingOptionCount": 2,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS38DQGHQGJ",
+          "conditionCode": 2,
+          "warrantyCode": 8,
+          "price": 1221.05,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS38DQGHQAC",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 1644.8,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-5982314",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/5982314",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 15,
+      "partNumber": "7333094",
+      "partName": "STANDARD DRIVE ASSEMBLY, 1-C-FRAME, PINLESS",
+      "title": "STANDARD DRIVE ASSEMBLY, 1-C-FRAME, PINLESS by Canon Medical Systems USA, Inc.",
+      "description": "STANDARD DRIVE ASSEMBLY, 1-C-FRAME, PINLESS",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "7333094",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/1fc46911604f176f/Web_300-83553_7333094_Canon-Medical-Systems-USA-Inc-png.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 2235.94,
+      "buyingOptionCount": 3,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS73RXMBRHC",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 1041.36,
+          "purchaseChoice": 2,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS73RXMBRGB",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 2082.73,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS73RXMBRA4",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 3292.3,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-7333094",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/7333094",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 16,
+      "partNumber": "5226423",
+      "partName": "LEFT HAND ARMREST LOWER END CAP",
+      "title": "LEFT HAND ARMREST LOWER END CAP by Canon Medical Systems USA, Inc.",
+      "description": "LEFT HAND ARMREST LOWER END CAP",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [
+        "E-CAM"
+      ],
+      "compatibleWith": [
+        {
+          "partNumber": "5226423",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 38.48,
+      "buyingOptionCount": 3,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS37GLPFVHV",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 35.02,
+          "purchaseChoice": 2,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS37GLPFVAM",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 50.53,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        },
+        {
+          "partSourcePartNumber": "PS37GLPFVGU",
+          "conditionCode": 2,
+          "warrantyCode": 4,
+          "price": 70.03,
+          "purchaseChoice": 1,
+          "leadTimeDays": 0,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-5226423",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/5226423",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    },
+    {
+      "sourceOrder": 17,
+      "partNumber": "10764260",
+      "partName": "ECAM CARDIAC HEADREST FRU",
+      "title": "ECAM CARDIAC HEADREST FRU by Canon Medical Systems USA, Inc.",
+      "description": "ECAM CARDIAC HEADREST FRU",
+      "manufacturer": "Toshiba",
+      "modality": "MRI",
+      "models": [],
+      "compatibleWith": [
+        {
+          "partNumber": "10764260",
+          "manufacturer": "Toshiba America Medical Systems (TAMS)"
+        },
+        {
+          "partNumber": "5970368",
+          "manufacturer": "Canon Medical Systems USA, Inc."
+        }
+      ],
+      "imageUrl": "https://dam.partssource.com/m/3ec994b8367d4a93/Web_447_w-Catalog-Fallback-Image.jpg",
+      "imageAltText": "",
+      "outrightListPrice": 1603.77,
+      "buyingOptionCount": 1,
+      "buyingOptions": [
+        {
+          "partSourcePartNumber": "PS43JLQLAA7",
+          "conditionCode": 1,
+          "warrantyCode": 4,
+          "price": 1920.68,
+          "purchaseChoice": 1,
+          "leadTimeDays": null,
+          "unitOfMeasurement": "(Each)",
+          "returnable": false
+        }
+      ],
+      "partSourceId": "O83553-10764260",
+      "isVariantProduct": false,
+      "hasDefaultVariant": false,
+      "isDiscontinued": false,
+      "sourceUrl": "https://www.partssource.com/parts/canon-medical-systems-usa-inc/10764260",
+      "sourcePage": 1,
+      "catalogOccurrences": 1,
+      "alternateTitles": [],
+      "alternateUrls": [],
+      "sourceManufacturer": "Canon Medical Systems USA, Inc."
+    }
+  ],
+  "catalogModality": "MRI",
+  "sourceKey": "partssource-canon",
+  "sourceManufacturerFilter": "Canon Medical Systems USA, Inc."
+}

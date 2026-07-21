@@ -57,7 +57,13 @@ export const buildProductHref = (product) => {
 
 export const parseProductSlug = (slug) => {
   if (!slug) return { id: null, nameSlug: "" };
-  return { id: null, nameSlug: slugify(slug) };
+  const nameSlug = slugify(slug);
+  const idMatch = nameSlug.match(/(?:^|-)((?:sc)?[a-f0-9]{12})$/i);
+  const matchedId = idMatch ? idMatch[1] : null;
+  return {
+    id: matchedId && matchedId.startsWith("sc") ? matchedId.toUpperCase() : matchedId,
+    nameSlug,
+  };
 };
 
 export const getProductUrl = (slug) =>

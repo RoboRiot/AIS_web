@@ -16,6 +16,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
+import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function Contact() {
   useEffect(() => {
@@ -43,11 +44,27 @@ export default function Contact() {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formType, setFormType] = useState("contact_form");
+  const [formContext, setFormContext] = useState("");
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   useEffect(() => {
     ensureRecaptchaScript(recaptchaSiteKey);
   }, [recaptchaSiteKey]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const inquiry = params.get("inquiry");
+    const nextFormType = inquiry === "service"
+      ? "service_request"
+      : inquiry === "trailer"
+        ? "trailer_request"
+        : "contact_form";
+    const context = params.get("source") || "contact_page";
+    setFormType(nextFormType);
+    setFormContext(context);
+    announceFormOpen(nextFormType, context);
+  }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +89,7 @@ export default function Contact() {
 
     setIsSubmitting(true);
 
-    const token = await executeRecaptcha(recaptchaSiteKey, "contact_form");
+    const token = await executeRecaptcha(recaptchaSiteKey, formType);
     if (!token) {
       setIsError(true);
       setFeedbackMessage("Error with reCAPTCHA. Please try again.");
@@ -84,13 +101,18 @@ export default function Contact() {
       await submitLead({
         ...sanitized,
         token,
-        action: "contact_form",
-        formType: "contact_form",
+        action: formType,
+        formType,
+        startedAt: formStartedAt,
+        website: honeypot,
+        context: formContext,
       });
+      trackWebsiteEvent("form_submit", { form_type: formType, context: formContext });
       setIsError(false);
       setFeedbackMessage("Thank you! we have received your message. We will contact back to you soon.");
     } catch (error) {
       console.error("Error sending email: ", error);
+      trackWebsiteEvent("form_error", { form_type: formType });
       setIsError(true);
       setFeedbackMessage("Error sending email. Please try again.");
     }
@@ -113,7 +135,7 @@ export default function Contact() {
           <p>We would love to hear from you. Please feel free to reach <br />out to us!</p>
         </div>
         <div className="container flex">
-          <form onSubmit={handleSubmit} data-aos="fade-left" data-aos-duration="1000">
+          <form onSubmit={handleSubmit} data-form-type={formType} data-aos="fade-left" data-aos-duration="1000">
             <ul className="list-none flex direction-column">
               <li className="bot-field" aria-hidden="true">
                 <label htmlFor="website">Website</label>
@@ -146,7 +168,7 @@ export default function Contact() {
                 maxLength={FORM_LIMITS.message}
                 onChange={(e) => setMessage(e.target.value)}
                 required></textarea></li>
-              <li><button className="simple-btn" type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send Message"}</button></li>
+              <li><button className="simple-btn" type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : formType === "trailer_request" ? "Send Rental Request" : formType === "service_request" ? "Send Service Request" : "Send Message"}</button></li>
             </ul>
             {feedbackMessage && 
                 <div className={isError ? 'response error' : 'response'}>

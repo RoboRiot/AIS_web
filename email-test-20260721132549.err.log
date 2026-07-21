@@ -1,0 +1,44 @@
+Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+    at e_ (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:139672)
+    at Object.toJSON (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135777)
+    at stringify (<anonymous>)
+    at eE (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142242)
+    at eT (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142721)
+    at Timeout._onTimeout (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135497)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  digest: '2607041400'
+}
+Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+    at e_ (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:139672)
+    at Object.toJSON (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135777)
+    at stringify (<anonymous>)
+    at eE (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142242)
+    at eT (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142721)
+    at Timeout._onTimeout (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135497)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  digest: '2607041400'
+}
+Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+    at e_ (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:139672)
+    at Object.toJSON (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135777)
+    at stringify (<anonymous>)
+    at eE (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142242)
+    at eT (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142721)
+    at Timeout._onTimeout (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135497)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  digest: '2607041400'
+}
+ ⨯ Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+    at e_ (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:139672)
+    at Object.toJSON (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135777)
+    at stringify (<anonymous>)
+    at eE (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142242)
+    at eT (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:142721)
+    at Timeout._onTimeout (C:\Users\mack2\Desktop\AIS_web\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:135497)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  digest: '2607041400'
+}

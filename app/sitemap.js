@@ -1,5 +1,5 @@
 import { BASE_URL, buildProductSlug } from "@/app/data/seoProducts";
-import { fetchAllProducts } from "@/app/data/firestoreProducts";
+import { fetchAllProducts } from "@/app/data/serverFirestoreProducts";
 import { serviceLandingPages, trailerLandingPages } from "@/app/data/serviceLandingPages";
 
 export default async function sitemap() {

@@ -1,4 +1,15 @@
-export const submitLead = async ({ token, action, formType, name, email, partNumber, message }) => {
+export const submitLead = async ({
+  token,
+  action,
+  formType,
+  name,
+  email,
+  partNumber,
+  message,
+  startedAt,
+  website = "",
+  context = "",
+}) => {
   const response = await fetch("/api/lead", {
     method: "POST",
     headers: {
@@ -11,6 +22,10 @@ export const submitLead = async ({ token, action, formType, name, email, partNum
       name,
       email,
       partNumber,
+      startedAt,
+      website,
+      sourcePage: typeof window === "undefined" ? "/" : window.location.pathname,
+      context,
       message,
     }),
   });

@@ -2,6 +2,8 @@ import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import '@/styles/globals.scss'
 import { BASE_URL } from "@/app/data/seoProducts";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import WebsiteAnalytics from "@/components/analytics/WebsiteAnalytics";
 
 const siteName = "Advanced Imaging Services";
 
@@ -70,6 +72,8 @@ export default function RootLayout({ children }) {
       <script type="text/javascript" id="hs-script-loader" async defer src="//js-na2.hs-scripts.com/242600993.js"></script>
 
       <body>
+        <GoogleAnalytics />
+        <WebsiteAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

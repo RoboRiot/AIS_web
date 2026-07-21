@@ -1,14 +1,25 @@
 /** @type {import('next').NextConfig} */
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://js-na2.hs-scripts.com https://*.hubspot.com https://*.hs-analytics.net https://*.hs-banner.com https://*.usemessages.com",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self' data:",
+  "img-src 'self' data: blob: https://firebasestorage.googleapis.com https://storage.googleapis.com https://www.google-analytics.com https://*.hubspot.com https://*.hubspotusercontent.com",
+  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://*.googleapis.com https://*.firebaseio.com https://firebasestorage.googleapis.com https://*.hubspot.com https://*.hsforms.com https://*.hs-analytics.net https://*.hs-banner.com",
+  "frame-src https://www.google.com https://recaptcha.google.com https://*.hubspot.com https://*.hsforms.com",
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "media-src 'self' https://firebasestorage.googleapis.com https://storage.googleapis.com",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const nextConfig = {
+  distDir: process.env.AIS_NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
-  // module.exports = {
-  //     reactStrictMode: true,
-  env: {
-    // next.config.mjs
-    emailAccounts: 'isavchenko@advancedimagingparts.com,swang@advancedimagingparts.com,sredd@advancedimagingparts.com',
-    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: '6LcmZyIqAAAAAIztRJsHyudfi22qgQzTvkSVm82X'
-    // emailAccount: 'testing@softenica.com',
-  },
   images: {
     remotePatterns: [
       {
@@ -29,6 +40,22 @@ const nextConfig = {
           {
             key: "X-Content-Type-Options",
             value: "nosniff",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: contentSecurityPolicy,
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-site",
+          },
+          {
+            key: "X-Permitted-Cross-Domain-Policies",
+            value: "none",
           },
           {
             key: "X-Frame-Options",

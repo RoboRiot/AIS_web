@@ -7,6 +7,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
+import { trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function FoundYourPart() {
     const [name, setName] = useState("");
@@ -61,12 +62,17 @@ export default function FoundYourPart() {
                 token,
                 action: "part_request",
                 formType: "part_request",
+                startedAt: formStartedAt,
+                website: honeypot,
+                context: partNumber,
             });
             setIsError(false);
+            trackWebsiteEvent("form_submit", { form_type: "part_request", context: partNumber });
             setFeedbackMessage("Thank you! We have received your message. We will contact you soon.");
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);
+            trackWebsiteEvent("form_error", { form_type: "part_request" });
             setFeedbackMessage("Error sending email. Please try again.");
         }
 
@@ -86,7 +92,7 @@ export default function FoundYourPart() {
             <div className={styles.found_part_wrap} data-aos="fade-up" data-aos-duration="1000">
                 <div className="container">
                     <h2 className="main-title">Found <span>Your Part?</span></h2>
-                    <form className="flex w-100" onSubmit={handleSubmit}>
+                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request">
                         <ul className="list-none">
                             <li className="bot-field" aria-hidden="true">
                                 <label htmlFor="found-part-website">Website</label>

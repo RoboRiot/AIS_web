@@ -3,51 +3,75 @@ import {Firebase} from '@/firebase/Firebase';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-
-
 export const getImageUrl = async (imagePath) => {
+    if (!imagePath) return null;
+
     const storage = getStorage(Firebase.app());
-
     const storageRef = ref(storage, imagePath);
+
     try {
-
-      const url = await getDownloadURL(storageRef);      
+      const url = await getDownloadURL(storageRef);
       return url;
-    } catch (error) {
-      console.error("Error fetching image URL: ", error);
-      return 0;
+    } catch {
+      return null;
     }
-  };
-  
-  export const ImageComponent = ({ imagePath, alt = "Medical imaging equipment part image" }) => {
+};
+
+const DIRECT_IMAGE_RE = /^(?:https?:|data:|blob:)/i;
+const IMAGE_EXTENSION_RE = /\.(?:avif|gif|jpe?g|png|webp)(?:\?.*)?$/i;
+
+export const resolveImageUrl = async (imagePath) => {
+    if (!imagePath) return null;
+    if (DIRECT_IMAGE_RE.test(imagePath) || imagePath.startsWith('/')) return imagePath;
+
+    if (IMAGE_EXTENSION_RE.test(imagePath)) {
+      return getImageUrl(imagePath);
+    }
+
+    // Older inventory records did not save their extension. Keep a bounded
+    // fallback for those records while new catalog entries use exact paths.
+    for (const extension of ['.jpg', '.jpeg', '.png']) {
+      const url = await getImageUrl(`${imagePath}${extension}`);
+      if (url) return url;
+    }
+
+    return null;
+};
+
+export const getPrimaryImagePath = (product) => {
+    const images = Array.isArray(product?.Images) ? product.Images : [];
+    const imagePaths = Array.isArray(product?.ImagePaths) ? product.ImagePaths : [];
+    return product?.PrimaryImage || images[0] || imagePaths[0] ||
+      (product?.id ? `Parts/${product.id}/${product.id}` : '');
+};
+
+export const ImageComponent = ({ imagePath, alt = "Medical imaging equipment part image" }) => {
     const [imageUrl, setImageUrl] = useState(null);
-  
+
     useEffect(() => {
+      let active = true;
+
       const fetchImageUrl = async () => {
-      const imageType = ['.png', '.jpg', '.jpeg','JPEG','JPG'];
-
-        const processImageUrls = async () => {
-          for (const x of imageType) {
-              const url = await getImageUrl(imagePath + x);
-              if (url) {
-                  setImageUrl(url);
-                  break; // Exit the loop as soon as the condition is met
-              }
-            }
-        };
-        
-        processImageUrls();
-
+        const url = await resolveImageUrl(imagePath);
+        if (active) setImageUrl(url);
       };
-  
+
       fetchImageUrl();
+
+      return () => {
+        active = false;
+      };
     }, [imagePath]);
-  
+
     return (
       <div>
-        {/* {imageUrl ? <img src={imageUrl} alt="Image"/> : <p>Loading image...</p>} */}
-        <Image width={470} height={320} alt={alt} src={imageUrl  ? imageUrl : '/assets/images/slide1.png' } />
+        <Image
+          width={470}
+          height={320}
+          alt={alt}
+          src={imageUrl || '/assets/images/slide1.png'}
+        />
       </div>
     );
-  };
+};
  

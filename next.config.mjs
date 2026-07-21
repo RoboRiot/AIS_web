@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const defaultDistDir = process.env.NODE_ENV === "development" ? ".next-dev" : ".next";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -18,7 +20,7 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const nextConfig = {
-  distDir: process.env.AIS_NEXT_DIST_DIR || ".next",
+  distDir: process.env.AIS_NEXT_DIST_DIR || defaultDistDir,
   poweredByHeader: false,
   images: {
     remotePatterns: [

@@ -1,5 +1,6 @@
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
+const ATTRIBUTION_KEY = "ais_session_attribution";
 
 const randomId = () => {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -25,14 +26,61 @@ const gaEventName = (eventType) => ({
   search: "search",
 }[eventType] || eventType);
 
+const sessionAttribution = () => {
+  try {
+    const stored = window.sessionStorage.getItem(ATTRIBUTION_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.acquisition_source && parsed?.landing_path) return parsed;
+    }
+
+    const landingUrl = new URL(window.location.href);
+    const referrerUrl = document.referrer ? new URL(document.referrer) : null;
+    const referrerHost = referrerUrl?.hostname.toLowerCase() || "";
+    const currentHost = landingUrl.hostname.toLowerCase();
+    const medium = (landingUrl.searchParams.get("utm_medium") || "").toLowerCase();
+    const source = (landingUrl.searchParams.get("utm_source") || "").toLowerCase();
+    const paid = Boolean(
+      landingUrl.searchParams.get("gclid") ||
+      landingUrl.searchParams.get("msclkid") ||
+      /(cpc|ppc|paid|display)/.test(medium)
+    );
+
+    let acquisitionSource = "direct";
+    if (paid) {
+      acquisitionSource = "paid_search";
+    } else if (/(^|\.)google\./.test(referrerHost) || source === "google") {
+      acquisitionSource = "google_organic";
+    } else if (
+      /(^|\.)(bing\.com|search\.yahoo\.com|duckduckgo\.com)$/.test(referrerHost) ||
+      /(bing|yahoo|duckduckgo)/.test(source)
+    ) {
+      acquisitionSource = "other_organic";
+    } else if (referrerHost && referrerHost !== currentHost) {
+      acquisitionSource = "referral";
+    }
+
+    const attribution = {
+      acquisition_source: acquisitionSource,
+      landing_path: `${landingUrl.pathname}${landingUrl.search}`.slice(0, 300),
+    };
+    window.sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(attribution));
+    return attribution;
+  } catch {
+    return { acquisition_source: "unknown", landing_path: window.location.pathname.slice(0, 300) };
+  }
+};
+
+
+
 export const trackWebsiteEvent = (eventType, properties = {}) => {
   if (typeof window === "undefined") return;
   if (navigator.doNotTrack === "1") return;
 
   const safeProperties = Object.fromEntries(
-    Object.entries(properties)
+    Object.entries({ ...properties, ...sessionAttribution() })
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
-      .slice(0, 16)
+      .slice(0, 20)
   );
   const payload = {
     eventType,

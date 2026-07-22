@@ -1,6 +1,6 @@
 import { cache } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import FoundYourPart from "@/app/product-detail/found-your-part/FoundYourPart";
 import {
@@ -80,6 +80,9 @@ export default async function ProductSeoPage({ params }) {
   }
 
   const canonicalSlug = buildProductSlug(product);
+  if (canonicalSlug && canonicalSlug !== params.slug) {
+    permanentRedirect(`/products/${canonicalSlug}`);
+  }
   const url = getProductUrl(canonicalSlug);
   const specs = parseProductSpecs(product);
   const partNumbers = getProductPartNumbers(product);
@@ -166,7 +169,7 @@ export default async function ProductSeoPage({ params }) {
   return (
     <>
       <Subheader title={product.Name || "Product Detail"} extraClass="product_bg" />
-      <div className="container">
+      <div className="container" data-product-id={product.id}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

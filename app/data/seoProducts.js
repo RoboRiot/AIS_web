@@ -1,4 +1,5 @@
 import { PRODUCTION_SITE_URL } from "../../site.config.mjs";
+import { buildProductIdSuffix, parseProductIdSuffix } from "@/app/data/productIdSlug.mjs";
 
 export const BASE_URL = PRODUCTION_SITE_URL;
 
@@ -35,20 +36,27 @@ export const slugify = (value) => {
 
 export const buildProductSlug = (product) => {
   if (!product) return "";
+  const storedSlug = slugify(product.Slug);
+  if (storedSlug) return storedSlug;
+
   const nameSlug = slugify(product.Name);
   const partNumbers = getProductPartNumbers(product).map(slugify).filter(Boolean);
-  const idSlug = slugify(product.id);
   const pieces = [nameSlug];
 
   for (const partNumber of partNumbers.slice(0, 2)) {
     if (partNumber && !nameSlug.includes(partNumber)) pieces.push(partNumber);
   }
 
-  if (idSlug && !pieces.some((piece) => piece === idSlug || piece.includes(idSlug))) {
-    pieces.push(idSlug);
-  }
+  const idSuffix = buildProductIdSuffix(product.id);
+  const maxLength = 180;
+  const prefixLimit = Math.max(1, maxLength - idSuffix.length);
+  const prefix = pieces
+    .filter(Boolean)
+    .join("-")
+    .slice(0, prefixLimit)
+    .replace(/-+$/g, "") || "part";
 
-  return pieces.filter(Boolean).join("-").slice(0, 140).replace(/-+$/g, "");
+  return `${prefix}${idSuffix}`;
 };
 
 export const buildProductHref = (product) => {
@@ -58,11 +66,23 @@ export const buildProductHref = (product) => {
 
 export const parseProductSlug = (slug) => {
   if (!slug) return { id: null, nameSlug: "" };
+  const encodedId = parseProductIdSuffix(slug);
   const nameSlug = slugify(slug);
-  const idMatch = nameSlug.match(/(?:^|-)((?:sc)?[a-f0-9]{12})$/i);
-  const matchedId = idMatch ? idMatch[1] : null;
+  const idPatterns = [
+    /(?:^|-)(temp-\d+)$/i,
+    /(?:^|-)(sc[a-z0-9]{8,})$/i,
+    /(?:^|-)([a-f0-9]{12,13})$/i,
+    /(?:^|-)(\d{5,})$/,
+  ];
+  const matchedId = idPatterns
+    .map((pattern) => nameSlug.match(pattern)?.[1])
+    .find(Boolean) || null;
   return {
-    id: matchedId && matchedId.startsWith("sc") ? matchedId.toUpperCase() : matchedId,
+    id: encodedId || (
+      matchedId && matchedId.toLowerCase().startsWith("sc")
+        ? matchedId.toUpperCase()
+        : matchedId?.toLowerCase() || null
+    ),
     nameSlug,
   };
 };

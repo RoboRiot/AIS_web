@@ -1,8 +1,11 @@
 import { FieldPath } from "firebase-admin/firestore";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
+import { toPlainFirestoreData } from "@/app/data/plainFirestoreData.mjs";
 
 const productFromDocument = (document) =>
-  document?.exists ? { id: document.id, ...document.data() } : null;
+  document?.exists
+    ? toPlainFirestoreData({ id: document.id, ...document.data() })
+    : null;
 
 export const fetchProductById = async (id) => {
   if (!id) return null;

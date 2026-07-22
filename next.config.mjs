@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const defaultDistDir = process.env.NODE_ENV === "development" ? ".next-dev" : ".next";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://advancedimagingparts.com";
 
-const contentSecurityPolicy = [
+const contentSecurityDirectives = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
@@ -16,8 +17,13 @@ const contentSecurityPolicy = [
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   "media-src 'self' https://firebasestorage.googleapis.com https://storage.googleapis.com",
-  "upgrade-insecure-requests",
-].join("; ");
+];
+
+if (siteUrl.startsWith("https://")) {
+  contentSecurityDirectives.push("upgrade-insecure-requests");
+}
+
+const contentSecurityPolicy = contentSecurityDirectives.join("; ");
 
 const nextConfig = {
   distDir: process.env.AIS_NEXT_DIST_DIR || defaultDistDir,

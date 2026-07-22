@@ -54,6 +54,10 @@ function getStagingHosts() {
 }
 
 function isStagingRequest(request) {
+  if (process.env.STAGING_DEPLOYMENT?.toLowerCase() === "true") {
+    return true;
+  }
+
   return getStagingHosts().includes(getRequestHost(request));
 }
 

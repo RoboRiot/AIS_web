@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { Timestamp } from "firebase-admin/firestore";
+import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "../../site.config.mjs";
 
 const AUTOMATION_UA = [
   "python-requests",
@@ -66,11 +67,15 @@ export const isTrustedOrigin = (request) => {
 
   try {
     const originUrl = new URL(origin);
-    const requestHost = request.headers.get("host");
-    const productionHost = new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "https://advancedimagingparts.com"
-    ).host;
-    return originUrl.host === requestHost || originUrl.host === productionHost;
+    const requestHost = cleanText(request.headers.get("host"), 255)
+      .toLowerCase()
+      .replace(/:\d+$/, "");
+    const trustedHosts = new Set([
+      requestHost,
+      PRODUCTION_HOSTNAME,
+      ...PRODUCTION_HOST_ALIASES,
+    ]);
+    return trustedHosts.has(originUrl.hostname.toLowerCase());
   } catch {
     return false;
   }

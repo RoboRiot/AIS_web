@@ -1,6 +1,7 @@
+import { PRODUCTION_SITE_URL } from "./site.config.mjs";
+
 /** @type {import('next').NextConfig} */
 const defaultDistDir = process.env.NODE_ENV === "development" ? ".next-dev" : ".next";
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://advancedimagingparts.com";
 
 const contentSecurityDirectives = [
   "default-src 'self'",
@@ -19,7 +20,7 @@ const contentSecurityDirectives = [
   "media-src 'self' https://firebasestorage.googleapis.com https://storage.googleapis.com",
 ];
 
-if (siteUrl.startsWith("https://")) {
+if (PRODUCTION_SITE_URL.startsWith("https://")) {
   contentSecurityDirectives.push("upgrade-insecure-requests");
 }
 

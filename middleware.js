@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
+import {
+  DEFAULT_DEPRECATED_HOSTS,
+  DEFAULT_STAGING_HOSTS,
+  LOCAL_HOSTS,
+  PRODUCTION_HOSTNAME,
+  PRODUCTION_HOST_ALIASES,
+  PRODUCTION_SITE_URL,
+} from "./site.config.mjs";
 
-const DEFAULT_STAGING_HOST = "advancedimaging.duckdns.org";
 const STAGING_ROBOTS_POLICY = ["User-agent: *", "Disallow: /", ""].join("\n");
 
 const KNOWN_GOOD_BOTS = [
@@ -37,28 +44,56 @@ const LIKELY_AUTOMATION_UA = [
 ];
 
 function getRequestHost(request) {
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const host = forwardedHost || request.headers.get("host") || request.nextUrl.host || "";
+  const host =
+    request.headers.get("host") ||
+    request.headers.get("x-forwarded-host") ||
+    request.nextUrl.host ||
+    "";
 
-  return host.split(",")[0].trim().toLowerCase().replace(/:\d+$/, "");
+  return host
+    .split(",")[0]
+    .trim()
+    .toLowerCase()
+    .replace(/:\d+$/, "")
+    .replace(/\.$/, "");
 }
 
-function getStagingHosts() {
-  const configuredHosts =
-    process.env.STAGING_HOSTS || process.env.STAGING_HOST || DEFAULT_STAGING_HOST;
+function parseHosts(configuredHosts, defaultHosts) {
+  const value = configuredHosts || defaultHosts.join(",");
 
-  return configuredHosts
+  return value
     .split(",")
-    .map((host) => host.trim().toLowerCase().replace(/:\d+$/, ""))
+    .map((host) =>
+      host.trim().toLowerCase().replace(/:\d+$/, "").replace(/\.$/, ""),
+    )
     .filter(Boolean);
 }
 
-function isStagingRequest(request) {
-  if (process.env.STAGING_DEPLOYMENT?.toLowerCase() === "true") {
-    return true;
-  }
+function getStagingHosts() {
+  return parseHosts(
+    process.env.STAGING_HOSTS || process.env.STAGING_HOST,
+    DEFAULT_STAGING_HOSTS,
+  );
+}
 
-  return getStagingHosts().includes(getRequestHost(request));
+function getDeprecatedHosts() {
+  return parseHosts(process.env.DEPRECATED_HOSTS, DEFAULT_DEPRECATED_HOSTS);
+}
+
+function buildCanonicalUrl(request) {
+  return new URL(`${request.nextUrl.pathname}${request.nextUrl.search}`, PRODUCTION_SITE_URL);
+}
+
+function isLocalRequest(host) {
+  return LOCAL_HOSTS.includes(host);
+}
+
+function isProductionRequest(host) {
+  return host === PRODUCTION_HOSTNAME;
+}
+
+function isStagingRequest(host) {
+  return getStagingHosts().includes(host);
 }
 
 function addStagingHeaders(response) {
@@ -137,7 +172,25 @@ function stagingAuthResponse(request) {
 
 export function middleware(request) {
   const pathname = request.nextUrl.pathname;
-  const stagingRequest = isStagingRequest(request);
+  const requestHost = getRequestHost(request);
+
+  if (getDeprecatedHosts().includes(requestHost)) {
+    return NextResponse.redirect(buildCanonicalUrl(request), 301);
+  }
+
+  if (PRODUCTION_HOST_ALIASES.includes(requestHost)) {
+    return NextResponse.redirect(buildCanonicalUrl(request), 308);
+  }
+
+  const stagingRequest = isStagingRequest(requestHost);
+  const recognizedHost =
+    isProductionRequest(requestHost) || stagingRequest || isLocalRequest(requestHost);
+
+  if (!recognizedHost) {
+    return addStagingHeaders(
+      new NextResponse("Misdirected Request", { status: 421 }),
+    );
+  }
 
   if (stagingRequest && pathname === "/robots.txt") {
     return addStagingHeaders(

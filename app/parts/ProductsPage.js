@@ -68,6 +68,7 @@ export default function ProductsPage() {
     const [pageCursors, setPageCursors] = useState([null]);
     const [nextCursor, setNextCursor] = useState(null);
     const [hasNextPage, setHasNextPage] = useState(false);
+    const [totalMatches, setTotalMatches] = useState(null);
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
@@ -92,6 +93,7 @@ export default function ProductsPage() {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         setSearchQuery(params.get('q') || '');
+        setSkuQuery(params.get('pn') || '');
         setSelectedBrand(params.get('OEM') || params.get('clickedOEM') || '');
     }, []);
 
@@ -131,12 +133,14 @@ export default function ProductsPage() {
                 setProducts(Array.isArray(data.products) ? data.products : []);
                 setHasNextPage(Boolean(data.hasNextPage));
                 setNextCursor(data.nextCursor || null);
+                setTotalMatches(Number.isInteger(data.totalMatches) ? data.totalMatches : null);
             } catch (error) {
                 console.error(error);
                 if (!active || currentRequest !== requestId.current) return;
                 setProducts([]);
                 setHasNextPage(false);
                 setNextCursor(null);
+                setTotalMatches(null);
                 setProductsError(
                     'Unable to load this catalog view right now. Please refresh the page or contact us for help finding a part.'
                 );
@@ -233,7 +237,7 @@ export default function ProductsPage() {
                         {isLoadingProducts
                             ? 'Loading products...'
                             : products.length > 0
-                                ? `Showing ${firstVisibleResult}-${lastVisibleResult} results`
+                                ? `Showing ${firstVisibleResult}-${lastVisibleResult}${totalMatches != null ? ` of ${totalMatches}` : ''} results`
                                 : 'No matching results'}
                     </p>
                     <section>
@@ -269,7 +273,7 @@ export default function ProductsPage() {
                                     <Image src={searchIcon} alt="" />
                                     <input
                                         type="search"
-                                        placeholder='SEARCH BY NAME'
+                                        placeholder='SEARCH BY NAME OR KEYWORD'
                                         value={searchQuery}
                                         maxLength={120}
                                         onChange={(event) => setSearchQuery(event.target.value)}

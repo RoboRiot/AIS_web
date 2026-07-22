@@ -8,22 +8,16 @@ import {
   signCursor,
   verifyCursor,
 } from "@/app/data/requestSecurity";
+import {
+  getCatalogSearchScore,
+  normalizeCatalogPartNumber,
+  normalizeCatalogSearchText,
+} from "@/app/data/partCatalogSearch.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 
 const PAGE_SIZE = 12;
-
-const normalizeName = (value) =>
-  cleanText(value, 120)
-    .normalize("NFKD")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim()
-    .replace(/\s+/g, " ");
-
-const normalizePartNumber = (value) =>
-  cleanText(value, 120).toUpperCase().replace(/[^A-Z0-9]/g, "");
 
 const querySignature = (values) =>
   JSON.stringify([
@@ -58,8 +52,8 @@ export async function GET(request) {
 
     const params = request.nextUrl.searchParams;
     const values = {
-      name: normalizeName(params.get("q")),
-      partNumber: normalizePartNumber(params.get("pn")),
+      name: normalizeCatalogSearchText(cleanText(params.get("q"), 120)),
+      partNumber: normalizeCatalogPartNumber(cleanText(params.get("pn"), 120)),
       oem: cleanText(params.get("oem"), 80),
       modality: cleanText(params.get("modality"), 40),
       model: cleanText(params.get("model"), 120),
@@ -72,34 +66,62 @@ export async function GET(request) {
     if (values.modality) query = query.where("Modality", "==", values.modality);
     if (values.model) query = query.where("Machine", "==", values.model);
 
-    const orderField = values.partNumber ? "PNNormalized" : "NameNormalized";
-    const prefix = values.partNumber || values.name;
-    if (prefix) {
-      query = query
-        .where(orderField, ">=", prefix)
-        .where(orderField, "<=", `${prefix}\uf8ff`);
-    }
-
     query = query
-      .orderBy(orderField, values.direction)
+      .orderBy("NameNormalized", values.direction)
       .orderBy(FieldPath.documentId(), values.direction);
 
     const cursor = verifyCursor(params.get("cursor"));
-    if (cursor?.id && cursor.signature === signature) {
-      const cursorSnapshot = await db.collection("Parts").doc(cursor.id).get();
-      if (cursorSnapshot.exists) query = query.startAfter(cursorSnapshot);
+    const hasSearch = Boolean(values.name || values.partNumber);
+    let products;
+    let hasNextPage;
+    let nextCursor;
+    let totalMatches = null;
+
+    if (hasSearch) {
+      const snapshot = await query.get();
+      const direction = values.direction === "desc" ? -1 : 1;
+      const ranked = snapshot.docs
+        .map((document) => {
+          const product = { id: document.id, ...document.data() };
+          return { product, score: getCatalogSearchScore(product, values) };
+        })
+        .filter((result) => result.score > 0)
+        .sort((left, right) => {
+          if (left.score !== right.score) return right.score - left.score;
+          const leftName = normalizeCatalogSearchText(left.product.Name);
+          const rightName = normalizeCatalogSearchText(right.product.Name);
+          const nameComparison = leftName.localeCompare(rightName);
+          if (nameComparison !== 0) return nameComparison * direction;
+          return String(left.product.id).localeCompare(String(right.product.id)) * direction;
+        });
+
+      const offset = cursor?.signature === signature && Number.isSafeInteger(cursor.offset)
+        ? Math.max(0, cursor.offset)
+        : 0;
+      const visible = ranked.slice(offset, offset + PAGE_SIZE);
+      products = visible.map((result) => result.product);
+      totalMatches = ranked.length;
+      hasNextPage = offset + PAGE_SIZE < ranked.length;
+      nextCursor = hasNextPage
+        ? signCursor({ offset: offset + PAGE_SIZE, signature })
+        : null;
+    } else {
+      if (cursor?.id && cursor.signature === signature) {
+        const cursorSnapshot = await db.collection("Parts").doc(cursor.id).get();
+        if (cursorSnapshot.exists) query = query.startAfter(cursorSnapshot);
+      }
+
+      const snapshot = await query.limit(PAGE_SIZE + 1).get();
+      const visible = snapshot.docs.slice(0, PAGE_SIZE);
+      products = visible.map((document) => ({ id: document.id, ...document.data() }));
+      hasNextPage = snapshot.docs.length > PAGE_SIZE;
+      nextCursor = hasNextPage && visible.length
+        ? signCursor({ id: visible[visible.length - 1].id, signature })
+        : null;
     }
 
-    const snapshot = await query.limit(PAGE_SIZE + 1).get();
-    const visible = snapshot.docs.slice(0, PAGE_SIZE);
-    const products = visible.map((document) => ({ id: document.id, ...document.data() }));
-    const hasNextPage = snapshot.docs.length > PAGE_SIZE;
-    const nextCursor = hasNextPage && visible.length
-      ? signCursor({ id: visible[visible.length - 1].id, signature })
-      : null;
-
     return NextResponse.json(
-      { products, nextCursor, hasNextPage, pageSize: PAGE_SIZE },
+      { products, nextCursor, hasNextPage, pageSize: PAGE_SIZE, totalMatches },
       { headers: { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex" } }
     );
   } catch (error) {

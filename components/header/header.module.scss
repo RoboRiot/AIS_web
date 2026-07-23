@@ -332,6 +332,27 @@
     }
 }
 
+@media (min-width: 1101px) {
+    .has_dropdown:hover {
+        .dropdown_panel {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, 0);
+            visibility: visible;
+        }
+
+        .dropdown_toggle {
+            background: #506381 !important;
+
+            &::before {
+                border-color: #fff;
+                margin-top: 3px;
+                transform: rotate(225deg);
+            }
+        }
+    }
+}
+
 .dropdown_intro {
     margin-bottom: 12px;
     padding: 2px 4px 0;

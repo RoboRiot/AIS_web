@@ -106,6 +106,13 @@ const genericMriExteriorImages = [
   },
 ];
 
+const genericTrailerExteriorImage = {
+  id: "generic/exterior-2.webp",
+  src: "/assets/images/trailers/generic/exterior-2.webp",
+  alt: "Mobile imaging trailer exterior side view",
+  category: "Exterior",
+};
+
 const openRollupDoorImages = new Set(["ge-ct/IMG_1283.webp", "ge-ct/IMG_1284.webp"]);
 const reusableGeCtImages = geCtImages.filter((image) => !openRollupDoorImages.has(image.id));
 const reusableGeCtExteriorImages = reusableGeCtImages
@@ -115,13 +122,86 @@ const reusableGeCtExteriorImages = reusableGeCtImages
     alt: `Mobile imaging trailer exterior view ${index + 1}`,
   }));
 
+const selectTrailerImages = (images, ids, altLabel) => {
+  const imagesById = new Map(images.map((image) => [image.id, image]));
+
+  return ids.map((id, index) => {
+    const image = imagesById.get(id);
+    if (!image) throw new Error(`Missing curated trailer image: ${id}`);
+
+    return {
+      ...image,
+      alt: `${altLabel} ${index + 1}`,
+    };
+  });
+};
+
+const generalMriExteriorImages = selectTrailerImages(
+  [...genericMriExteriorImages, genericTrailerExteriorImage, ...reusableGeCtExteriorImages],
+  [
+    "generic-mri/exterior-1.jpg",
+    "generic-mri/mobile-mri2.jpg",
+    "generic/exterior-2.webp",
+    "ge-ct/IMG_1280.webp",
+  ],
+  "Mobile MRI trailer exterior view"
+);
+
+const generalMriInteriorImages = selectTrailerImages(
+  [...geMriImages, ...siemensMriImages],
+  [
+    "ge-mri/GE-SIGNA-Voyager-MRI_16-1198-15_2482.webp",
+    "ge-mri/GE-SIGNA-Voyager-MRI_Interior.webp",
+    "ge-mri/GE-SIGNA-Voyager-MRI_Control-Room-into-scan-room.webp",
+    "siemens-mri/Siemens-MRI-Viato-04122024_140213.webp",
+    "siemens-mri/Siemens-MRI-Viato-04122024_140244.webp",
+  ],
+  "Mobile MRI trailer interior view"
+);
+
+const generalCtExteriorImages = selectTrailerImages(
+  [genericTrailerExteriorImage, ...reusableGeCtExteriorImages],
+  [
+    "generic/exterior-2.webp",
+    "ge-ct/IMG_1276.webp",
+    "ge-ct/IMG_1280.webp",
+    "ge-ct/IMG_1281.webp",
+  ],
+  "Mobile CT trailer exterior view"
+);
+
+const generalCtInteriorImages = selectTrailerImages(
+  [...geCtImages, ...siemensCtImages, ...canonCtImages],
+  [
+    "ge-ct/IMG_1286.webp",
+    "ge-ct/IMG_1549.jpg.webp",
+    "siemens-ct/Mobile-CT-Siemens-interior-2.webp",
+    "canon-ct/Mobile-CT-Canon-interior-6.webp",
+    "canon-ct/Mobile-CT-Canon-interior-26.webp",
+  ],
+  "Mobile CT trailer interior view"
+);
+
+const generalPetCtInteriorImages = selectTrailerImages(
+  [...gePetCtImages, ...siemensPetCtImages],
+  [
+    "ge-pet-ct/IMG_8610.webp",
+    "ge-pet-ct/Scan-Room--rotated.webp",
+    "siemens-pet-ct/AMST-Siemens-Biograph-Vision-Control-Scan2.webp",
+    "siemens-pet-ct/AMST-Siemens-Biograph-Vision-Scan-Room2.webp",
+  ],
+  "Mobile PET/CT trailer interior view"
+);
+
 const trailerImagesBySlug = {
+  "mobile-mri-trailer-rental": [...generalMriExteriorImages, ...generalMriInteriorImages],
+  "mobile-ct-trailer-rental": [...generalCtExteriorImages, ...generalCtInteriorImages],
+  "mobile-pet-ct-trailer-rental": [...generalCtExteriorImages, ...generalPetCtInteriorImages],
   "ge-ct-trailer-rental": geCtImages,
   "ge-pet-ct-trailer-rental": [...reusableGeCtExteriorImages, ...gePetCtImages],
   "siemens-pet-ct-trailer-rental": [...reusableGeCtExteriorImages, ...siemensPetCtImages],
   "ge-mri-trailer-rental": [...genericMriExteriorImages, ...geMriImages],
   "siemens-mri-trailer-rental": siemensMriImages,
-  "mobile-ct-trailer-rental": reusableGeCtImages,
   "toshiba-ct-trailer-rental": [...reusableGeCtExteriorImages, ...canonCtImages],
   "siemens-ct-trailer-rental": [...reusableGeCtExteriorImages, ...siemensCtImages],
 };

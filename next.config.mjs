@@ -1,7 +1,9 @@
 import { PRODUCTION_SITE_URL } from "./site.config.mjs";
 
 /** @type {import('next').NextConfig} */
-const defaultDistDir = process.env.NODE_ENV === "development" ? ".next-dev" : ".next";
+const isDevelopment = process.env.NODE_ENV === "development";
+const defaultDistDir = isDevelopment ? ".next-dev" : ".next";
+const developmentScriptPolicy = isDevelopment ? " 'unsafe-eval'" : "";
 
 const contentSecurityDirectives = [
   "default-src 'self'",
@@ -9,7 +11,7 @@ const contentSecurityDirectives = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://js-na2.hs-scripts.com https://js-na2.hscollectedforms.net https://*.hubspot.com https://*.hs-analytics.net https://*.hs-banner.com https://*.usemessages.com",
+  `script-src 'self' 'unsafe-inline'${developmentScriptPolicy} https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://js-na2.hs-scripts.com https://js-na2.hscollectedforms.net https://*.hubspot.com https://*.hs-analytics.net https://*.hs-banner.com https://*.usemessages.com`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
   "img-src 'self' data: blob: https://firebasestorage.googleapis.com https://storage.googleapis.com https://www.google-analytics.com https://*.hubspot.com https://*.hubspotusercontent.com",

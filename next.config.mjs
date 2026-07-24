@@ -1,9 +1,44 @@
 import { PRODUCTION_SITE_URL } from "./site.config.mjs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
+import path from "node:path";
 
 /** @type {import('next').NextConfig} */
 const isDevelopment = process.env.NODE_ENV === "development";
 const defaultDistDir = isDevelopment ? ".next-dev" : ".next";
+const configuredDistDir = process.env.AIS_NEXT_DIST_DIR || defaultDistDir;
 const developmentScriptPolicy = isDevelopment ? " 'unsafe-eval'" : "";
+let finalStaticMirrorRegistered = false;
+
+const copyDirectoryContents = (sourceDirectory, targetDirectory) => {
+  if (!existsSync(sourceDirectory)) return;
+  mkdirSync(targetDirectory, { recursive: true });
+
+  for (const entry of readdirSync(sourceDirectory, { withFileTypes: true })) {
+    const sourcePath = path.join(sourceDirectory, entry.name);
+    const targetPath = path.join(targetDirectory, entry.name);
+
+    if (entry.isDirectory()) {
+      copyDirectoryContents(sourcePath, targetPath);
+    } else if (entry.isFile()) {
+      copyFileSync(sourcePath, targetPath);
+    }
+  }
+};
+
+class MirrorNextStaticAssetsPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap("MirrorNextStaticAssetsPlugin", () => {
+      mirrorNextStaticAssets();
+    });
+  }
+}
+
+const mirrorNextStaticAssets = () => {
+  copyDirectoryContents(
+    path.join(process.cwd(), configuredDistDir, "static"),
+    path.join(process.cwd(), "public", "assets", "next-static"),
+  );
+};
 
 const contentSecurityDirectives = [
   "default-src 'self'",
@@ -29,7 +64,17 @@ if (PRODUCTION_SITE_URL.startsWith("https://")) {
 const contentSecurityPolicy = contentSecurityDirectives.join("; ");
 
 const nextConfig = {
-  distDir: process.env.AIS_NEXT_DIST_DIR || defaultDistDir,
+  distDir: configuredDistDir,
+  webpack(config, { dev }) {
+    if (!dev) {
+      config.plugins.push(new MirrorNextStaticAssetsPlugin());
+      if (!finalStaticMirrorRegistered) {
+        finalStaticMirrorRegistered = true;
+        process.once("exit", mirrorNextStaticAssets);
+      }
+    }
+    return config;
+  },
   poweredByHeader: false,
   images: {
     remotePatterns: [

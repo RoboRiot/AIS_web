@@ -21,8 +21,12 @@ export default function PartCard({ mainTitle }) {
         const fetchData = async () => {
 
             try {
+                const isCtSection = String(mainTitle?.[0] || '').includes('CT');
                 const data = await fetchProducts();
-                const matchedProducts = mainTitle[0].includes('CT') ? data.filter((product) => (product.Modality.includes('CT'))) : data;
+                const matchedProducts = isCtSection
+                    ? data.filter((product) =>
+                        String(product?.Modality || '').includes('CT'))
+                    : data;
                 setProducts(matchedProducts);
             } catch (error) {
                 console.error("Error fetching products:", error);

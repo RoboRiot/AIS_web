@@ -1,8 +1,6 @@
 "use client"
 import React, {useEffect, useState } from 'react';
 import styles from "./foundYourPart.module.scss"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
@@ -84,9 +82,6 @@ export default function FoundYourPart() {
         // closeModal();
     };
     
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.found_part_wrap} data-aos="fade-up" data-aos-duration="1000">

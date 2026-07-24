@@ -1,16 +1,9 @@
 "use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./mriExperts.module.scss"
 import downArrow from "@/public/assets/images/down-arrow.svg"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function MriExperts() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
-
     const handleScroll = () => {
         const targetElement = document.getElementById('targetElement');
         if (targetElement) {

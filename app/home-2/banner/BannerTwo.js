@@ -2,21 +2,21 @@
 import React from 'react';
 import styles from "./banner.module.scss"
 import Link from "next/link"
+import Image from "next/image";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
-import bannerImageList from "./bannerImageList.json"
+import bannerImageFour from "@/public/assets/images/bannerslider4.jpg";
+import bannerImageFive from "@/public/assets/images/bannerslider5.jpg";
+import bannerImageSix from "@/public/assets/images/bannerslider6.jpg";
+
+const bannerImageList = [bannerImageFour, bannerImageFive, bannerImageSix];
 
 export default function BannerTwo() {
-    React.useEffect(() => {
-        bannerImageList.forEach(({ image }) => {
-            const preloadImage = new window.Image();
-            preloadImage.src = image;
-        });
-    }, []);
+    const [activeIndex, setActiveIndex] = React.useState(0);
 
     return(
         <>
@@ -40,14 +40,26 @@ export default function BannerTwo() {
                             disableOnInteraction: false,
                             pauseOnMouseEnter: true,
                         }}
+                        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                         modules={[EffectFade, Autoplay, Pagination, Navigation]}
                         className="mySwiper"
                         >
                         {
-                            bannerImageList.map(({image},index)=>{
+                            bannerImageList.map((image,index)=>{
                                 return(
-                                    <SwiperSlide key={`banner-${index}`} style={{ backgroundImage: `url(${image})`, width: '100%', height: '100%' }} className="flex items-center">
-                                        {/* <Image width={1920} height={1080} src={image} alt="image" /> */}
+                                    <SwiperSlide key={`banner-${index}`} style={{ position: "relative", width: '100%', height: '100%' }} className="flex items-center">
+                                        {index === activeIndex && (
+                                            <Image
+                                                src={image}
+                                                alt=""
+                                                aria-hidden="true"
+                                                fill
+                                                priority={index === 0}
+                                                quality={82}
+                                                sizes="100vw"
+                                                style={{ objectFit: "cover" }}
+                                            />
+                                        )}
                                     </SwiperSlide>
                                 )
                             })

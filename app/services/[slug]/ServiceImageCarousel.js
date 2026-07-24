@@ -6,6 +6,7 @@ import styles from "../landingPage.module.scss";
 
 export default function ServiceImageCarousel({ title, slides }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeSlide = slides[activeIndex];
 
   useEffect(() => {
     if (slides.length < 2) return undefined;
@@ -20,17 +21,17 @@ export default function ServiceImageCarousel({ title, slides }) {
   return (
     <figure className={`${styles.figure} ${styles.serviceCarouselFigure}`}>
       <div className={styles.serviceCarouselFrame}>
-        {slides.map((slide, index) => (
+        {activeSlide && (
           <Image
-            key={slide.id}
-            src={slide.src}
-            alt={`${title}: ${slide.alt}`}
+            key={activeSlide.id}
+            src={activeSlide.src}
+            alt={`${title}: ${activeSlide.alt}`}
             fill
-            priority={index === 0}
+            priority={activeIndex === 0}
             sizes="(max-width: 1100px) 100vw, 45vw"
-            className={index === activeIndex ? styles.carouselActive : ""}
+            className={styles.carouselActive}
           />
-        ))}
+        )}
       </div>
       {slides.length > 1 && (
         <div className={styles.carouselDots} aria-label={`${title} service image carousel controls`}>

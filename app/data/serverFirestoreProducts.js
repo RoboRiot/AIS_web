@@ -31,7 +31,7 @@ export const fetchAllProducts = async () => {
   do {
     let query = db
       .collection("Parts")
-      .select("Name", "PN", "Description", "OEM", "Modality", "Machine", "UpdatedAt")
+      .select("Name", "PN", "Description", "OEM", "Modality", "Machine", "Slug", "UpdatedAt")
       .orderBy(FieldPath.documentId())
       .limit(500);
     if (cursor) query = query.startAfter(cursor);

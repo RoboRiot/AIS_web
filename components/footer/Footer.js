@@ -1,6 +1,4 @@
-"use client"
 import Link from "next/link"
-import { useEffect } from 'react';
 import styles from "./footer.module.scss"
 import Image from "next/image"
 import logoImage from "@/public/assets/images/logo.svg"
@@ -12,37 +10,7 @@ import linkedin from "@/public/assets/images/linkedin.svg"
 import twitter from "@/public/assets/images/twitter.svg"
 import heartIcon from "@/public/assets/images/heart.svg"
 
-function smoothScrollTo(hash, offset = 0) {
-  const target = document.querySelector(hash);
-  if (target) {
-    window.scrollTo({
-      top: target.offsetTop - offset,
-      behavior: 'smooth'
-    });
-  }
-}
-
-function handleScrollClick(event) {
-  const hash = event.target.hash;
-  if (hash !== "") {
-    event.preventDefault();
-    smoothScrollTo(hash, 200);
-  }
-}
-
 export default function Footer() {
-    useEffect(() => {
-        const scrollLinks = document.querySelectorAll('a.bottom-scroll');
-        scrollLinks.forEach(link => {
-          link.addEventListener('click', handleScrollClick);
-        });
-        return () => {
-          scrollLinks.forEach(link => {
-            link.removeEventListener('click', handleScrollClick);
-          });
-        };
-      }, []);
-
     const currentYear = new Date().getFullYear();
     return(
         <>

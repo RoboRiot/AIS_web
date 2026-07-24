@@ -1,18 +1,12 @@
 "use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./mobileMri.module.scss"
 import weDoImage from "@/public/assets/images/mobile-mri.jpg"
 import weDoImage2 from "@/public/assets/images/mobile-mri2.jpg"
 import Link from "next/link";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import downArrow from "@/public/assets/images/down-arrow.svg"
 
 export default function MobileMri({ showFleetPricing = true }) {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     const handleScroll = () => {
         const targetElement = document.getElementById('targetElement');
         if (targetElement) {

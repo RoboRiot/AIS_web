@@ -13,7 +13,8 @@ import {
 import { getTrailerImages } from "@/app/data/trailerImages";
 import styles from "@/app/services/landingPage.module.scss";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return trailerLandingPages.map((page) => ({ slug: page.slug }));

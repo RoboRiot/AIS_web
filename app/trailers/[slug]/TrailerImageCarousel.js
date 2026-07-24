@@ -73,17 +73,15 @@ export default function TrailerImageCarousel({ title, slides = [] }) {
   return (
     <figure className={`${styles.figure} ${styles.carouselFigure}`}>
       <div className={styles.carouselFrame}>
-        {trailerSlides.map((slide, index) => (
-          <Image
-            key={slide.id}
-            src={slide.src}
-            alt={`${title}: ${slide.alt}`}
-            fill
-            priority={index === 0}
-            sizes="(max-width: 1100px) 100vw, 45vw"
-            className={index === activeIndex ? styles.carouselActive : ""}
-          />
-        ))}
+        <Image
+          key={activeSlide.id}
+          src={activeSlide.src}
+          alt={`${title}: ${activeSlide.alt}`}
+          fill
+          priority={activeIndex === 0}
+          sizes="(max-width: 1100px) 100vw, 45vw"
+          className={styles.carouselActive}
+        />
         <span className={styles.carouselCategoryBadge}>{activeSlide.category}</span>
       </div>
       {trailerSlides.length > 1 && (

@@ -1,15 +1,8 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./howWeAre.module.scss"
 import HowWEImage from "@/public/assets/images/who_we_are.jpg"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function HowWeAre() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.how_we_are} id="targetElement">

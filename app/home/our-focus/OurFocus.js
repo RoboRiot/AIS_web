@@ -1,15 +1,8 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image"
 import styles from "./ourFocus.module.scss"
 import focusImage from "@/public/assets/images/focus-image.jpg"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function OurFocus() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.focus_wrapper}>

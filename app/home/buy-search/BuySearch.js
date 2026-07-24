@@ -1,10 +1,8 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from "./buySearch.module.scss";
 import productsData from "../part-card/partCardList.json";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function BuySearch() {
     const router = useRouter();
@@ -46,10 +44,6 @@ export default function BuySearch() {
         setSearchQuery(suggestion.partTitle);
         setSuggestions([]);
     };
-    useEffect(() => {
-        AOS.init();
-    },[]);
-
     return(
         <div className={styles.search_form_wrap} data-aos="fade-up" data-aos-duration="1000" id="search">
             <div className="container">

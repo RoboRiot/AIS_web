@@ -1,17 +1,11 @@
 "use client";
-import {Fragment, useState, useEffect} from "react";
+import {Fragment, useState} from "react";
 import styles from "./expertsProvidingService.module.scss";
 import expertsProvidingServiceList from "./expertsProvidingServiceList.json";
 import Image from "next/image";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function ExpertsProvidingService() {
     const [tabs, setTabs] = useState(0);
-    useEffect(() => {
-        AOS.init();
-    },[]);
-
     return(
         <>
             <div className={styles.tab_wrapper}>

@@ -1,5 +1,3 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image"
 import styles from "./getInTouch.module.scss"
 import phoneIcon from "@/public/assets/images/phoneicon.svg"
@@ -8,13 +6,8 @@ import locationIcon from "@/public/assets/images/location.svg"
 import facebook from "@/public/assets/images/facebook.svg"
 import linkedin from "@/public/assets/images/linkedin.svg"
 import twitter from "@/public/assets/images/twitter.svg"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function GetInTouch() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.get_wrapper}>

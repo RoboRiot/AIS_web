@@ -215,18 +215,6 @@ export function middleware(request) {
   const respond = (response) =>
     stagingRequest ? addStagingHeaders(response) : response;
 
-  if (
-    process.env.NODE_ENV === "production" &&
-    pathname.startsWith("/_next/static/")
-  ) {
-    const staticAssetPath = pathname.slice("/_next/static/".length);
-    if (staticAssetPath && !staticAssetPath.includes("..")) {
-      const mirrorUrl = request.nextUrl.clone();
-      mirrorUrl.pathname = `/assets/next-static/${staticAssetPath}`;
-      return respond(NextResponse.rewrite(mirrorUrl));
-    }
-  }
-
   if (pathname === "/product-detail") {
     const rawQuery = request.nextUrl.search.replace(/^\?/, "");
     const redirectUrl = request.nextUrl.clone();
@@ -280,7 +268,6 @@ export const config = {
   matcher: [
     "/robots.txt",
     "/sitemap.xml",
-    "/_next/static/:path*",
     "/((?!_next/static|_next/image|.*\\..*).*)",
   ],
 };

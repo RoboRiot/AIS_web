@@ -6,8 +6,6 @@ import pro1 from "@/public/assets/images/slide1.png"
 import pro2 from "@/public/assets/images/slide2.png"
 import pro3 from "@/public/assets/images/slide3.png"
 import Link from "next/link"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { fetchProducts } from "@/components/fetchProducts/fetchedProducts";
 import { ImageComponent } from '@/components/fetchImages/Image';
 import { buildProductHref } from "@/app/data/seoProducts";
@@ -47,9 +45,6 @@ export default function RelatedProducts() {
 
     }, []);
 
-    useEffect(() => {
-        AOS.init();
-    }, []);
     return (
         <>
             <div className={styles.related_products}>

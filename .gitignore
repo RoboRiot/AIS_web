@@ -12,6 +12,7 @@
 # next.js
 /.next/
 /.next-*/
+/.next-release-current
 /out/
 
 # production
@@ -26,6 +27,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /catalog-dev.*.log
+/ais-release-*.log
 
 # local env files
 .env

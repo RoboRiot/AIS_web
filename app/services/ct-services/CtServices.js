@@ -1,16 +1,9 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./ctServices.module.scss"
 import weDoImage from "@/public/assets/images/ct_services.jpg"
 import Link from "next/link";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function CtServices() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.mobile_mri} id="service2">

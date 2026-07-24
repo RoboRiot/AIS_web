@@ -1,16 +1,9 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./expertMriServices.module.scss"
 import weDoImage from "@/public/assets/images/e-mri.jpg"
 import Link from "next/link";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function ExpertMriServices() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.mri_experts} id="service1">

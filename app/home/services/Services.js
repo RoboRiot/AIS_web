@@ -1,16 +1,9 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image"
 import styles from "./services.module.scss"
 import servicesList from "./servicesList.json"
 import Link from "next/link";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function Services() { 
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.services_wrapper}>

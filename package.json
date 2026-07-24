@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build-release.mjs",
     "start": "next start",
     "lint": "next lint",
     "test": "node --test tests/*.test.mjs",
+    "verify:build": "node scripts/verify-build-assets.mjs",
+    "verify:site": "node scripts/verify-site-assets.mjs",
     "audit:product-links": "node scripts/audit-product-links.mjs"
   },
   "dependencies": {

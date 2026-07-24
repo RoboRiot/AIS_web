@@ -1,5 +1,4 @@
 @import "./variables.scss";
-@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;300;400;500;600;700;800;900&display=swap');
 
 * {
   box-sizing: border-box;
@@ -12,7 +11,7 @@ body {
   margin: 0;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
-  font: 400 14px/26px 'Geologica', sans-serif;
+  font: 400 14px/26px var(--font-geologica), Arial, sans-serif;
   color: $dark_color;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
@@ -32,7 +31,7 @@ body h6 {
   margin: 0 0 10px;
   color: #19191D;
   font-weight: 400;
-  font-family: 'Geologica', sans-serif;
+  font-family: var(--font-geologica), Arial, sans-serif;
 }
 .img-responsive {
   width: 100%;
@@ -201,7 +200,7 @@ a {
 input,
 button,
 textarea {
-  font: 400 16px/20px "Geologica", sans-serif;
+  font: 400 16px/20px var(--font-geologica), Arial, sans-serif;
 }
 input,
 textarea,

@@ -1,15 +1,8 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image";
 import styles from "./whatWeDev.module.scss"
 import weDoImage from "@/public/assets/images/we_do.jpg"
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function WhatWeDev() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <>
             <div className={styles.mri_experts}>

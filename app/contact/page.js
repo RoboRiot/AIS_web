@@ -10,8 +10,6 @@ import facebook from "@/public/assets/images/facebook.svg"
 import linkedin from "@/public/assets/images/linkedin.svg"
 import twitter from "@/public/assets/images/twitter.svg"
 import Testimonial from "../home/testimonial/Testimonial";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
@@ -19,10 +17,6 @@ import { submitLead } from '@/components/utils/submitLead';
 import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function Contact() {
-  useEffect(() => {
-    AOS.init();
-  }, []);
-
 //   useEffect(() => {
 //     // Load reCAPTCHA script dynamically when the component mounts
 //     const script = document.createElement('script');

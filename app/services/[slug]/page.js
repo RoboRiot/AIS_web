@@ -10,7 +10,8 @@ import {
 } from "@/app/data/serviceLandingPages";
 import styles from "../landingPage.module.scss";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return serviceLandingPages.map((page) => ({ slug: page.slug }));

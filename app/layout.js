@@ -1,11 +1,22 @@
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import '@/styles/globals.scss'
+import "aos/dist/aos.css";
+import { Geologica } from "next/font/google";
+import Script from "next/script";
 import { BASE_URL } from "@/app/data/seoProducts";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import WebsiteAnalytics from "@/components/analytics/WebsiteAnalytics";
+import AosInitializer from "@/components/animations/AosInitializer";
 
 const siteName = "Advanced Imaging Services";
+const geologica = Geologica({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-geologica",
+  weight: "variable",
+  adjustFontFallback: false,
+});
 
 export const metadata = {
   metadataBase: new URL(BASE_URL),
@@ -67,13 +78,11 @@ const organizationJsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-
-      <script type="text/javascript" id="hs-script-loader" async defer src="//js-na2.hs-scripts.com/242600993.js"></script>
-
+    <html lang="en" className={geologica.variable}>
       <body>
         <GoogleAnalytics />
         <WebsiteAnalytics />
+        <AosInitializer />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -85,6 +94,11 @@ export default function RootLayout({ children }) {
           </main>
           <Footer />
         </div>
+        <Script
+          id="hs-script-loader"
+          src="https://js-na2.hs-scripts.com/242600993.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

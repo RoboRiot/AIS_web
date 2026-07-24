@@ -1,16 +1,9 @@
-"use client"
-import {useEffect} from "react"
 import Image from "next/image"
 import styles from "./about.module.scss"
 import aboutImage from "@/public/assets/images/about-img.png"
 import Link from "next/link"
-import AOS from 'aos'; 
-import 'aos/dist/aos.css';
 
 export default function About() {
-    useEffect(() => {
-        AOS.init();
-    },[]);
     return(
         <> 
             <div className={styles.about_main_wrapper}>

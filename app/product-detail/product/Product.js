@@ -12,8 +12,6 @@ import Image1 from "@/public/assets/images/loader2.png"
 import Enlarge from "@/public/assets/images/enlarge.svg"
 import Link from 'next/link';
 import RequestModal from '@/components/modals/RequestModal';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { getPrimaryImagePath, resolveImageUrl } from '@/components/fetchImages/Image';
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -93,10 +91,6 @@ export default function Product({ clickedProduct }) {
     const clickModal = () => {
         setShowPop(!showPop);
     }
-
-    useEffect(() => {
-        AOS.init();
-    }, []);
 
     const onInit = () => {
         console.log('lightGallery has been initialized');

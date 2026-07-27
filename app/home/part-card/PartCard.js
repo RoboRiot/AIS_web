@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 import { fetchProducts } from "@/components/fetchProducts/fetchedProducts";
-import { ImageComponent } from '@/components/fetchImages/Image';
+import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import { buildProductHref } from "@/app/data/seoProducts";
 
 
@@ -17,23 +17,29 @@ export default function PartCard({ mainTitle }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
+        const controller = new AbortController();
+        let active = true;
 
         const fetchData = async () => {
 
             try {
                 const isCtSection = String(mainTitle?.[0] || '').includes('CT');
-                const data = await fetchProducts();
-                const matchedProducts = isCtSection
-                    ? data.filter((product) =>
-                        String(product?.Modality || '').includes('CT'))
-                    : data;
-                setProducts(matchedProducts);
+                const data = await fetchProducts({
+                    modality: isCtSection ? 'CT' : '',
+                    limit: 12,
+                    signal: controller.signal,
+                });
+                if (active) setProducts(data);
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
         };
         fetchData();
 
+        return () => {
+            active = false;
+            controller.abort();
+        };
     }, [mainTitle]);
     
     return(
@@ -68,9 +74,10 @@ export default function PartCard({ mainTitle }) {
                         className="mySwiper"
                         >
                         {
-                            products.map(({id,Name},index)=>{
+                            products.map((product)=>{
+                                const { id, Name } = product;
                                 return(
-                                    <SwiperSlide key={`part-${index}`} className="flex items-center">
+                                    <SwiperSlide key={id} className="flex items-center">
                                         <Link
                                             href={buildProductHref({ id, Name }) || "/product-detail"}
                                             onClick={() => {
@@ -85,7 +92,10 @@ export default function PartCard({ mainTitle }) {
                                             }}
                                         >
                                             <figure>
-                                                <ImageComponent imagePath={`Parts/${id}/${id}`} alt={`${Name || "Medical imaging part"} ${id || ""}`}/>
+                                                <ImageComponent
+                                                    imagePath={getPrimaryImagePath(product)}
+                                                    alt={`${Name || "Medical imaging part"} ${id || ""}`}
+                                                />
                                                 <h3>{Name}</h3>
                                             </figure>
                                         </Link>

@@ -1,20 +1,14 @@
 "use client"
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import styles from "./relatedProducts.module.scss"
-import pro1 from "@/public/assets/images/slide1.png"
-import pro2 from "@/public/assets/images/slide2.png"
-import pro3 from "@/public/assets/images/slide3.png"
 import Link from "next/link"
 import { fetchProducts } from "@/components/fetchProducts/fetchedProducts";
-import { ImageComponent } from '@/components/fetchImages/Image';
+import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import { buildProductHref } from "@/app/data/seoProducts";
 
 
 export default function RelatedProducts() {
     const [products, setProducts] = useState([]);
-    const [storedProduct, setStoredProduct] = useState([]);
-    const [imageUrl, setImageUrl] = useState(null);
 
 
     useEffect(() => {
@@ -25,24 +19,29 @@ export default function RelatedProducts() {
                 return null;
             }
         })();
-        setStoredProduct(stored || {});
+        const controller = new AbortController();
+        let active = true;
 
         const fetchData = async () => {
 
             try {
-                const data = await fetchProducts();
                 const targetOEM = stored?.OEM;
-                const matchedProducts = targetOEM
-                    ? data.filter((product) => product.OEM === targetOEM)
+                const data = targetOEM
+                    ? await fetchProducts({ oem: targetOEM, limit: 4, signal: controller.signal })
                     : [];
-                const slicedProductsArray = matchedProducts.slice(0, 3);
-                setProducts(slicedProductsArray);
+                if (active) {
+                    setProducts(data.filter((product) => product.id !== stored?.id).slice(0, 3));
+                }
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
         };
         fetchData();
 
+        return () => {
+            active = false;
+            controller.abort();
+        };
     }, []);
 
     return (
@@ -51,10 +50,8 @@ export default function RelatedProducts() {
                 <div className="container">
                     <h2 className="main-title">Related <span>products</span></h2>
                     <ul className="list-none flex flex-wrap" data-aos="fade-up" data-aos-duration="1000">
-                        {products.map((x, index) =>
-                            <li key={index}>
-                            {/* {getImageUrl(x.id)} */}
-
+                        {products.map((x) =>
+                            <li key={x.id}>
                                 <Link
                                     href={buildProductHref(x) || "/product-detail"}
                                     onClick={() => {
@@ -66,8 +63,10 @@ export default function RelatedProducts() {
                                     }}
                                 >
                                     <figure>
-                                        {/* <Image src={imageUrl  ? imageUrl : pro1 } alt="pro1" /> */}
-                                        <ImageComponent imagePath={`Parts/${x.id}/${x.id}`} />
+                                        <ImageComponent
+                                            imagePath={getPrimaryImagePath(x)}
+                                            alt={`${x.Name || "Medical imaging part"} ${x.id || ""}`}
+                                        />
                                         <h3>{x.Name}</h3>
                                     </figure>
                                 </Link>

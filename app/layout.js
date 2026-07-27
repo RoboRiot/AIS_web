@@ -8,6 +8,7 @@ import { BASE_URL } from "@/app/data/seoProducts";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import WebsiteAnalytics from "@/components/analytics/WebsiteAnalytics";
 import AosInitializer from "@/components/animations/AosInitializer";
+import ClientRouteRecovery from "@/components/errors/ClientRouteRecovery";
 
 const siteName = "Advanced Imaging Services";
 const geologica = Geologica({
@@ -76,13 +77,55 @@ const organizationJsonLd = {
   },
 };
 
+const staleAssetRecoveryScript = `
+(() => {
+  const recoveryParam = "__ais_recover";
+  const recoveryKey = "ais-route-recovery:" + window.location.pathname;
+  const recoveryWindow = 300000;
+  const nextStaticPath = "/_next/" + "static/";
+  const recover = () => {
+    try {
+      const lastRecovery = Number(sessionStorage.getItem(recoveryKey) || 0);
+      if (Date.now() - lastRecovery < recoveryWindow) return;
+      sessionStorage.setItem(recoveryKey, String(Date.now()));
+      const nextUrl = new URL(window.location.href);
+      nextUrl.searchParams.set(recoveryParam, String(Date.now()));
+      window.location.replace(nextUrl.toString());
+    } catch {
+      window.location.reload();
+    }
+  };
+  const recoverable = (value) =>
+    /ChunkLoadError|Loading chunk \\d+ failed|Failed to fetch dynamically imported module|Failed to fetch RSC payload/i.test(
+      String(value?.message || value || "")
+    );
+  window.addEventListener("error", (event) => {
+    const target = event.target;
+    const assetUrl = target && (target.src || target.href || "");
+    if (String(assetUrl).includes(nextStaticPath) || recoverable(event.error || event.message)) {
+      recover();
+    }
+  }, true);
+  window.addEventListener("unhandledrejection", (event) => {
+    if (recoverable(event.reason)) recover();
+  });
+})();
+`;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={geologica.variable}>
+      <head>
+        <script
+          id="ais-static-recovery"
+          dangerouslySetInnerHTML={{ __html: staleAssetRecoveryScript }}
+        />
+      </head>
       <body>
         <GoogleAnalytics />
         <WebsiteAnalytics />
         <AosInitializer />
+        <ClientRouteRecovery />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

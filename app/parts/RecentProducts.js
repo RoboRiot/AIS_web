@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import styles from './search.module.scss';
 import Link from 'next/link';
-import slide1 from "@/public/assets/images/slide1.png";
-import { ImageComponent } from '@/components/fetchImages/Image';
+import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import { buildProductHref, slugify } from '@/app/data/seoProducts';
 
 export default function RecentProducts() {
@@ -41,7 +39,10 @@ export default function RecentProducts() {
                             onClick={() => handleClick(product)}
                         >
                             {/* Replace with dynamic product image if available */}
-                            <ImageComponent imagePath={`Parts/${product.id}/${product.id}`} alt={`${product.Name || "Medical imaging part"} ${product.id || ""}`} />
+                            <ImageComponent
+                                imagePath={getPrimaryImagePath(product)}
+                                alt={`${product.Name || "Medical imaging part"} ${product.id || ""}`}
+                            />
                             <h6>{product.Name}</h6>
                         </Link>
                     </li>

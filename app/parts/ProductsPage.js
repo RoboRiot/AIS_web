@@ -104,6 +104,7 @@ export default function ProductsPage() {
 
     useEffect(() => {
         let active = true;
+        const controller = new AbortController();
         const currentRequest = ++requestId.current;
 
         const fetchPage = async () => {
@@ -123,6 +124,7 @@ export default function ProductsPage() {
 
                 const response = await fetch(`/api/parts/search?${searchParams.toString()}`, {
                     headers: { Accept: 'application/json' },
+                    signal: controller.signal,
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) {
@@ -135,6 +137,7 @@ export default function ProductsPage() {
                 setNextCursor(data.nextCursor || null);
                 setTotalMatches(Number.isInteger(data.totalMatches) ? data.totalMatches : null);
             } catch (error) {
+                if (error?.name === 'AbortError') return;
                 console.error(error);
                 if (!active || currentRequest !== requestId.current) return;
                 setProducts([]);
@@ -155,6 +158,7 @@ export default function ProductsPage() {
 
         return () => {
             active = false;
+            controller.abort();
         };
     }, [
         debouncedSearch,

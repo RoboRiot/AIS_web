@@ -8,13 +8,17 @@ import searchIcon from "@/public/assets/images/search.svg"
 import { useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler';
 import productsData from "./partCardList.json";
-import { serviceLandingPages, serviceModalities, trailerLandingPages } from "@/app/data/serviceLandingPages";
+import {
+    navigationModalities,
+    serviceNavigationLinks,
+    trailerNavigationLinks,
+} from "@/app/data/serviceNavigation.mjs";
 
-const primaryServiceLinks = serviceLandingPages.filter((page) => !page.brand);
-const oemServiceLinks = serviceLandingPages.filter((page) => page.brand);
-const primaryTrailerLinks = trailerLandingPages.filter((page) => !page.brand);
-const oemTrailerLinks = trailerLandingPages.filter((page) => page.brand);
-const modalityKeys = Object.keys(serviceModalities);
+const primaryServiceLinks = serviceNavigationLinks.filter((page) => !page.brand);
+const oemServiceLinks = serviceNavigationLinks.filter((page) => page.brand);
+const primaryTrailerLinks = trailerNavigationLinks.filter((page) => !page.brand);
+const oemTrailerLinks = trailerNavigationLinks.filter((page) => page.brand);
+const modalityKeys = Object.keys(navigationModalities);
 
 const getGeneralPage = (pages, modality) => pages.find((page) => page.modality === modality);
 const getOemPages = (pages, modality) => pages.filter((page) => page.modality === modality);
@@ -61,7 +65,7 @@ export default function Navigation() {
                                 [type]: modality,
                             }))}
                         >
-                            {serviceModalities[modality].label}
+                            {navigationModalities[modality]}
                         </button>
                     ))}
                 </div>
@@ -72,13 +76,19 @@ export default function Navigation() {
                                 className={styles.dropdown_primary_link}
                                 onClick={closeNavOverlays}
                                 href={`${basePath}/${generalPage.slug}`}
+                                prefetch={false}
                             >
                                 {generalPage.shortTitle}
                             </Link>
                         )}
                         <div className={styles.oem_link_grid}>
                             {brandPages.map((page) => (
-                                <Link key={page.slug} onClick={closeNavOverlays} href={`${basePath}/${page.slug}`}>
+                                <Link
+                                    key={page.slug}
+                                    onClick={closeNavOverlays}
+                                    href={`${basePath}/${page.slug}`}
+                                    prefetch={false}
+                                >
                                     {page.shortTitle}
                                 </Link>
                             ))}
@@ -125,7 +135,7 @@ export default function Navigation() {
     const generateSuggestions = (value) => {
         const normalizedValue = value.toLowerCase().trim();
         const filteredSuggestions = productsData.filter(product =>
-            product.partTitle.toLowerCase().includes(normalizedValue)
+            String(product?.partTitle || '').toLowerCase().includes(normalizedValue)
         );
         setSuggestions(filteredSuggestions);
     };

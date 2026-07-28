@@ -428,18 +428,47 @@
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
-  margin-top: 8px;
+  gap: 16px 24px;
+  margin: 8px 0 32px;
+
+  :global(.simple-btn) {
+    align-items: center;
+    box-shadow: 0 12px 24px rgba(80, 99, 129, 0.18);
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1.25;
+    min-height: 58px;
+    padding: 16px 34px;
+    text-align: center;
+  }
 
   a:not(:global(.simple-btn)) {
     border-bottom: 1px solid #3797f8;
     color: #3797f8;
     font-size: 16px;
+    padding: 8px 0;
     transition: all 0.3s ease;
 
     &:hover {
       border-bottom-color: #506381;
       color: #506381;
+    }
+  }
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 26px;
+
+    :global(.simple-btn) {
+      min-height: 52px;
+      padding: 14px 20px;
+      width: 100%;
+    }
+
+    a:not(:global(.simple-btn)) {
+      align-self: flex-start;
     }
   }
 }

@@ -139,6 +139,10 @@ export default function TrailerLandingPage({ params }) {
               <span className={styles.kicker}>Mobile imaging rental and lease planning</span>
               <h2 className={styles.title}>{page.h1}</h2>
               <p className={styles.lead}>{page.intro}</p>
+              <div className={styles.ctaRow}>
+                <Link href={`/contact?inquiry=trailer&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Check Trailer Availability</Link>
+                <Link href="/trailers">All Trailer Rentals</Link>
+              </div>
               <div className={styles.heroSystems}>
                 <h3>Systems We Cover</h3>
                 <ul className="list-none">
@@ -146,10 +150,6 @@ export default function TrailerLandingPage({ params }) {
                     <li key={system}>{system}</li>
                   ))}
                 </ul>
-              </div>
-              <div className={styles.ctaRow}>
-                <Link href={`/contact?inquiry=trailer&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Request Rental Support</Link>
-                <Link href="/trailers">All Trailer Rentals</Link>
               </div>
               <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
                 {modelCoverage.length > 0 && <a href="#mri-models">{brandLabel} MRI Models</a>}

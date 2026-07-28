@@ -28,6 +28,9 @@ yarn-debug.log*
 yarn-error.log*
 /catalog-dev.*.log
 /ais-release-*.log
+/*-audit.*.log
+/*-upload.*.log
+/data/*/upload-readiness-*.json
 
 # local env files
 .env

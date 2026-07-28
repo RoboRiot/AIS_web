@@ -40,9 +40,10 @@ const renderEmailRow = (label, value) => `
   </tr>
 `;
 
-export const sanitizeLeadForm = (values = {}) => {
+export const sanitizeLeadForm = (values = {}, options = {}) => {
   const { name, email, message, partNumber = "" } = values;
   const partNumberRequired = Object.prototype.hasOwnProperty.call(values, "partNumber");
+  const messageRequired = options.messageRequired !== false;
 
   const sanitized = {
     name: normalizeInput(name, FORM_LIMITS.name),
@@ -54,7 +55,7 @@ export const sanitizeLeadForm = (values = {}) => {
   const errors = [];
   if (sanitized.name.length < 3) errors.push("Please enter a valid name.");
   if (!EMAIL_PATTERN.test(sanitized.email)) errors.push("Please enter a valid email address.");
-  if (!sanitized.message) errors.push("Please enter a message.");
+  if (messageRequired && !sanitized.message) errors.push("Please enter a message.");
   if (partNumberRequired && !sanitized.partNumber) {
     errors.push("Please enter a part number.");
   }
@@ -72,7 +73,7 @@ export const buildLeadText = ({ name, email, message, partNumber, leadType, sour
     partNumber ? `Part Number: ${partNumber}` : null,
     "",
     "Message:",
-    message,
+    message || "No additional details provided.",
   ]
     .filter((line) => line !== null)
     .join("\n");
@@ -85,7 +86,7 @@ export const buildLeadEmailHtml = ({ name, email, message, partNumber, leadType,
     renderEmailRow("Name", name),
     renderEmailRow("Email Address", email),
     partNumber ? renderEmailRow("Part Number", partNumber) : "",
-    renderEmailRow("Message", message),
+    renderEmailRow("Message", message || "No additional details provided."),
   ].join("");
 
   return `<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td height="50"></td></tr><tr><td align="center"><table align="center" bgcolor="#f7f7f7" cellpadding="0" cellspacing="0" width="600" style="border-radius:10px"><tr><td><table align="center" border="0" cellpadding="0" cellspacing="0" width="500"><tr><td height="30"></td></tr><tr><td align="center" width="100%" style="padding:0 15px"><a target="_blank" rel="noopener noreferrer" href="https://advancedimagingparts.com/"><img width="250" src="https://advancedimagingparts.com/assets/images/logo.svg" alt="Advanced Imaging Parts"></a></td></tr><tr><td height="30"></td></tr><tr><td align="left" style="color:#000;font-family:'Segoe UI',sans-serif,Arial,Helvetica,Lato;letter-spacing:1px"><table align="left" border="1" cellpadding="0" cellspacing="0" width="500" style="border-radius:10px;padding:10px 0">${rows}</table></td></tr></table></td></tr><tr><td height="40"></td></tr></table></td></tr></table>`;

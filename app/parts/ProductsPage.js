@@ -75,21 +75,11 @@ export default function ProductsPage() {
     const [types, setTypes] = useState(allTypes);
     const [models, setModels] = useState([]);
     const requestId = useRef(0);
+    const lastTrackedSearch = useRef('');
 
     const debouncedSearch = useDebouncedValue(searchQuery);
     const debouncedSku = useDebouncedValue(skuQuery);
 
-
-    useEffect(() => {
-        if (!debouncedSearch && !debouncedSku && !selectedBrand && !selectedType && !selectedModel) return;
-        trackWebsiteEvent('search', {
-            search_term: (debouncedSku || debouncedSearch).slice(0, 100),
-            search_location: 'parts_catalog',
-            oem: selectedBrand,
-            modality: selectedType,
-            model: selectedModel,
-        });
-    }, [debouncedSearch, debouncedSku, selectedBrand, selectedType, selectedModel]);
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         setSearchQuery(params.get('q') || '');
@@ -135,7 +125,35 @@ export default function ProductsPage() {
                 setProducts(Array.isArray(data.products) ? data.products : []);
                 setHasNextPage(Boolean(data.hasNextPage));
                 setNextCursor(data.nextCursor || null);
+                const resultCount = Number.isInteger(data.totalMatches)
+                    ? data.totalMatches
+                    : (Array.isArray(data.products) ? data.products.length : 0);
                 setTotalMatches(Number.isInteger(data.totalMatches) ? data.totalMatches : null);
+
+                const searchTerm = debouncedSku || debouncedSearch;
+                if (searchTerm) {
+                    const trackingKey = JSON.stringify([
+                        normalizeSearchValue(debouncedSearch),
+                        normalizePartNumber(debouncedSku),
+                        selectedBrand,
+                        selectedType,
+                        selectedModel,
+                    ]);
+                    if (lastTrackedSearch.current !== trackingKey) {
+                        lastTrackedSearch.current = trackingKey;
+                        trackWebsiteEvent('search', {
+                            search_term: searchTerm.slice(0, 100),
+                            search_kind: debouncedSku ? 'part_number' : 'keyword',
+                            search_location: 'parts_catalog',
+                            result_count: resultCount,
+                            oem: selectedBrand,
+                            modality: selectedType,
+                            model: selectedModel,
+                        });
+                    }
+                } else {
+                    lastTrackedSearch.current = '';
+                }
             } catch (error) {
                 if (error?.name === 'AbortError') return;
                 console.error(error);

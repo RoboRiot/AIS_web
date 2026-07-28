@@ -13,6 +13,8 @@ const tube = {
   PN: "4535-6650 2751",
   OEM: "Philips",
   Modality: "CT",
+  Models: ["Brilliance 64"],
+  AlternatePartNumbers: ["4535-6650-2751-R"],
 };
 
 test("finds a word anywhere in a product name", () => {
@@ -33,6 +35,11 @@ test("PN search is case and punctuation insensitive and supports partial values"
   assert.ok(getPartNumberCatalogSearchScore(tube, "4535 6650-2751") > 0);
   assert.ok(getPartNumberCatalogSearchScore(tube, "650275") > 0);
   assert.equal(getPartNumberCatalogSearchScore(tube, "999999"), 0);
+});
+
+test("searches alternate part numbers and compatible models", () => {
+  assert.ok(getPartNumberCatalogSearchScore(tube, "2751R") > 0);
+  assert.ok(getGeneralCatalogSearchScore(tube, "brilliance") > 0);
 });
 
 test("requires both boxes to match when name and PN searches are combined", () => {

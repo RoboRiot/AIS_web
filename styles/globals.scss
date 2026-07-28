@@ -605,6 +605,13 @@ select {
           margin: 0;
           font-size: 20px;
         }
+        .modal-intro {
+          max-width: 390px;
+          margin: 8px 24px 0 0;
+          color: #506381;
+          font-size: 14px;
+          line-height: 1.5;
+        }
         .close {
           padding: 1rem;
           margin: -1rem -1rem -1rem auto;
@@ -625,6 +632,17 @@ select {
           li {
             margin-bottom: 20px;
             &:last-child { margin-bottom: 0;}
+            label {
+              display: block;
+              margin-bottom: 7px;
+              color: #19191D;
+              font-size: 13px;
+              font-weight: 700;
+              span {
+                color: #506381;
+                font-weight: 400;
+              }
+            }
             input,textarea { color: #000;}
           }
         }
@@ -636,6 +654,12 @@ select {
         justify-content: flex-end;
         padding: 1rem;
         border-top: 1px solid #e9ecef;
+        @media (max-width: $breakpoint_mobile_portrait) {
+          flex-direction: column-reverse;
+          button {
+            width: 100%;
+          }
+        }
       }
     }
   }

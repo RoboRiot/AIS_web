@@ -3,6 +3,7 @@ import path from "node:path";
 import process from "node:process";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { buildCatalogSearchFields } from "../app/data/partCatalogIndex.mjs";
 
 const ROOT = process.cwd();
 const clean = (value) => String(value || "").replace(/\s+/g, " ").trim();
@@ -78,9 +79,16 @@ for (const doc of snapshot.docs) {
     PNNormalized: normalizePartNumber(data.PN),
     Slug: buildSlug(doc.id, data),
     PrimaryImage: primaryImage(doc.id, data),
+    Modalities: Array.isArray(data.Modalities) && data.Modalities.length
+      ? data.Modalities
+      : [data.Modality].filter(Boolean),
+    ...buildCatalogSearchFields(data, doc.id),
   };
   const changed = Object.fromEntries(
-    Object.entries(fields).filter(([key, value]) => value && data[key] !== value)
+    Object.entries(fields).filter(([key, value]) => {
+      if (!value || (Array.isArray(value) && !value.length)) return false;
+      return JSON.stringify(data[key]) !== JSON.stringify(value);
+    })
   );
   if (Object.keys(changed).length) changes.push({ reference: doc.ref, id: doc.id, changed });
 }

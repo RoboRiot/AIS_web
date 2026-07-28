@@ -13,11 +13,16 @@ import {
   normalizeCatalogPartNumber,
   normalizeCatalogSearchText,
 } from "@/app/data/partCatalogSearch.mjs";
+import {
+  getCatalogPartNumberLookupTerm,
+  getCatalogSearchLookupTerm,
+} from "@/app/data/partCatalogIndex.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 
 const PAGE_SIZE = 12;
+const MAX_SEARCH_CANDIDATES = 750;
 
 const querySignature = (values) =>
   JSON.stringify([
@@ -66,10 +71,6 @@ export async function GET(request) {
     if (values.modality) query = query.where("Modality", "==", values.modality);
     if (values.model) query = query.where("Machine", "==", values.model);
 
-    query = query
-      .orderBy("NameNormalized", values.direction)
-      .orderBy(FieldPath.documentId(), values.direction);
-
     const cursor = verifyCursor(params.get("cursor"));
     const hasSearch = Boolean(values.name || values.partNumber);
     let products;
@@ -78,7 +79,39 @@ export async function GET(request) {
     let totalMatches = null;
 
     if (hasSearch) {
-      const snapshot = await query.get();
+      const lookupField = values.partNumber ? "PNPrefixes" : "SearchTerms";
+      const lookupValue = values.partNumber
+        ? getCatalogPartNumberLookupTerm(values.partNumber)
+        : getCatalogSearchLookupTerm(values.name);
+
+      if (!lookupValue || lookupValue.length < 2) {
+        return NextResponse.json(
+          {
+            products: [],
+            nextCursor: null,
+            hasNextPage: false,
+            pageSize: PAGE_SIZE,
+            totalMatches: 0,
+          },
+          { headers: { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex" } }
+        );
+      }
+
+      let snapshot;
+      try {
+        snapshot = await query
+          .where(lookupField, "array-contains", lookupValue)
+          .limit(MAX_SEARCH_CANDIDATES)
+          .get();
+      } catch (error) {
+        if (error?.code !== 9 && error?.code !== "failed-precondition") throw error;
+        snapshot = await query.limit(MAX_SEARCH_CANDIDATES).get();
+      }
+      if (snapshot.empty) {
+        // Keep searches working during the one-time metadata backfill without
+        // allowing an unbounded collection scan.
+        snapshot = await query.limit(MAX_SEARCH_CANDIDATES).get();
+      }
       const direction = values.direction === "desc" ? -1 : 1;
       const ranked = snapshot.docs
         .map((document) => {
@@ -106,6 +139,10 @@ export async function GET(request) {
         ? signCursor({ offset: offset + PAGE_SIZE, signature })
         : null;
     } else {
+      query = query
+        .orderBy("NameNormalized", values.direction)
+        .orderBy(FieldPath.documentId(), values.direction);
+
       if (cursor?.id && cursor.signature === signature) {
         const cursorSnapshot = await db.collection("Parts").doc(cursor.id).get();
         if (cursorSnapshot.exists) query = query.startAfter(cursorSnapshot);

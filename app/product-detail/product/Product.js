@@ -110,7 +110,7 @@ export default function Product({ clickedProduct }) {
         <>
             <div className={styles.product_details}>
                 <div className="container flex">
-                    <div className={`flex product_slider ${styles.product_slider}`} data-aos="fade-right" data-aos-duration="1000">
+                    <div className={`flex product_slider ${styles.product_slider}`}>
                         <Swiper
                             onSwiper={setThumbsSwiper}
                             spaceBetween={0}
@@ -177,15 +177,17 @@ export default function Product({ clickedProduct }) {
                         </LightGallery>
                     </div>
 
-                    <div className={styles.detail_content} data-aos="fade-left" data-aos-duration="1000">
+                    <div className={styles.detail_content}>
                         <h2>{clickedProduct?.Name}</h2>
                         <span> <b>AIS Item ID:</b> {clickedProduct?.id}</span>
                         <span><b>Categories:</b>  <Link href={`/parts?clickedOEM=${clickedProduct.OEM}`}>  {clickedProduct?.OEM} </Link>,  <Link href={`/parts?OEM=${clickedProduct.OEM}?clickedModality=${clickedProduct.Modality}`}> {clickedProduct?.Modality} </Link> </span>
-                        <span
+                        <button
+                            type="button"
                             className={`${styles.availability} ${clickedProduct?.Available === false ? styles.callForAvailability : styles.available}`}
+                            onClick={clickModal}
                         >
-                            {clickedProduct?.Available === false ? "Call for availability" : "In stock"}
-                        </span>
+                            {clickedProduct?.Available === false ? "Request availability" : "Request this part"}
+                        </button>
                         <h3>Description</h3>
                         <ul className='list-none' style={{marginBottom: "20px"}}>
                             <li><b>Part Number: </b> {partNumbers.length ? partNumbers.join(", ") : "N/A"}</li>
@@ -202,11 +204,17 @@ export default function Product({ clickedProduct }) {
                                 <p> {clickedProduct?.Description}  </p>
                             </>
                         }
-                        <button className='simple-btn' onClick={() => clickModal()}>Request</button>
+                        <button className='simple-btn' onClick={clickModal}>Request Part Availability</button>
                     </div>
                 </div>
             </div>
-            {showPop && <RequestModal closeModal={() => setShowPop(false)} />}
+            {showPop && (
+                <RequestModal
+                    closeModal={() => setShowPop(false)}
+                    initialPartNumber={partNumbers[0] || ""}
+                    productName={clickedProduct?.Name || ""}
+                />
+            )}
         </>
     )
 }

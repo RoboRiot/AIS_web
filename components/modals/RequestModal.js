@@ -5,7 +5,7 @@ import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
 import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
 
-export default function RequestModal({ closeModal }) {
+export default function RequestModal({ closeModal, initialPartNumber = "", productName = "" }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [partNumber, setPartNumber] = useState("");
@@ -18,6 +18,12 @@ export default function RequestModal({ closeModal }) {
     const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
     useEffect(() => {
+        if (initialPartNumber) {
+            setPartNumber(initialPartNumber);
+            ensureRecaptchaScript(recaptchaSiteKey);
+            announceFormOpen("part_request", "product_modal");
+            return;
+        }
         try {
             const storedProduct = JSON.parse(localStorage.getItem('product'));
             setPartNumber(storedProduct?.PN || storedProduct?.Name || "");
@@ -26,7 +32,15 @@ export default function RequestModal({ closeModal }) {
         }
         ensureRecaptchaScript(recaptchaSiteKey);
         announceFormOpen("part_request", "product_modal");
-    }, [recaptchaSiteKey]);
+    }, [initialPartNumber, recaptchaSiteKey]);
+
+    const recordError = (stage, reason = "") => {
+        trackWebsiteEvent("form_error", {
+            form_type: "part_request",
+            error_stage: stage,
+            error_reason: reason,
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,13 +53,18 @@ export default function RequestModal({ closeModal }) {
         if (botSignals.blocked) {
             setIsError(true);
             setFeedbackMessage("Submission blocked. Please try again.");
+            recordError("bot_check", botSignals.reason);
             return;
         }
 
-        const { sanitized, errors } = sanitizeLeadForm({ name, email, partNumber, message });
+        const { sanitized, errors } = sanitizeLeadForm(
+            { name, email, partNumber, message },
+            { messageRequired: false }
+        );
         if (errors.length) {
             setIsError(true);
             setFeedbackMessage(errors[0]);
+            recordError("validation");
             return;
         }
 
@@ -55,6 +74,7 @@ export default function RequestModal({ closeModal }) {
         if (!token) {
             setIsError(true);
             setFeedbackMessage("Error with reCAPTCHA. Please try again.");
+            recordError("recaptcha_token");
             setIsSubmitting(false);
             return;
         }
@@ -67,34 +87,44 @@ export default function RequestModal({ closeModal }) {
                 formType: "part_request",
                 startedAt: formStartedAt,
                 website: honeypot,
-                context: partNumber,
+                context: [productName, partNumber].filter(Boolean).join(" | "),
             });
             setIsError(false);
-            trackWebsiteEvent("form_submit", { form_type: "part_request", context: partNumber });
-            setFeedbackMessage("Thank you! We have received your message. We will contact you soon.");
+            trackWebsiteEvent(
+                "form_submit",
+                { form_type: "part_request", context: partNumber },
+                { recordInternally: false }
+            );
+            setFeedbackMessage("Request received. Our parts team will follow up on availability and compatibility.");
+            setName("");
+            setEmail("");
+            setMessage("");
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);
-            trackWebsiteEvent("form_error", { form_type: "part_request" });
-            setFeedbackMessage("Error sending email. Please try again.");
+            recordError("lead_request", String(error?.status || "request_failed"));
+            setFeedbackMessage(error?.message || "We could not send your request. Please try again.");
         }
 
-        setName("");
-        setEmail("");
-        setMessage("");
-        setPartNumber("");
         setIsSubmitting(false);
-        // closeModal();
     };
 
     return (
         <>
-            <form onSubmit={handleSubmit} data-form-type="part_request">
+            <form
+                onSubmit={handleSubmit}
+                data-form-type="part_request"
+                data-form-source="product_modal"
+                data-form-open-tracking="manual"
+            >
                 <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLongTitle">Request Box</h5>
+                                <div>
+                                    <h5 className="modal-title" id="exampleModalLongTitle">Request Part Availability</h5>
+                                    <p className="modal-intro">The part number is ready below. Add any system details that will help us confirm compatibility.</p>
+                                </div>
                                 <button type="button" onClick={closeModal} className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -113,35 +143,46 @@ export default function RequestModal({ closeModal }) {
                                             autoComplete="off"
                                         />
                                     </li>
-                                    <li><input placeholder="Name" type="text"
+                                    <li>
+                                        <label htmlFor="modal-part-name">Name</label>
+                                        <input id="modal-part-name" placeholder="Your name" type="text"
                                         value={name}
                                         maxLength={FORM_LIMITS.name}
                                         pattern=".{3,}"
                                         title="Please enter at least 3 characters"
                                         onChange={(e) => setName(e.target.value)}
-                                        required /></li>
-                                    <li><input placeholder="Email" type="email"
+                                        required />
+                                    </li>
+                                    <li>
+                                        <label htmlFor="modal-part-email">Email</label>
+                                        <input id="modal-part-email" placeholder="you@company.com" type="email"
                                         value={email}
                                         maxLength={FORM_LIMITS.email}
                                         name="email"
-                                        id="email"
                                         pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                                         title="Please enter a valid email address"
                                         onChange={(e) => setEmail(e.target.value)}
-                                        required/></li>
-                                    <li><input placeholder="Part Number" type="text"
+                                        required/>
+                                    </li>
+                                    <li>
+                                        <label htmlFor="modal-part-number">Part number</label>
+                                        <input id="modal-part-number" placeholder="Part number" type="text"
                                         value={partNumber}
                                         maxLength={FORM_LIMITS.partNumber}
                                         onChange={(e) => setPartNumber(e.target.value)}
-                                        required/></li>
-                                    <li><textarea placeholder="Message" type="text"
+                                        required/>
+                                    </li>
+                                    <li>
+                                        <label htmlFor="modal-part-message">System details <span>(optional)</span></label>
+                                        <textarea id="modal-part-message" placeholder="Scanner model, urgency, quantity, or compatibility questions"
                                         value={message}
                                         maxLength={FORM_LIMITS.message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        required></textarea></li>
+                                        ></textarea>
+                                    </li>
                                 </ul>
                                 {feedbackMessage && 
-                                    <div className={isError ? 'response error' : 'response'}>
+                                    <div className={isError ? 'response error' : 'response'} role="status" aria-live="polite">
                                         {
                                             isError ?
                                             <svg width="800px" height="800px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.5C17.1086 21.5 21.25 17.3586 21.25 12.25C21.25 7.14137 17.1086 3 12 3C6.89137 3 2.75 7.14137 2.75 12.25C2.75 17.3586 6.89137 21.5 12 21.5Z" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path id="inner" d="M12.9309 8.15005C12.9256 8.39231 12.825 8.62272 12.6509 8.79123C12.4767 8.95974 12.2431 9.05271 12.0008 9.05002C11.8242 9.04413 11.6533 8.98641 11.5093 8.884C11.3652 8.7816 11.2546 8.63903 11.1911 8.47415C11.1275 8.30927 11.1139 8.12932 11.152 7.95675C11.19 7.78419 11.278 7.6267 11.405 7.50381C11.532 7.380" /></svg>
@@ -154,7 +195,7 @@ export default function RequestModal({ closeModal }) {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" onClick={closeModal} className="simple-btn close-btn" data-dismiss="modal">Close</button>
-                                <button type="submit" className="simple-btn" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send Request"}</button>
+                                <button type="submit" className="simple-btn" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Request Availability"}</button>
                             </div>
                         </div>
                     </div>

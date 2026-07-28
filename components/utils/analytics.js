@@ -73,7 +73,7 @@ const sessionAttribution = () => {
 
 
 
-export const trackWebsiteEvent = (eventType, properties = {}) => {
+export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   if (typeof window === "undefined") return;
   if (navigator.doNotTrack === "1") return;
 
@@ -92,12 +92,14 @@ export const trackWebsiteEvent = (eventType, properties = {}) => {
     properties: safeProperties,
   };
 
-  fetch("/api/analytics", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    keepalive: true,
-  }).catch(() => {});
+  if (options.recordInternally !== false) {
+    fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  }
 
   if (typeof window.gtag === "function") {
     window.gtag("event", gaEventName(eventType), {

@@ -5,6 +5,13 @@
     @media (max-width: $breakpoint_tablet) {
         padding: 60px 0 40px;
     }
+    .form_intro {
+        max-width: 700px;
+        margin: -25px 0 34px;
+        color: #3f506c;
+        font-size: 16px;
+        line-height: 1.6;
+    }
     form {
         gap: 50px;
         @media (max-width: $breakpoint_mobile_portrait) {
@@ -19,6 +26,16 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                label {
+                    margin-bottom: 7px;
+                    color: #19191D;
+                    font-size: 13px;
+                    font-weight: 700;
+                    span {
+                        color: #506381;
+                        font-weight: 400;
+                    }
+                }
                 input {
                     height: 62px;
                     color: #000;

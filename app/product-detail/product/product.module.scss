@@ -44,6 +44,9 @@
         }
         img { margin-bottom: 20px;}
         .availability {
+            border-top: 0;
+            border-right: 0;
+            border-bottom: 0;
             display: inline-flex;
             align-items: center;
             width: fit-content;
@@ -56,6 +59,13 @@
             font-size: 13px;
             font-weight: 700;
             line-height: 1.2;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            &:hover,
+            &:focus-visible {
+                background: #2f9af2;
+                transform: translateY(-1px);
+            }
         }
         .available {
             border-left-color: #f7a765;

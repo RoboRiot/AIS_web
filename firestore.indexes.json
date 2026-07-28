@@ -357,6 +357,110 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "SearchTerms", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
+      "collectionGroup": "Parts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "OEM", "order": "ASCENDING" },
+        { "fieldPath": "Modality", "order": "ASCENDING" },
+        { "fieldPath": "Machine", "order": "ASCENDING" },
+        { "fieldPath": "PNPrefixes", "arrayConfig": "CONTAINS" }
+      ]
     }
   ],
   "fieldOverrides": []

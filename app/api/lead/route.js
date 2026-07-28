@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import {
   buildLeadEmailHtml,
   buildLeadText,
@@ -28,6 +28,7 @@ const FORM_CONFIG = {
     expectedAction: "part_request",
     subject: "[AIS WEBSITE] Medical Imaging Part Request",
     requiresPartNumber: true,
+    requiresMessage: false,
     label: "Part request",
   },
   service_request: {
@@ -157,6 +158,8 @@ export async function POST(request) {
       email: payload.email,
       message: payload.message,
       ...(config.requiresPartNumber ? { partNumber: payload.partNumber } : {}),
+    }, {
+      messageRequired: config.requiresMessage !== false,
     });
     if (errors.length) {
       return NextResponse.json({ error: errors[0] }, { status: 400 });
@@ -174,7 +177,12 @@ export async function POST(request) {
       return NextResponse.json({ error: "Email recipients are not configured." }, { status: 500 });
     }
 
-    await db.collection("mail").add({
+    const now = new Date();
+    const date = now.toISOString().slice(0, 10);
+    const mailReference = db.collection("mail").doc();
+    const eventReference = db.collection("WebsiteAnalyticsEvents").doc();
+    const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
+    const mailPayload = {
       to,
       message: {
         subject: config.subject,
@@ -185,15 +193,61 @@ export async function POST(request) {
         html: buildLeadEmailHtml(leadDetails),
       },
       metadata: {
+        leadId: mailReference.id,
         formType: payload.formType,
         createdAt: FieldValue.serverTimestamp(),
         leadType: config.label,
         sourcePage: leadDetails.sourcePage,
         context: leadDetails.context || null,
       },
+    };
+    const confirmedSubmissionEvent = {
+      eventType: "form_submit",
+      date,
+      path: leadDetails.sourcePage,
+      properties: {
+        form_type: payload.formType,
+        context: leadDetails.context || "",
+        confirmed_by: "lead_api",
+      },
+      formType: payload.formType,
+      referrerHost: "server-confirmed",
+      visitorHash: null,
+      sessionHash: null,
+      browser: "unknown",
+      device: "unknown",
+      country: "unknown",
+      utm: { source: "", medium: "", campaign: "" },
+      aggregateVersion: null,
+      createdAt: FieldValue.serverTimestamp(),
+      clientOccurredAt: "",
+      expiresAt: Timestamp.fromMillis(now.getTime() + 90 * 24 * 60 * 60 * 1000),
+    };
+
+    await db.runTransaction(async (transaction) => {
+      const dailySnapshot = await transaction.get(dailyReference);
+      transaction.set(mailReference, mailPayload);
+      transaction.set(eventReference, confirmedSubmissionEvent);
+      if (dailySnapshot.exists) {
+        transaction.update(dailyReference, {
+          "totals.form_submit": FieldValue.increment(1),
+          [`forms.${payload.formType}.form_submit`]: FieldValue.increment(1),
+          totalEvents: FieldValue.increment(1),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        transaction.set(dailyReference, {
+          date,
+          totalEvents: 1,
+          totals: { form_submit: 1 },
+          forms: { [payload.formType]: { form_submit: 1 } },
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      }
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, leadId: mailReference.id });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return NextResponse.json(

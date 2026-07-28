@@ -10,7 +10,15 @@
     "test": "node --test tests/*.test.mjs",
     "verify:build": "node scripts/verify-build-assets.mjs",
     "verify:site": "node scripts/verify-site-assets.mjs",
-    "audit:product-links": "node scripts/audit-product-links.mjs"
+    "audit:product-links": "node scripts/audit-product-links.mjs",
+    "catalog:ge:audit": "node scripts/import-oem-catalog.mjs --oem=GE --audit-live",
+    "catalog:ge:verify": "node scripts/import-oem-catalog.mjs --oem=GE --verify",
+    "catalog:siemens:audit": "node scripts/import-oem-catalog.mjs --oem=Siemens --audit-live",
+    "catalog:siemens:verify": "node scripts/import-oem-catalog.mjs --oem=Siemens --verify",
+    "catalog:toshiba:audit": "node scripts/import-oem-catalog.mjs --oem=Toshiba --audit-live",
+    "catalog:toshiba:verify": "node scripts/import-oem-catalog.mjs --oem=Toshiba --verify",
+    "catalog:philips:audit": "node scripts/import-oem-catalog.mjs --oem=Philips --audit-live",
+    "catalog:philips:verify": "node scripts/import-oem-catalog.mjs --oem=Philips --verify"
   },
   "dependencies": {
     "aos": "^2.3.4",

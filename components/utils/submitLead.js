@@ -32,7 +32,9 @@ export const submitLead = async ({
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.error || "Submission failed. Please try again.");
+    const error = new Error(data.error || "Submission failed. Please try again.");
+    error.status = response.status;
+    throw error;
   }
 
   return data;

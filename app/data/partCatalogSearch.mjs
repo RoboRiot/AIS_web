@@ -94,14 +94,17 @@ const getSearchGroups = (product = {}) => ({
     product.pn,
     product.PartNumber,
     product.partNumber,
-    product.PNNormalized
+    product.PNNormalized,
+    product.AlternatePartNumbers
   ),
   itemIds: normalizedPartNumberValues(product.id, product.ID, product.ItemID),
   details: normalizedTextValues(
     product.OEM,
     product.Modality,
+    product.Modalities,
     product.Machine,
-    product.Model
+    product.Model,
+    product.Models
   ),
 });
 

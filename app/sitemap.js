@@ -2,6 +2,20 @@ import { BASE_URL, buildProductSlug } from "@/app/data/seoProducts";
 import { fetchAllProducts } from "@/app/data/serverFirestoreProducts";
 import { serviceLandingPages, trailerLandingPages } from "@/app/data/serviceLandingPages";
 
+const partsCategoryPaths = [
+  "ge/mri",
+  "ge/ct",
+  "ge/pet-ct",
+  "siemens/mri",
+  "siemens/ct",
+  "siemens/pet-ct",
+  "toshiba/mri",
+  "toshiba/ct",
+  "philips/mri",
+  "philips/ct",
+  "philips/pet-ct",
+];
+
 export default async function sitemap() {
   const now = new Date();
   const urls = [
@@ -42,6 +56,15 @@ export default async function sitemap() {
       priority: 0.85,
     },
   ];
+
+  for (const path of partsCategoryPaths) {
+    urls.push({
+      url: `${BASE_URL}/parts/${path}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.76,
+    });
+  }
 
   for (const page of serviceLandingPages) {
     urls.push({

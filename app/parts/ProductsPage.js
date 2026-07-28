@@ -14,6 +14,10 @@ import { buildProductHref, slugify } from '@/app/data/seoProducts';
 import { trackWebsiteEvent } from '@/components/utils/analytics';
 
 const ITEMS_PER_PAGE = 12;
+const BRANDS = Object.keys(brandsModels);
+const ALL_TYPES = [...new Set(
+    Object.values(brandsModels).flatMap((typesByBrand) => Object.keys(typesByBrand))
+)];
 
 const normalizeSearchValue = (value) => (value ?? '')
     .toString()
@@ -51,41 +55,66 @@ const getModelsForType = (brand, type) => {
     ];
 };
 
-export default function ProductsPage() {
-    const brands = Object.keys(brandsModels);
-    const allTypes = [...new Set(
-        Object.values(brandsModels).flatMap((typesByBrand) => Object.keys(typesByBrand))
-    )];
-
+export default function ProductsPage({ initialCatalog = {} }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [skuQuery, setSkuQuery] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+    const initialProducts = Array.isArray(initialCatalog.products) ? initialCatalog.products : [];
+    const [products, setProducts] = useState(initialProducts);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(initialProducts.length === 0);
     const [productsError, setProductsError] = useState('');
     const [sortOrder, setSortOrder] = useState('a-z');
     const [pageIndex, setPageIndex] = useState(0);
     const [pageCursors, setPageCursors] = useState([null]);
-    const [nextCursor, setNextCursor] = useState(null);
-    const [hasNextPage, setHasNextPage] = useState(false);
+    const [nextCursor, setNextCursor] = useState(initialCatalog.nextCursor || null);
+    const [hasNextPage, setHasNextPage] = useState(Boolean(initialCatalog.hasNextPage));
     const [totalMatches, setTotalMatches] = useState(null);
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
-    const [types, setTypes] = useState(allTypes);
+    const [types, setTypes] = useState(ALL_TYPES);
     const [models, setModels] = useState([]);
     const requestId = useRef(0);
     const lastTrackedSearch = useRef('');
+    const skipInitialRequest = useRef(initialProducts.length > 0);
+    const [urlStateReady, setUrlStateReady] = useState(false);
 
     const debouncedSearch = useDebouncedValue(searchQuery);
     const debouncedSku = useDebouncedValue(skuQuery);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
+        const brand = params.get('OEM') || params.get('clickedOEM') || '';
+        const type = params.get('modality') || params.get('clickedModality') || '';
+        const model = params.get('model') || '';
         setSearchQuery(params.get('q') || '');
         setSkuQuery(params.get('pn') || '');
-        setSelectedBrand(params.get('OEM') || params.get('clickedOEM') || '');
+        setSelectedBrand(brand);
+        setSelectedType(type);
+        setSelectedModel(model);
+        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : ALL_TYPES);
+        setModels(getModelsForType(brand, type));
+        setUrlStateReady(true);
     }, []);
+
+    useEffect(() => {
+        if (!urlStateReady) return;
+        const params = new URLSearchParams();
+        if (debouncedSearch) params.set('q', debouncedSearch);
+        if (debouncedSku) params.set('pn', debouncedSku);
+        if (selectedBrand) params.set('OEM', selectedBrand);
+        if (selectedType) params.set('modality', selectedType);
+        if (selectedModel) params.set('model', selectedModel);
+        const query = params.toString();
+        window.history.replaceState(null, '', query ? `/parts?${query}` : '/parts');
+    }, [
+        urlStateReady,
+        debouncedSearch,
+        debouncedSku,
+        selectedBrand,
+        selectedType,
+        selectedModel,
+    ]);
 
     useEffect(() => {
         setPageIndex(0);
@@ -93,6 +122,21 @@ export default function ProductsPage() {
     }, [debouncedSearch, debouncedSku, selectedBrand, selectedType, selectedModel, sortOrder]);
 
     useEffect(() => {
+        if (!urlStateReady) return undefined;
+        const isDefaultInitialView =
+            !debouncedSearch &&
+            !debouncedSku &&
+            !selectedBrand &&
+            !selectedType &&
+            !selectedModel &&
+            sortOrder === 'a-z' &&
+            pageIndex === 0;
+        if (skipInitialRequest.current && isDefaultInitialView) {
+            skipInitialRequest.current = false;
+            return undefined;
+        }
+        skipInitialRequest.current = false;
+
         let active = true;
         const controller = new AbortController();
         const currentRequest = ++requestId.current;
@@ -187,6 +231,7 @@ export default function ProductsPage() {
         sortOrder,
         pageIndex,
         pageCursors,
+        urlStateReady,
     ]);
 
     const handleBrandChange = (event) => {
@@ -194,7 +239,7 @@ export default function ProductsPage() {
         setSelectedBrand(brand);
         setSelectedType('');
         setSelectedModel('');
-        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : allTypes);
+        setTypes(brand ? Object.keys(brandsModels[brand] || {}) : ALL_TYPES);
         setModels([]);
     };
 
@@ -232,7 +277,7 @@ export default function ProductsPage() {
         setSelectedModel('');
         setSearchQuery('');
         setSkuQuery('');
-        setTypes(allTypes);
+        setTypes(ALL_TYPES);
         setModels([]);
         setSortOrder('a-z');
     };
@@ -315,7 +360,7 @@ export default function ProductsPage() {
                         </form>
                         <select value={selectedBrand} onChange={handleBrandChange}>
                             <option value="">Select Brand</option>
-                            {brands.map((brand) => (
+                            {BRANDS.map((brand) => (
                                 <option key={brand} value={brand}>{brand}</option>
                             ))}
                         </select>

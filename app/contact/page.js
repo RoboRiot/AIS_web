@@ -247,7 +247,7 @@ export default function Contact() {
           <div className={styles.contact_info}>
             <h3>Contact Info</h3>
             <ul className={`list-none flex direction-column ${styles.contact_info_list}`}>
-              <li><Image src={phoneIcon} alt="icon" /><a href="tel:(800) 200-3583">(800) 200-3583</a></li>
+              <li><Image src={phoneIcon} alt="icon" /><a href="tel:+15595376851">(559) 537-6851</a></li>
               <li><Image src={emailIcon} alt="icon" /><a href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</a></li>
               <li><Image src={locationIcon} alt="icon" /><span>17410 Murphy Pkwy. Lathrop, CA 95330</span></li>
             </ul>

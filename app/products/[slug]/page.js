@@ -1,6 +1,6 @@
 import { cache } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import FoundYourPart from "@/app/product-detail/found-your-part/FoundYourPart";
 import {
@@ -16,6 +16,7 @@ import {
 } from "@/app/data/seoProducts";
 import SeoProductClient from "./SeoProductClient";
 import { fetchProductById, fetchProductBySlug } from "@/app/data/serverFirestoreProducts";
+import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
 
 export const revalidate = 3600;
 
@@ -29,10 +30,11 @@ const getProductBySlug = cache(async (slug) => {
 
   if (id) {
     const product = await fetchProductById(id);
-    if (product) return product;
+    if (product && isCampaignReadyProduct(product)) return product;
   }
 
-  return fetchProductBySlug(nameSlug);
+  const product = await fetchProductBySlug(nameSlug);
+  return product && isCampaignReadyProduct(product) ? product : null;
 });
 
 export async function generateMetadata({ params }) {
@@ -80,6 +82,9 @@ export default async function ProductSeoPage({ params }) {
   }
 
   const canonicalSlug = buildProductSlug(product);
+  if (params.slug !== canonicalSlug) {
+    permanentRedirect(`/products/${canonicalSlug}`);
+  }
   const url = getProductUrl(canonicalSlug);
   const specs = parseProductSpecs(product);
   const partNumbers = getProductPartNumbers(product);

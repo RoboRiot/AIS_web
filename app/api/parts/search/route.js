@@ -17,6 +17,10 @@ import {
   getCatalogPartNumberLookupTerm,
   getCatalogSearchLookupTerm,
 } from "@/app/data/partCatalogIndex.mjs";
+import {
+  isCampaignReadyProduct,
+  normalizePublicCatalogProduct,
+} from "@/app/data/catalogProductQuality.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -115,10 +119,13 @@ export async function GET(request) {
       const direction = values.direction === "desc" ? -1 : 1;
       const ranked = snapshot.docs
         .map((document) => {
-          const product = { id: document.id, ...document.data() };
+          const product = normalizePublicCatalogProduct({
+            id: document.id,
+            ...document.data(),
+          });
           return { product, score: getCatalogSearchScore(product, values) };
         })
-        .filter((result) => result.score > 0)
+        .filter((result) => result.score > 0 && isCampaignReadyProduct(result.product))
         .sort((left, right) => {
           if (left.score !== right.score) return right.score - left.score;
           const leftName = normalizeCatalogSearchText(left.product.Name);
@@ -148,10 +155,18 @@ export async function GET(request) {
         if (cursorSnapshot.exists) query = query.startAfter(cursorSnapshot);
       }
 
-      const snapshot = await query.limit(PAGE_SIZE + 1).get();
-      const visible = snapshot.docs.slice(0, PAGE_SIZE);
-      products = visible.map((document) => ({ id: document.id, ...document.data() }));
-      hasNextPage = snapshot.docs.length > PAGE_SIZE;
+      const fetchLimit = PAGE_SIZE * 4 + 1;
+      const snapshot = await query.limit(fetchLimit).get();
+      const readyDocuments = snapshot.docs.filter((document) =>
+        isCampaignReadyProduct({ id: document.id, ...document.data() })
+      );
+      const visible = readyDocuments.slice(0, PAGE_SIZE);
+      products = visible.map((document) =>
+        normalizePublicCatalogProduct({ id: document.id, ...document.data() })
+      );
+      hasNextPage =
+        visible.length > 0 &&
+        (readyDocuments.length > PAGE_SIZE || snapshot.docs.length === fetchLimit);
       nextCursor = hasNextPage && visible.length
         ? signCursor({ id: visible[visible.length - 1].id, signature })
         : null;

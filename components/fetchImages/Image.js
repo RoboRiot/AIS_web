@@ -1,43 +1,20 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import {
+    getImageUrl,
+    getPrimaryImagePath,
+    resolveImageUrl,
+} from '@/app/data/catalogImageUrl.mjs';
+
+export { getImageUrl, getPrimaryImagePath, resolveImageUrl };
 
 const MAX_RESOLVED_IMAGES = 250;
 const resolvedImageUrls = new Map();
 
-const normalizeImagePath = (imagePath) =>
-    typeof imagePath === 'string' ? imagePath.trim() : '';
-
-const storageBucket =
-    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'magmo-ac10c.appspot.com';
-
-export const getImageUrl = async (imagePath) => {
-    const normalizedPath = normalizeImagePath(imagePath);
-    if (!normalizedPath) return null;
-
-    return `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(storageBucket)}/o/${encodeURIComponent(normalizedPath)}?alt=media`;
-};
-
-const DIRECT_IMAGE_RE = /^(?:https?:|data:|blob:)/i;
-const IMAGE_EXTENSION_RE = /\.(?:avif|gif|jpe?g|png|webp)(?:\?.*)?$/i;
-
-export const resolveImageUrl = async (imagePath) => {
-    const normalizedPath = normalizeImagePath(imagePath);
-    if (!normalizedPath) return null;
-    if (DIRECT_IMAGE_RE.test(normalizedPath) || normalizedPath.startsWith('/')) {
-      return normalizedPath;
-    }
-
-    if (IMAGE_EXTENSION_RE.test(normalizedPath)) {
-      return getImageUrl(normalizedPath);
-    }
-
-    // Older records omitted the extension. Try one conventional path and let
-    // the image element fall back locally if that legacy object does not exist.
-    return getImageUrl(`${normalizedPath}.jpg`);
-};
-
 const getCachedImageUrl = (imagePath) => {
-    const normalizedPath = normalizeImagePath(imagePath);
+    const normalizedPath = typeof imagePath === 'string' ? imagePath.trim() : '';
     if (!normalizedPath) return Promise.resolve(null);
 
     if (resolvedImageUrls.has(normalizedPath)) {
@@ -52,20 +29,6 @@ const getCachedImageUrl = (imagePath) => {
     const pendingUrl = resolveImageUrl(normalizedPath);
     resolvedImageUrls.set(normalizedPath, pendingUrl);
     return pendingUrl;
-};
-
-export const getPrimaryImagePath = (product) => {
-    const images = Array.isArray(product?.Images)
-      ? product.Images.map(normalizeImagePath).filter(Boolean)
-      : [];
-    const imagePaths = Array.isArray(product?.ImagePaths)
-      ? product.ImagePaths.map(normalizeImagePath).filter(Boolean)
-      : [];
-    const primaryImage = normalizeImagePath(product?.PrimaryImage);
-    const productId = normalizeImagePath(product?.id);
-
-    return primaryImage || images[0] || imagePaths[0] ||
-      (productId ? `Parts/${productId}/${productId}` : '');
 };
 
 export const ImageComponent = ({ imagePath, alt = "Medical imaging equipment part image" }) => {

@@ -19,6 +19,7 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import 'lightgallery/scss/lightgallery.scss';
 import 'lightgallery/scss/lg-zoom.scss';
 import {
+    buildPartsCategoryHref,
     buildProductImageAlt,
     cleanText,
     getProductPartNumbers,
@@ -180,7 +181,20 @@ export default function Product({ clickedProduct }) {
                     <div className={styles.detail_content}>
                         <h2>{clickedProduct?.Name}</h2>
                         <span> <b>AIS Item ID:</b> {clickedProduct?.id}</span>
-                        <span><b>Categories:</b>  <Link href={`/parts?clickedOEM=${clickedProduct.OEM}`}>  {clickedProduct?.OEM} </Link>,  <Link href={`/parts?OEM=${clickedProduct.OEM}?clickedModality=${clickedProduct.Modality}`}> {clickedProduct?.Modality} </Link> </span>
+                        <span>
+                            <b>Categories:</b>{" "}
+                            <Link href={`/parts?OEM=${encodeURIComponent(clickedProduct.OEM || "")}`}>
+                                {clickedProduct?.OEM}
+                            </Link>
+                            {clickedProduct?.Modality && (
+                                <>
+                                    ,{" "}
+                                    <Link href={buildPartsCategoryHref(clickedProduct.OEM, clickedProduct.Modality)}>
+                                        {clickedProduct.Modality}
+                                    </Link>
+                                </>
+                            )}
+                        </span>
                         <button
                             type="button"
                             className={`${styles.availability} ${clickedProduct?.Available === false ? styles.callForAvailability : styles.available}`}

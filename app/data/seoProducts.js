@@ -1,5 +1,6 @@
 import { PRODUCTION_SITE_URL } from "../../site.config.mjs";
 import { buildProductIdSuffix, parseProductIdSuffix } from "@/app/data/productIdSlug.mjs";
+import { cleanCatalogProductName } from "@/app/data/catalogProductQuality.mjs";
 
 export const BASE_URL = PRODUCTION_SITE_URL;
 
@@ -36,12 +37,15 @@ export const slugify = (value) => {
 
 export const buildProductSlug = (product) => {
   if (!product) return "";
-  const storedSlug = slugify(product.Slug);
-  if (storedSlug) return storedSlug;
+  const existingId = parseProductIdSuffix(product.Slug);
+  if (existingId && existingId === String(product.id || "")) {
+    return String(product.Slug).toLowerCase();
+  }
 
-  const nameSlug = slugify(product.Name);
+  const storedSlug = slugify(product.Slug);
+  const nameSlug = slugify(cleanCatalogProductName(product));
   const partNumbers = getProductPartNumbers(product).map(slugify).filter(Boolean);
-  const pieces = [nameSlug];
+  const pieces = [storedSlug || nameSlug];
 
   for (const partNumber of partNumbers.slice(0, 2)) {
     if (partNumber && !nameSlug.includes(partNumber)) pieces.push(partNumber);
@@ -160,7 +164,7 @@ export const buildProductKeywords = (product) => {
 };
 
 export const buildProductSeoTitle = (product) => {
-  const name = cleanText(product?.Name) || "Imaging Part";
+  const name = cleanCatalogProductName(product) || "Imaging Part";
   const specs = parseProductSpecs(product);
   const partNumbers = getProductPartNumbers(product);
   const primaryPart = partNumbers[0] && !name.toLowerCase().includes(partNumbers[0].toLowerCase())
@@ -180,7 +184,7 @@ export const buildProductSeoTitle = (product) => {
 };
 
 export const buildProductSeoDescription = (product) => {
-  const name = cleanText(product?.Name) || "Imaging part";
+  const name = cleanCatalogProductName(product) || "Imaging part";
   const specs = parseProductSpecs(product);
   const partNumbers = getProductPartNumbers(product);
   const oem = cleanText(product?.OEM || specs.manufacturer);
@@ -196,8 +200,14 @@ export const buildProductSeoDescription = (product) => {
 };
 
 export const buildProductImageAlt = (product, index = 0) => {
-  const name = cleanText(product?.Name) || "Imaging part";
+  const name = cleanCatalogProductName(product) || "Imaging part";
   const partNumbers = getProductPartNumbers(product);
   const primaryPart = partNumbers[0] ? ` ${partNumbers[0]}` : "";
   return cleanText(`${name}${primaryPart} product image${index ? ` ${index + 1}` : ""}`);
+};
+
+export const buildPartsCategoryHref = (oem, modality) => {
+  const oemSlug = slugify(oem);
+  const modalitySlug = slugify(modality);
+  return oemSlug && modalitySlug ? `/parts/${oemSlug}/${modalitySlug}` : "/parts";
 };

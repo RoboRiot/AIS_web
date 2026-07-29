@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './search.module.scss';
 import searchIcon from "@/public/assets/images/search.svg";
-import sortArrowIcon from "@/public/assets/images/sort_arrow.svg";
 import brandsModels from "@/firebase/models.json";
 import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import SidebarFoundYourPart from '../product-detail/found-your-part/SidebarFoundYourPart';
@@ -63,12 +62,14 @@ export default function ProductsPage({ initialCatalog = {} }) {
     const [products, setProducts] = useState(initialProducts);
     const [isLoadingProducts, setIsLoadingProducts] = useState(initialProducts.length === 0);
     const [productsError, setProductsError] = useState('');
-    const [sortOrder, setSortOrder] = useState('a-z');
+    const [sortOrder, setSortOrder] = useState(initialCatalog.sort || 'relevant');
     const [pageIndex, setPageIndex] = useState(0);
     const [pageCursors, setPageCursors] = useState([null]);
     const [nextCursor, setNextCursor] = useState(initialCatalog.nextCursor || null);
     const [hasNextPage, setHasNextPage] = useState(Boolean(initialCatalog.hasNextPage));
-    const [totalMatches, setTotalMatches] = useState(null);
+    const [totalMatches, setTotalMatches] = useState(
+        Number.isInteger(initialCatalog.totalMatches) ? initialCatalog.totalMatches : null
+    );
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
@@ -87,11 +88,22 @@ export default function ProductsPage({ initialCatalog = {} }) {
         const brand = params.get('OEM') || params.get('clickedOEM') || '';
         const type = params.get('modality') || params.get('clickedModality') || '';
         const model = params.get('model') || '';
+        const requestedSort = params.get('sort');
+        const hasCatalogFilter = Boolean(brand || type || model);
         setSearchQuery(params.get('q') || '');
         setSkuQuery(params.get('pn') || '');
         setSelectedBrand(brand);
         setSelectedType(type);
         setSelectedModel(model);
+        setSortOrder(
+            requestedSort === 'z-a' || requestedSort === 'desc'
+                ? 'z-a'
+                : requestedSort === 'a-z' || requestedSort === 'asc'
+                    ? 'a-z'
+                    : hasCatalogFilter
+                        ? 'a-z'
+                        : 'relevant'
+        );
         setTypes(brand ? Object.keys(brandsModels[brand] || {}) : ALL_TYPES);
         setModels(getModelsForType(brand, type));
         setUrlStateReady(true);
@@ -105,6 +117,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
         if (selectedBrand) params.set('OEM', selectedBrand);
         if (selectedType) params.set('modality', selectedType);
         if (selectedModel) params.set('model', selectedModel);
+        if (sortOrder !== 'relevant') params.set('sort', sortOrder);
         const query = params.toString();
         window.history.replaceState(null, '', query ? `/parts?${query}` : '/parts');
     }, [
@@ -114,6 +127,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
         selectedBrand,
         selectedType,
         selectedModel,
+        sortOrder,
     ]);
 
     useEffect(() => {
@@ -129,7 +143,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
             !selectedBrand &&
             !selectedType &&
             !selectedModel &&
-            sortOrder === 'a-z' &&
+            sortOrder === 'relevant' &&
             pageIndex === 0;
         if (skipInitialRequest.current && isDefaultInitialView) {
             skipInitialRequest.current = false;
@@ -152,7 +166,10 @@ export default function ProductsPage({ initialCatalog = {} }) {
                 if (selectedBrand) searchParams.set('oem', selectedBrand);
                 if (selectedType) searchParams.set('modality', selectedType);
                 if (selectedModel) searchParams.set('model', selectedModel);
-                searchParams.set('sort', sortOrder === 'z-a' ? 'desc' : 'asc');
+                searchParams.set(
+                    'sort',
+                    sortOrder === 'z-a' ? 'desc' : sortOrder === 'a-z' ? 'asc' : 'relevant'
+                );
                 const cursor = pageCursors[pageIndex];
                 if (cursor) searchParams.set('cursor', cursor);
 
@@ -241,6 +258,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
         setSelectedModel('');
         setTypes(brand ? Object.keys(brandsModels[brand] || {}) : ALL_TYPES);
         setModels([]);
+        setSortOrder(searchQuery || skuQuery ? 'relevant' : brand ? 'a-z' : 'relevant');
     };
 
     const handleTypeChange = (event) => {
@@ -248,6 +266,25 @@ export default function ProductsPage({ initialCatalog = {} }) {
         setSelectedType(type);
         setSelectedModel('');
         setModels(getModelsForType(selectedBrand, type));
+        setSortOrder(searchQuery || skuQuery ? 'relevant' : type ? 'a-z' : selectedBrand ? 'a-z' : 'relevant');
+    };
+
+    const handleModelChange = (event) => {
+        const model = event.target.value;
+        setSelectedModel(model);
+        setSortOrder(searchQuery || skuQuery ? 'relevant' : model ? 'a-z' : selectedType ? 'a-z' : 'relevant');
+    };
+
+    const handleNameSearchChange = (event) => {
+        const value = event.target.value;
+        setSearchQuery(value);
+        setSortOrder(value || skuQuery ? 'relevant' : selectedBrand || selectedType || selectedModel ? 'a-z' : 'relevant');
+    };
+
+    const handlePartNumberSearchChange = (event) => {
+        const value = event.target.value;
+        setSkuQuery(value);
+        setSortOrder(value || searchQuery ? 'relevant' : selectedBrand || selectedType || selectedModel ? 'a-z' : 'relevant');
     };
 
     const handleClick = (product) => {
@@ -255,6 +292,8 @@ export default function ProductsPage({ initialCatalog = {} }) {
             item_id: product.id || '',
             item_name: product.Name || '',
             part_number: product.PN || '',
+            oem: product.OEM || '',
+            modality: product.Modality || '',
         });
 
         localStorage.setItem('product', JSON.stringify(product));
@@ -279,7 +318,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
         setSkuQuery('');
         setTypes(ALL_TYPES);
         setModels([]);
-        setSortOrder('a-z');
+        setSortOrder('relevant');
     };
 
     const handleNextPage = () => {
@@ -294,15 +333,24 @@ export default function ProductsPage({ initialCatalog = {} }) {
 
     const firstVisibleResult = products.length > 0 ? pageIndex * ITEMS_PER_PAGE + 1 : 0;
     const lastVisibleResult = pageIndex * ITEMS_PER_PAGE + products.length;
+    const isPopularView =
+        sortOrder === 'relevant' &&
+        !debouncedSearch &&
+        !debouncedSku &&
+        !selectedBrand &&
+        !selectedType &&
+        !selectedModel;
 
     return (
         <div className={styles.search_wrapper}>
             <div className='container'>
                 <div className={styles.sorting}>
                     <p>
-                        <span>Parts</span>
+                        <span>{isPopularView ? 'Popular parts' : 'Parts'}</span>
                         {isLoadingProducts
                             ? 'Loading products...'
+                            : isPopularView
+                                ? 'Most viewed and high-interest items'
                             : products.length > 0
                                 ? `Showing ${firstVisibleResult}-${lastVisibleResult}${totalMatches != null ? ` of ${totalMatches}` : ''} results`
                                 : 'No matching results'}
@@ -317,17 +365,15 @@ export default function ProductsPage({ initialCatalog = {} }) {
                             <span></span>
                         </button>
                         <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                            <option
+                                value="relevant"
+                                disabled={!debouncedSearch && !debouncedSku && Boolean(selectedBrand || selectedType || selectedModel)}
+                            >
+                                Relevant
+                            </option>
                             <option value="a-z">Name: A to Z</option>
                             <option value="z-a">Name: Z to A</option>
                         </select>
-                        <button
-                            type="button"
-                            aria-label="Reverse sort order"
-                            className={`sorting_button ${sortOrder === 'a-z' ? 'active' : ''}`}
-                            onClick={() => setSortOrder((current) => current === 'a-z' ? 'z-a' : 'a-z')}
-                        >
-                            <Image src={sortArrowIcon} alt="" />
-                        </button>
                     </section>
                 </div>
             </div>
@@ -343,7 +389,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
                                         placeholder='SEARCH BY NAME OR KEYWORD'
                                         value={searchQuery}
                                         maxLength={120}
-                                        onChange={(event) => setSearchQuery(event.target.value)}
+                                        onChange={handleNameSearchChange}
                                     />
                                 </li>
                                 <li>
@@ -353,7 +399,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
                                         placeholder='SEARCH BY PART NUMBER'
                                         value={skuQuery}
                                         maxLength={120}
-                                        onChange={(event) => setSkuQuery(event.target.value)}
+                                        onChange={handlePartNumberSearchChange}
                                     />
                                 </li>
                             </ul>
@@ -373,7 +419,7 @@ export default function ProductsPage({ initialCatalog = {} }) {
                         <select
                             disabled={!selectedType}
                             value={selectedModel}
-                            onChange={(event) => setSelectedModel(event.target.value)}
+                            onChange={handleModelChange}
                         >
                             <option value="">Select Model</option>
                             {models.map((model) => (
@@ -405,6 +451,14 @@ export default function ProductsPage({ initialCatalog = {} }) {
                                                     alt={`${product.Name || 'Medical imaging part'} ${product.PN || product.id || ''}`}
                                                 />
                                                 <h3>{product.Name}</h3>
+                                                <p className={styles.product_meta}>
+                                                    {[product.OEM, product.Modality].filter(Boolean).join(' / ')}
+                                                </p>
+                                                {product.PN && (
+                                                    <span className={styles.product_part_number}>
+                                                        Part {product.PN}
+                                                    </span>
+                                                )}
                                             </figure>
                                         </Link>
                                     </div>

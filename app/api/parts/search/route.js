@@ -21,6 +21,7 @@ import {
   isCampaignReadyProduct,
   normalizePublicCatalogProduct,
 } from "@/app/data/catalogProductQuality.mjs";
+import { fetchRelevantCatalogPage } from "@/app/data/serverFirestoreProducts";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -35,6 +36,7 @@ const querySignature = (values) =>
     values.oem,
     values.modality,
     values.model,
+    values.sortMode,
     values.direction,
   ]);
 
@@ -60,13 +62,20 @@ export async function GET(request) {
     }
 
     const params = request.nextUrl.searchParams;
+    const requestedSort = cleanText(params.get("sort"), 20);
     const values = {
       name: normalizeCatalogSearchText(cleanText(params.get("q"), 120)),
       partNumber: normalizeCatalogPartNumber(cleanText(params.get("pn"), 120)),
       oem: cleanText(params.get("oem"), 80),
       modality: cleanText(params.get("modality"), 40),
       model: cleanText(params.get("model"), 120),
-      direction: params.get("sort") === "desc" ? "desc" : "asc",
+      sortMode:
+        requestedSort === "asc"
+          ? "a-z"
+          : requestedSort === "desc"
+            ? "z-a"
+            : "relevant",
+      direction: requestedSort === "desc" ? "desc" : "asc",
     };
     const signature = querySignature(values);
     let query = db.collection("Parts");
@@ -145,6 +154,17 @@ export async function GET(request) {
       nextCursor = hasNextPage
         ? signCursor({ offset: offset + PAGE_SIZE, signature })
         : null;
+    } else if (
+      values.sortMode === "relevant" &&
+      !values.oem &&
+      !values.modality &&
+      !values.model
+    ) {
+      const relevantCatalog = await fetchRelevantCatalogPage(PAGE_SIZE);
+      products = relevantCatalog.products;
+      totalMatches = relevantCatalog.totalMatches;
+      hasNextPage = false;
+      nextCursor = null;
     } else {
       query = query
         .orderBy("NameNormalized", values.direction)
@@ -173,7 +193,14 @@ export async function GET(request) {
     }
 
     return NextResponse.json(
-      { products, nextCursor, hasNextPage, pageSize: PAGE_SIZE, totalMatches },
+      {
+        products,
+        nextCursor,
+        hasNextPage,
+        pageSize: PAGE_SIZE,
+        totalMatches,
+        sort: values.sortMode,
+      },
       { headers: { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex" } }
     );
   } catch (error) {

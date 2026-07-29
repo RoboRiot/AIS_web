@@ -110,6 +110,13 @@ export async function POST(request) {
       eventType === "search" &&
       properties.search_location === "parts_catalog" &&
       searchTerm.length >= 2;
+    const productId = cleanText(
+      properties.product_id || properties.item_id,
+      180
+    );
+    const isProductInterest =
+      Boolean(productId) &&
+      (eventType === "product_view" || eventType === "product_select");
     const searchKind = SEARCH_KINDS.has(properties.search_kind)
       ? properties.search_kind
       : /\d/.test(searchTerm)
@@ -158,6 +165,17 @@ export async function POST(request) {
               .slice(0, 24)}`
           )
       : null;
+    const productInterestReference = isProductInterest
+      ? db
+          .collection("WebsiteProductInterest")
+          .doc(
+            crypto
+              .createHash("sha256")
+              .update(productId)
+              .digest("hex")
+              .slice(0, 32)
+          )
+      : null;
     await db.runTransaction(async (transaction) => {
       const dailySnapshot = await transaction.get(dailyReference);
       transaction.set(eventReference, event);
@@ -194,6 +212,26 @@ export async function POST(request) {
             oem: cleanText(properties.oem, 40),
             modality: cleanText(properties.modality, 40),
             model: cleanText(properties.model, 80),
+            updatedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+      }
+      if (productInterestReference) {
+        const isSelection = eventType === "product_select";
+        transaction.set(
+          productInterestReference,
+          {
+            productId,
+            productName: cleanText(
+              properties.product_name || properties.item_name,
+              120
+            ),
+            oem: cleanText(properties.oem, 40),
+            modality: cleanText(properties.modality, 40),
+            score: FieldValue.increment(isSelection ? 4 : 1),
+            views: FieldValue.increment(isSelection ? 0 : 1),
+            selections: FieldValue.increment(isSelection ? 1 : 0),
             updatedAt: FieldValue.serverTimestamp(),
           },
           { merge: true }

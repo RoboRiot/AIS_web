@@ -1,11 +1,15 @@
 import { FieldPath } from "firebase-admin/firestore";
+import { unstable_cache } from "next/cache";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
 import { toPlainFirestoreData } from "@/app/data/plainFirestoreData.mjs";
 import {
   isCampaignReadyProduct,
   normalizePublicCatalogProduct,
 } from "@/app/data/catalogProductQuality.mjs";
-import { signCursor } from "@/app/data/requestSecurity";
+import {
+  rankRelevantCatalogProducts,
+  relevantCatalogSearchTerms,
+} from "@/app/data/catalogRelevance.mjs";
 
 const productFromDocument = (document) =>
   document?.exists
@@ -72,34 +76,88 @@ export const fetchAllProducts = async () => {
   return products;
 };
 
-const defaultQuerySignature = JSON.stringify(["", "", "", "", "", "asc"]);
+const buildRelevantCatalog = unstable_cache(
+  async () => {
+    const db = getAdminDb();
+    const interestScores = new Map();
 
-export const fetchInitialCatalogPage = async (limit = 12) => {
+    const [interestSnapshot, eventSnapshot, ...candidateSnapshots] = await Promise.all([
+      db
+        .collection("WebsiteProductInterest")
+        .orderBy("score", "desc")
+        .limit(80)
+        .get()
+        .catch(() => null),
+      db
+        .collection("WebsiteAnalyticsEvents")
+        .where("eventType", "in", ["product_view", "product_select"])
+        .limit(180)
+        .get()
+        .catch(() => null),
+      ...relevantCatalogSearchTerms.map((term) =>
+        db
+          .collection("Parts")
+          .where("SearchTerms", "array-contains", term)
+          .limit(10)
+          .get()
+          .catch(() => null)
+      ),
+    ]);
+
+    interestSnapshot?.docs.forEach((document) => {
+      const data = document.data();
+      const productId = String(data.productId || "");
+      if (!productId) return;
+      interestScores.set(productId, Number(data.score) || 0);
+    });
+
+    eventSnapshot?.docs.forEach((document) => {
+      const data = document.data();
+      const productId = String(
+        data.properties?.product_id || data.properties?.item_id || ""
+      );
+      if (!productId) return;
+      const weight = data.eventType === "product_select" ? 4 : 1;
+      interestScores.set(productId, (interestScores.get(productId) || 0) + weight);
+    });
+
+    const productsById = new Map();
+    candidateSnapshots.forEach((snapshot) => {
+      readyProductsFromDocuments(snapshot?.docs || []).forEach((product) => {
+        productsById.set(String(product.id), product);
+      });
+    });
+
+    const interestIds = [...interestScores.keys()].slice(0, 100);
+    if (interestIds.length) {
+      const references = interestIds.map((id) => db.collection("Parts").doc(id));
+      const documents = await db.getAll(...references);
+      readyProductsFromDocuments(documents).forEach((product) => {
+        productsById.set(String(product.id), product);
+      });
+    }
+
+    return rankRelevantCatalogProducts(
+      [...productsById.values()],
+      interestScores,
+      36
+    );
+  },
+  ["parts-relevant-catalog-v1"],
+  { revalidate: 900 }
+);
+
+export const fetchRelevantCatalogPage = async (limit = 12) => {
   const pageSize = Math.min(Math.max(Number(limit) || 12, 1), 24);
-  const fetchLimit = pageSize * 4 + 1;
-  const snapshot = await getAdminDb()
-    .collection("Parts")
-    .orderBy("NameNormalized", "asc")
-    .orderBy(FieldPath.documentId(), "asc")
-    .limit(fetchLimit)
-    .get();
-  const readyDocuments = snapshot.docs.filter((document) =>
-    isCampaignReadyProduct({ id: document.id, ...document.data() })
-  );
-  const visibleDocuments = readyDocuments.slice(0, pageSize);
-  const products = readyProductsFromDocuments(visibleDocuments);
-  const lastDocument = visibleDocuments[visibleDocuments.length - 1];
-  const hasNextPage =
-    Boolean(lastDocument) &&
-    (readyDocuments.length > pageSize || snapshot.docs.length === fetchLimit);
+  const rankedProducts = await buildRelevantCatalog();
+  const products = rankedProducts.slice(0, pageSize);
 
   return {
     products,
-    hasNextPage,
-    nextCursor:
-      hasNextPage && lastDocument
-        ? signCursor({ id: lastDocument.id, signature: defaultQuerySignature })
-        : null,
+    hasNextPage: false,
+    nextCursor: null,
+    totalMatches: rankedProducts.length,
+    sort: "relevant",
   };
 };
 

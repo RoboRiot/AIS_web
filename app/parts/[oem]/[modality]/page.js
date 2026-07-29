@@ -1,14 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPrimaryImagePath, resolveImageUrl } from "@/app/data/catalogImageUrl.mjs";
 import {
   BASE_URL,
   buildProductHref,
-  buildProductImageAlt,
-  getProductPartNumbers,
 } from "@/app/data/seoProducts";
 import { fetchCatalogProductsByCategory } from "@/app/data/serverFirestoreProducts";
+import PartsCatalogNav from "../../PartsCatalogNav";
+import ProductsPage from "../../ProductsPage";
 import styles from "../../search.module.scss";
 
 export const revalidate = 3600;
@@ -63,7 +61,7 @@ export default async function PartsCategoryPage({ params }) {
     products = await fetchCatalogProductsByCategory({
       oem: category.oem,
       modality: category.modality,
-      limit: 24,
+      limit: 12,
     });
   } catch (error) {
     console.error("Unable to render parts category:", error);
@@ -85,7 +83,7 @@ export default async function PartsCategoryPage({ params }) {
 
   return (
     <>
-      <main className={styles.category_page}>
+      <section className={styles.category_page}>
         <div className="container">
           <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
             <Link href="/parts">Parts</Link>
@@ -97,58 +95,41 @@ export default async function PartsCategoryPage({ params }) {
               <p className={styles.catalog_eyebrow}>REVIEWED MEDICAL IMAGING CATALOG</p>
               <h1>{category.oem} {category.modality} Replacement Parts</h1>
               <p>
-                Browse product images and part numbers, then request current availability,
-                compatibility confirmation, and lead-time support from Advanced Imaging Services.
+                Search {category.oem} {category.modality} parts by keyword, OEM part number,
+                or compatible system model, then request current availability and
+                compatibility confirmation.
               </p>
             </div>
-            <Link
-              className="simple-btn"
-              href={`/parts?OEM=${encodeURIComponent(category.oem)}&modality=${encodeURIComponent(category.modality)}`}
-            >
-              Search All {category.oem} {category.modality} Parts
-            </Link>
           </div>
-
-          {products.length > 0 ? (
-            <ul className={styles.category_products}>
-              {await Promise.all(products.map(async (product) => {
-                const partNumbers = getProductPartNumbers(product);
-                const imageUrl = await resolveImageUrl(getPrimaryImagePath(product));
-                return (
-                  <li key={product.id}>
-                    <Link href={buildProductHref(product)}>
-                      <Image
-                        src={imageUrl}
-                        width={470}
-                        height={320}
-                        alt={buildProductImageAlt(product)}
-                      />
-                      <div>
-                        <h2>{product.Name}</h2>
-                        <p>{partNumbers[0] ? `Part number ${partNumbers[0]}` : "Request part details"}</p>
-                        {product.Machine && <span>{product.Machine}</span>}
-                      </div>
-                    </Link>
-                  </li>
-                );
-              }))}
-            </ul>
-          ) : (
-            <div className={styles.category_empty}>
-              <h2>Tell us which part you need</h2>
-              <p>
-                Our team can search beyond the currently featured catalog results and confirm
-                compatible options for your system.
-              </p>
-              <Link className="simple-btn" href="/contact">Request Parts Support</Link>
-            </div>
-          )}
+          <PartsCatalogNav
+            activeOem={category.oem}
+            activeModality={category.modality}
+          />
         </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
         />
-      </main>
+      </section>
+      <ProductsPage
+        initialCatalog={{
+          products,
+          hasNextPage: false,
+          nextCursor: null,
+          totalMatches: null,
+          sort: "a-z",
+        }}
+        initialFilters={{
+          oem: category.oem,
+          modality: category.modality,
+        }}
+        lockedFilters={{
+          oem: true,
+          modality: true,
+        }}
+        catalogPath={`/parts/${params.oem}/${params.modality}`}
+        catalogLabel={`${category.oem} ${category.modality} parts`}
+      />
     </>
   );
 }

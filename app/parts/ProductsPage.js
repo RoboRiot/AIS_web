@@ -54,7 +54,18 @@ const getModelsForType = (brand, type) => {
     ];
 };
 
-export default function ProductsPage({ initialCatalog = {} }) {
+export default function ProductsPage({
+    initialCatalog = {},
+    initialFilters = {},
+    lockedFilters = {},
+    catalogPath = '/parts',
+    catalogLabel = '',
+}) {
+    const initialBrand = initialFilters.oem || '';
+    const initialType = initialFilters.modality || '';
+    const initialModel = initialFilters.model || '';
+    const isBrandLocked = Boolean(lockedFilters.oem && initialBrand);
+    const isTypeLocked = Boolean(lockedFilters.modality && initialType);
     const [searchQuery, setSearchQuery] = useState('');
     const [skuQuery, setSkuQuery] = useState('');
     const [showMenu, setShowMenu] = useState(false);
@@ -70,11 +81,15 @@ export default function ProductsPage({ initialCatalog = {} }) {
     const [totalMatches, setTotalMatches] = useState(
         Number.isInteger(initialCatalog.totalMatches) ? initialCatalog.totalMatches : null
     );
-    const [selectedBrand, setSelectedBrand] = useState('');
-    const [selectedType, setSelectedType] = useState('');
-    const [selectedModel, setSelectedModel] = useState('');
-    const [types, setTypes] = useState(ALL_TYPES);
-    const [models, setModels] = useState([]);
+    const [selectedBrand, setSelectedBrand] = useState(initialBrand);
+    const [selectedType, setSelectedType] = useState(initialType);
+    const [selectedModel, setSelectedModel] = useState(initialModel);
+    const [types, setTypes] = useState(
+        initialBrand ? Object.keys(brandsModels[initialBrand] || {}) : ALL_TYPES
+    );
+    const [models, setModels] = useState(
+        getModelsForType(initialBrand, initialType)
+    );
     const requestId = useRef(0);
     const lastTrackedSearch = useRef('');
     const skipInitialRequest = useRef(initialProducts.length > 0);
@@ -85,9 +100,13 @@ export default function ProductsPage({ initialCatalog = {} }) {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const brand = params.get('OEM') || params.get('clickedOEM') || '';
-        const type = params.get('modality') || params.get('clickedModality') || '';
-        const model = params.get('model') || '';
+        const brand = isBrandLocked
+            ? initialBrand
+            : params.get('OEM') || params.get('clickedOEM') || initialBrand;
+        const type = isTypeLocked
+            ? initialType
+            : params.get('modality') || params.get('clickedModality') || initialType;
+        const model = params.get('model') || initialModel;
         const requestedSort = params.get('sort');
         const hasCatalogFilter = Boolean(brand || type || model);
         setSearchQuery(params.get('q') || '');
@@ -107,19 +126,31 @@ export default function ProductsPage({ initialCatalog = {} }) {
         setTypes(brand ? Object.keys(brandsModels[brand] || {}) : ALL_TYPES);
         setModels(getModelsForType(brand, type));
         setUrlStateReady(true);
-    }, []);
+    }, [
+        initialBrand,
+        initialModel,
+        initialType,
+        isBrandLocked,
+        isTypeLocked,
+    ]);
 
     useEffect(() => {
         if (!urlStateReady) return;
         const params = new URLSearchParams();
         if (debouncedSearch) params.set('q', debouncedSearch);
         if (debouncedSku) params.set('pn', debouncedSku);
-        if (selectedBrand) params.set('OEM', selectedBrand);
-        if (selectedType) params.set('modality', selectedType);
+        if (selectedBrand && !isBrandLocked) params.set('OEM', selectedBrand);
+        if (selectedType && !isTypeLocked) params.set('modality', selectedType);
         if (selectedModel) params.set('model', selectedModel);
-        if (sortOrder !== 'relevant') params.set('sort', sortOrder);
+        if (sortOrder !== (initialCatalog.sort || 'relevant')) {
+            params.set('sort', sortOrder);
+        }
         const query = params.toString();
-        window.history.replaceState(null, '', query ? `/parts?${query}` : '/parts');
+        window.history.replaceState(
+            null,
+            '',
+            query ? `${catalogPath}?${query}` : catalogPath
+        );
     }, [
         urlStateReady,
         debouncedSearch,
@@ -128,6 +159,10 @@ export default function ProductsPage({ initialCatalog = {} }) {
         selectedType,
         selectedModel,
         sortOrder,
+        catalogPath,
+        initialCatalog.sort,
+        isBrandLocked,
+        isTypeLocked,
     ]);
 
     useEffect(() => {
@@ -311,14 +346,14 @@ export default function ProductsPage({ initialCatalog = {} }) {
     };
 
     const handleClear = () => {
-        setSelectedBrand('');
-        setSelectedType('');
-        setSelectedModel('');
+        setSelectedBrand(isBrandLocked ? initialBrand : '');
+        setSelectedType(isTypeLocked ? initialType : '');
+        setSelectedModel(initialModel);
         setSearchQuery('');
         setSkuQuery('');
-        setTypes(ALL_TYPES);
-        setModels([]);
-        setSortOrder('relevant');
+        setTypes(initialBrand ? Object.keys(brandsModels[initialBrand] || {}) : ALL_TYPES);
+        setModels(getModelsForType(initialBrand, initialType));
+        setSortOrder(initialCatalog.sort || (initialBrand || initialType ? 'a-z' : 'relevant'));
     };
 
     const handleNextPage = () => {
@@ -346,7 +381,9 @@ export default function ProductsPage({ initialCatalog = {} }) {
             <div className='container'>
                 <div className={styles.sorting}>
                     <p>
-                        <span>{isPopularView ? 'Popular parts' : 'Parts'}</span>
+                        <span>
+                            {isPopularView ? 'Popular parts' : catalogLabel || 'Parts'}
+                        </span>
                         {isLoadingProducts
                             ? 'Loading products...'
                             : isPopularView
@@ -404,18 +441,28 @@ export default function ProductsPage({ initialCatalog = {} }) {
                                 </li>
                             </ul>
                         </form>
-                        <select value={selectedBrand} onChange={handleBrandChange}>
-                            <option value="">Select Brand</option>
-                            {BRANDS.map((brand) => (
-                                <option key={brand} value={brand}>{brand}</option>
-                            ))}
-                        </select>
-                        <select value={selectedType} onChange={handleTypeChange}>
-                            <option value="">Select Type</option>
-                            {types.map((type) => (
-                                <option key={type} value={type}>{type}</option>
-                            ))}
-                        </select>
+                        {isBrandLocked && isTypeLocked ? (
+                            <div className={styles.catalog_scope}>
+                                <span>Current catalog</span>
+                                <strong>{initialBrand} {initialType}</strong>
+                                <Link href="/parts">Browse all imaging parts</Link>
+                            </div>
+                        ) : (
+                            <>
+                                <select value={selectedBrand} onChange={handleBrandChange}>
+                                    <option value="">Select Brand</option>
+                                    {BRANDS.map((brand) => (
+                                        <option key={brand} value={brand}>{brand}</option>
+                                    ))}
+                                </select>
+                                <select value={selectedType} onChange={handleTypeChange}>
+                                    <option value="">Select Type</option>
+                                    {types.map((type) => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
                         <select
                             disabled={!selectedType}
                             value={selectedModel}

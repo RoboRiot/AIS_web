@@ -1,43 +1,9 @@
-import Link from "next/link";
 import { fetchRelevantCatalogPage } from "@/app/data/serverFirestoreProducts";
+import PartsCatalogNav from "./PartsCatalogNav";
 import ProductsPage from "./ProductsPage";
 import styles from "./search.module.scss";
 
 export const revalidate = 3600;
-
-const manufacturers = [
-  {
-    name: "GE",
-    modalities: [
-      ["MRI", "/parts/ge/mri"],
-      ["CT", "/parts/ge/ct"],
-      ["PET/CT", "/parts/ge/pet-ct"],
-    ],
-  },
-  {
-    name: "Siemens",
-    modalities: [
-      ["MRI", "/parts/siemens/mri"],
-      ["CT", "/parts/siemens/ct"],
-      ["PET/CT", "/parts/siemens/pet-ct"],
-    ],
-  },
-  {
-    name: "Toshiba",
-    modalities: [
-      ["MRI", "/parts/toshiba/mri"],
-      ["CT", "/parts/toshiba/ct"],
-    ],
-  },
-  {
-    name: "Philips",
-    modalities: [
-      ["MRI", "/parts/philips/mri"],
-      ["CT", "/parts/philips/ct"],
-      ["PET/CT", "/parts/philips/pet-ct"],
-    ],
-  },
-];
 
 export default async function Search() {
   let initialCatalog = {
@@ -64,32 +30,7 @@ export default async function Search() {
             system. Every catalog result includes a reviewed product image and a direct
             availability request path.
           </p>
-          <nav
-            className={styles.system_selector}
-            aria-label="Browse parts by manufacturer and modality"
-          >
-            <div className={styles.selector_intro}>
-              <span>Browse catalog</span>
-              <strong>Choose your system</strong>
-            </div>
-            <ul className={styles.selector_groups}>
-              {manufacturers.map((manufacturer) => (
-                <li key={manufacturer.name} className={styles.selector_group}>
-                  <span className={styles.selector_oem}>{manufacturer.name}</span>
-                  <div
-                    className={styles.selector_links}
-                    data-count={manufacturer.modalities.length}
-                  >
-                    {manufacturer.modalities.map(([label, href]) => (
-                      <Link key={href} href={href}>
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <PartsCatalogNav />
         </div>
       </section>
       <ProductsPage initialCatalog={initialCatalog} />

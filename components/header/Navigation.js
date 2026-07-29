@@ -217,6 +217,15 @@ export default function Navigation() {
                                     })}
                                 </div>
                             </li>
+                            <li className={styles.service_request_item}>
+                                <Link
+                                    onClick={closeNavOverlays}
+                                    className={`${styles.service_request_link} ${pathname === '/service-request' ? styles.active : ''}`}
+                                    href="/service-request"
+                                >
+                                    Service Request
+                                </Link>
+                            </li>
                             <li><Link onClick={closeNavOverlays} className={pathname === '/parts' ? styles.active : ''} href="/parts">Parts</Link></li>
                             <li><Link onClick={closeNavOverlays} className={pathname === '/contact' ? styles.active : ''} href="/contact">Contact Us</Link></li>
                             <li className={`${pathname === '/parts' ? styles.hidebtn : ""}`}>

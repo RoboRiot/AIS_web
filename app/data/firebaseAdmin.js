@@ -1,5 +1,6 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 const getServiceAccount = () => {
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
@@ -18,9 +19,20 @@ const getServiceAccount = () => {
   };
 };
 
-export const getAdminDb = () => {
+const getAdminApp = () => {
   if (!getApps().length) {
-    initializeApp({ credential: cert(getServiceAccount()) });
+    const serviceAccount = getServiceAccount();
+    initializeApp({
+      credential: cert(serviceAccount),
+      storageBucket:
+        process.env.FIREBASE_STORAGE_BUCKET ||
+        process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+        `${serviceAccount.projectId}.appspot.com`,
+    });
   }
-  return getFirestore();
+  return getApps()[0];
 };
+
+export const getAdminDb = () => getFirestore(getAdminApp());
+
+export const getAdminBucket = () => getStorage(getAdminApp()).bucket();

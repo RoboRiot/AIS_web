@@ -31,21 +31,6 @@ const MODALITIES = new Set([
   "Nucmed",
 ]);
 const URGENCIES = new Set(["hard_down", "asap", "soon", "anytime"]);
-const OPERATIONAL_STATUSES = new Set([
-  "not_operational",
-  "limited",
-  "operational",
-  "unknown",
-]);
-const OPERATIONAL_IMPACTS = new Set([
-  "scanning_stopped",
-  "degraded_performance",
-  "intermittent",
-  "cosmetic",
-  "preventive",
-  "other",
-]);
-const REMOTE_ACCESS_STATUSES = new Set(["available", "unavailable", "unknown"]);
 const FILE_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -156,12 +141,6 @@ const sanitizePayload = (formData) => ({
   purchaseOrderNumber: cleanText(formData.get("purchaseOrderNumber"), 50),
   issueTitle: cleanText(formData.get("issueTitle"), 100),
   systemModel: cleanText(formData.get("systemModel"), 160),
-  equipmentOperational: oneOf(
-    formData.get("equipmentOperational"),
-    OPERATIONAL_STATUSES
-  ),
-  operationalImpact: oneOf(formData.get("operationalImpact"), OPERATIONAL_IMPACTS),
-  remoteAccess: oneOf(formData.get("remoteAccess"), REMOTE_ACCESS_STATUSES),
   requestedTiming: cleanText(formData.get("requestedTiming"), 240),
   description: cleanMultiline(formData.get("description"), 4000),
 });
@@ -183,9 +162,6 @@ const validationError = (payload) => {
     ["phone", "Contact number"],
     ["email", "Email"],
     ["issueTitle", "Issue title"],
-    ["equipmentOperational", "Equipment operational status"],
-    ["operationalImpact", "Operational impact"],
-    ["remoteAccess", "Remote access status"],
     ["description", "Issue description"],
   ];
   const missing = required.find(([key]) => !payload[key]);

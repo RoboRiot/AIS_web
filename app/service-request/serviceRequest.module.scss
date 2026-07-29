@@ -258,6 +258,26 @@
   grid-column: 1 / -1;
 }
 
+.equipmentLayout {
+  display: grid;
+  gap: 24px;
+}
+
+.equipmentDetails {
+  background: linear-gradient(145deg, #fbfdff, #f5f9fd);
+  border: 1px solid #e1e9f1;
+  border-radius: 16px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 22px;
+
+  @media (max-width: $breakpoint_mobile_landscape) {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+}
+
 .field {
   display: flex;
   flex-direction: column;

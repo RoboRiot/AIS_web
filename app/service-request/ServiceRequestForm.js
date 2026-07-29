@@ -80,9 +80,6 @@ const initialForm = () => ({
   purchaseOrderNumber: "",
   issueTitle: "",
   systemModel: "",
-  equipmentOperational: "",
-  operationalImpact: "",
-  remoteAccess: "",
   requestedTiming: "",
   description: "",
 });
@@ -417,7 +414,7 @@ export default function ServiceRequestForm() {
                 <span>02</span>
                 Equipment &amp; urgency
               </legend>
-              <div className={styles.grid}>
+              <div className={styles.equipmentLayout}>
                 <Field
                   id="urgency"
                   label="Urgency"
@@ -445,97 +442,55 @@ export default function ServiceRequestForm() {
                     ))}
                   </div>
                 </Field>
-                <Field id="manufacturer" label="Manufacture" required>
-                  <select
-                    id="manufacturer"
-                    value={form.manufacturer}
-                    onChange={update("manufacturer")}
-                    required
-                  >
-                    <option value="">Select manufacturer</option>
-                    {MANUFACTURERS.map((manufacturer) => (
-                      <option key={manufacturer}>{manufacturer}</option>
-                    ))}
-                  </select>
-                </Field>
-                <Field id="modality" label="Modality" required>
-                  <select
-                    id="modality"
-                    value={form.modality}
-                    onChange={update("modality")}
-                    required
-                  >
-                    <option value="">Select modality</option>
-                    {MODALITIES.map((modality) => (
-                      <option key={modality}>{modality}</option>
-                    ))}
-                  </select>
-                </Field>
-                <Field id="system-model" label="System / model">
-                  <input
-                    id="system-model"
-                    value={form.systemModel}
-                    onChange={update("systemModel")}
-                    maxLength={160}
-                    placeholder="Example: GE Signa Explorer"
-                  />
-                </Field>
-                <Field id="equipment-operational" label="Is the equipment operational?" required>
-                  <select
-                    id="equipment-operational"
-                    value={form.equipmentOperational}
-                    onChange={update("equipmentOperational")}
-                    required
-                  >
-                    <option value="">Select operational status</option>
-                    <option value="not_operational">No — system cannot scan</option>
-                    <option value="limited">Limited or degraded operation</option>
-                    <option value="operational">Yes — system is scanning</option>
-                    <option value="unknown">Unknown</option>
-                  </select>
-                </Field>
-                <Field id="operational-impact" label="Operational impact" required>
-                  <select
-                    id="operational-impact"
-                    value={form.operationalImpact}
-                    onChange={update("operationalImpact")}
-                    required
-                  >
-                    <option value="">Select current impact</option>
-                    <option value="scanning_stopped">Scanning stopped</option>
-                    <option value="degraded_performance">Degraded performance</option>
-                    <option value="intermittent">Intermittent issue</option>
-                    <option value="cosmetic">Cosmetic issue</option>
-                    <option value="preventive">Preventive / planned service</option>
-                    <option value="other">Other</option>
-                  </select>
-                </Field>
-                <Field id="remote-access" label="Is remote access available?" required>
-                  <select
-                    id="remote-access"
-                    value={form.remoteAccess}
-                    onChange={update("remoteAccess")}
-                    required
-                  >
-                    <option value="">Select remote access status</option>
-                    <option value="available">Yes</option>
-                    <option value="unavailable">No</option>
-                    <option value="unknown">Unknown</option>
-                  </select>
-                </Field>
-                <Field
-                  id="requested-timing"
-                  label="Requested timing or known schedule"
-                  className={styles.full}
-                >
-                  <input
+                <div className={styles.equipmentDetails}>
+                  <Field id="manufacturer" label="Manufacture" required>
+                    <select
+                      id="manufacturer"
+                      value={form.manufacturer}
+                      onChange={update("manufacturer")}
+                      required
+                    >
+                      <option value="">Select manufacturer</option>
+                      {MANUFACTURERS.map((manufacturer) => (
+                        <option key={manufacturer}>{manufacturer}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field id="modality" label="Modality" required>
+                    <select
+                      id="modality"
+                      value={form.modality}
+                      onChange={update("modality")}
+                      required
+                    >
+                      <option value="">Select modality</option>
+                      {MODALITIES.map((modality) => (
+                        <option key={modality}>{modality}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field id="system-model" label="System / model">
+                    <input
+                      id="system-model"
+                      value={form.systemModel}
+                      onChange={update("systemModel")}
+                      maxLength={160}
+                      placeholder="Example: GE Signa Explorer"
+                    />
+                  </Field>
+                  <Field
                     id="requested-timing"
-                    value={form.requestedTiming}
-                    onChange={update("requestedTiming")}
-                    maxLength={240}
-                    placeholder="Example: Site access is available Monday after 9 AM"
-                  />
-                </Field>
+                    label="Requested timing or known schedule"
+                  >
+                    <input
+                      id="requested-timing"
+                      value={form.requestedTiming}
+                      onChange={update("requestedTiming")}
+                      maxLength={240}
+                      placeholder="Example: Monday after 9 AM"
+                    />
+                  </Field>
+                </div>
               </div>
             </fieldset>
 

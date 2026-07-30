@@ -8,6 +8,7 @@ import {
   consumeRateLimit,
   hashIdentifier,
   isLikelyAutomation,
+  isProductionAnalyticsRequest,
   isTrustedOrigin,
   readJsonBody,
 } from "@/app/data/requestSecurity";
@@ -79,7 +80,11 @@ const normalizedSearchTerm = (value) =>
 
 export async function POST(request) {
   try {
-    if (!isTrustedOrigin(request) || isLikelyAutomation(request)) {
+    if (
+      !isProductionAnalyticsRequest(request) ||
+      !isTrustedOrigin(request) ||
+      isLikelyAutomation(request)
+    ) {
       return NextResponse.json({ error: "Event rejected." }, { status: 403 });
     }
 
@@ -146,6 +151,8 @@ export async function POST(request) {
         medium: cleanText(pathUrl.searchParams.get("utm_medium"), 80),
         campaign: cleanText(pathUrl.searchParams.get("utm_campaign"), 100),
       },
+      analyticsVersion: 2,
+      trafficClass: "human",
       aggregateVersion: isPartSearch ? 1 : null,
       createdAt: FieldValue.serverTimestamp(),
       clientOccurredAt: cleanText(payload.occurredAt, 40),
@@ -167,7 +174,7 @@ export async function POST(request) {
       : null;
     const productInterestReference = isProductInterest
       ? db
-          .collection("WebsiteProductInterest")
+          .collection("WebsiteProductInterestVerified")
           .doc(
             crypto
               .createHash("sha256")
@@ -182,17 +189,25 @@ export async function POST(request) {
       if (dailySnapshot.exists) {
         const updates = {
           [`totals.${eventType}`]: FieldValue.increment(1),
+          [`humanTotals.${eventType}`]: FieldValue.increment(1),
           totalEvents: FieldValue.increment(1),
+          humanTotalEvents: FieldValue.increment(1),
           updatedAt: FieldValue.serverTimestamp(),
         };
-        if (formType) updates[`forms.${formType}.${eventType}`] = FieldValue.increment(1);
+        if (formType) {
+          updates[`forms.${formType}.${eventType}`] = FieldValue.increment(1);
+          updates[`humanForms.${formType}.${eventType}`] = FieldValue.increment(1);
+        }
         transaction.update(dailyReference, updates);
       } else {
         transaction.set(dailyReference, {
           date,
           totalEvents: 1,
+          humanTotalEvents: 1,
           totals: { [eventType]: 1 },
+          humanTotals: { [eventType]: 1 },
           forms: formType ? { [formType]: { [eventType]: 1 } } : {},
+          humanForms: formType ? { [formType]: { [eventType]: 1 } } : {},
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
         });

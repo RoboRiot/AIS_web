@@ -1,16 +1,10 @@
 import crypto from "node:crypto";
 import { Timestamp } from "firebase-admin/firestore";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "../../site.config.mjs";
-
-const AUTOMATION_UA = [
-  "python-requests",
-  "scrapy",
-  "go-http-client",
-  "libwww",
-  "phantomjs",
-  "selenium",
-  "headlesschrome",
-];
+import {
+  isAutomatedUserAgent,
+  isProductionAnalyticsHost,
+} from "./analyticsPolicy.mjs";
 
 const securitySecret = () =>
   process.env.ANALYTICS_HASH_SALT ||
@@ -54,9 +48,16 @@ export const getRequestFingerprint = (request, namespace) => {
 };
 
 export const isLikelyAutomation = (request) => {
-  const ua = cleanText(request.headers.get("user-agent"), 300).toLowerCase();
-  return !ua || AUTOMATION_UA.some((pattern) => ua.includes(pattern));
+  const ua = cleanText(request.headers.get("user-agent"), 300);
+  return isAutomatedUserAgent(ua);
 };
+
+export const isProductionAnalyticsRequest = (request) =>
+  isProductionAnalyticsHost(
+    request.headers.get("x-forwarded-host") ||
+      request.headers.get("host") ||
+      ""
+  );
 
 export const isTrustedOrigin = (request) => {
   const site = request.headers.get("sec-fetch-site");

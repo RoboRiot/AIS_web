@@ -83,14 +83,14 @@ const buildRelevantCatalog = unstable_cache(
 
     const [interestSnapshot, eventSnapshot, ...candidateSnapshots] = await Promise.all([
       db
-        .collection("WebsiteProductInterest")
+        .collection("WebsiteProductInterestVerified")
         .orderBy("score", "desc")
         .limit(80)
         .get()
         .catch(() => null),
       db
         .collection("WebsiteAnalyticsEvents")
-        .where("eventType", "in", ["product_view", "product_select"])
+        .where("analyticsVersion", "==", 2)
         .limit(180)
         .get()
         .catch(() => null),
@@ -113,6 +113,7 @@ const buildRelevantCatalog = unstable_cache(
 
     eventSnapshot?.docs.forEach((document) => {
       const data = document.data();
+      if (!["product_view", "product_select"].includes(data.eventType)) return;
       const productId = String(
         data.properties?.product_id || data.properties?.item_id || ""
       );
@@ -143,7 +144,7 @@ const buildRelevantCatalog = unstable_cache(
       36
     );
   },
-  ["parts-relevant-catalog-v1"],
+  ["parts-relevant-catalog-v2"],
   { revalidate: 900 }
 );
 

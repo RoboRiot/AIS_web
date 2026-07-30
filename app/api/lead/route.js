@@ -10,6 +10,7 @@ import {
   cleanPath,
   cleanText,
   consumeRateLimit,
+  isProductionAnalyticsRequest,
   isTrustedOrigin,
   readJsonBody,
 } from "@/app/data/requestSecurity";
@@ -179,6 +180,7 @@ export async function POST(request) {
 
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
+    const verifiedAnalytics = isProductionAnalyticsRequest(request);
     const mailReference = db.collection("mail").doc();
     const eventReference = db.collection("WebsiteAnalyticsEvents").doc();
     const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
@@ -218,6 +220,8 @@ export async function POST(request) {
       device: "unknown",
       country: "unknown",
       utm: { source: "", medium: "", campaign: "" },
+      analyticsVersion: 2,
+      trafficClass: "human",
       aggregateVersion: null,
       createdAt: FieldValue.serverTimestamp(),
       clientOccurredAt: "",
@@ -225,22 +229,31 @@ export async function POST(request) {
     };
 
     await db.runTransaction(async (transaction) => {
-      const dailySnapshot = await transaction.get(dailyReference);
+      const dailySnapshot = verifiedAnalytics
+        ? await transaction.get(dailyReference)
+        : null;
       transaction.set(mailReference, mailPayload);
+      if (!verifiedAnalytics) return;
       transaction.set(eventReference, confirmedSubmissionEvent);
       if (dailySnapshot.exists) {
         transaction.update(dailyReference, {
           "totals.form_submit": FieldValue.increment(1),
+          "humanTotals.form_submit": FieldValue.increment(1),
           [`forms.${payload.formType}.form_submit`]: FieldValue.increment(1),
+          [`humanForms.${payload.formType}.form_submit`]: FieldValue.increment(1),
           totalEvents: FieldValue.increment(1),
+          humanTotalEvents: FieldValue.increment(1),
           updatedAt: FieldValue.serverTimestamp(),
         });
       } else {
         transaction.set(dailyReference, {
           date,
           totalEvents: 1,
+          humanTotalEvents: 1,
           totals: { form_submit: 1 },
+          humanTotals: { form_submit: 1 },
           forms: { [payload.formType]: { form_submit: 1 } },
+          humanForms: { [payload.formType]: { form_submit: 1 } },
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
         });

@@ -1,3 +1,5 @@
+import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
+
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
 const ATTRIBUTION_KEY = "ais_session_attribution";
@@ -76,6 +78,15 @@ const sessionAttribution = () => {
 export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   if (typeof window === "undefined") return;
   if (navigator.doNotTrack === "1") return;
+  if (
+    !shouldCollectBrowserAnalytics({
+      hostname: window.location.hostname,
+      userAgent: navigator.userAgent,
+      webdriver: navigator.webdriver,
+    })
+  ) {
+    return;
+  }
 
   const safeProperties = Object.fromEntries(
     Object.entries({ ...properties, ...sessionAttribution() })
@@ -101,7 +112,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
     }).catch(() => {});
   }
 
-  if (typeof window.gtag === "function") {
+  if (eventType !== "page_view" && typeof window.gtag === "function") {
     window.gtag("event", gaEventName(eventType), {
       ...safeProperties,
       page_path: payload.path,

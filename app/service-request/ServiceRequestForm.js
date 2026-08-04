@@ -266,7 +266,7 @@ export default function ServiceRequestForm() {
           <aside className={styles.emergencyCard}>
             <span>Scanner down now?</span>
             <strong>Call for immediate remote support</strong>
-            <a href="tel:+18002003583">(800) 200-3583</a>
+            <a href="tel:+15595376851">(559) 537-6851</a>
             <small>Available for urgent MRI, CT, and PET/CT issues.</small>
           </aside>
         </div>

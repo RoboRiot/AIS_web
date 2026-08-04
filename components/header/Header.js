@@ -31,7 +31,7 @@ export default function Header() {
                     <div className="container flex">
                         <span>ISO 9001:2015 Certified</span>
                         <ul className="list-none flex items-center ml-auto">
-                            <li className="flex items-center"><Image src={phoneIcon} alt="phone" /><Link href="tel:(800)200-3583">(800) 200-3583</Link></li>
+                            <li className="flex items-center"><Image src={phoneIcon} alt="phone" /><Link href="tel:+15595376851">(559) 537-6851</Link></li>
                             <li className="flex items-center"><Image src={emailIcon} alt="email" /><Link href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</Link></li>
                         </ul>
                     </div>

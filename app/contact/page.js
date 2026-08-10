@@ -14,7 +14,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
-import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
+import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
 
 const FORM_COPY = {
   contact_form: {
@@ -61,6 +61,7 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [formStartedAt] = useState(() => Date.now());
+  const [leadId] = useState(createLeadId);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,8 +83,8 @@ export default function Contact() {
     const context = params.get("source") || "contact_page";
     setFormType(nextFormType);
     setFormContext(context);
-    announceFormOpen(nextFormType, context);
-  }, []);
+    announceFormOpen(nextFormType, context, leadId);
+  }, [leadId]);
 
   const copy = FORM_COPY[formType] || FORM_COPY.contact_form;
   const recordError = (stage, reason = "") => {
@@ -137,6 +138,7 @@ export default function Contact() {
         startedAt: formStartedAt,
         website: honeypot,
         context: formContext,
+        leadId,
       });
       trackWebsiteEvent(
         "form_submit",
@@ -179,7 +181,7 @@ export default function Contact() {
           <p>{copy.intro}</p>
           {formType === "service_request" && (
             <p className={styles.urgent_note}>
-              Scanner down now? Call <a href="tel:(800) 200-3583">(800) 200-3583</a> for immediate remote support.
+              Scanner down now? Call <a href="tel:+15595376851">(559) 537-6851</a> for immediate remote support.
             </p>
           )}
         </div>
@@ -188,6 +190,7 @@ export default function Contact() {
             onSubmit={handleSubmit}
             data-form-type={formType}
             data-form-source={formContext || "contact_page"}
+            data-lead-id={leadId}
             data-form-open-tracking="manual"
           >
             <ul className="list-none flex direction-column">

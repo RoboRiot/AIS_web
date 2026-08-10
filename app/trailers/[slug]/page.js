@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import Image from "next/image";
 import TrailerImageCarousel from "./TrailerImageCarousel";
-import pricingImage from "@/public/assets/images/mobile-mri2.jpg";
+import QuickInquiryForm from "@/components/forms/QuickInquiryForm";
 import { BASE_URL } from "@/app/data/seoProducts";
 import {
   getTrailerLandingPage,
@@ -79,16 +79,12 @@ export default function TrailerLandingPage({ params }) {
     "Coordinate technical support, uptime communication, and response planning throughout the rental period.",
     "Align equipment availability, delivery sequencing, site access, and replacement-parts support before deployment.",
   ];
-  const fleetPricing = [
-    ["GE HDxt", "$25,000"],
-    ["GE Evo", "$25,000"],
-    ["GE DVCT STE", "$35,000"],
-    ["Siemens Aera", "$48,000"],
-    ["Siemens Espree", "$32,000"],
-    ["Siemens Definition", "$27,500"],
-    ["Canon Prime 160", "$27,000"],
-    ["Canon Aquilion CXL", "$25,000"],
-  ];
+  const fleetPricing = page.fleetPricing || [];
+  const pricingImage = trailerImages.find((image) => image.category === "Exterior") ||
+    trailerImages[0] || {
+      src: "/assets/images/mobile-mri2.jpg",
+      alt: `${page.h1} exterior`,
+    };
   const trailerJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -124,6 +120,15 @@ export default function TrailerLandingPage({ params }) {
         }
       : {}),
   };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Trailer Rentals", item: `${BASE_URL}/trailers` },
+      { "@type": "ListItem", position: 3, name: page.shortTitle, item: `${BASE_URL}/trailers/${page.slug}` },
+    ],
+  };
 
   return (
     <>
@@ -131,16 +136,20 @@ export default function TrailerLandingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trailerJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Subheader title={[page.h1.split(" ")[0], " ", <span key="1">{page.h1.split(" ").slice(1).join(" ")}</span>]} extraClass="services_bg" />
       <section className={styles.section}>
         <div className="container">
           <div className={styles.introGrid}>
             <article className={styles.heroCopy}>
               <span className={styles.kicker}>Mobile imaging rental and lease planning</span>
-              <h2 className={styles.title}>{page.h1}</h2>
+              <h2 className={styles.title}>Mobile {page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase()} Rental Coverage</h2>
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
-                <Link href={`/contact?inquiry=trailer&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Check Trailer Availability</Link>
+                <a href="#request" className="simple-btn">Check Trailer Availability</a>
                 <Link href="/trailers">All Trailer Rentals</Link>
               </div>
               <div className={styles.heroSystems}>
@@ -163,6 +172,15 @@ export default function TrailerLandingPage({ params }) {
           </div>
         </div>
       </section>
+      <QuickInquiryForm
+        formType="trailer_request"
+        source={page.slug}
+        title={`Check ${page.shortTitle} Availability`}
+        intro="Share the location, target dates, modality, and preferred system. Our team will review fleet timing and the most practical coverage path."
+        detailsLabel="Project details"
+        detailsPlaceholder="Facility and state, target dates, expected term, preferred system, and clinical volume"
+        submitLabel="Check Availability"
+      />
       {modelCoverage.length > 0 && (
         <section id="mri-models" className={styles.modelCoverageSection}>
           <div className="container">
@@ -208,21 +226,47 @@ export default function TrailerLandingPage({ params }) {
         <div className="container">
           <div className={styles.pricingGrid}>
             <figure>
-              <Image src={pricingImage} alt={`${page.h1} mobile imaging fleet pricing`} />
+              <Image
+                src={pricingImage.src}
+                alt={pricingImage.alt || `${page.h1} mobile imaging fleet pricing`}
+                width={900}
+                height={620}
+              />
             </figure>
             <article>
               <span className={styles.kicker}>Fleet pricing</span>
               <h2 className={styles.sectionHeading}>Our Mobile <span>Fleet</span></h2>
-              <p className={styles.sectionCopy}>Monthly pricing for one year lease starting at:</p>
+              <p className={styles.sectionCopy}>
+                Illustrative monthly starting points for a one-year lease. Configuration,
+                transport, site work, availability, and service scope affect final pricing.
+              </p>
               <ul className={`${styles.pricingList} list-none`}>
-                {fleetPricing.map(([system, price]) => (
-                  <li key={system}>
-                    {system}
-                    <span>{price}</span>
+                {fleetPricing.map((item) => (
+                  <li key={item.system}>
+                    {item.system}
+                    <span>{item.price}</span>
                   </li>
                 ))}
               </ul>
             </article>
+          </div>
+        </div>
+      </section>
+      <section className={styles.routeSection}>
+        <div className="container">
+          <span className={styles.kicker}>Site and deployment planning</span>
+          <h2 className={styles.sectionHeading}>Plan Before the Trailer <span>Arrives</span></h2>
+          <p className={styles.sectionCopy}>
+            Early coordination helps avoid delivery delays and makes the transition into temporary
+            imaging capacity easier for patients, technologists, and facility teams.
+          </p>
+          <div className={styles.cardGrid}>
+            {(page.planningPoints || []).map((point, index) => (
+              <article key={point} className={styles.systemCard}>
+                <h3>{["Site Readiness", "Clinical Fit", "Deployment Coordination"][index]}</h3>
+                <p>{point}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>

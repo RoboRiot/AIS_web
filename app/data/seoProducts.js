@@ -180,7 +180,15 @@ export const buildProductSeoTitle = (product) => {
 
   if (title.length <= 70) return title;
   const compactTitle = suffix ? `${productLabel} | ${suffix}` : `${productLabel} | AIS`;
-  return compactTitle.length <= 70 ? compactTitle : `${name} | Advanced Imaging`;
+  if (compactTitle.length <= 70) return compactTitle;
+
+  if (primaryPart) {
+    const compactSuffix = ` ${primaryPart} | AIS`;
+    const availableNameLength = Math.max(18, 70 - compactSuffix.length - 3);
+    return `${truncateText(name, availableNameLength)}${compactSuffix}`;
+  }
+
+  return `${truncateText(name, 61)} | AIS`;
 };
 
 export const buildProductSeoDescription = (product) => {
@@ -194,7 +202,7 @@ export const buildProductSeoDescription = (product) => {
   const compatibility = [oem, model, modality].filter(Boolean).join(" ");
 
   return truncateText(
-    `${name} is a medical imaging equipment part available from Advanced Imaging Services.${identifiers} Request pricing, availability, compatibility, and service support${compatibility ? ` for ${compatibility} systems` : ""}.`,
+    `${name} medical imaging part sourcing support from Advanced Imaging Services.${identifiers} Request current availability, pricing, and compatibility confirmation${compatibility ? ` for ${compatibility} systems` : ""}.`,
     170
   );
 };
@@ -207,7 +215,23 @@ export const buildProductImageAlt = (product, index = 0) => {
 };
 
 export const buildPartsCategoryHref = (oem, modality) => {
-  const oemSlug = slugify(oem);
-  const modalitySlug = slugify(modality);
+  const normalizedOem = slugify(oem);
+  const normalizedModality = slugify(modality);
+  const oemSlug = normalizedOem.startsWith("ge")
+    ? "ge"
+    : normalizedOem.startsWith("siemens")
+      ? "siemens"
+      : /^(toshiba|canon)/.test(normalizedOem)
+        ? "toshiba"
+        : normalizedOem.startsWith("philips")
+          ? "philips"
+          : normalizedOem;
+  const modalitySlug = normalizedModality.includes("pet")
+    ? "pet-ct"
+    : normalizedModality.includes("mri") || normalizedModality === "mr"
+      ? "mri"
+      : normalizedModality.includes("ct")
+        ? "ct"
+        : normalizedModality;
   return oemSlug && modalitySlug ? `/parts/${oemSlug}/${modalitySlug}` : "/parts";
 };

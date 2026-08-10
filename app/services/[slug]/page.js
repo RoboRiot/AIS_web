@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import ServiceImageCarousel from "./ServiceImageCarousel";
+import QuickInquiryForm from "@/components/forms/QuickInquiryForm";
 import { BASE_URL } from "@/app/data/seoProducts";
 import { getServiceImages } from "@/app/data/serviceImages";
 import {
@@ -103,6 +104,15 @@ export default function ServiceLandingPage({ params }) {
         }
       : {}),
   };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${BASE_URL}/services` },
+      { "@type": "ListItem", position: 3, name: page.shortTitle, item: `${BASE_URL}/services/${page.slug}` },
+    ],
+  };
 
   return (
     <>
@@ -110,17 +120,21 @@ export default function ServiceLandingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Subheader title={[page.h1.split(" ")[0], " ", <span key="1">{page.h1.split(" ").slice(1).join(" ")}</span>]} extraClass="services_bg" />
       <section className={styles.section}>
         <div className="container">
           <div className={styles.introGrid}>
             <article className={styles.heroCopy}>
               <span className={styles.kicker}>{page.eyebrow}</span>
-              <h2 className={styles.title}>{page.h1}</h2>
+              <h2 className={styles.title}>Remote-First {page.shortTitle}</h2>
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
-                <Link href={`/contact?inquiry=service&source=${encodeURIComponent(page.slug)}`} className="simple-btn">Request Service</Link>
-                <Link href="/services">View All Services</Link>
+                <a href="#request" className="simple-btn">Request Service</a>
+                <Link href="/service-request">Detailed Service Intake</Link>
               </div>
               <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
                 {modelCoverage.length > 0 && <a href="#mri-service-models">{brandLabel} MRI Models</a>}
@@ -133,6 +147,15 @@ export default function ServiceLandingPage({ params }) {
           </div>
         </div>
       </section>
+      <QuickInquiryForm
+        formType="service_request"
+        source={page.slug}
+        title={`Request ${page.shortTitle}`}
+        intro="Remote diagnostics are the fastest first step and can often restore operation immediately. Share the system and current issue so our team can begin triage."
+        detailsLabel="System and issue"
+        detailsPlaceholder="OEM, model, error code or symptoms, facility and state, and urgency"
+        submitLabel="Request Service Support"
+      />
       {modelCoverage.length > 0 && (
         <section id="mri-service-models" className={styles.modelCoverageSection}>
           <div className="container">

@@ -5,7 +5,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
-import { trackWebsiteEvent } from '@/components/utils/analytics';
+import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function FoundYourPart() {
     const [name, setName] = useState("");
@@ -14,6 +14,7 @@ export default function FoundYourPart() {
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
     const [formStartedAt] = useState(() => Date.now());
+    const [leadId] = useState(createLeadId);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +22,8 @@ export default function FoundYourPart() {
 
     useEffect(() => {
         ensureRecaptchaScript(recaptchaSiteKey);
-    }, [recaptchaSiteKey]);
+        announceFormOpen("part_request", "product_page", leadId);
+    }, [leadId, recaptchaSiteKey]);
 
     const recordError = (stage, reason = "") => {
         trackWebsiteEvent("form_error", {
@@ -77,6 +79,7 @@ export default function FoundYourPart() {
                 startedAt: formStartedAt,
                 website: honeypot,
                 context: partNumber,
+                leadId,
             });
             setIsError(false);
             trackWebsiteEvent(
@@ -105,7 +108,7 @@ export default function FoundYourPart() {
                 <div className="container">
                     <h2 className="main-title">Request <span>Part Availability</span></h2>
                     <p className={styles.form_intro}>Send the part number below and our team will confirm availability and compatibility.</p>
-                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request" data-form-source="product_page">
+                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request" data-form-source="product_page" data-lead-id={leadId}>
                         <ul className="list-none">
                             <li className="bot-field" aria-hidden="true">
                                 <label htmlFor="found-part-website">Website</label>

@@ -3,11 +3,14 @@ import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
 const ATTRIBUTION_KEY = "ais_session_attribution";
+const LAST_PART_SEARCH_KEY = "ais_last_part_search";
 
 const randomId = () => {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 };
+
+export const createLeadId = () => randomId();
 
 const storedId = (storage, key) => {
   try {
@@ -65,12 +68,39 @@ const sessionAttribution = () => {
     const attribution = {
       acquisition_source: acquisitionSource,
       landing_path: `${landingUrl.pathname}${landingUrl.search}`.slice(0, 300),
+      referrer_host: referrerHost.slice(0, 120),
+      utm_source: (landingUrl.searchParams.get("utm_source") || "").slice(0, 80),
+      utm_medium: (landingUrl.searchParams.get("utm_medium") || "").slice(0, 80),
+      utm_campaign: (landingUrl.searchParams.get("utm_campaign") || "").slice(0, 100),
+      click_id_present: Boolean(
+        landingUrl.searchParams.get("gclid") || landingUrl.searchParams.get("msclkid")
+      ),
     };
     window.sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(attribution));
     return attribution;
   } catch {
     return { acquisition_source: "unknown", landing_path: window.location.pathname.slice(0, 300) };
   }
+};
+
+export const getLeadAnalyticsContext = (leadId = "") => {
+  if (typeof window === "undefined") return {};
+  let lastPartSearch = {};
+  try {
+    lastPartSearch = JSON.parse(window.sessionStorage.getItem(LAST_PART_SEARCH_KEY) || "{}");
+  } catch {
+    lastPartSearch = {};
+  }
+  return {
+    leadId: leadId || createLeadId(),
+    visitorId: storedId(window.localStorage, VISITOR_KEY),
+    sessionId: storedId(window.sessionStorage, SESSION_KEY),
+    sourcePage: `${window.location.pathname}${window.location.search}`.slice(0, 300),
+    referrer: document.referrer.slice(0, 300),
+    search_term: String(lastPartSearch.search_term || "").slice(0, 100),
+    search_kind: String(lastPartSearch.search_kind || "").slice(0, 40),
+    ...sessionAttribution(),
+  };
 };
 
 
@@ -93,6 +123,23 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
       .slice(0, 20)
   );
+  if (
+    eventType === "search" &&
+    safeProperties.search_location === "parts_catalog" &&
+    safeProperties.search_term
+  ) {
+    try {
+      window.sessionStorage.setItem(
+        LAST_PART_SEARCH_KEY,
+        JSON.stringify({
+          search_term: safeProperties.search_term,
+          search_kind: safeProperties.search_kind || "keyword",
+        })
+      );
+    } catch {
+      // Analytics must never interrupt catalog use.
+    }
+  }
   const payload = {
     eventType,
     path: `${window.location.pathname}${window.location.search}`.slice(0, 300),
@@ -120,6 +167,11 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   }
 };
 
-export const announceFormOpen = (formType, source = "") => {
-  trackWebsiteEvent("form_open", { form_type: formType, source });
+export const announceFormOpen = (formType, source = "", leadId = createLeadId()) => {
+  trackWebsiteEvent("form_open", {
+    form_type: formType,
+    source,
+    lead_id: leadId,
+  });
+  return leadId;
 };

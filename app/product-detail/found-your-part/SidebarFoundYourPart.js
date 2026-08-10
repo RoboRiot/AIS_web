@@ -5,7 +5,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
-import { trackWebsiteEvent } from '@/components/utils/analytics';
+import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function SidebarFoundYourPart() {
     const [name, setName] = useState("");
@@ -14,6 +14,7 @@ export default function SidebarFoundYourPart() {
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
     const [formStartedAt] = useState(() => Date.now());
+    const [leadId] = useState(createLeadId);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +22,8 @@ export default function SidebarFoundYourPart() {
 
     useEffect(() => {
         ensureRecaptchaScript(recaptchaSiteKey);
-    }, [recaptchaSiteKey]);
+        announceFormOpen("part_request", "parts_sidebar", leadId);
+    }, [leadId, recaptchaSiteKey]);
 
     const recordError = (stage, reason = "") => {
         trackWebsiteEvent("form_error", {
@@ -77,6 +79,7 @@ export default function SidebarFoundYourPart() {
                 startedAt: formStartedAt,
                 website: honeypot,
                 context: partNumber,
+                leadId,
             });
             setIsError(false);
             trackWebsiteEvent(
@@ -104,7 +107,7 @@ export default function SidebarFoundYourPart() {
                 <div className="container">
                     <h2>Haven&apos;t found your item yet?</h2>
                     <p>Send a part number and our team will help locate it.</p>
-                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request" data-form-source="parts_sidebar">
+                    <form className="flex w-100" onSubmit={handleSubmit} data-form-type="part_request" data-form-source="parts_sidebar" data-lead-id={leadId}>
                         <ul className="list-none">
                             <li className="bot-field" aria-hidden="true">
                                 <label htmlFor="sidebar-part-website">Website</label>

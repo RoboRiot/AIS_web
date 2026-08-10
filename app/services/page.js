@@ -59,7 +59,7 @@ const servicesStructuredData = {
         "@id": `${BASE_URL}/#organization`,
         name: "Advanced Imaging Services",
         url: BASE_URL,
-        telephone: "+1-800-200-3583",
+        telephone: "+1-559-537-6851",
     },
     areaServed: {
         "@type": "Country",
@@ -122,7 +122,7 @@ const localBusinessStructuredData = {
     url: BASE_URL,
     image: `${BASE_URL}/assets/images/logo.svg`,
     logo: `${BASE_URL}/assets/images/logo.svg`,
-    telephone: "+1-800-200-3583",
+    telephone: "+1-559-537-6851",
     email: "info@advancedimagingparts.com",
     address: {
         "@type": "PostalAddress",

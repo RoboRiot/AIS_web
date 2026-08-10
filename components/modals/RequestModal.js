@@ -3,7 +3,7 @@ import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/reca
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
-import { announceFormOpen, trackWebsiteEvent } from '@/components/utils/analytics';
+import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
 
 export default function RequestModal({ closeModal, initialPartNumber = "", productName = "" }) {
     const [name, setName] = useState("");
@@ -12,6 +12,7 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
     const [formStartedAt] = useState(() => Date.now());
+    const [leadId] = useState(createLeadId);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +22,7 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
         if (initialPartNumber) {
             setPartNumber(initialPartNumber);
             ensureRecaptchaScript(recaptchaSiteKey);
-            announceFormOpen("part_request", "product_modal");
+            announceFormOpen("part_request", "product_modal", leadId);
             return;
         }
         try {
@@ -31,8 +32,8 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
             setPartNumber("");
         }
         ensureRecaptchaScript(recaptchaSiteKey);
-        announceFormOpen("part_request", "product_modal");
-    }, [initialPartNumber, recaptchaSiteKey]);
+        announceFormOpen("part_request", "product_modal", leadId);
+    }, [initialPartNumber, leadId, recaptchaSiteKey]);
 
     const recordError = (stage, reason = "") => {
         trackWebsiteEvent("form_error", {
@@ -88,6 +89,7 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
                 startedAt: formStartedAt,
                 website: honeypot,
                 context: [productName, partNumber].filter(Boolean).join(" | "),
+                leadId,
             });
             setIsError(false);
             trackWebsiteEvent(
@@ -115,6 +117,7 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
                 onSubmit={handleSubmit}
                 data-form-type="part_request"
                 data-form-source="product_modal"
+                data-lead-id={leadId}
                 data-form-open-tracking="manual"
             >
                 <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

@@ -211,7 +211,7 @@ export default function Product({ clickedProduct }) {
                             <li><b>Category: </b> {modality || "N/A"}</li>
                         </ul>
 
-                        <p>Call for Pricing: <Link href="tel:(800) 200-3583">(800) 200-3583</Link></p>
+                        <p>Call for Pricing: <Link href="tel:+15595376851">(559) 537-6851</Link></p>
                         {clickedProduct?.Description &&
                             <>
                                 <p style={{ marginBottom: "5px" }}><b> Description: </b></p>

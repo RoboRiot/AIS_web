@@ -59,7 +59,7 @@ const organizationJsonLd = {
   alternateName: "Advanced Imaging Parts",
   url: BASE_URL,
   logo: `${BASE_URL}/assets/images/logo.svg`,
-  telephone: "+1-800-200-3583",
+  telephone: "+1-559-537-6851",
   email: "info@advancedimagingparts.com",
   address: {
     "@type": "PostalAddress",
@@ -71,7 +71,7 @@ const organizationJsonLd = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    telephone: "+1-800-200-3583",
+    telephone: "+1-559-537-6851",
     contactType: "sales and service",
     areaServed: "US",
   },

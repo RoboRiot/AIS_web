@@ -1,6 +1,4 @@
-import { BASE_URL, buildProductSlug } from "@/app/data/seoProducts";
-import { fetchAllProducts } from "@/app/data/serverFirestoreProducts";
-import { serviceLandingPages, trailerLandingPages } from "@/app/data/serviceLandingPages";
+import { BASE_URL } from "@/app/data/seoProducts";
 
 const partsCategoryPaths = [
   "ge/mri",
@@ -61,45 +59,6 @@ export default async function sitemap() {
       changeFrequency: "weekly",
       priority: 0.76,
     });
-  }
-
-  for (const page of serviceLandingPages) {
-    urls.push({
-      url: `${BASE_URL}/services/${page.slug}`,
-      changeFrequency: "monthly",
-      priority: page.brand ? 0.78 : 0.82,
-    });
-  }
-
-  for (const page of trailerLandingPages) {
-    urls.push({
-      url: `${BASE_URL}/trailers/${page.slug}`,
-      changeFrequency: "monthly",
-      priority: page.brand ? 0.78 : 0.84,
-    });
-  }
-
-  try {
-    const products = await fetchAllProducts();
-    const seen = new Set();
-    for (const product of products) {
-      const slug = buildProductSlug(product);
-      if (!slug || seen.has(slug)) continue;
-      seen.add(slug);
-      const updatedAt = product.UpdatedAt
-        ? new Date(product.UpdatedAt)
-        : null;
-      urls.push({
-        url: `${BASE_URL}/products/${slug}`,
-        ...(updatedAt && Number.isFinite(updatedAt.getTime())
-          ? { lastModified: updatedAt }
-          : {}),
-        changeFrequency: "monthly",
-        priority: 0.7,
-      });
-    }
-  } catch {
-    // fall back to base URLs only
   }
 
   return urls;

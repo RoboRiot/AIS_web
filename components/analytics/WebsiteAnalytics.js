@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { trackWebsiteEvent } from "@/components/utils/analytics";
+import { createLeadId, trackWebsiteEvent } from "@/components/utils/analytics";
 
 const labelFor = (element) =>
   (element.dataset.analyticsLabel ||
@@ -49,8 +49,12 @@ export default function WebsiteAnalytics() {
       const formType = form?.dataset.formType;
       if (!formType || startedForms.has(form)) return;
       startedForms.add(form);
+      const leadId = form.dataset.leadId || createLeadId();
+      form.dataset.leadId = leadId;
       trackWebsiteEvent("form_start", {
         form_type: formType,
+        form_source: form.dataset.formSource || "",
+        lead_id: leadId,
       });
     };
 

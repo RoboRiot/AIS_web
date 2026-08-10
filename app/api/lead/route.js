@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import crypto from "node:crypto";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import {
@@ -10,10 +11,12 @@ import {
   cleanPath,
   cleanText,
   consumeRateLimit,
+  hashIdentifier,
   isProductionAnalyticsRequest,
   isTrustedOrigin,
   readJsonBody,
 } from "@/app/data/requestSecurity";
+import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -122,6 +125,9 @@ export async function POST(request) {
 
     const payload = await readJsonBody(request, 16_384);
     const config = FORM_CONFIG[payload.formType];
+    const analytics = normalizeLeadAnalytics(payload.analytics);
+    const leadId = analytics.leadId || crypto.randomUUID();
+    const leadHash = hashIdentifier(leadId, "website-lead");
     const startedAt = Number(payload.startedAt || 0);
     const elapsed = Date.now() - startedAt;
     if (cleanText(payload.website, 200) || !startedAt || elapsed < 2_500 || elapsed > 86_400_000) {
@@ -138,7 +144,7 @@ export async function POST(request) {
     });
     if (!allowed) {
       return NextResponse.json(
-        { error: "Too many requests. Please call (800) 200-3583 for immediate help." },
+        { error: "Too many requests. Please call (559) 537-6851 for immediate help." },
         { status: 429, headers: { "Retry-After": "900" } }
       );
     }
@@ -181,9 +187,21 @@ export async function POST(request) {
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
     const verifiedAnalytics = isProductionAnalyticsRequest(request);
-    const mailReference = db.collection("mail").doc();
-    const eventReference = db.collection("WebsiteAnalyticsEvents").doc();
+    const mailReference = db.collection("mail").doc(`website-${leadHash}`);
+    const eventReference = db.collection("WebsiteAnalyticsEvents").doc(`lead-${leadHash}`);
     const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
+    const funnelReference = db.collection("WebsiteLeadFunnels").doc(leadHash);
+    const attributedSearchReference = payload.formType === "part_request" && analytics.searchTerm
+      ? db
+          .collection("WebsitePartSearchDaily")
+          .doc(
+            `${date}_${crypto
+              .createHash("sha256")
+              .update(analytics.searchTerm)
+              .digest("hex")
+              .slice(0, 24)}`
+          )
+      : null;
     const mailPayload = {
       to,
       message: {
@@ -201,6 +219,10 @@ export async function POST(request) {
         leadType: config.label,
         sourcePage: leadDetails.sourcePage,
         context: leadDetails.context || null,
+        acquisitionSource: analytics.acquisitionSource,
+        landingPath: analytics.landingPath || null,
+        utm: analytics.utm,
+        attributedPartSearch: analytics.searchTerm || null,
       },
     };
     const confirmedSubmissionEvent = {
@@ -211,16 +233,26 @@ export async function POST(request) {
         form_type: payload.formType,
         context: leadDetails.context || "",
         confirmed_by: "lead_api",
+        lead_id: leadHash,
+        acquisition_source: analytics.acquisitionSource,
+        landing_path: analytics.landingPath || "",
+        search_term: analytics.searchTerm || "",
       },
       formType: payload.formType,
-      referrerHost: "server-confirmed",
-      visitorHash: null,
-      sessionHash: null,
+      referrerHost: analytics.referrerHost || "direct",
+      visitorHash: analytics.visitorId
+        ? hashIdentifier(analytics.visitorId, "website-visitor")
+        : null,
+      sessionHash: analytics.sessionId
+        ? hashIdentifier(analytics.sessionId, "website-session")
+        : null,
       browser: "unknown",
       device: "unknown",
       country: "unknown",
-      utm: { source: "", medium: "", campaign: "" },
-      analyticsVersion: 2,
+      utm: analytics.utm,
+      acquisitionSource: analytics.acquisitionSource,
+      landingPath: cleanPath(analytics.landingPath),
+      analyticsVersion: 3,
       trafficClass: "human",
       aggregateVersion: null,
       createdAt: FieldValue.serverTimestamp(),
@@ -228,13 +260,54 @@ export async function POST(request) {
       expiresAt: Timestamp.fromMillis(now.getTime() + 90 * 24 * 60 * 60 * 1000),
     };
 
+    let duplicateSubmission = false;
     await db.runTransaction(async (transaction) => {
-      const dailySnapshot = verifiedAnalytics
-        ? await transaction.get(dailyReference)
-        : null;
+      const mailSnapshot = await transaction.get(mailReference);
+      if (mailSnapshot.exists) {
+        duplicateSubmission = true;
+        return;
+      }
+      const dailySnapshot = verifiedAnalytics ? await transaction.get(dailyReference) : null;
+      const funnelSnapshot = verifiedAnalytics ? await transaction.get(funnelReference) : null;
+      const shouldAggregate = !funnelSnapshot?.get("milestones.form_submit");
       transaction.set(mailReference, mailPayload);
       if (!verifiedAnalytics) return;
       transaction.set(eventReference, confirmedSubmissionEvent);
+      transaction.set(
+        funnelReference,
+        {
+          formType: payload.formType,
+          source: leadDetails.context || "",
+          path: leadDetails.sourcePage,
+          acquisitionSource: analytics.acquisitionSource,
+          landingPath: cleanPath(analytics.landingPath),
+          sessionHash: confirmedSubmissionEvent.sessionHash,
+          visitorHash: confirmedSubmissionEvent.visitorHash,
+          milestones: { form_submit: true },
+          milestoneDates: { form_submit: date },
+          leadDocumentId: mailReference.id,
+          createdAt: funnelSnapshot?.exists
+            ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
+            : FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+      if (attributedSearchReference) {
+        transaction.set(
+          attributedSearchReference,
+          {
+            date,
+            searchTerm: analytics.searchTerm,
+            searchTermNormalized: analytics.searchTerm,
+            searchKind: analytics.searchKind || "keyword",
+            conversionCount: FieldValue.increment(1),
+            updatedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+      }
+      if (!shouldAggregate) return;
       if (dailySnapshot.exists) {
         transaction.update(dailyReference, {
           "totals.form_submit": FieldValue.increment(1),
@@ -260,7 +333,11 @@ export async function POST(request) {
       }
     });
 
-    return NextResponse.json({ ok: true, leadId: mailReference.id });
+    return NextResponse.json({
+      ok: true,
+      leadId: mailReference.id,
+      duplicate: duplicateSubmission,
+    });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return NextResponse.json(

@@ -322,13 +322,18 @@ export default function ProductsPage({
         setSortOrder(value || searchQuery ? 'relevant' : selectedBrand || selectedType || selectedModel ? 'a-z' : 'relevant');
     };
 
-    const handleClick = (product) => {
+    const handleClick = (product, resultIndex) => {
+        const activeSearchTerm = skuQuery || searchQuery;
         trackWebsiteEvent('product_select', {
             item_id: product.id || '',
             item_name: product.Name || '',
             part_number: product.PN || '',
             oem: product.OEM || '',
             modality: product.Modality || '',
+            search_term: activeSearchTerm.slice(0, 100),
+            search_kind: skuQuery ? 'part_number' : 'keyword',
+            search_location: activeSearchTerm ? 'parts_catalog' : '',
+            result_position: pageIndex * ITEMS_PER_PAGE + resultIndex + 1,
         });
 
         localStorage.setItem('product', JSON.stringify(product));
@@ -485,9 +490,9 @@ export default function ProductsPage({
                         ) : productsError ? (
                             <li className={styles.no_product}>{productsError}</li>
                         ) : products.length > 0 ? (
-                            products.map((product) => (
+                            products.map((product, index) => (
                                 <li key={product.id} className="flex">
-                                    <div onClick={() => handleClick(product)}>
+                                    <div onClick={() => handleClick(product, index)}>
                                         <Link
                                             href={buildProductHref(product) ||
                                                 (product?.Name ? `/products/${slugify(product.Name)}` : '/parts')}

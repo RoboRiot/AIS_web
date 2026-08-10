@@ -1200,3 +1200,195 @@
   margin: 0 0 30px;
   max-width: 860px;
 }
+
+.quickInquirySection {
+  background: #eef2f7;
+  border-bottom: 1px solid #dfe4ec;
+  border-top: 1px solid #dfe4ec;
+  padding: 72px 0;
+}
+
+.quickInquiryLayout {
+  align-items: start;
+  display: grid;
+  gap: 56px;
+  grid-template-columns: minmax(0, 0.82fr) minmax(420px, 1.18fr);
+
+  @media (max-width: $breakpoint_tablet) {
+    gap: 34px;
+    grid-template-columns: 1fr;
+  }
+}
+
+.quickInquiryIntro {
+  > span {
+    color: #3797f8;
+    display: block;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: #394b5d;
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0 0 18px;
+  }
+
+  > a {
+    color: #263f63;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 850;
+    margin-bottom: 24px;
+    text-decoration: underline;
+    text-decoration-color: #f7a765;
+    text-underline-offset: 5px;
+  }
+
+  ul {
+    border-top: 1px solid #d6dde7;
+    margin: 0;
+    padding: 16px 0 0;
+  }
+
+  li {
+    color: #394b5d;
+    font-size: 14px;
+    line-height: 1.55;
+    padding: 7px 0 7px 22px;
+    position: relative;
+
+    &::before {
+      background: #f7a765;
+      content: "";
+      height: 8px;
+      left: 0;
+      position: absolute;
+      top: 13px;
+      width: 8px;
+    }
+  }
+}
+
+.quickInquiryForm {
+  background: #fff;
+  border: 1px solid #d8dee8;
+  border-radius: 6px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 28px;
+
+  label {
+    color: #263644;
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    font-weight: 800;
+    gap: 7px;
+    text-transform: uppercase;
+  }
+
+  input,
+  textarea {
+    background: #fff;
+    border: 1px solid #cfd6e0;
+    border-radius: 4px;
+    color: #19191d;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 400;
+    min-height: 48px;
+    padding: 12px 14px;
+    text-transform: none;
+    width: 100%;
+
+    &:focus {
+      border-color: #3797f8;
+      box-shadow: 0 0 0 3px rgba(55, 151, 248, 0.14);
+      outline: none;
+    }
+  }
+
+  textarea {
+    min-height: 112px;
+    resize: vertical;
+  }
+
+  button {
+    align-self: end;
+    border: 0;
+    cursor: pointer;
+    min-height: 52px;
+  }
+
+  > small {
+    align-self: center;
+    color: #647181;
+    font-size: 12px;
+    grid-column: 2 / -1;
+    line-height: 1.4;
+  }
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    grid-template-columns: 1fr;
+    padding: 22px;
+
+    > small {
+      grid-column: 1;
+    }
+  }
+}
+
+.quickInquiryDetails,
+.quickInquiryError {
+  grid-column: 1 / -1;
+}
+
+.quickInquiryError {
+  background: #fff0ef;
+  border-left: 4px solid #c9473e;
+  color: #812c26;
+  font-size: 14px;
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.quickInquirySuccess {
+  background: #fff;
+  border: 1px solid #cfd9e7;
+  border-left: 5px solid #3797f8;
+  border-radius: 6px;
+  padding: 34px;
+
+  strong {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: #394b5d;
+    line-height: 1.6;
+  }
+
+  a {
+    color: #263f63;
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: #f7a765;
+    text-underline-offset: 4px;
+  }
+}

@@ -1,12 +1,16 @@
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminBucket, getAdminDb } from "@/app/data/firebaseAdmin";
 import {
   cleanText,
+  cleanPath,
   consumeRateLimit,
+  hashIdentifier,
+  isProductionAnalyticsRequest,
   isTrustedOrigin,
 } from "@/app/data/requestSecurity";
+import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -198,13 +202,22 @@ export async function POST(request) {
     });
     if (!allowed) {
       return fail(
-        "Too many requests. Please call (800) 200-3583 for immediate help.",
+        "Too many requests. Please call (559) 537-6851 for immediate help.",
         429,
         { "Retry-After": "1800" }
       );
     }
 
     const formData = await request.formData();
+    let rawAnalytics = {};
+    try {
+      rawAnalytics = JSON.parse(String(formData.get("analytics") || "{}"));
+    } catch {
+      rawAnalytics = {};
+    }
+    const analytics = normalizeLeadAnalytics(rawAnalytics);
+    const leadId = analytics.leadId || crypto.randomUUID();
+    const leadHash = hashIdentifier(leadId, "website-lead");
     const startedAt = Number(formData.get("startedAt") || 0);
     const elapsed = Date.now() - startedAt;
     if (
@@ -241,7 +254,19 @@ export async function POST(request) {
       return fail("Attachments can total no more than 25 MB.", 413);
     }
 
-    const requestReference = db.collection("ServiceRequests").doc();
+    const requestReference = db.collection("ServiceRequests").doc(`web-${leadHash}`);
+    const existingRequest = await requestReference.get();
+    if (existingRequest.exists) {
+      return NextResponse.json(
+        {
+          ok: true,
+          duplicate: true,
+          requestId: requestReference.id,
+          requestNumber: existingRequest.get("requestNumber"),
+        },
+        { status: 200 }
+      );
+    }
     const requestNumber = `SR-${requestReference.id.slice(0, 8).toUpperCase()}`;
     const bucket = getAdminBucket();
     const attachmentRecords = [];
@@ -313,9 +338,120 @@ export async function POST(request) {
       blueFolder: null,
       magmo: null,
       processing: null,
+      analytics: {
+        acquisitionSource: analytics.acquisitionSource,
+        landingPath: cleanPath(analytics.landingPath),
+        sourcePage: cleanPath(analytics.sourcePage),
+        referrerHost: analytics.referrerHost || "direct",
+        utm: analytics.utm,
+        clickIdPresent: analytics.clickIdPresent,
+        visitorHash: analytics.visitorId
+          ? hashIdentifier(analytics.visitorId, "website-visitor")
+          : null,
+        sessionHash: analytics.sessionId
+          ? hashIdentifier(analytics.sessionId, "website-session")
+          : null,
+      },
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     });
+
+    if (isProductionAnalyticsRequest(request)) {
+      try {
+        const now = new Date();
+        const date = now.toISOString().slice(0, 10);
+        const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
+        const funnelReference = db.collection("WebsiteLeadFunnels").doc(leadHash);
+        const eventReference = db.collection("WebsiteAnalyticsEvents").doc(`lead-${leadHash}`);
+        const sessionHash = analytics.sessionId
+          ? hashIdentifier(analytics.sessionId, "website-session")
+          : null;
+        const visitorHash = analytics.visitorId
+          ? hashIdentifier(analytics.visitorId, "website-visitor")
+          : null;
+
+        await db.runTransaction(async (transaction) => {
+          const dailySnapshot = await transaction.get(dailyReference);
+          const funnelSnapshot = await transaction.get(funnelReference);
+          const shouldAggregate = !funnelSnapshot.get("milestones.form_submit");
+          transaction.set(eventReference, {
+            eventType: "form_submit",
+            date,
+            path: cleanPath(analytics.sourcePage || "/service-request"),
+            properties: {
+              form_type: "service_request",
+              context: requestNumber,
+              confirmed_by: "service_request_api",
+              lead_id: leadHash,
+              acquisition_source: analytics.acquisitionSource,
+              landing_path: analytics.landingPath || "",
+            },
+            formType: "service_request",
+            referrerHost: analytics.referrerHost || "direct",
+            visitorHash,
+            sessionHash,
+            browser: "unknown",
+            device: "unknown",
+            country: "unknown",
+            utm: analytics.utm,
+            acquisitionSource: analytics.acquisitionSource,
+            landingPath: cleanPath(analytics.landingPath),
+            analyticsVersion: 3,
+            trafficClass: "human",
+            aggregateVersion: null,
+            createdAt: FieldValue.serverTimestamp(),
+            clientOccurredAt: "",
+            expiresAt: Timestamp.fromMillis(now.getTime() + 90 * 24 * 60 * 60 * 1000),
+          });
+          transaction.set(
+            funnelReference,
+            {
+              formType: "service_request",
+              source: "service_request_page",
+              path: cleanPath(analytics.sourcePage || "/service-request"),
+              acquisitionSource: analytics.acquisitionSource,
+              landingPath: cleanPath(analytics.landingPath),
+              sessionHash,
+              visitorHash,
+              milestones: { form_submit: true },
+              milestoneDates: { form_submit: date },
+              leadDocumentId: requestReference.id,
+              createdAt: funnelSnapshot.exists
+                ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
+                : FieldValue.serverTimestamp(),
+              updatedAt: FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
+          if (!shouldAggregate) return;
+          if (dailySnapshot.exists) {
+            transaction.update(dailyReference, {
+              "totals.form_submit": FieldValue.increment(1),
+              "humanTotals.form_submit": FieldValue.increment(1),
+              "forms.service_request.form_submit": FieldValue.increment(1),
+              "humanForms.service_request.form_submit": FieldValue.increment(1),
+              totalEvents: FieldValue.increment(1),
+              humanTotalEvents: FieldValue.increment(1),
+              updatedAt: FieldValue.serverTimestamp(),
+            });
+          } else {
+            transaction.set(dailyReference, {
+              date,
+              totalEvents: 1,
+              humanTotalEvents: 1,
+              totals: { form_submit: 1 },
+              humanTotals: { form_submit: 1 },
+              forms: { service_request: { form_submit: 1 } },
+              humanForms: { service_request: { form_submit: 1 } },
+              createdAt: FieldValue.serverTimestamp(),
+              updatedAt: FieldValue.serverTimestamp(),
+            });
+          }
+        });
+      } catch (analyticsError) {
+        console.error("Service request analytics failed:", analyticsError);
+      }
+    }
 
     return NextResponse.json(
       { ok: true, requestId: requestReference.id, requestNumber },

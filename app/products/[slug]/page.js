@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
 import FoundYourPart from "@/app/product-detail/found-your-part/FoundYourPart";
 import {
+  buildPartsCategoryHref,
   buildProductSlug,
   buildProductKeywords,
   buildProductSeoDescription,
@@ -94,6 +95,22 @@ export default async function ProductSeoPage({ params }) {
   const modality = cleanText(product.Modality || specs.category);
   const systemModel = cleanText(product.Machine || specs.systemModel);
   const primaryPartNumber = partNumbers[0] || cleanText(product.PN) || product.id;
+  const productName = cleanText(product.Name) || "Medical Imaging Part";
+  const displayHeading = [
+    productName,
+    primaryPartNumber && !productName.toLowerCase().includes(String(primaryPartNumber).toLowerCase())
+      ? primaryPartNumber
+      : "",
+  ].filter(Boolean).join(" ");
+  const categoryHref = manufacturer && modality
+    ? buildPartsCategoryHref(manufacturer, modality)
+    : "/parts";
+  const normalizedCondition = cleanText(product.Condition).toLowerCase();
+  const itemCondition = normalizedCondition.includes("new")
+    ? "https://schema.org/NewCondition"
+    : normalizedCondition.includes("used") || normalizedCondition.includes("refurb")
+      ? "https://schema.org/UsedCondition"
+      : undefined;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -105,6 +122,7 @@ export default async function ProductSeoPage({ params }) {
     sku: product.id || primaryPartNumber || "",
     mpn: primaryPartNumber || "",
     productID: primaryPartNumber || "",
+    itemCondition,
     brand: manufacturer
       ? {
           "@type": "Brand",
@@ -170,7 +188,7 @@ export default async function ProductSeoPage({ params }) {
 
   return (
     <>
-      <Subheader title={product.Name || "Product Detail"} extraClass="product_bg" />
+      <Subheader title={displayHeading} extraClass="product_bg" />
       <div className="container" data-product-id={product.id}>
         <script
           type="application/ld+json"
@@ -183,7 +201,7 @@ export default async function ProductSeoPage({ params }) {
         <div className="seo-fallback">
           <div className="grid-container-2" style={{ margin: "40px 0" }}>
             <div>
-              <h2>{title}</h2>
+              <h2>{displayHeading}</h2>
               <p>
                 {description}
               </p>
@@ -207,7 +225,7 @@ export default async function ProductSeoPage({ params }) {
                   <b>Category:</b> {modality || "N/A"}
                 </li>
                 <li>
-                  <b>Availability:</b> {product.Available === false ? "Call for availability" : "Available"}
+                  <b>Availability:</b> Request current availability
                 </li>
                 {product.Condition && (
                   <li>
@@ -216,23 +234,23 @@ export default async function ProductSeoPage({ params }) {
                 )}
               </ul>
               <p>
-                Call for pricing: <Link href="tel:+18002003583">(800) 200-3583</Link> or{" "}
+                Call for pricing: <Link href="tel:+15595376851">(559) 537-6851</Link> or{" "}
                 <Link href="/contact">request availability and compatibility support</Link>.
               </p>
             </div>
             <div>
               <h2>Compatibility and Availability</h2>
               <p>
-                Searching by product name, model, or part number? This page is optimized to match
-                exact and partial queries such as {product.Name}, {partNumbers.slice(0, 3).join(", ") || "the listed part number"},
-                and compatible {manufacturer || "OEM"} {modality || "imaging"} system terms.
+                Compatibility can vary by scanner configuration, software level, and revision.
+                Send the exact part number and installed system model so our team can confirm fit
+                before a quote is prepared.
               </p>
               <p>
-                Advanced Imaging Parts can help confirm fit, availability, lead time, and related
-                CT or MRI replacement parts before you place a request.
+                Advanced Imaging Parts can help confirm condition, current availability, lead time,
+                and related replacement options for {manufacturer || "medical imaging"} {modality || "equipment"} systems.
               </p>
               <p>
-                Browse more <Link href="/parts">medical imaging parts</Link> or learn about{" "}
+                Browse more <Link href={categoryHref}>{[manufacturer, modality].filter(Boolean).join(" ") || "medical imaging"} parts</Link> or learn about{" "}
                 <Link href="/services">MRI, CT, and PET/CT service support</Link>.
               </p>
             </div>

@@ -60,6 +60,62 @@ export const serviceModalities = {
   },
 };
 
+const fleetPricingByModality = {
+  mri: [
+    { system: "GE SIGNA HDxt 1.5T", price: "$25,000" },
+    { system: "GE SIGNA Artist Evo 1.5T", price: "$25,000" },
+    { system: "Siemens MAGNETOM Aera 1.5T", price: "$48,000" },
+    { system: "Siemens MAGNETOM Espree 1.5T", price: "$32,000" },
+  ],
+  ct: [
+    { system: "GE Discovery CT / DVCT", price: "$35,000" },
+    { system: "Siemens SOMATOM Definition", price: "$27,500" },
+    { system: "Canon Aquilion Prime 160", price: "$27,000" },
+    { system: "Canon Aquilion CXL", price: "$25,000" },
+  ],
+  "pet-ct": [
+    { system: "GE Discovery PET/CT", price: "Request pricing" },
+    { system: "Siemens Biograph PET/CT", price: "Request pricing" },
+    { system: "Canon/Toshiba PET/CT", price: "Request pricing" },
+  ],
+};
+
+const fleetPricingByBrand = {
+  GE: {
+    mri: fleetPricingByModality.mri.filter((item) => item.system.startsWith("GE")),
+    ct: fleetPricingByModality.ct.filter((item) => item.system.startsWith("GE")),
+    "pet-ct": fleetPricingByModality["pet-ct"].filter((item) => item.system.startsWith("GE")),
+  },
+  Siemens: {
+    mri: fleetPricingByModality.mri.filter((item) => item.system.startsWith("Siemens")),
+    ct: fleetPricingByModality.ct.filter((item) => item.system.startsWith("Siemens")),
+    "pet-ct": fleetPricingByModality["pet-ct"].filter((item) => item.system.startsWith("Siemens")),
+  },
+  Toshiba: {
+    mri: [{ system: "Toshiba/Canon Vantage 1.5T", price: "Request pricing" }],
+    ct: fleetPricingByModality.ct.filter((item) => item.system.startsWith("Canon")),
+    "pet-ct": fleetPricingByModality["pet-ct"].filter((item) => item.system.startsWith("Canon")),
+  },
+};
+
+const trailerPlanningByModality = {
+  mri: [
+    "Confirm pad or dock access, power, HVAC or chiller needs, connectivity, and MRI safety boundaries before deployment.",
+    "Match a 1.5T mobile MRI configuration to patient volume, coil needs, downtime length, and the facility transition plan.",
+    "Coordinate delivery access, magnet and trailer clearances, ramp placement, and the operational handoff with the clinical team.",
+  ],
+  ct: [
+    "Confirm trailer access, electrical service, HVAC needs, connectivity, and patient flow before the mobile CT arrives.",
+    "Match detector configuration and clinical throughput to downtime coverage, renovation timing, or temporary capacity needs.",
+    "Coordinate delivery, setup, acceptance planning, and service expectations around the imaging department schedule.",
+  ],
+  "pet-ct": [
+    "Confirm site access, utilities, connectivity, patient flow, and applicable radiation-safety planning before deployment.",
+    "Match the PET/CT platform and coverage term to oncology volume, downtime risk, and clinical protocol needs.",
+    "Coordinate delivery, setup, operational readiness, and service support with the facility project team.",
+  ],
+};
+
 const geMriModelCoverage = [
   {
     category: "GE 1.5T MRI platforms",
@@ -236,7 +292,7 @@ const getTrailerModelKeywords = (brand, modality) =>
 const brandSystems = {
   GE: {
     mri: ["SIGNA HDxt 1.5T", "Optima MR450w 1.5T", "SIGNA Voyager 1.5T", "SIGNA Artist 1.5T", "SIGNA Architect 3.0T", "SIGNA Premier 3.0T", "Discovery MR750w 3.0T"],
-    ct: ["Discovery CT750 HD", "LightSpeed", "BrightSpeed", "Revolution CT", "Optima CT660", "Discovery 4 PET"],
+    ct: ["Discovery CT750 HD", "LightSpeed", "BrightSpeed", "Revolution CT", "Optima CT660"],
     "pet-ct": ["Discovery PET/CT", "Discovery MI", "Discovery IQ", "Discovery 4 PET"],
   },
   Siemens: {
@@ -258,6 +314,20 @@ const trailerBrandSystems = {
   Siemens: {
     mri: ["MAGNETOM Aera Mobile 1.5T", "MAGNETOM Viato.Mobile 1.5T", "MAGNETOM Avanto Mobile 1.5T", "MAGNETOM Espree Mobile 1.5T", "MAGNETOM Symphony Mobile 1.5T", "MAGNETOM Sola 1.5T"],
   },
+  Toshiba: {
+    mri: ["Vantage Titan 1.5T", "Vantage Orian 1.5T", "Vantage Elan 1.5T", "Vantage Atlas 1.5T", "Excelart Vantage 1.5T"],
+  },
+};
+
+const genericTrailerSystems = {
+  mri: [
+    "GE SIGNA HDxt 1.5T",
+    "GE SIGNA Artist 1.5T",
+    "Siemens MAGNETOM Aera 1.5T",
+    "Siemens MAGNETOM Espree 1.5T",
+    "Toshiba/Canon Vantage Titan 1.5T",
+    "Toshiba/Canon Vantage Orian 1.5T",
+  ],
 };
 
 const getTrailerSystems = (brand, modality) =>
@@ -276,11 +346,11 @@ const genericServicePages = Object.entries(serviceModalities).map(([modality, co
   slug: `${modality}-service`,
   brand: null,
   modality,
-  title: `${config.pageTitle} | Advanced Imaging Services`,
+  title: `${config.label} Service & Repair | Remote Support | AIS`,
   shortTitle: config.serviceLabel,
   eyebrow: "Multi-vendor service",
   h1: config.pageTitle,
-  description: `Advanced Imaging Services provides nationwide ${config.serviceLabel.toLowerCase()}, preventive maintenance, emergency repair, troubleshooting, and tested parts support.`,
+  description: `Nationwide ${config.serviceLabel.toLowerCase()} with immediate remote diagnostics, preventive maintenance, emergency repair, field support, and tested imaging parts.`,
   intro: config.description,
   systems: config.systems,
   servicePoints: config.servicePoints,
@@ -298,11 +368,11 @@ const brandServicePages = serviceBrands.flatMap((brand) =>
     slug: slugFor(brand, modality, "service"),
     brand,
     modality,
-    title: `${brand} ${config.serviceLabel} | Advanced Imaging Services`,
+    title: `${brand} ${config.label} Service & Repair | AIS`,
     shortTitle: `${brand} ${config.serviceLabel}`,
     eyebrow: `${brand} ${config.label} support`,
     h1: `${brand} ${config.serviceLabel}`,
-    description: `Advanced Imaging Services provides ${brand} ${config.serviceLabel.toLowerCase()}, preventive maintenance, emergency repair, troubleshooting, and tested parts support for hospitals and imaging centers.`,
+    description: `${brand} ${config.serviceLabel.toLowerCase()} with immediate remote diagnostics, preventive maintenance, emergency repair, field support, and tested imaging parts.`,
     intro: `${brandDescriptions[brand]} We support ${brand} ${config.label} service needs with preventive maintenance, emergency troubleshooting, system diagnostics, and tested parts coordination.`,
     systems: brandSystems[brand][modality],
     modelCoverage: getModelCoverage(brand, modality),
@@ -325,12 +395,14 @@ export const trailerLandingPages = [
     slug: `mobile-${modality}-trailer-rental`,
     brand: null,
     modality,
-    title: `Mobile ${config.label} Trailer Rental & Service | Advanced Imaging Services`,
+    title: `Mobile ${config.label} Trailer Rental & Lease | AIS`,
     shortTitle: `Mobile ${config.label} Trailer Rental`,
     h1: `Mobile ${config.label} Trailer Rental & Service`,
-    description: `Mobile ${config.label} trailer rental, short-term lease, long-term lease, trailer service, downtime coverage, renovation coverage, and purchase planning support from Advanced Imaging Services.`,
+    description: `Mobile ${config.label} trailer rental and lease coverage for downtime, renovations, overflow, and new programs, with nationwide planning and technical support.`,
     intro: `Advanced Imaging Services helps facilities rent, lease, service, and plan mobile ${config.label} trailers for scanner downtime, renovations, replacement projects, overflow volume, rural access, and new program launches.`,
-    systems: config.systems,
+    systems: genericTrailerSystems[modality] || config.systems,
+    fleetPricing: fleetPricingByModality[modality],
+    planningPoints: trailerPlanningByModality[modality],
     rentalPoints: [
       `Short-term and long-term mobile ${config.label} trailer rental`,
       "Interim imaging coverage for downtime, upgrades, and construction",
@@ -353,12 +425,14 @@ export const trailerLandingPages = [
       slug: slugFor(brand, modality, "trailer-rental"),
       brand,
       modality,
-      title: `${brand} Mobile ${config.label} Trailer Rental & Service | Advanced Imaging Services`,
+      title: `${brand} Mobile ${config.label} Trailer Rental | AIS`,
       shortTitle: `${brand} Mobile ${config.label} Trailer`,
       h1: `${brand} Mobile ${config.label} Trailer Rental & Service`,
-      description: `${brand} mobile ${config.label} trailer rental, lease planning, trailer service, downtime coverage, renovation coverage, and purchase planning support from Advanced Imaging Services.`,
+      description: `${brand} mobile ${config.label} trailer rental and lease planning for downtime, renovations, overflow, and temporary imaging capacity with technical support.`,
       intro: `Facilities searching for ${brand} mobile ${config.label} trailer rental or service usually need fast interim imaging capacity with technical support. Advanced Imaging Services helps plan rental coverage, lease timing, uptime expectations, purchase comparisons, and service support around your clinical schedule.`,
       systems: getTrailerSystems(brand, modality),
+      fleetPricing: fleetPricingByBrand[brand][modality],
+      planningPoints: trailerPlanningByModality[modality],
       modelCoverage: getTrailerModelCoverage(brand, modality),
       rentalPoints: [
         `${brand} mobile ${config.label} trailer rental and lease planning`,

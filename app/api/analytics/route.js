@@ -12,6 +12,11 @@ import {
   isTrustedOrigin,
   readJsonBody,
 } from "@/app/data/requestSecurity";
+import {
+  getFormMilestone,
+  normalizeFormType,
+  normalizeLeadId,
+} from "@/app/data/leadAnalytics.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -28,7 +33,6 @@ const EVENT_TYPES = new Set([
   "form_submit",
   "form_error",
 ]);
-const FORM_TYPES = new Set(["contact_form", "part_request", "service_request", "trailer_request"]);
 const SEARCH_KINDS = new Set(["keyword", "part_number"]);
 
 const redact = (value) =>
@@ -109,10 +113,16 @@ export async function POST(request) {
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
     const properties = safeProperties(payload.properties);
-    const formType = FORM_TYPES.has(properties.form_type) ? properties.form_type : "";
+    const formType = normalizeFormType(properties.form_type);
+    const leadId = normalizeLeadId(properties.lead_id);
+    const formMilestone = getFormMilestone(eventType);
     const searchTerm = normalizedSearchTerm(properties.search_term);
     const isPartSearch =
       eventType === "search" &&
+      properties.search_location === "parts_catalog" &&
+      searchTerm.length >= 2;
+    const isPartSearchSelection =
+      eventType === "product_select" &&
       properties.search_location === "parts_catalog" &&
       searchTerm.length >= 2;
     const productId = cleanText(
@@ -153,7 +163,7 @@ export async function POST(request) {
       },
       analyticsVersion: 2,
       trafficClass: "human",
-      aggregateVersion: isPartSearch ? 1 : null,
+      aggregateVersion: isPartSearch || isPartSearchSelection ? 2 : null,
       createdAt: FieldValue.serverTimestamp(),
       clientOccurredAt: cleanText(payload.occurredAt, 40),
       expiresAt: Timestamp.fromMillis(now.getTime() + 90 * 24 * 60 * 60 * 1000),
@@ -161,7 +171,7 @@ export async function POST(request) {
 
     const eventReference = db.collection("WebsiteAnalyticsEvents").doc();
     const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
-    const searchReference = isPartSearch
+    const searchReference = isPartSearch || isPartSearchSelection
       ? db
           .collection("WebsitePartSearchDaily")
           .doc(
@@ -183,10 +193,40 @@ export async function POST(request) {
               .slice(0, 32)
           )
       : null;
+    const funnelReference = formType && leadId && formMilestone
+      ? db
+          .collection("WebsiteLeadFunnels")
+          .doc(hashIdentifier(leadId, "website-lead"))
+      : null;
     await db.runTransaction(async (transaction) => {
       const dailySnapshot = await transaction.get(dailyReference);
+      const funnelSnapshot = funnelReference
+        ? await transaction.get(funnelReference)
+        : null;
+      const shouldAggregate = !funnelSnapshot?.get(`milestones.${formMilestone}`);
       transaction.set(eventReference, event);
-      if (dailySnapshot.exists) {
+      if (funnelReference) {
+        transaction.set(
+          funnelReference,
+          {
+            formType,
+            source: cleanText(properties.source || properties.form_source, 100),
+            path: pathUrl.pathname,
+            acquisitionSource: cleanText(properties.acquisition_source, 40) || "unknown",
+            landingPath: cleanPath(properties.landing_path),
+            sessionHash: event.sessionHash,
+            visitorHash: event.visitorHash,
+            milestones: { [formMilestone]: true },
+            milestoneDates: { [formMilestone]: date },
+            createdAt: funnelSnapshot?.exists
+              ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
+              : FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+      }
+      if (shouldAggregate && dailySnapshot.exists) {
         const updates = {
           [`totals.${eventType}`]: FieldValue.increment(1),
           [`humanTotals.${eventType}`]: FieldValue.increment(1),
@@ -199,7 +239,7 @@ export async function POST(request) {
           updates[`humanForms.${formType}.${eventType}`] = FieldValue.increment(1);
         }
         transaction.update(dailyReference, updates);
-      } else {
+      } else if (shouldAggregate) {
         transaction.set(dailyReference, {
           date,
           totalEvents: 1,
@@ -220,13 +260,18 @@ export async function POST(request) {
             searchTerm: cleanText(properties.search_term, 100),
             searchTermNormalized: searchTerm,
             searchKind,
-            count: FieldValue.increment(1),
-            zeroResultCount: FieldValue.increment(resultCount === 0 ? 1 : 0),
-            resultTotal: FieldValue.increment(resultCount),
+            count: FieldValue.increment(isPartSearch ? 1 : 0),
+            clickCount: FieldValue.increment(isPartSearchSelection ? 1 : 0),
+            zeroResultCount: FieldValue.increment(isPartSearch && resultCount === 0 ? 1 : 0),
+            resultTotal: FieldValue.increment(isPartSearch ? resultCount : 0),
             lastResultCount: resultCount,
             oem: cleanText(properties.oem, 40),
             modality: cleanText(properties.modality, 40),
             model: cleanText(properties.model, 80),
+            lastSelectedProductId: isPartSearchSelection ? productId : "",
+            lastSelectedProductName: isPartSearchSelection
+              ? cleanText(properties.product_name || properties.item_name, 120)
+              : "",
             updatedAt: FieldValue.serverTimestamp(),
           },
           { merge: true }

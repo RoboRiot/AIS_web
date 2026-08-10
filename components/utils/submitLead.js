@@ -1,3 +1,5 @@
+import { createLeadId, getLeadAnalyticsContext } from "@/components/utils/analytics";
+
 export const submitLead = async ({
   token,
   action,
@@ -9,7 +11,9 @@ export const submitLead = async ({
   startedAt,
   website = "",
   context = "",
+  leadId = "",
 }) => {
+  const resolvedLeadId = leadId || createLeadId();
   const response = await fetch("/api/lead", {
     method: "POST",
     headers: {
@@ -27,6 +31,7 @@ export const submitLead = async ({
       sourcePage: typeof window === "undefined" ? "/" : window.location.pathname,
       context,
       message,
+      analytics: getLeadAnalyticsContext(resolvedLeadId),
     }),
   });
 

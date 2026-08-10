@@ -3,7 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { executeRecaptcha, ensureRecaptchaScript } from "@/components/utils/recaptcha";
 import { evaluateBotSignals } from "@/components/utils/antiBot";
-import { announceFormOpen, trackWebsiteEvent } from "@/components/utils/analytics";
+import {
+  announceFormOpen,
+  createLeadId,
+  getLeadAnalyticsContext,
+  trackWebsiteEvent,
+} from "@/components/utils/analytics";
 import { COUNTRIES } from "./countries";
 import styles from "./serviceRequest.module.scss";
 
@@ -102,6 +107,7 @@ export default function ServiceRequestForm() {
   const [files, setFiles] = useState([]);
   const [honeypot, setHoneypot] = useState("");
   const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
+  const [leadId, setLeadId] = useState(createLeadId);
   const [dragActive, setDragActive] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -110,8 +116,8 @@ export default function ServiceRequestForm() {
 
   useEffect(() => {
     ensureRecaptchaScript(recaptchaSiteKey);
-    announceFormOpen("service_request", "service_request_page");
-  }, [recaptchaSiteKey]);
+    announceFormOpen("service_request", "service_request_page", leadId);
+  }, [leadId, recaptchaSiteKey]);
 
   const fileSummary = useMemo(
     () =>
@@ -205,6 +211,7 @@ export default function ServiceRequestForm() {
       payload.append("action", "service_request");
       payload.append("startedAt", String(formStartedAt));
       payload.append("website", honeypot);
+      payload.append("analytics", JSON.stringify(getLeadAnalyticsContext(leadId)));
       files.forEach((file) => payload.append("files", file, file.name));
 
       const response = await fetch("/api/service-requests", {
@@ -229,6 +236,7 @@ export default function ServiceRequestForm() {
       setFiles([]);
       setHoneypot("");
       setFormStartedAt(Date.now());
+      setLeadId(createLeadId());
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       trackWebsiteEvent("form_error", {
@@ -298,7 +306,13 @@ export default function ServiceRequestForm() {
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form
+            onSubmit={handleSubmit}
+            className={styles.form}
+            data-form-type="service_request"
+            data-form-source="service_request_page"
+            data-lead-id={leadId}
+          >
             <div className="bot-field" aria-hidden="true">
               <label htmlFor="service-website">Website</label>
               <input

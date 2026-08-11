@@ -40,6 +40,19 @@ test("cleans malformed imported description separators", () => {
   );
 });
 
+test("removes legacy call-for-pricing numbers from public descriptions", () => {
+  assert.equal(
+    cleanCatalogDescription(
+      "Gradient power supply Call for Pricing: (800) 200-3583"
+    ),
+    "Gradient power supply"
+  );
+  assert.equal(
+    cleanCatalogDescription("For support call 800-200-3583."),
+    "For support call (559) 537-6851."
+  );
+});
+
 test("accepts a complete, visible product with an image", () => {
   assert.equal(isCampaignReadyProduct(readyProduct), true);
   assert.deepEqual(getCampaignReadinessIssues(readyProduct), []);

@@ -1,4 +1,5 @@
 const cleanValue = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
+const legacyPhonePattern = /(?:\+?1[-.\s]?)?\(?800\)?[-.\s]*200[-.\s]*3583/gi;
 
 const hiddenValues = new Set(["hidden", "private", "draft", "unpublished"]);
 const placeholderNames = new Set([
@@ -39,6 +40,8 @@ export const cleanCatalogDescription = (value) =>
   cleanValue(value)
     .replace(/\?{2,}/g, " ")
     .replace(/(?:Description:\s*){2,}/gi, "Description: ")
+    .replace(/\s*Call for Pricing:\s*(?:\+?1[-.\s]?)?\(?800\)?[-.\s]*200[-.\s]*3583/gi, " ")
+    .replace(legacyPhonePattern, "(559) 537-6851")
     .replace(/\s+/g, " ")
     .trim();
 

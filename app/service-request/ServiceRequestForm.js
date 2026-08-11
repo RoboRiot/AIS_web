@@ -542,7 +542,7 @@ export default function ServiceRequestForm() {
                     onChange={update("phone")}
                     maxLength={30}
                     autoComplete="tel"
-                    placeholder="(555) 555-0123"
+                    placeholder="Your phone number"
                     required
                   />
                 </Field>

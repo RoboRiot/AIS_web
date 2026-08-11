@@ -167,7 +167,7 @@ export default function QuickInquiryForm({
                   onChange={(event) => setPhone(event.target.value)}
                   maxLength={30}
                   autoComplete="tel"
-                  placeholder="(555) 555-0123"
+                  placeholder="Your phone number"
                   required
                 />
               </label>

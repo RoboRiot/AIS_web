@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function LegacySiemensMobileMriPage() {
-  redirect("/trailers/siemens-mri-trailer-rental");
+  permanentRedirect("/trailers/siemens-mri-trailer-rental");
 }

@@ -83,11 +83,6 @@ export default function QuickInquiryForm({
         context: source,
         leadId,
       });
-      trackWebsiteEvent(
-        "form_submit",
-        { form_type: formType, context: source, lead_id: leadId },
-        { recordInternally: false }
-      );
       setSubmitted(true);
     } catch (error) {
       recordError("lead_request", String(error?.status || "request_failed"));

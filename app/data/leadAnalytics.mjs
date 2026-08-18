@@ -61,3 +61,6 @@ export const getFormMilestone = (eventType) =>
   ["form_open", "form_start", "form_submit"].includes(eventType)
     ? eventType
     : "";
+
+export const shouldTrackLeadConversion = (result) =>
+  Boolean(result?.ok) && result?.duplicate !== true;

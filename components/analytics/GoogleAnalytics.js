@@ -35,25 +35,32 @@ export default function GoogleAnalytics() {
     });
   }, [enabled, pathname, ready]);
 
+  useEffect(() => {
+    if (!enabled) return;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag =
+      window.gtag ||
+      function gtag() {
+        window.dataLayer.push(arguments);
+      };
+
+    if (window.__aisGaMeasurementId !== measurementId) {
+      window.gtag("js", new Date());
+      window.gtag("config", measurementId, {
+        anonymize_ip: true,
+        send_page_view: false,
+      });
+      window.__aisGaMeasurementId = measurementId;
+    }
+    setReady(true);
+  }, [enabled]);
+
   if (!measurementId || !enabled) return null;
   return (
     <Script
       src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
       strategy="afterInteractive"
-      onReady={() => {
-        window.dataLayer = window.dataLayer || [];
-        window.gtag =
-          window.gtag ||
-          function gtag() {
-            window.dataLayer.push(arguments);
-          };
-        window.gtag("js", new Date());
-        window.gtag("config", measurementId, {
-          anonymize_ip: true,
-          send_page_view: false,
-        });
-        setReady(true);
-      }}
     />
   );
 }

@@ -9,6 +9,7 @@ import {
   getLeadAnalyticsContext,
   trackWebsiteEvent,
 } from "@/components/utils/analytics";
+import { shouldTrackLeadConversion } from "@/app/data/leadAnalytics.mjs";
 import { COUNTRIES } from "./countries";
 import styles from "./serviceRequest.module.scss";
 
@@ -223,11 +224,17 @@ export default function ServiceRequestForm() {
         throw new Error(result.error || "We could not submit your request.");
       }
 
-      trackWebsiteEvent(
-        "form_submit",
-        { form_type: "service_request", context: "service_request_page" },
-        { recordInternally: false }
-      );
+      if (shouldTrackLeadConversion(result)) {
+        trackWebsiteEvent(
+          "form_submit",
+          {
+            form_type: "service_request",
+            context: "service_request_page",
+            lead_id: leadId,
+          },
+          { recordInternally: false }
+        );
+      }
       setFeedback({
         type: "success",
         message: `Request ${result.requestNumber} received. Our service team will review it and contact you shortly.`,

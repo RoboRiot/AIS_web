@@ -241,7 +241,8 @@ export function middleware(request) {
     pathname.startsWith("/assets") ||
     pathname === "/favicon.ico" ||
     pathname === "/robots.txt" ||
-    pathname === "/sitemap.xml"
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/sitemaps/")
   ) {
     return respond(NextResponse.next());
   }
@@ -268,6 +269,7 @@ export const config = {
   matcher: [
     "/robots.txt",
     "/sitemap.xml",
+    "/sitemaps/:path*",
     "/((?!_next/static|_next/image|.*\\..*).*)",
   ],
 };

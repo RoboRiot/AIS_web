@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function LegacyGeMobileMriPage() {
-  redirect("/trailers/ge-mri-trailer-rental");
+  permanentRedirect("/trailers/ge-mri-trailer-rental");
 }

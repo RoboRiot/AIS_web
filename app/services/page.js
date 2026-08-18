@@ -7,9 +7,9 @@ import { BASE_URL } from "@/app/data/seoProducts";
 import { serviceLandingPages, serviceModalities } from "@/app/data/serviceLandingPages";
 
 export const metadata = {
-    title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
+    title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
     description:
-        "Advanced Imaging Services provides MRI, CT, and PET/CT equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts across the U.S.",
+        "Nationwide MRI, CT, and PET/CT service with rapid remote diagnostics, emergency repair, preventive maintenance, and tested parts. Call (559) 537-6851.",
     keywords: [
         "MRI service",
         "CT service",
@@ -31,17 +31,17 @@ export const metadata = {
         canonical: "/services",
     },
     openGraph: {
-        title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
+        title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
         description:
-            "MRI, CT, PET/CT service, repair, preventive maintenance, emergency support, and tested medical imaging parts.",
+            "Nationwide MRI, CT, and PET/CT service with rapid remote diagnostics, emergency repair, preventive maintenance, and tested parts support.",
         url: "/services",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "MRI, CT & PET/CT Service | Advanced Imaging Services",
+        title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
         description:
-            "Nationwide MRI, CT, and PET/CT service support.",
+            "Rapid remote diagnostics and nationwide MRI, CT, and PET/CT service support.",
     },
 };
 

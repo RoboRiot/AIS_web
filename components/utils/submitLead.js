@@ -1,4 +1,9 @@
-import { createLeadId, getLeadAnalyticsContext } from "@/components/utils/analytics";
+import { shouldTrackLeadConversion } from "@/app/data/leadAnalytics.mjs";
+import {
+  createLeadId,
+  getLeadAnalyticsContext,
+  trackWebsiteEvent,
+} from "@/components/utils/analytics";
 
 export const submitLead = async ({
   token,
@@ -40,6 +45,18 @@ export const submitLead = async ({
     const error = new Error(data.error || "Submission failed. Please try again.");
     error.status = response.status;
     throw error;
+  }
+
+  if (shouldTrackLeadConversion(data)) {
+    trackWebsiteEvent(
+      "form_submit",
+      {
+        form_type: formType,
+        context,
+        lead_id: resolvedLeadId,
+      },
+      { recordInternally: false }
+    );
   }
 
   return data;

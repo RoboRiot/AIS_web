@@ -6,9 +6,9 @@ import { serviceModalities, trailerLandingPages } from "@/app/data/serviceLandin
 import styles from "@/app/services/landingPage.module.scss";
 
 export const metadata = {
-  title: "Mobile Imaging Trailer Rentals, Lease & Service | Advanced Imaging Services",
+  title: "Mobile MRI & CT Trailer Rental | Nationwide Lease Support",
   description:
-    "Mobile MRI trailer rental, mobile CT trailer rental, and mobile PET/CT trailer rental for short-term lease, long-term lease, trailer service, downtime coverage, renovations, overflow, and purchase planning.",
+    "Request nationwide mobile MRI, CT, or PET/CT trailer rental for downtime, renovations, overflow, or replacement projects. Short- and long-term lease support.",
   keywords: [
     "mobile MRI trailer rental",
     "mobile CT trailer rental",
@@ -24,9 +24,9 @@ export const metadata = {
     canonical: `${BASE_URL}/trailers`,
   },
   openGraph: {
-    title: "Mobile Imaging Trailer Rentals, Lease & Service",
+    title: "Mobile MRI & CT Trailer Rental | Nationwide Lease Support",
     description:
-      "Short-term and long-term mobile MRI, CT, and PET/CT trailer rentals, lease planning, trailer service, and purchase planning.",
+      "Nationwide mobile MRI, CT, and PET/CT trailer rentals for downtime, renovations, overflow, and replacement projects.",
     url: `${BASE_URL}/trailers`,
     type: "website",
   },

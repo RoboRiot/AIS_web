@@ -1,4 +1,7 @@
-import { buildProductIdSuffix } from "../app/data/productIdSlug.mjs";
+import {
+  buildProductIdSuffix,
+  parseProductIdSuffix,
+} from "../app/data/productIdSlug.mjs";
 
 const baseUrl = String(
   process.argv.find((argument) => argument.startsWith("--base-url="))?.split("=").slice(1).join("=") ||
@@ -12,26 +15,31 @@ const headers = {
   "User-Agent": "Mozilla/5.0 AIS product-link audit",
 };
 
+const decodeXml = (value) =>
+  value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+
 const getCatalog = async () => {
-  const products = [];
-  let cursor = "";
+  const response = await fetch(
+    new URL("/sitemaps/products/sitemap.xml", baseUrl),
+    { headers }
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Product sitemap failed with HTTP ${response.status}: ${await response.text()}`
+    );
+  }
 
-  do {
-    const url = new URL("/api/parts/search", baseUrl);
-    url.searchParams.set("sort", "asc");
-    if (cursor) url.searchParams.set("cursor", cursor);
-
-    const response = await fetch(url, { headers });
-    if (!response.ok) {
-      throw new Error(`Catalog page failed with HTTP ${response.status}: ${await response.text()}`);
-    }
-    const payload = await response.json();
-    products.push(...(Array.isArray(payload.products) ? payload.products : []));
-    cursor = payload.hasNextPage ? String(payload.nextCursor || "") : "";
-    if (payload.hasNextPage && !cursor) throw new Error("Catalog pagination did not return a cursor.");
-  } while (cursor);
-
-  return products;
+  const xml = await response.text();
+  return [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => {
+    const path = new URL(decodeXml(match[1])).pathname;
+    const id = parseProductIdSuffix(path.split("/").pop());
+    return { id, Slug: path.split("/").pop(), Name: path };
+  });
 };
 
 const productPaths = (product) => {
@@ -94,11 +102,14 @@ const duplicateIds = products
   .map((product) => String(product.id || ""))
   .filter((id, index, ids) => id && ids.indexOf(id) !== index);
 const missingIds = products.filter((product) => !product.id);
-const missingSlugs = products.filter((product) => !product.Slug);
+const duplicatePaths = products
+  .map((product) => product.Slug)
+  .filter((path, index, paths) => path && paths.indexOf(path) !== index);
 
-if (duplicateIds.length || missingIds.length) {
+if (duplicateIds.length || duplicatePaths.length || missingIds.length) {
   throw new Error(
-    `Invalid catalog identity data: ${duplicateIds.length} duplicate IDs, ${missingIds.length} missing IDs.`
+    `Invalid product sitemap: ${duplicateIds.length} duplicate IDs, ` +
+      `${duplicatePaths.length} duplicate paths, ${missingIds.length} missing IDs.`
   );
 }
 
@@ -106,7 +117,7 @@ const urls = products.flatMap((product) =>
   productPaths(product).map((entry) => ({ ...entry, id: product.id, name: product.Name || "" }))
 );
 console.log(
-  `Auditing ${products.length} products (${urls.length} URLs, ${missingSlugs.length} without stored slugs) at ${baseUrl}.`
+  `Auditing ${products.length} products (${urls.length} canonical and fallback URLs) at ${baseUrl}.`
 );
 
 const failures = await runPool(urls);

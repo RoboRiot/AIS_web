@@ -5,6 +5,7 @@ import {
   normalizeFormType,
   normalizeLeadAnalytics,
   normalizeLeadId,
+  shouldTrackLeadConversion,
 } from "../app/data/leadAnalytics.mjs";
 
 test("normalizes valid lead identifiers and rejects unsafe values", () => {
@@ -34,4 +35,12 @@ test("limits form types and funnel milestones", () => {
   assert.equal(normalizeFormType("newsletter"), "");
   assert.equal(getFormMilestone("form_submit"), "form_submit");
   assert.equal(getFormMilestone("form_error"), "");
+});
+
+test("tracks only newly accepted leads as conversions", () => {
+  assert.equal(shouldTrackLeadConversion({ ok: true }), true);
+  assert.equal(shouldTrackLeadConversion({ ok: true, duplicate: false }), true);
+  assert.equal(shouldTrackLeadConversion({ ok: true, duplicate: true }), false);
+  assert.equal(shouldTrackLeadConversion({ ok: false }), false);
+  assert.equal(shouldTrackLeadConversion(null), false);
 });

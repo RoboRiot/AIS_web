@@ -140,11 +140,6 @@ export default function Contact() {
         context: formContext,
         leadId,
       });
-      trackWebsiteEvent(
-        "form_submit",
-        { form_type: formType, context: formContext },
-        { recordInternally: false }
-      );
       setIsError(false);
       setFeedbackMessage(
         formType === "service_request"

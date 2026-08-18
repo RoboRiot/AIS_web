@@ -7,6 +7,10 @@ export const metadata = {
   alternates: {
     canonical: "/service-request",
   },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function ServiceRequestPage() {

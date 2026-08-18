@@ -82,11 +82,6 @@ export default function SidebarFoundYourPart() {
                 leadId,
             });
             setIsError(false);
-            trackWebsiteEvent(
-                "form_submit",
-                { form_type: "part_request", context: partNumber },
-                { recordInternally: false }
-            );
             setFeedbackMessage("Request received. Our parts team will follow up on availability and compatibility.");
             setName("");
             setEmail("");

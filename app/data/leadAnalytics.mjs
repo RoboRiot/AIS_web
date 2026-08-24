@@ -21,6 +21,11 @@ const clean = (value, maxLength = 120) =>
     .trim()
     .slice(0, maxLength);
 
+const cleanClickId = (value) => {
+  const candidate = clean(value, 240);
+  return /^[a-zA-Z0-9._~-]{6,240}$/.test(candidate) ? candidate : "";
+};
+
 export const normalizeLeadId = (value) => {
   const candidate = clean(value, 100).toLowerCase();
   return /^[a-z0-9][a-z0-9-]{7,99}$/.test(candidate) ? candidate : "";
@@ -36,6 +41,12 @@ export const normalizeLeadAnalytics = (value = {}) => {
     ? value
     : {};
   const source = clean(analytics.acquisition_source, 40);
+  const clickIds = {
+    gclid: cleanClickId(analytics.gclid),
+    gbraid: cleanClickId(analytics.gbraid),
+    wbraid: cleanClickId(analytics.wbraid),
+    msclkid: cleanClickId(analytics.msclkid),
+  };
 
   return {
     leadId: normalizeLeadId(analytics.leadId),
@@ -51,7 +62,10 @@ export const normalizeLeadAnalytics = (value = {}) => {
       medium: clean(analytics.utm_medium, 80),
       campaign: clean(analytics.utm_campaign, 100),
     },
-    clickIdPresent: Boolean(analytics.click_id_present),
+    clickIds,
+    clickIdPresent: Boolean(
+      analytics.click_id_present || Object.values(clickIds).some(Boolean)
+    ),
     searchTerm: clean(analytics.search_term, 100).toLowerCase(),
     searchKind: clean(analytics.search_kind, 40),
   };

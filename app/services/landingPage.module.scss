@@ -1384,11 +1384,70 @@
     line-height: 1.6;
   }
 
+  small {
+    color: #647181;
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+  }
+
   a {
     color: #263f63;
     font-weight: 800;
     text-decoration: underline;
     text-decoration-color: #f7a765;
     text-underline-offset: 4px;
+  }
+}
+
+.mobileActionBar,
+.mobileActionSpacer {
+  display: none;
+}
+
+@media (max-width: $breakpoint_mobile_portrait) {
+  .mobileActionSpacer {
+    display: block;
+    height: calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .mobileActionBar {
+    align-items: stretch;
+    background: #fff;
+    border-top: 1px solid #d8dee8;
+    bottom: 0;
+    box-shadow: 0 -8px 24px rgba(25, 25, 29, 0.12);
+    display: grid;
+    gap: 10px;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    left: 0;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    position: fixed;
+    right: 0;
+    z-index: 40;
+
+    a {
+      align-items: center;
+      border-radius: 4px;
+      display: flex;
+      font-size: 14px;
+      font-weight: 800;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    a:first-child {
+      border: 1px solid #506381;
+      color: #506381;
+    }
+
+    a:last-child {
+      background: #506381;
+      color: #fff;
+    }
   }
 }

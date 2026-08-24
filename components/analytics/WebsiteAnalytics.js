@@ -25,6 +25,13 @@ const destinationFor = (element) => {
   }
 };
 
+const communicationEventFor = (element) => {
+  const href = String(element.getAttribute("href") || "").toLowerCase();
+  if (href.startsWith("tel:")) return "phone_click";
+  if (href.startsWith("mailto:")) return "email_click";
+  return "";
+};
+
 export default function WebsiteAnalytics() {
   const pathname = usePathname();
 
@@ -43,6 +50,14 @@ export default function WebsiteAnalytics() {
         label: labelFor(element),
         destination: destinationFor(element),
       });
+      const communicationEvent = communicationEventFor(element);
+      if (communicationEvent) {
+        trackWebsiteEvent(communicationEvent, {
+          label: labelFor(element),
+          destination: destinationFor(element),
+          source: element.dataset.analyticsSource || pathname || "/",
+        });
+      }
     };
     const onFocus = (event) => {
       const form = event.target.closest?.("form");
@@ -64,7 +79,7 @@ export default function WebsiteAnalytics() {
       document.removeEventListener("click", onClick, true);
       document.removeEventListener("focusin", onFocus, true);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

@@ -4,6 +4,14 @@ const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
 const ATTRIBUTION_KEY = "ais_session_attribution";
 const LAST_PART_SEARCH_KEY = "ais_last_part_search";
+const CLICK_ID_KEYS = ["gclid", "gbraid", "wbraid", "msclkid"];
+
+const leadEventName = (formType) => ({
+  contact_form: "generate_contact_lead",
+  part_request: "generate_part_lead",
+  service_request: "generate_service_lead",
+  trailer_request: "generate_trailer_lead",
+}[formType] || "");
 
 const randomId = () => {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -31,6 +39,11 @@ const gaEventName = (eventType) => ({
   search: "search",
 }[eventType] || eventType);
 
+const cleanClickId = (value) =>
+  String(value || "")
+    .replace(/[^a-zA-Z0-9._~-]/g, "")
+    .slice(0, 240);
+
 const sessionAttribution = () => {
   try {
     const stored = window.sessionStorage.getItem(ATTRIBUTION_KEY);
@@ -46,8 +59,7 @@ const sessionAttribution = () => {
     const medium = (landingUrl.searchParams.get("utm_medium") || "").toLowerCase();
     const source = (landingUrl.searchParams.get("utm_source") || "").toLowerCase();
     const paid = Boolean(
-      landingUrl.searchParams.get("gclid") ||
-      landingUrl.searchParams.get("msclkid") ||
+      CLICK_ID_KEYS.some((key) => landingUrl.searchParams.get(key)) ||
       /(cpc|ppc|paid|display)/.test(medium)
     );
 
@@ -72,9 +84,10 @@ const sessionAttribution = () => {
       utm_source: (landingUrl.searchParams.get("utm_source") || "").slice(0, 80),
       utm_medium: (landingUrl.searchParams.get("utm_medium") || "").slice(0, 80),
       utm_campaign: (landingUrl.searchParams.get("utm_campaign") || "").slice(0, 100),
-      click_id_present: Boolean(
-        landingUrl.searchParams.get("gclid") || landingUrl.searchParams.get("msclkid")
+      ...Object.fromEntries(
+        CLICK_ID_KEYS.map((key) => [key, cleanClickId(landingUrl.searchParams.get(key))])
       ),
+      click_id_present: CLICK_ID_KEYS.some((key) => landingUrl.searchParams.get(key)),
     };
     window.sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(attribution));
     return attribution;
@@ -118,8 +131,10 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
     return;
   }
 
+  const attribution = sessionAttribution();
   const safeProperties = Object.fromEntries(
-    Object.entries({ ...properties, ...sessionAttribution() })
+    Object.entries({ ...properties, ...attribution })
+      .filter(([key]) => !CLICK_ID_KEYS.includes(key))
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
       .slice(0, 20)
   );
@@ -160,10 +175,18 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   }
 
   if (eventType !== "page_view" && typeof window.gtag === "function") {
-    window.gtag("event", gaEventName(eventType), {
+    const gaProperties = {
       ...safeProperties,
       page_path: payload.path,
-    });
+    };
+    window.gtag("event", gaEventName(eventType), gaProperties);
+
+    if (eventType === "form_submit") {
+      const specificLeadEvent = leadEventName(safeProperties.form_type);
+      if (specificLeadEvent) {
+        window.gtag("event", specificLeadEvent, gaProperties);
+      }
+    }
   }
 };
 

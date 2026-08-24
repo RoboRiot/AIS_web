@@ -28,6 +28,8 @@ const EVENT_TYPES = new Set([
   "filter",
   "product_view",
   "product_select",
+  "phone_click",
+  "email_click",
   "form_open",
   "form_start",
   "form_submit",

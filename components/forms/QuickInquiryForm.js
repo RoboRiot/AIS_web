@@ -26,6 +26,7 @@ export default function QuickInquiryForm({
   const [startedAt] = useState(() => Date.now());
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [confirmationId, setConfirmationId] = useState("");
   const [feedback, setFeedback] = useState("");
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
@@ -73,7 +74,7 @@ export default function QuickInquiryForm({
       const token = await executeRecaptcha(recaptchaSiteKey, formType);
       if (!token) throw new Error("reCAPTCHA could not verify this request. Please try again.");
 
-      await submitLead({
+      const result = await submitLead({
         ...sanitized,
         token,
         action: formType,
@@ -83,6 +84,9 @@ export default function QuickInquiryForm({
         context: source,
         leadId,
       });
+      setConfirmationId(
+        String(result.leadId || "").split("-").pop().slice(0, 10).toUpperCase()
+      );
       setSubmitted(true);
     } catch (error) {
       recordError("lead_request", String(error?.status || "request_failed"));
@@ -111,7 +115,14 @@ export default function QuickInquiryForm({
             <div className={styles.quickInquirySuccess} role="status">
               <strong>Request received</strong>
               <p>Our team will review the details and follow up as quickly as possible.</p>
-              <a href="tel:+15595376851">Need immediate help? Call (559) 537-6851</a>
+              {confirmationId ? <small>Reference {confirmationId}</small> : null}
+              <a
+                href="tel:+15595376851"
+                data-analytics="quick-inquiry-phone"
+                data-analytics-source={source}
+              >
+                Need immediate help? Call (559) 537-6851
+              </a>
             </div>
           ) : (
             <form
@@ -178,7 +189,13 @@ export default function QuickInquiryForm({
                 />
               </label>
               {feedback ? <p className={styles.quickInquiryError} role="alert">{feedback}</p> : null}
-              <button type="submit" className="simple-btn" disabled={submitting}>
+              <button
+                type="submit"
+                className="simple-btn"
+                disabled={submitting}
+                data-analytics="quick-inquiry-submit"
+                data-analytics-label={submitLabel}
+              >
                 {submitting ? "Sending..." : submitLabel}
               </button>
               <small>Protected by reCAPTCHA and secure server validation.</small>

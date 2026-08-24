@@ -1,0 +1,89 @@
+@import "../styles/variables";
+
+.page {
+  align-items: center;
+  background: #f6f8fb;
+  display: flex;
+  min-height: 68vh;
+  padding: 96px 24px;
+}
+
+.inner {
+  margin: 0 auto;
+  max-width: 940px;
+  width: 100%;
+}
+
+.eyebrow {
+  color: #3797f8;
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+}
+
+.inner h1 {
+  color: #19191d;
+  font-size: 68px;
+  font-weight: 800;
+  line-height: 1.04;
+  margin: 0;
+  max-width: 850px;
+}
+
+.intro {
+  color: #394b5d;
+  font-size: 21px;
+  line-height: 1.65;
+  margin: 28px 0 36px;
+  max-width: 790px;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 26px;
+
+  > a:not(:global(.simple-btn)) {
+    color: #263f63;
+    font-size: 16px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: #3797f8;
+    text-underline-offset: 5px;
+  }
+}
+
+.contact {
+  border-top: 1px solid #d8dee8;
+  color: #394b5d;
+  font-size: 16px;
+  margin: 42px 0 0;
+  padding-top: 24px;
+
+  a {
+    color: #263f63;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: $breakpoint_mobile_portrait) {
+  .page {
+    min-height: 62vh;
+    padding: 68px 20px;
+  }
+
+  .intro {
+    font-size: 18px;
+  }
+
+  .inner h1 {
+    font-size: 42px;
+  }
+
+  .actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

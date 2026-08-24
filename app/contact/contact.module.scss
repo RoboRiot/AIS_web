@@ -94,9 +94,18 @@
                         font-weight: 700;
                     }
                 }
-                input {
+                input,
+                select {
                     height: 60px;
                     color: #19191D;
+                    width: 100%;
+                }
+                select {
+                    background: #fff;
+                    border: 1px solid #e1e4eb;
+                    padding: 0 18px;
+                }
+                input {
                     &::placeholder { color: rgba(25,25,29,0.3);}
                 }
                 textarea {
@@ -212,6 +221,14 @@
             }
         }
     }
+}
+
+.confirmation_reference {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 

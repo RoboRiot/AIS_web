@@ -149,7 +149,14 @@ export default function TrailerLandingPage({ params }) {
               <h2 className={styles.title}>Mobile {page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase()} Rental Coverage</h2>
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
-                <a href="#request" className="simple-btn">Check Trailer Availability</a>
+                <a
+                  href="#request"
+                  className="simple-btn"
+                  data-analytics="trailer-hero-availability"
+                  data-analytics-label={`Check ${page.shortTitle} availability`}
+                >
+                  Check Trailer Availability
+                </a>
                 <Link href="/trailers">All Trailer Rentals</Link>
               </div>
               <div className={styles.heroSystems}>
@@ -307,6 +314,17 @@ export default function TrailerLandingPage({ params }) {
               </article>
             ))}
           </div>
+          <div className={styles.trailerClosingCta}>
+            <p>Planning downtime, construction, or added imaging capacity?</p>
+            <a
+              href="#request"
+              className="simple-btn"
+              data-analytics="trailer-workflow-availability"
+              data-analytics-label={`Request ${page.shortTitle} availability`}
+            >
+              Check Trailer Availability
+            </a>
+          </div>
         </div>
       </section>
       {(relatedServices.length > 0 || relatedTrailers.length > 0) && (
@@ -333,6 +351,23 @@ export default function TrailerLandingPage({ params }) {
           </div>
         </section>
       )}
+      <div className={styles.mobileActionSpacer} aria-hidden="true" />
+      <nav className={styles.mobileActionBar} aria-label={`${page.shortTitle} contact options`}>
+        <a
+          href="tel:+15595376851"
+          data-analytics="trailer-mobile-phone"
+          data-analytics-source={page.slug}
+        >
+          Call AIS
+        </a>
+        <a
+          href="#request"
+          data-analytics="trailer-mobile-availability"
+          data-analytics-label={`Check ${page.shortTitle} availability`}
+        >
+          Check Availability
+        </a>
+      </nav>
     </>
   );
 }

@@ -20,13 +20,16 @@ test("normalizes attribution without accepting arbitrary sources", () => {
     acquisition_source: "google_organic",
     landing_path: "/parts?q=coil",
     utm_campaign: "parts-search",
-    click_id_present: true,
+    gclid: "EAIaIQobChMI_test-click-id",
+    msclkid: "unsafe click id",
   });
 
   assert.equal(analytics.acquisitionSource, "google_organic");
   assert.equal(analytics.landingPath, "/parts?q=coil");
   assert.equal(analytics.utm.campaign, "parts-search");
   assert.equal(analytics.clickIdPresent, true);
+  assert.equal(analytics.clickIds.gclid, "EAIaIQobChMI_test-click-id");
+  assert.equal(analytics.clickIds.msclkid, "");
   assert.equal(normalizeLeadAnalytics({ acquisition_source: "made-up" }).acquisitionSource, "unknown");
 });
 

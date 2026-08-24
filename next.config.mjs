@@ -137,7 +137,9 @@ export default function createNextConfig(phase) {
           headers: [
             {
               key: "Cache-Control",
-              value: "public, max-age=31536000, immutable",
+              value: isDevelopment
+                ? "no-store, max-age=0"
+                : "public, max-age=31536000, immutable",
             },
           ],
         },
@@ -146,7 +148,9 @@ export default function createNextConfig(phase) {
           headers: [
             {
               key: "Cache-Control",
-              value: "public, max-age=31536000, immutable",
+              value: isDevelopment
+                ? "no-store, max-age=0"
+                : "public, max-age=31536000, immutable",
             },
           ],
         },

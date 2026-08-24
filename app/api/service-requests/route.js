@@ -344,6 +344,7 @@ export async function POST(request) {
         sourcePage: cleanPath(analytics.sourcePage),
         referrerHost: analytics.referrerHost || "direct",
         utm: analytics.utm,
+        clickIds: analytics.clickIds,
         clickIdPresent: analytics.clickIdPresent,
         visitorHash: analytics.visitorId
           ? hashIdentifier(analytics.visitorId, "website-visitor")
@@ -394,6 +395,7 @@ export async function POST(request) {
             device: "unknown",
             country: "unknown",
             utm: analytics.utm,
+            clickIdPresent: analytics.clickIdPresent,
             acquisitionSource: analytics.acquisitionSource,
             landingPath: cleanPath(analytics.landingPath),
             analyticsVersion: 3,
@@ -411,6 +413,7 @@ export async function POST(request) {
               path: cleanPath(analytics.sourcePage || "/service-request"),
               acquisitionSource: analytics.acquisitionSource,
               landingPath: cleanPath(analytics.landingPath),
+              clickIdPresent: analytics.clickIdPresent,
               sessionHash,
               visitorHash,
               milestones: { form_submit: true },

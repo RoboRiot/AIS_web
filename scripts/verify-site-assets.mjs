@@ -97,25 +97,63 @@ const extractInternalResources = (contents, pageUrl, baseOrigin) => {
   const resources = [];
   for (const match of contents.matchAll(INTERNAL_RESOURCE_PATTERN)) {
     const resource = normalizeResource(match[0], pageUrl);
-    if (resource?.origin === baseOrigin) resources.push(resource.href);
+    if (resource?.origin !== baseOrigin) continue;
+
+    // Next image candidates embedded in srcset/RSC payloads are not fetchable
+    // until their width parameter is present. The complete src/srcset URL is
+    // audited separately.
+    if (resource.pathname === "/_next/image" && !resource.searchParams.has("w")) {
+      continue;
+    }
+    // Development output can include a non-module polyfill reference with an
+    // ampersand where a query string would begin. Modern browsers ignore it,
+    // and production output omits it.
+    if (resource.pathname.includes("polyfills.js&dpl=")) continue;
+
+    resources.push(resource.href);
   }
   return resources;
 };
 
-const loadRoutes = async (baseUrl) => {
-  const sitemapUrl = new URL("/sitemap.xml", baseUrl);
-  const sitemap = await fetchWithTimeout(sitemapUrl, { readBody: true });
-  if (sitemap.status !== 200) return DEFAULT_ROUTES;
+const sitemapLocations = (contents) =>
+  [...contents.matchAll(/<loc>(.*?)<\/loc>/g)]
+    .map((match) => match[1].replaceAll("&amp;", "&"))
+    .filter(Boolean);
 
-  const routes = [];
-  for (const match of sitemap.body.matchAll(/<loc>(.*?)<\/loc>/g)) {
-    try {
-      const sourceUrl = new URL(match[1]);
-      routes.push(`${sourceUrl.pathname}${sourceUrl.search}`);
-    } catch {
-      // Ignore malformed sitemap entries; the site audit reports valid routes.
+const loadRoutes = async (baseUrl) => {
+  const base = new URL(baseUrl);
+  const visitedSitemaps = new Set();
+
+  const readSitemap = async (sitemapUrl, depth = 0) => {
+    const supplied = new URL(sitemapUrl, base);
+    const resolved = new URL(`${supplied.pathname}${supplied.search}`, base);
+    if (visitedSitemaps.has(resolved.href) || depth > 3) {
+      return [];
     }
-  }
+    visitedSitemaps.add(resolved.href);
+
+    const sitemap = await fetchWithTimeout(resolved, { readBody: true });
+    if (sitemap.status !== 200) return [];
+
+    const locations = sitemapLocations(sitemap.body);
+    if (sitemap.body.includes("<sitemapindex")) {
+      const nested = await Promise.all(
+        locations.map((location) => readSitemap(location, depth + 1)),
+      );
+      return nested.flat();
+    }
+
+    return locations.flatMap((location) => {
+      try {
+        const sourceUrl = new URL(location, base);
+        return [`${sourceUrl.pathname}${sourceUrl.search}`];
+      } catch {
+        return [];
+      }
+    });
+  };
+
+  const routes = await readSitemap(new URL("/sitemap.xml", base));
   return routes.length > 0 ? [...new Set(routes)] : DEFAULT_ROUTES;
 };
 

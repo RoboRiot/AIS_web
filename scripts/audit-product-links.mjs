@@ -52,11 +52,36 @@ const productPaths = (product) => {
   return paths;
 };
 
+const sleep = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const fetchAuditPage = async (path) => {
+  const maxAttempts = 3;
+  let lastResponse;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    lastResponse = await fetch(new URL(path, baseUrl), {
+      headers,
+      redirect: "follow",
+    });
+
+    if (lastResponse.ok || attempt === maxAttempts) return lastResponse;
+
+    const retryable =
+      lastResponse.status === 404 ||
+      lastResponse.status === 429 ||
+      lastResponse.status >= 500;
+    if (!retryable) return lastResponse;
+
+    await lastResponse.arrayBuffer();
+    await sleep(250 * attempt);
+  }
+
+  return lastResponse;
+};
+
 const auditPath = async (item) => {
-  const response = await fetch(new URL(item.path, baseUrl), {
-    headers,
-    redirect: "follow",
-  });
+  const response = await fetchAuditPage(item.path);
   const body = await response.text();
   const escapedId = String(item.id)
     .replace(/&/g, "&amp;")

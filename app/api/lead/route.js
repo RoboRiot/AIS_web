@@ -222,6 +222,7 @@ export async function POST(request) {
         acquisitionSource: analytics.acquisitionSource,
         landingPath: analytics.landingPath || null,
         utm: analytics.utm,
+        clickIds: analytics.clickIds,
         attributedPartSearch: analytics.searchTerm || null,
       },
     };
@@ -250,6 +251,7 @@ export async function POST(request) {
       device: "unknown",
       country: "unknown",
       utm: analytics.utm,
+      clickIdPresent: analytics.clickIdPresent,
       acquisitionSource: analytics.acquisitionSource,
       landingPath: cleanPath(analytics.landingPath),
       analyticsVersion: 3,
@@ -281,6 +283,7 @@ export async function POST(request) {
           path: leadDetails.sourcePage,
           acquisitionSource: analytics.acquisitionSource,
           landingPath: cleanPath(analytics.landingPath),
+          clickIdPresent: analytics.clickIdPresent,
           sessionHash: confirmedSubmissionEvent.sessionHash,
           visitorHash: confirmedSubmissionEvent.visitorHash,
           milestones: { form_submit: true },

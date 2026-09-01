@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NotFoundAnalytics from "@/components/analytics/NotFoundAnalytics";
 import styles from "./not-found.module.scss";
 
 export const metadata = {
@@ -12,6 +13,7 @@ export const metadata = {
 export default function NotFound() {
   return (
     <section className={styles.page} aria-labelledby="not-found-title">
+      <NotFoundAnalytics />
       <div className={styles.inner}>
         <p className={styles.eyebrow}>Page not found</p>
         <h1 id="not-found-title">The page you requested is no longer here.</h1>

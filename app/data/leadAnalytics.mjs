@@ -5,6 +5,13 @@ const FORM_TYPES = new Set([
   "trailer_request",
 ]);
 
+const LEAD_EVENT_NAMES = Object.freeze({
+  contact_form: "generate_contact_lead",
+  part_request: "generate_part_lead",
+  service_request: "generate_service_lead",
+  trailer_request: "generate_trailer_lead",
+});
+
 const ACQUISITION_SOURCES = new Set([
   "direct",
   "google_organic",
@@ -35,6 +42,9 @@ export const normalizeFormType = (value) => {
   const candidate = clean(value, 40);
   return FORM_TYPES.has(candidate) ? candidate : "";
 };
+
+export const getLeadEventName = (formType) =>
+  LEAD_EVENT_NAMES[normalizeFormType(formType)] || "";
 
 export const normalizeLeadAnalytics = (value = {}) => {
   const analytics = value && typeof value === "object" && !Array.isArray(value)

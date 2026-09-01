@@ -15,6 +15,17 @@ import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+const getTrafficCountry = (request) => {
+  const candidate = cleanText(
+    request.headers.get("cf-ipcountry") ||
+      request.headers.get("x-vercel-ip-country") ||
+      request.headers.get("x-appengine-country") ||
+      "unknown",
+    8
+  ).toUpperCase();
+  return /^[A-Z]{2}$/.test(candidate) ? candidate : "unknown";
+};
+
 const MAX_REQUEST_BYTES = 28 * 1024 * 1024;
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 const MAX_TOTAL_FILE_BYTES = 25 * 1024 * 1024;
@@ -324,6 +335,11 @@ export async function POST(request) {
       .filter(Boolean)
       .join(", ");
 
+    const trafficCountry = getTrafficCountry(request);
+    const reviewFlags = trafficCountry !== "unknown" && trafficCountry !== "US"
+      ? ["outside_us"]
+      : [];
+
     await requestReference.set({
       ...payload,
       requestNumber,
@@ -332,6 +348,8 @@ export async function POST(request) {
       files: attachmentRecords,
       status: "pending",
       source: "ais_website",
+      trafficCountry,
+      reviewFlags,
       clientMatchStatus: "pending",
       suggestedClient: null,
       confirmedClient: null,
@@ -393,7 +411,7 @@ export async function POST(request) {
             sessionHash,
             browser: "unknown",
             device: "unknown",
-            country: "unknown",
+            country: trafficCountry,
             utm: analytics.utm,
             clickIdPresent: analytics.clickIdPresent,
             acquisitionSource: analytics.acquisitionSource,
@@ -414,6 +432,8 @@ export async function POST(request) {
               acquisitionSource: analytics.acquisitionSource,
               landingPath: cleanPath(analytics.landingPath),
               clickIdPresent: analytics.clickIdPresent,
+              country: trafficCountry,
+              reviewFlags,
               sessionHash,
               visitorHash,
               milestones: { form_submit: true },

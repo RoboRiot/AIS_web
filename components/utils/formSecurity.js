@@ -63,11 +63,23 @@ export const sanitizeLeadForm = (values = {}, options = {}) => {
   return { sanitized, errors };
 };
 
-export const buildLeadText = ({ name, email, message, partNumber, leadType, sourcePage, context }) =>
+export const buildLeadText = ({
+  name,
+  email,
+  message,
+  partNumber,
+  leadType,
+  sourcePage,
+  context,
+  trafficCountry,
+  reviewFlag,
+}) =>
   [
     `Source: AIS website - ${leadType || "Website inquiry"}`,
     sourcePage ? `Page: ${sourcePage}` : null,
     context ? `Context: ${context}` : null,
+    trafficCountry && trafficCountry !== "unknown" ? `Traffic Country: ${trafficCountry}` : null,
+    reviewFlag ? `Review Flag: ${reviewFlag}` : null,
     `Name: ${name}`,
     `Email: ${email}`,
     partNumber ? `Part Number: ${partNumber}` : null,
@@ -78,11 +90,25 @@ export const buildLeadText = ({ name, email, message, partNumber, leadType, sour
     .filter((line) => line !== null)
     .join("\n");
 
-export const buildLeadEmailHtml = ({ name, email, message, partNumber, leadType, sourcePage, context }) => {
+export const buildLeadEmailHtml = ({
+  name,
+  email,
+  message,
+  partNumber,
+  leadType,
+  sourcePage,
+  context,
+  trafficCountry,
+  reviewFlag,
+}) => {
   const rows = [
     renderEmailRow("Submission Source", `AIS website - ${leadType || "Website inquiry"}`),
     sourcePage ? renderEmailRow("Page", sourcePage) : "",
     context ? renderEmailRow("Context", context) : "",
+    trafficCountry && trafficCountry !== "unknown"
+      ? renderEmailRow("Traffic Country", trafficCountry)
+      : "",
+    reviewFlag ? renderEmailRow("Review Flag", reviewFlag) : "",
     renderEmailRow("Name", name),
     renderEmailRow("Email Address", email),
     partNumber ? renderEmailRow("Part Number", partNumber) : "",

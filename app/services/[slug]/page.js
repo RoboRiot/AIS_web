@@ -21,6 +21,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const page = getServiceLandingPage(params.slug);
   if (!page) return {};
+  const primaryImage = getServiceImages(page)[0];
+  const socialImage = primaryImage?.src
+    ? primaryImage.src.startsWith("http")
+      ? primaryImage.src
+      : `${BASE_URL}${primaryImage.src}`
+    : undefined;
 
   return {
     title: page.title,
@@ -34,6 +40,13 @@ export async function generateMetadata({ params }) {
       description: page.description,
       url: `${BASE_URL}/services/${page.slug}`,
       type: "website",
+      ...(socialImage ? { images: [{ url: socialImage, alt: primaryImage.alt }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.title,
+      description: page.description,
+      ...(socialImage ? { images: [socialImage] } : {}),
     },
   };
 }
@@ -82,10 +95,19 @@ export default function ServiceLandingPage({ params }) {
       "@type": "Organization",
       name: "Advanced Imaging Services",
       url: BASE_URL,
+      telephone: "+1-559-537-6851",
     },
     areaServed: {
       "@type": "Country",
       name: "United States",
+    },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      servicePhone: {
+        "@type": "ContactPoint",
+        telephone: "+1-559-537-6851",
+        contactType: "technical support",
+      },
     },
     ...(modelCoverageItems.length > 0
       ? {
@@ -134,8 +156,19 @@ export default function ServiceLandingPage({ params }) {
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
                 <a href="#request" className="simple-btn">Request Service</a>
-                <Link href="/service-request">Detailed Service Intake</Link>
+                <a
+                  href="tel:+15595376851"
+                  data-analytics="service-hero-phone"
+                  data-analytics-source={page.slug}
+                >
+                  Call (559) 537-6851
+                </a>
               </div>
+              <ul className={`${styles.heroProofList} list-none`} aria-label="Service support highlights">
+                <li>Remote support first</li>
+                <li>Nationwide coverage</li>
+                <li>Field service and parts coordination</li>
+              </ul>
               <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
                 {modelCoverage.length > 0 && <a href="#mri-service-models">{brandLabel} MRI Models</a>}
                 <a href="#capabilities">Capabilities</a>

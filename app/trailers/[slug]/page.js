@@ -23,6 +23,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const page = getTrailerLandingPage(params.slug);
   if (!page) return {};
+  const primaryImage = getTrailerImages(page.slug)[0];
+  const socialImage = primaryImage?.src
+    ? primaryImage.src.startsWith("http")
+      ? primaryImage.src
+      : `${BASE_URL}${primaryImage.src}`
+    : undefined;
 
   return {
     title: page.title,
@@ -36,6 +42,13 @@ export async function generateMetadata({ params }) {
       description: page.description,
       url: `${BASE_URL}/trailers/${page.slug}`,
       type: "website",
+      ...(socialImage ? { images: [{ url: socialImage, alt: primaryImage.alt }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.title,
+      description: page.description,
+      ...(socialImage ? { images: [socialImage] } : {}),
     },
   };
 }
@@ -80,6 +93,27 @@ export default function TrailerLandingPage({ params }) {
     "Align equipment availability, delivery sequencing, site access, and replacement-parts support before deployment.",
   ];
   const fleetPricing = page.fleetPricing || [];
+  const modalityLabel = page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase();
+  const trailerFaqs = [
+    {
+      question: `What information is needed to check mobile ${modalityLabel} trailer availability?`,
+      answer: "Share the facility location, target dates, expected rental term, preferred OEM or system, and anticipated clinical volume. AIS uses those details to review the most practical fleet options.",
+    },
+    {
+      question: `Can AIS support mobile ${modalityLabel} trailer rentals nationwide?`,
+      answer: "AIS supports nationwide rental and lease planning, including availability review, deployment timing, site coordination, and technical service expectations.",
+    },
+    {
+      question: `What happens after a mobile ${modalityLabel} trailer request is submitted?`,
+      answer: "An imaging specialist reviews the requested dates, location, system requirements, and site needs, then contacts the facility to confirm availability and next steps.",
+    },
+    ...(page.modality === "mri"
+      ? [{
+          question: "Which MRI field strength is used for mobile trailer rentals?",
+          answer: "Mobile MRI trailer programs are based on 1.5T systems. AIS can help match the requested OEM and model family to current fleet availability.",
+        }]
+      : []),
+  ];
   const pricingImage = trailerImages.find((image) => image.category === "Exterior") ||
     trailerImages[0] || {
       src: "/assets/images/mobile-mri2.jpg",
@@ -98,10 +132,19 @@ export default function TrailerLandingPage({ params }) {
       "@type": "Organization",
       name: "Advanced Imaging Services",
       url: BASE_URL,
+      telephone: "+1-559-537-6851",
     },
     areaServed: {
       "@type": "Country",
       name: "United States",
+    },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      servicePhone: {
+        "@type": "ContactPoint",
+        telephone: "+1-559-537-6851",
+        contactType: "rental availability",
+      },
     },
     ...(modelCoverageItems.length > 0
       ? {
@@ -129,6 +172,18 @@ export default function TrailerLandingPage({ params }) {
       { "@type": "ListItem", position: 3, name: page.shortTitle, item: `${BASE_URL}/trailers/${page.slug}` },
     ],
   };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: trailerFaqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
 
   return (
     <>
@@ -139,6 +194,10 @@ export default function TrailerLandingPage({ params }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <Subheader title={[page.h1.split(" ")[0], " ", <span key="1">{page.h1.split(" ").slice(1).join(" ")}</span>]} extraClass="services_bg" />
       <section className={styles.section}>
@@ -157,8 +216,19 @@ export default function TrailerLandingPage({ params }) {
                 >
                   Check Trailer Availability
                 </a>
-                <Link href="/trailers">All Trailer Rentals</Link>
+                <a
+                  href="tel:+15595376851"
+                  data-analytics="trailer-hero-phone"
+                  data-analytics-source={page.slug}
+                >
+                  Call (559) 537-6851
+                </a>
               </div>
+              <ul className={`${styles.heroProofList} list-none`} aria-label="Rental support highlights">
+                <li>Nationwide planning</li>
+                <li>OEM-specific fleet options</li>
+                <li>Technical service support</li>
+              </ul>
               <div className={styles.heroSystems}>
                 <h3>Systems We Cover</h3>
                 <ul className="list-none">
@@ -324,6 +394,22 @@ export default function TrailerLandingPage({ params }) {
             >
               Check Trailer Availability
             </a>
+          </div>
+        </div>
+      </section>
+      <section className={styles.faqSection} aria-labelledby={`${page.slug}-faq-heading`}>
+        <div className="container">
+          <span className={styles.kicker}>Rental planning answers</span>
+          <h2 id={`${page.slug}-faq-heading`} className={styles.sectionHeading}>
+            Mobile {modalityLabel} Trailer <span>Questions</span>
+          </h2>
+          <div className={styles.faqList}>
+            {trailerFaqs.map((item) => (
+              <article key={item.question} className={styles.faqItem}>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>

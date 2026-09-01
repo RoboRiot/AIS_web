@@ -55,6 +55,17 @@ const getRecipients = () =>
     .map((address) => address.trim())
     .filter(Boolean);
 
+const getTrafficCountry = (request) => {
+  const candidate = cleanText(
+    request.headers.get("cf-ipcountry") ||
+      request.headers.get("x-vercel-ip-country") ||
+      request.headers.get("x-appengine-country") ||
+      "unknown",
+    8
+  ).toUpperCase();
+  return /^[A-Z]{2}$/.test(candidate) ? candidate : "unknown";
+};
+
 const getServiceAccount = () => {
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
@@ -172,11 +183,18 @@ export async function POST(request) {
       return NextResponse.json({ error: errors[0] }, { status: 400 });
     }
 
+    const trafficCountry = getTrafficCountry(request);
+    const reviewFlag = trafficCountry !== "unknown" && trafficCountry !== "US"
+      ? "Traffic originated outside the United States"
+      : "";
+
     const leadDetails = {
       ...sanitized,
       leadType: config.label,
       sourcePage: cleanPath(payload.sourcePage),
       context: cleanText(payload.context, 200),
+      trafficCountry,
+      reviewFlag,
     };
 
     const to = getRecipients();
@@ -224,6 +242,8 @@ export async function POST(request) {
         utm: analytics.utm,
         clickIds: analytics.clickIds,
         attributedPartSearch: analytics.searchTerm || null,
+        trafficCountry,
+        reviewFlags: reviewFlag ? ["outside_us"] : [],
       },
     };
     const confirmedSubmissionEvent = {
@@ -249,7 +269,7 @@ export async function POST(request) {
         : null,
       browser: "unknown",
       device: "unknown",
-      country: "unknown",
+      country: trafficCountry,
       utm: analytics.utm,
       clickIdPresent: analytics.clickIdPresent,
       acquisitionSource: analytics.acquisitionSource,
@@ -284,6 +304,8 @@ export async function POST(request) {
           acquisitionSource: analytics.acquisitionSource,
           landingPath: cleanPath(analytics.landingPath),
           clickIdPresent: analytics.clickIdPresent,
+          country: trafficCountry,
+          reviewFlags: reviewFlag ? ["outside_us"] : [],
           sessionHash: confirmedSubmissionEvent.sessionHash,
           visitorHash: confirmedSubmissionEvent.visitorHash,
           milestones: { form_submit: true },

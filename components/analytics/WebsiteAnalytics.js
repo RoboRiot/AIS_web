@@ -49,13 +49,14 @@ export default function WebsiteAnalytics() {
         element: element.dataset.analytics || element.tagName.toLowerCase(),
         label: labelFor(element),
         destination: destinationFor(element),
+        link_location: pathname || "/",
       });
       const communicationEvent = communicationEventFor(element);
       if (communicationEvent) {
         trackWebsiteEvent(communicationEvent, {
           label: labelFor(element),
           destination: destinationFor(element),
-          source: element.dataset.analyticsSource || pathname || "/",
+          link_location: element.dataset.analyticsSource || pathname || "/",
         });
       }
     };

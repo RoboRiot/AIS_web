@@ -29,6 +29,17 @@ export default function QuickInquiryForm({
   const [confirmationId, setConfirmationId] = useState("");
   const [feedback, setFeedback] = useState("");
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  const nextSteps = formType === "trailer_request"
+    ? [
+        "We review location, dates, configuration, and current fleet timing.",
+        "An imaging specialist follows up to confirm practical options and next steps.",
+        "Call now when downtime or deployment timing is urgent.",
+      ]
+    : [
+        "Remote support is the first step for urgent scanner issues.",
+        "If remote recovery is not enough, we coordinate field service and parts.",
+        "Call now when the scanner is down or patient schedules are at risk.",
+      ];
 
   useEffect(() => {
     ensureRecaptchaScript(recaptchaSiteKey);
@@ -106,9 +117,7 @@ export default function QuickInquiryForm({
             <p>{intro}</p>
             <a href="tel:+15595376851">Call (559) 537-6851</a>
             <ul className="list-none">
-              <li>Remote support starts immediately for urgent service needs.</li>
-              <li>Trailer requests are reviewed for timing, location, and configuration.</li>
-              <li>Your information is used only to respond to this request.</li>
+              {nextSteps.map((step) => <li key={step}>{step}</li>)}
             </ul>
           </div>
           {submitted ? (
@@ -195,6 +204,7 @@ export default function QuickInquiryForm({
                 disabled={submitting}
                 data-analytics="quick-inquiry-submit"
                 data-analytics-label={submitLabel}
+                data-analytics-source={source}
               >
                 {submitting ? "Sending..." : submitLabel}
               </button>

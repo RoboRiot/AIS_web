@@ -229,7 +229,8 @@ export default function ServiceRequestForm() {
           "form_submit",
           {
             form_type: "service_request",
-            context: "service_request_page",
+            form_source: "service_request_page",
+            lead_category: "service",
             lead_id: leadId,
           },
           { recordInternally: false }

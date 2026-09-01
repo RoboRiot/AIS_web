@@ -34,6 +34,7 @@ const EVENT_TYPES = new Set([
   "form_start",
   "form_submit",
   "form_error",
+  "page_not_found",
 ]);
 const SEARCH_KINDS = new Set(["keyword", "part_number"]);
 
@@ -212,7 +213,7 @@ export async function POST(request) {
           funnelReference,
           {
             formType,
-            source: cleanText(properties.source || properties.form_source, 100),
+            source: cleanText(properties.form_source, 100),
             path: pathUrl.pathname,
             acquisitionSource: cleanText(properties.acquisition_source, 40) || "unknown",
             landingPath: cleanPath(properties.landing_path),

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   getFormMilestone,
+  getLeadEventName,
   normalizeFormType,
   normalizeLeadAnalytics,
   normalizeLeadId,
@@ -38,6 +39,14 @@ test("limits form types and funnel milestones", () => {
   assert.equal(normalizeFormType("newsletter"), "");
   assert.equal(getFormMilestone("form_submit"), "form_submit");
   assert.equal(getFormMilestone("form_error"), "");
+});
+
+test("maps accepted form types to distinct GA lead events", () => {
+  assert.equal(getLeadEventName("contact_form"), "generate_contact_lead");
+  assert.equal(getLeadEventName("part_request"), "generate_part_lead");
+  assert.equal(getLeadEventName("service_request"), "generate_service_lead");
+  assert.equal(getLeadEventName("trailer_request"), "generate_trailer_lead");
+  assert.equal(getLeadEventName("unknown"), "");
 });
 
 test("tracks only newly accepted leads as conversions", () => {

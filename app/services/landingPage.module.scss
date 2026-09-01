@@ -473,6 +473,38 @@
   }
 }
 
+.heroProofList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: -12px 0 26px;
+  padding: 0;
+
+  li {
+    color: #394b5d;
+    font-size: 14px;
+    font-weight: 700;
+    padding-left: 18px;
+    position: relative;
+
+    &::before {
+      background: #f7a765;
+      content: "";
+      height: 8px;
+      left: 0;
+      position: absolute;
+      top: 6px;
+      width: 8px;
+    }
+  }
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    display: grid;
+    gap: 8px;
+    margin-top: -8px;
+  }
+}
+
 .quickNav {
   display: flex;
   flex-wrap: wrap;
@@ -1030,6 +1062,45 @@
 
 .routeSection {
   padding: 80px 0;
+}
+
+.faqSection {
+  background: #f7f8fb;
+  border-bottom: 1px solid #e1e5ec;
+  border-top: 1px solid #e1e5ec;
+  padding: 80px 0;
+}
+
+.faqList {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 1180px;
+
+  @media (max-width: $breakpoint_tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faqItem {
+  border-left: 4px solid #f7a765;
+  border-top: 1px solid #dde2ea;
+  padding: 24px 28px 26px;
+
+  h3 {
+    color: #19191d;
+    font-size: 20px;
+    font-weight: 850;
+    line-height: 1.35;
+    margin: 0 0 9px;
+  }
+
+  p {
+    color: #394b5d;
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+  }
 }
 
 .systemsBand {

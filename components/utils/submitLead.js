@@ -52,7 +52,8 @@ export const submitLead = async ({
       "form_submit",
       {
         form_type: formType,
-        context,
+        form_source: context,
+        lead_category: formType.replace(/_request$|_form$/g, ""),
         lead_id: resolvedLeadId,
       },
       { recordInternally: false }

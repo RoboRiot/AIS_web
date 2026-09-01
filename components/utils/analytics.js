@@ -1,17 +1,11 @@
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
+import { getLeadEventName } from "@/app/data/leadAnalytics.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
 const ATTRIBUTION_KEY = "ais_session_attribution";
 const LAST_PART_SEARCH_KEY = "ais_last_part_search";
 const CLICK_ID_KEYS = ["gclid", "gbraid", "wbraid", "msclkid"];
-
-const leadEventName = (formType) => ({
-  contact_form: "generate_contact_lead",
-  part_request: "generate_part_lead",
-  service_request: "generate_service_lead",
-  trailer_request: "generate_trailer_lead",
-}[formType] || "");
 
 const randomId = () => {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -135,6 +129,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   const safeProperties = Object.fromEntries(
     Object.entries({ ...properties, ...attribution })
       .filter(([key]) => !CLICK_ID_KEYS.includes(key))
+      .filter(([key]) => key !== "source")
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
       .slice(0, 20)
   );
@@ -182,7 +177,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
     window.gtag("event", gaEventName(eventType), gaProperties);
 
     if (eventType === "form_submit") {
-      const specificLeadEvent = leadEventName(safeProperties.form_type);
+      const specificLeadEvent = getLeadEventName(safeProperties.form_type);
       if (specificLeadEvent) {
         window.gtag("event", specificLeadEvent, gaProperties);
       }
@@ -193,7 +188,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
 export const announceFormOpen = (formType, source = "", leadId = createLeadId()) => {
   trackWebsiteEvent("form_open", {
     form_type: formType,
-    source,
+    form_source: source,
     lead_id: leadId,
   });
   return leadId;

@@ -12,20 +12,22 @@ import { buildProductHref } from "@/app/data/seoProducts";
 
 
 
-export default function PartCard({ mainTitle }) {
+export default function PartCard({ mainTitle, initialProducts = [], modality = "" }) {
 
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState(initialProducts);
+    const hasInitialProducts = initialProducts.length > 0;
 
     useEffect(() => {
+        if (hasInitialProducts) return undefined;
+
         const controller = new AbortController();
         let active = true;
 
         const fetchData = async () => {
 
             try {
-                const isCtSection = String(mainTitle?.[0] || '').includes('CT');
                 const data = await fetchProducts({
-                    modality: isCtSection ? 'CT' : '',
+                    modality,
                     limit: 12,
                     signal: controller.signal,
                 });
@@ -40,7 +42,7 @@ export default function PartCard({ mainTitle }) {
             active = false;
             controller.abort();
         };
-    }, [mainTitle]);
+    }, [hasInitialProducts, modality]);
     
     return(
         <>

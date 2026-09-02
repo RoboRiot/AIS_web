@@ -6,9 +6,6 @@ import Image from "next/image";
 import phoneIcon from "@/public/assets/images/phoneicon.svg"
 import emailIcon from "@/public/assets/images/emailicon.svg"
 import locationIcon from "@/public/assets/images/location.svg"
-import facebook from "@/public/assets/images/facebook.svg"
-import linkedin from "@/public/assets/images/linkedin.svg"
-import twitter from "@/public/assets/images/twitter.svg"
 import Testimonial from "../home/testimonial/Testimonial";
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
@@ -372,12 +369,6 @@ export default function Contact() {
               <li><Image src={phoneIcon} alt="icon" /><a href="tel:+15595376851">(559) 537-6851</a></li>
               <li><Image src={emailIcon} alt="icon" /><a href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</a></li>
               <li><Image src={locationIcon} alt="icon" /><span>17410 Murphy Pkwy. Lathrop, CA 95330</span></li>
-            </ul>
-            <h3>Follow Us</h3>
-            <ul className={`list-none flex ${styles.social_list}`}>
-              <li><a href="https://www.facebook.com/" target="_blank"><Image src={facebook} alt="icon" /></a></li>
-              <li><a href="https://www.linkedin.com/" target="_blank"><Image src={linkedin} alt="icon" /></a></li>
-              <li><a href="https://twitter.com/" target="_blank"><Image src={twitter} alt="icon" /></a></li>
             </ul>
           </div>
         </div>

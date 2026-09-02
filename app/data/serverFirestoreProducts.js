@@ -7,6 +7,7 @@ import {
   normalizePublicCatalogProduct,
 } from "@/app/data/catalogProductQuality.mjs";
 import {
+  getCatalogComponentGroup,
   rankRelevantCatalogProducts,
   relevantCatalogSearchTerms,
 } from "@/app/data/catalogRelevance.mjs";
@@ -161,6 +162,40 @@ export const fetchRelevantCatalogPage = async (limit = 12) => {
     sort: "relevant",
   };
 };
+
+const buildHomepageProducts = unstable_cache(
+  async () => {
+    const db = getAdminDb();
+    const [relevantProducts, tubeSnapshot] = await Promise.all([
+      buildRelevantCatalog(),
+      db
+        .collection("Parts")
+        .where("SearchTerms", "array-contains", "tube")
+        .limit(80)
+        .get()
+        .catch(() => null),
+    ]);
+
+    const ctTubes = readyProductsFromDocuments(tubeSnapshot?.docs || [])
+      .filter(
+        (product) =>
+          String(product.Modality || "").toUpperCase() === "CT" &&
+          getCatalogComponentGroup(product) === "tube"
+      )
+      .sort((left, right) =>
+        String(left.Name || "").localeCompare(String(right.Name || ""))
+      );
+
+    return {
+      mostRequested: relevantProducts.slice(0, 12),
+      ctTubes: ctTubes.slice(0, 12),
+    };
+  },
+  ["homepage-products-v1"],
+  { revalidate: 900 }
+);
+
+export const fetchHomepageProducts = async () => buildHomepageProducts();
 
 export const fetchCatalogProductsByCategory = async ({
   oem,

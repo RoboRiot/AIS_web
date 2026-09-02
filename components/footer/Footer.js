@@ -5,10 +5,18 @@ import logoImage from "@/public/assets/images/logo.svg"
 import phoneIcon from "@/public/assets/images/phoneicon.svg"
 import emailIcon from "@/public/assets/images/emailicon.svg"
 import locationIcon from "@/public/assets/images/location.svg"
-import facebook from "@/public/assets/images/facebook.svg"
-import linkedin from "@/public/assets/images/linkedin.svg"
-import twitter from "@/public/assets/images/twitter.svg"
 import heartIcon from "@/public/assets/images/heart.svg"
+
+const popularPages = [
+    { href: "/services/mri-service", label: "MRI Service" },
+    { href: "/services/ct-service", label: "CT Service" },
+    { href: "/trailers/mobile-mri-trailer-rental", label: "MRI Trailer Rental" },
+    { href: "/trailers/mobile-ct-trailer-rental", label: "CT Trailer Rental" },
+    { href: "/parts/ge/mri", label: "GE MRI Parts" },
+    { href: "/parts/ge/ct", label: "GE CT Parts" },
+    { href: "/parts/siemens/mri", label: "Siemens MRI Parts" },
+    { href: "/parts/siemens/ct", label: "Siemens CT Parts" },
+];
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -22,7 +30,7 @@ export default function Footer() {
                             <p>At Advanced Imaging Parts, we believe that the best service comes from the knowledge and personal care of our staff. That is why we only hire the very best Field-Service Engineers, coupled with our proprietary support and remote diagnostic network, to ensure that the customer spends as little time down as possible, saving them money in the process. ISO: 9001-2015</p>
                         </div>
                         <div className={styles.footer_links}>
-                            <h4 className="footer_title">quick Links</h4>
+                            <h4 className="footer_title">Quick Links</h4>
                             <ul className="list-none">
                                 <li><Link href="/">Home</Link></li>
                                 <li><Link href="/about">Our Story</Link></li>
@@ -33,18 +41,20 @@ export default function Footer() {
                                 <li><Link href="/parts">Search</Link></li>
                             </ul>
                         </div>
+                        <div className={styles.footer_links}>
+                            <h4 className="footer_title">Popular Pages</h4>
+                            <ul className="list-none">
+                                {popularPages.map((page) => (
+                                    <li key={page.href}><Link href={page.href}>{page.label}</Link></li>
+                                ))}
+                            </ul>
+                        </div>
                         <div className={styles.contact_info}>
                             <h4 className="footer_title">Contact Info</h4>
                             <ul className={`list-none flex direction-column ${styles.contact_info_list}`}>
                                 <li><Image src={phoneIcon} alt="phone" /><a href="tel:+15595376851">(559) 537-6851</a></li>
                                 <li><Image src={emailIcon} alt="icon" /><a href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</a></li>
                                 <li><Image src={locationIcon} alt="icon" /><span>17410 Murphy Pkwy. Lathrop, CA 95330</span></li>
-                            </ul>
-                            <h4 className="footer_title">Follow Us</h4>
-                            <ul className={`list-none flex ${styles.social_list}`}>
-                                <li><a href="https://www.facebook.com/" target="_blank"><Image src={facebook} alt="icon" /></a></li>
-                                <li><a href="https://www.linkedin.com/" target="_blank"><Image src={linkedin} alt="icon" /></a></li>
-                                <li><a href="https://twitter.com/" target="_blank"><Image src={twitter} alt="icon" /></a></li>
                             </ul>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./servicesSeo.module.scss";
 import { BASE_URL } from "@/app/data/seoProducts";
 import { serviceLandingPages, serviceModalities } from "@/app/data/serviceLandingPages";
+import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
 export const metadata = {
     title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
@@ -36,12 +37,14 @@ export const metadata = {
             "Nationwide MRI, CT, and PET/CT service with rapid remote diagnostics, emergency repair, preventive maintenance, and tested parts support.",
         url: "/services",
         type: "website",
+        images: DEFAULT_SOCIAL_IMAGES,
     },
     twitter: {
         card: "summary_large_image",
         title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
         description:
             "Rapid remote diagnostics and nationwide MRI, CT, and PET/CT service support.",
+        images: DEFAULT_SOCIAL_IMAGES,
     },
 };
 
@@ -112,33 +115,6 @@ const servicesStructuredData = {
         "Preventive maintenance",
         "Emergency imaging equipment service",
     ],
-};
-
-const localBusinessStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${BASE_URL}/#localbusiness`,
-    name: "Advanced Imaging Services",
-    url: BASE_URL,
-    image: `${BASE_URL}/assets/images/logo.svg`,
-    logo: `${BASE_URL}/assets/images/logo.svg`,
-    telephone: "+1-559-537-6851",
-    email: "info@advancedimagingparts.com",
-    address: {
-        "@type": "PostalAddress",
-        streetAddress: "17410 Murphy Pkwy.",
-        addressLocality: "Lathrop",
-        addressRegion: "CA",
-        postalCode: "95330",
-        addressCountry: "US",
-    },
-    areaServed: {
-        "@type": "Country",
-        name: "United States",
-    },
-    makesOffer: {
-        "@id": `${BASE_URL}/services#medical-imaging-equipment-service`,
-    },
 };
 
 const breadcrumbStructuredData = {
@@ -238,10 +214,6 @@ export default function Services() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesStructuredData) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessStructuredData) }}
             />
             <script
                 type="application/ld+json"

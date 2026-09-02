@@ -4,6 +4,7 @@ import MobileMri from "@/app/services/mobile-mri/MobileMri";
 import { BASE_URL } from "@/app/data/seoProducts";
 import { serviceModalities, trailerLandingPages } from "@/app/data/serviceLandingPages";
 import styles from "@/app/services/landingPage.module.scss";
+import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
 export const metadata = {
   title: "Mobile MRI & CT Trailer Rental | Nationwide Lease Support",
@@ -29,6 +30,14 @@ export const metadata = {
       "Nationwide mobile MRI, CT, and PET/CT trailer rentals for downtime, renovations, overflow, and replacement projects.",
     url: `${BASE_URL}/trailers`,
     type: "website",
+    images: DEFAULT_SOCIAL_IMAGES,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mobile MRI & CT Trailer Rental | Nationwide Lease Support",
+    description:
+      "Nationwide mobile MRI, CT, and PET/CT trailer rentals for downtime, renovations, overflow, and replacement projects.",
+    images: DEFAULT_SOCIAL_IMAGES,
   },
 };
 

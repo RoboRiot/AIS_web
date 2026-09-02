@@ -9,6 +9,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import WebsiteAnalytics from "@/components/analytics/WebsiteAnalytics";
 import AosInitializer from "@/components/animations/AosInitializer";
 import ClientRouteRecovery from "@/components/errors/ClientRouteRecovery";
+import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
 const siteName = "Advanced Imaging Services";
 const geologica = Geologica({
@@ -26,20 +27,19 @@ export const metadata = {
     template: "%s",
   },
   description: "Advanced Imaging Services provides MRI, CT, PET/CT, mobile imaging equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts across the United States.",
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     siteName,
     title: "Advanced Imaging Services | MRI, CT & PET/CT Service and Parts",
     description: "MRI, CT, PET/CT, mobile imaging equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts.",
     url: BASE_URL,
+    images: DEFAULT_SOCIAL_IMAGES,
   },
   twitter: {
     card: "summary_large_image",
     title: "Advanced Imaging Services | MRI, CT & PET/CT Service and Parts",
     description: "Nationwide medical imaging equipment service, repair, mobile imaging support, and tested replacement parts.",
+    images: DEFAULT_SOCIAL_IMAGES,
   },
   robots: {
     index: true,
@@ -51,30 +51,49 @@ export const metadata = {
   },
 };
 
-const organizationJsonLd = {
+const siteJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${BASE_URL}/#organization`,
-  name: siteName,
-  alternateName: "Advanced Imaging Parts",
-  url: BASE_URL,
-  logo: `${BASE_URL}/assets/images/logo.svg`,
-  telephone: "+1-559-537-6851",
-  email: "info@advancedimagingparts.com",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "17410 Murphy Pkwy.",
-    addressLocality: "Lathrop",
-    addressRegion: "CA",
-    postalCode: "95330",
-    addressCountry: "US",
-  },
-  contactPoint: {
-    "@type": "ContactPoint",
-    telephone: "+1-559-537-6851",
-    contactType: "sales and service",
-    areaServed: "US",
-  },
+  "@graph": [
+    {
+      "@type": ["Organization", "LocalBusiness"],
+      "@id": `${BASE_URL}/#organization`,
+      name: siteName,
+      alternateName: "Advanced Imaging Parts",
+      url: BASE_URL,
+      logo: `${BASE_URL}/assets/images/logo.svg`,
+      image: `${BASE_URL}${DEFAULT_SOCIAL_IMAGES[0].url}`,
+      telephone: "+1-559-537-6851",
+      email: "info@advancedimagingparts.com",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "17410 Murphy Pkwy.",
+        addressLocality: "Lathrop",
+        addressRegion: "CA",
+        postalCode: "95330",
+        addressCountry: "US",
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "United States",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+1-559-537-6851",
+        contactType: "sales and service",
+        areaServed: "US",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: siteName,
+      publisher: {
+        "@id": `${BASE_URL}/#organization`,
+      },
+      inLanguage: "en-US",
+    },
+  ],
 };
 
 const staleAssetRecoveryScript = `
@@ -128,7 +147,7 @@ export default function RootLayout({ children }) {
         <ClientRouteRecovery />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
         <div className='body-wrapper'>
           <Header />

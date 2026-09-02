@@ -18,6 +18,7 @@ import {
 import SeoProductClient from "./SeoProductClient";
 import { fetchProductById, fetchProductBySlug } from "@/app/data/serverFirestoreProducts";
 import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
+import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
 export const revalidate = 3600;
 
@@ -52,6 +53,7 @@ export async function generateMetadata({ params }) {
   const images = Array.isArray(product.Images)
     ? product.Images.filter((image) => typeof image === "string" && image.startsWith("http"))
     : [];
+  const socialImages = images.length ? images : DEFAULT_SOCIAL_IMAGES;
 
   return {
     title,
@@ -65,13 +67,13 @@ export async function generateMetadata({ params }) {
       description,
       url,
       type: "website",
-      ...(images.length ? { images } : {}),
+      images: socialImages,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      ...(images.length ? { images } : {}),
+      images: socialImages,
     },
   };
 }

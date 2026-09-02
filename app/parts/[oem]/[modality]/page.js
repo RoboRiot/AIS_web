@@ -8,6 +8,7 @@ import { fetchCatalogProductsByCategory } from "@/app/data/serverFirestoreProduc
 import PartsCatalogNav from "../../PartsCatalogNav";
 import ProductsPage from "../../ProductsPage";
 import styles from "../../search.module.scss";
+import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
 export const revalidate = 3600;
 
@@ -48,7 +49,19 @@ export async function generateMetadata({ params }) {
     title,
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url, type: "website" },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      images: DEFAULT_SOCIAL_IMAGES,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: DEFAULT_SOCIAL_IMAGES,
+    },
   };
 }
 

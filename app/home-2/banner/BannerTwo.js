@@ -69,9 +69,9 @@ export default function BannerTwo() {
                 <div className={styles.banner_two_slider}>
                     <div className="container flex">
                         <section>
-                            <small>Welcome to</small>
-                            <h1>Advanced <span>Imaging</span></h1>
-                            <p>We provide parts, accessories, repairs, and <br/>maintenance for the world&apos;s leading CT and <br/>MRI scanning equipment. </p>
+                            <small>Advanced Imaging Services</small>
+                            <h1>MRI, CT &amp; PET/CT <span>Parts, Service &amp; Mobile Trailers</span></h1>
+                            <p>Nationwide parts, repairs, preventive maintenance, remote support, and mobile imaging rental coverage.</p>
                             <Link href="/contact" className="simple-btn">Contact Us</Link>
                         </section>
                     </div>

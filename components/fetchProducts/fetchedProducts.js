@@ -1,3 +1,5 @@
+import { CATALOG_REQUEST_HEADERS } from '@/app/data/catalogRequestPolicy.mjs';
+
 const MAX_PRODUCTS = 24;
 
 export const fetchProducts = async ({
@@ -13,7 +15,7 @@ export const fetchProducts = async ({
     if (modality) params.set('modality', modality);
 
     const response = await fetch(`/api/parts/search?${params.toString()}`, {
-      headers: { Accept: 'application/json' },
+      headers: CATALOG_REQUEST_HEADERS,
       signal,
     });
     const payload = await response.json().catch(() => ({}));

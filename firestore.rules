@@ -1,0 +1,83 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.email_verified == true;
+    }
+
+    function accessNotRevoked() {
+      return !('magmoAccessRevoked' in request.auth.token)
+        || request.auth.token.magmoAccessRevoked != true;
+    }
+
+    function internalUser() {
+      return signedIn()
+        && accessNotRevoked()
+        && request.auth.token.email.matches('.*@advancedimagingparts[.]com$');
+    }
+
+    function approvedViewer() {
+      return signedIn()
+        && accessNotRevoked()
+        && ('role' in request.auth.token)
+        && request.auth.token.role == 'viewer';
+    }
+
+    function approvedUser() {
+      return internalUser() || approvedViewer();
+    }
+
+    match /UserPreferences/{userId} {
+      allow read: if approvedUser() && request.auth.uid == userId;
+      allow create, update: if approvedUser()
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly([
+          "theme",
+          "opsActiveCollapsedTiers",
+          "opsActiveCollapsedUpdatedAt",
+          "updatedAt"
+        ])
+        && (!request.resource.data.keys().hasAny(["theme"])
+          || request.resource.data.theme in ["light", "dark"])
+        && (!request.resource.data.keys().hasAny(["opsActiveCollapsedTiers"])
+          || request.resource.data.opsActiveCollapsedTiers is map);
+      allow delete: if approvedUser() && request.auth.uid == userId;
+      match /SearchConsoleTrackedPages/{document} {
+        allow read, write: if false;
+      }
+      match /SearchConsoleIndexStatus/{document} {
+        allow read, write: if false;
+      }
+    }
+
+    match /WebsiteAnalyticsEvents/{document} {
+      allow read, write: if false;
+    }
+    match /WebsiteAnalyticsDaily/{document} {
+      allow read, write: if false;
+    }
+    match /WebsitePartSearchDaily/{document} {
+      allow read, write: if false;
+    }
+    match /WebsiteRateLimits/{document} {
+      allow read, write: if false;
+    }
+    match /mail/{document} {
+      allow read, write: if false;
+    }
+
+    // The public website reads catalog data through the server-side Admin SDK.
+    // Direct client reads are limited to approved signed-in users.
+    match /Parts/{document=**} {
+      allow read: if approvedUser();
+      allow create, update, delete: if internalUser();
+    }
+
+    match /{document=**} {
+      allow read: if approvedUser();
+      allow create, update, delete: if internalUser();
+    }
+  }
+}

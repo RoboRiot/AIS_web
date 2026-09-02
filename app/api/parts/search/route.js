@@ -3,8 +3,9 @@ import { FieldPath } from "firebase-admin/firestore";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
 import {
   cleanText,
-  consumeRateLimit,
+  consumeRateLimits,
   isLikelyAutomation,
+  isTrustedCatalogRequest,
   signCursor,
   verifyCursor,
 } from "@/app/data/requestSecurity";
@@ -28,6 +29,11 @@ export const runtime = "nodejs";
 
 const PAGE_SIZE = 12;
 const MAX_SEARCH_CANDIDATES = 750;
+const PARTS_RATE_LIMITS = [
+  { name: "burst", scope: "ip", limit: 15, windowMs: 10_000 },
+  { name: "minute", scope: "ip", limit: 45, windowMs: 60_000 },
+  { name: "hour", scope: "ip", limit: 300, windowMs: 60 * 60_000 },
+];
 
 const querySignature = (values) =>
   JSON.stringify([
@@ -42,22 +48,24 @@ const querySignature = (values) =>
 
 export async function GET(request) {
   try {
-    if (isLikelyAutomation(request)) {
+    if (isLikelyAutomation(request) || !isTrustedCatalogRequest(request)) {
       return NextResponse.json({ error: "Automated catalog access is not allowed." }, { status: 403 });
     }
 
     const db = getAdminDb();
-    const allowed = await consumeRateLimit({
+    const rateLimit = await consumeRateLimits({
       db,
       request,
       namespace: "parts-search",
-      limit: 80,
-      windowMs: 60_000,
+      policies: PARTS_RATE_LIMITS,
     });
-    if (!allowed) {
+    if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Too many catalog searches. Please wait a moment." },
-        { status: 429, headers: { "Retry-After": "60" } }
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfterSeconds || 60) },
+        }
       );
     }
 

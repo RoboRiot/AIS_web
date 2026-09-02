@@ -1,0 +1,21 @@
+
+> advanced-imaging@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1040ms
+ ✓ Compiled /middleware in 111ms (116 modules)
+ ○ Compiling /contact ...
+ ✓ Compiled /contact in 3.1s (1130 modules)
+ GET /contact?inquiry=parts&source=parts-page 200 in 3664ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 623ms (643 modules)
+ GET /favicon.ico 200 in 1518ms
+ GET /contact?inquiry=parts&source=parts-page 200 in 123ms
+ ✓ Compiled /_not-found in 415ms (1133 modules)
+ GET /sw.js 404 in 1225ms
+ GET /sw.js 404 in 62ms

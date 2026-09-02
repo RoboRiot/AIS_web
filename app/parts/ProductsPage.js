@@ -10,6 +10,7 @@ import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Im
 import SidebarFoundYourPart from '../product-detail/found-your-part/SidebarFoundYourPart';
 import RecentProducts from './RecentProducts';
 import { buildProductHref, slugify } from '@/app/data/seoProducts';
+import { CATALOG_REQUEST_HEADERS } from '@/app/data/catalogRequestPolicy.mjs';
 import { trackWebsiteEvent } from '@/components/utils/analytics';
 
 const ITEMS_PER_PAGE = 12;
@@ -209,7 +210,7 @@ export default function ProductsPage({
                 if (cursor) searchParams.set('cursor', cursor);
 
                 const response = await fetch(`/api/parts/search?${searchParams.toString()}`, {
-                    headers: { Accept: 'application/json' },
+                    headers: CATALOG_REQUEST_HEADERS,
                     signal: controller.signal,
                 });
                 const data = await response.json().catch(() => ({}));

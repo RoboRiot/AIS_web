@@ -5,6 +5,10 @@ import {
   isAutomatedUserAgent,
   isProductionAnalyticsHost,
 } from "./analyticsPolicy.mjs";
+import {
+  CATALOG_REQUEST_HEADER,
+  CATALOG_REQUEST_VALUE,
+} from "./catalogRequestPolicy.mjs";
 
 const securitySecret = () =>
   process.env.ANALYTICS_HASH_SALT ||
@@ -47,6 +51,14 @@ export const getRequestFingerprint = (request, namespace) => {
   return hashIdentifier(`${getClientIp(request)}|${ua}`, namespace);
 };
 
+export const getRateLimitFingerprint = (request, namespace, scope = "ip-user-agent") => {
+  const clientIp = getClientIp(request);
+  if (scope === "ip" && clientIp !== "unknown") {
+    return hashIdentifier(clientIp, `${namespace}:ip`);
+  }
+  return getRequestFingerprint(request, `${namespace}:ip-user-agent`);
+};
+
 export const isLikelyAutomation = (request) => {
   const ua = cleanText(request.headers.get("user-agent"), 300);
   return isAutomatedUserAgent(ua);
@@ -82,6 +94,20 @@ export const isTrustedOrigin = (request) => {
   }
 };
 
+export const isTrustedCatalogRequest = (request) => {
+  const marker = cleanText(request.headers.get(CATALOG_REQUEST_HEADER), 40);
+  if (marker !== CATALOG_REQUEST_VALUE) return false;
+
+  const accept = cleanText(request.headers.get("accept"), 200).toLowerCase();
+  if (!accept.includes("application/json")) return false;
+
+  const fetchSite = cleanText(request.headers.get("sec-fetch-site"), 30).toLowerCase();
+  if (fetchSite === "cross-site") return false;
+
+  const origin = request.headers.get("origin");
+  return !origin || isTrustedOrigin(request);
+};
+
 export const readJsonBody = async (request, maxBytes = 16_384) => {
   const declaredLength = Number(request.headers.get("content-length") || 0);
   if (declaredLength > maxBytes) {
@@ -106,25 +132,81 @@ export const readJsonBody = async (request, maxBytes = 16_384) => {
   }
 };
 
-export const consumeRateLimit = async ({ db, request, namespace, limit, windowMs }) => {
-  const now = Date.now();
-  const windowStart = Math.floor(now / windowMs) * windowMs;
-  const fingerprint = getRequestFingerprint(request, namespace);
-  const id = hashIdentifier(`${fingerprint}:${windowStart}`, `rate:${namespace}`);
-  const reference = db.collection("WebsiteRateLimits").doc(id);
+export const consumeRateLimits = async ({
+  db,
+  request,
+  namespace,
+  policies = [],
+  now = Date.now(),
+}) => {
+  const entries = policies.map((policy, index) => {
+    const limit = Math.max(1, Math.floor(Number(policy.limit) || 1));
+    const windowMs = Math.max(1_000, Math.floor(Number(policy.windowMs) || 60_000));
+    const bucket = cleanText(policy.name || `window-${index + 1}`, 40) || `window-${index + 1}`;
+    const scope = policy.scope === "ip" ? "ip" : "ip-user-agent";
+    const windowStart = Math.floor(now / windowMs) * windowMs;
+    const fingerprint = getRateLimitFingerprint(request, `${namespace}:${bucket}`, scope);
+    const id = hashIdentifier(
+      `${fingerprint}:${windowStart}`,
+      `rate:${namespace}:${bucket}`
+    );
+
+    return {
+      bucket,
+      scope,
+      limit,
+      windowMs,
+      windowStart,
+      reference: db.collection("WebsiteRateLimits").doc(id),
+    };
+  });
+
+  if (!entries.length) return { allowed: true, retryAfterSeconds: 0 };
 
   return db.runTransaction(async (transaction) => {
-    const snapshot = await transaction.get(reference);
-    const count = Number(snapshot.data()?.count || 0);
-    if (count >= limit) return false;
-    transaction.set(reference, {
-      namespace,
-      count: count + 1,
-      windowStartedAt: Timestamp.fromMillis(windowStart),
-      expiresAt: Timestamp.fromMillis(windowStart + windowMs * 3),
-    }, { merge: true });
-    return true;
+    const snapshots = [];
+    for (const entry of entries) {
+      snapshots.push(await transaction.get(entry.reference));
+    }
+
+    const blocked = entries.filter((entry, index) =>
+      Number(snapshots[index].data()?.count || 0) >= entry.limit
+    );
+    if (blocked.length) {
+      return {
+        allowed: false,
+        retryAfterSeconds: Math.max(
+          ...blocked.map((entry) =>
+            Math.max(1, Math.ceil((entry.windowStart + entry.windowMs - now) / 1_000))
+          )
+        ),
+      };
+    }
+
+    entries.forEach((entry, index) => {
+      const count = Number(snapshots[index].data()?.count || 0);
+      transaction.set(entry.reference, {
+        namespace,
+        bucket: entry.bucket,
+        scope: entry.scope,
+        count: count + 1,
+        windowStartedAt: Timestamp.fromMillis(entry.windowStart),
+        expiresAt: Timestamp.fromMillis(entry.windowStart + entry.windowMs * 3),
+      }, { merge: true });
+    });
+
+    return { allowed: true, retryAfterSeconds: 0 };
   });
+};
+
+export const consumeRateLimit = async ({ db, request, namespace, limit, windowMs }) => {
+  const result = await consumeRateLimits({
+    db,
+    request,
+    namespace,
+    policies: [{ name: "default", limit, windowMs, scope: "ip-user-agent" }],
+  });
+  return result.allowed;
 };
 
 export const signCursor = (payload) => {

@@ -12,6 +12,7 @@ import RecentProducts from './RecentProducts';
 import { buildProductHref, slugify } from '@/app/data/seoProducts';
 import { CATALOG_REQUEST_HEADERS } from '@/app/data/catalogRequestPolicy.mjs';
 import { trackWebsiteEvent } from '@/components/utils/analytics';
+import { buildPartSourcingHref } from '@/app/data/partSourcing.mjs';
 
 const ITEMS_PER_PAGE = 12;
 const BRANDS = Object.keys(brandsModels);
@@ -455,13 +456,13 @@ export default function ProductsPage({
                             </div>
                         ) : (
                             <>
-                                <select value={selectedBrand} onChange={handleBrandChange}>
+                                <select aria-label="Manufacturer" value={selectedBrand} onChange={handleBrandChange}>
                                     <option value="">Select Brand</option>
                                     {BRANDS.map((brand) => (
                                         <option key={brand} value={brand}>{brand}</option>
                                     ))}
                                 </select>
-                                <select value={selectedType} onChange={handleTypeChange}>
+                                <select aria-label="Modality" value={selectedType} onChange={handleTypeChange}>
                                     <option value="">Select Type</option>
                                     {types.map((type) => (
                                         <option key={type} value={type}>{type}</option>
@@ -518,7 +519,18 @@ export default function ProductsPage({
                                 </li>
                             ))
                         ) : (
-                            <li className={styles.no_product}>No products match your current search or filters.</li>
+                            <li className={`${styles.no_product} ${styles.no_results}`}>
+                                <h2>No catalog match{debouncedSku || debouncedSearch ? ` for "${debouncedSku || debouncedSearch}"` : ''}</h2>
+                                <p>Our parts team can check availability and compatible alternatives.</p>
+                                <Link className="simple-btn" href={buildPartSourcingHref({
+                                    query: debouncedSearch, partNumber: debouncedSku,
+                                    oem: selectedBrand, modality: selectedType, model: selectedModel,
+                                })} data-analytics="parts-no-results-request">Request Part Sourcing</Link>
+                                <a href="tel:+15595376851">Call (559) 537-6851</a>
+                                {(selectedBrand || selectedType || selectedModel) && (
+                                    <Link href={`/parts?${new URLSearchParams({ q: debouncedSearch, pn: debouncedSku }).toString()}`}>Search all manufacturers and modalities</Link>
+                                )}
+                            </li>
                         )}
                     </ul>
                     {!isLoadingProducts && !productsError && (pageIndex > 0 || hasNextPage) && (

@@ -99,7 +99,7 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);
-            recordError("lead_request", String(error?.status || "request_failed"));
+            recordError("lead_request", String(error?.code || error?.status || "request_failed"));
             setFeedbackMessage(error?.message || "We could not send your request. Please try again.");
         }
 

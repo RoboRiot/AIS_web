@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Subheader from "@/components/subheader/Subheader";
 import Image from "next/image";
 import TrailerImageCarousel from "./TrailerImageCarousel";
 import QuickInquiryForm from "@/components/forms/QuickInquiryForm";
@@ -199,13 +198,12 @@ export default function TrailerLandingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Subheader title={[page.h1.split(" ")[0], " ", <span key="1">{page.h1.split(" ").slice(1).join(" ")}</span>]} extraClass="services_bg" />
-      <section className={styles.section}>
+      <section className={`${styles.section} ${styles.landingHero}`}>
         <div className="container">
           <div className={styles.introGrid}>
             <article className={styles.heroCopy}>
               <span className={styles.kicker}>Mobile imaging rental and lease planning</span>
-              <h2 className={styles.title}>Mobile {page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase()} Rental Coverage</h2>
+              <h1 className={styles.title}>{page.h1}</h1>
               <p className={styles.lead}>{page.intro}</p>
               <div className={styles.ctaRow}>
                 <a

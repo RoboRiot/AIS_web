@@ -7,7 +7,7 @@ import {
   normalizePublicCatalogProduct,
 } from "@/app/data/catalogProductQuality.mjs";
 import {
-  getCatalogComponentGroup,
+  isCtTubeProduct,
   rankRelevantCatalogProducts,
   relevantCatalogSearchTerms,
 } from "@/app/data/catalogRelevance.mjs";
@@ -177,11 +177,7 @@ const buildHomepageProducts = unstable_cache(
     ]);
 
     const ctTubes = readyProductsFromDocuments(tubeSnapshot?.docs || [])
-      .filter(
-        (product) =>
-          String(product.Modality || "").toUpperCase() === "CT" &&
-          getCatalogComponentGroup(product) === "tube"
-      )
+      .filter(isCtTubeProduct)
       .sort((left, right) =>
         String(left.Name || "").localeCompare(String(right.Name || ""))
       );
@@ -191,7 +187,7 @@ const buildHomepageProducts = unstable_cache(
       ctTubes: ctTubes.slice(0, 12),
     };
   },
-  ["homepage-products-v1"],
+  ["homepage-products-v2"],
   { revalidate: 900 }
 );
 

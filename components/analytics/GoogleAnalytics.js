@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
+import { analyticsPageUrl } from "@/app/data/analyticsPrivacy.mjs";
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-L0236JT5N3";
 
@@ -29,8 +30,8 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     if (!enabled || !ready || typeof window.gtag !== "function") return;
     window.gtag("event", "page_view", {
-      page_path: `${window.location.pathname}${window.location.search}`,
-      page_location: window.location.href,
+      page_path: window.location.pathname,
+      page_location: analyticsPageUrl(window.location.href),
       page_title: document.title,
     });
   }, [enabled, pathname, ready]);
@@ -50,6 +51,7 @@ export default function GoogleAnalytics() {
       window.gtag("config", measurementId, {
         anonymize_ip: true,
         send_page_view: false,
+        page_location: analyticsPageUrl(window.location.href),
       });
       window.__aisGaMeasurementId = measurementId;
     }

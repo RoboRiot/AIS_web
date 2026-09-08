@@ -15,8 +15,7 @@ import {
   normalizeCatalogSearchText,
 } from "@/app/data/partCatalogSearch.mjs";
 import {
-  getCatalogPartNumberLookupTerm,
-  getCatalogSearchLookupTerm,
+  getCatalogLookupPlans,
 } from "@/app/data/partCatalogIndex.mjs";
 import {
   isCampaignReadyProduct,
@@ -100,12 +99,9 @@ export async function GET(request) {
     let totalMatches = null;
 
     if (hasSearch) {
-      const lookupField = values.partNumber ? "PNPrefixes" : "SearchTerms";
-      const lookupValue = values.partNumber
-        ? getCatalogPartNumberLookupTerm(values.partNumber)
-        : getCatalogSearchLookupTerm(values.name);
+      const lookupPlans = getCatalogLookupPlans(values);
 
-      if (!lookupValue || lookupValue.length < 2) {
+      if (!lookupPlans.length) {
         return NextResponse.json(
           {
             products: [],
@@ -118,23 +114,26 @@ export async function GET(request) {
         );
       }
 
-      let snapshot;
-      try {
-        snapshot = await query
-          .where(lookupField, "array-contains", lookupValue)
-          .limit(MAX_SEARCH_CANDIDATES)
-          .get();
-      } catch (error) {
-        if (error?.code !== 9 && error?.code !== "failed-precondition") throw error;
-        snapshot = await query.limit(MAX_SEARCH_CANDIDATES).get();
+      let documents = [];
+      const candidates = new Map();
+      for (const { field, value } of lookupPlans) {
+        try {
+          const snapshot = await query.where(field, "array-contains", value)
+            .limit(MAX_SEARCH_CANDIDATES).get();
+          snapshot.docs.forEach((document) => candidates.set(document.id, document));
+        } catch (error) {
+          if (error?.code !== 9 && error?.code !== "failed-precondition") throw error;
+          // Keep matches from other indexes while an index is being built.
+        }
       }
-      if (snapshot.empty) {
+      documents = [...candidates.values()];
+      if (!documents.length) {
         // Keep searches working during the one-time metadata backfill without
         // allowing an unbounded collection scan.
-        snapshot = await query.limit(MAX_SEARCH_CANDIDATES).get();
+        documents = (await query.limit(MAX_SEARCH_CANDIDATES).get()).docs;
       }
       const direction = values.direction === "desc" ? -1 : 1;
-      const ranked = snapshot.docs
+      const ranked = documents
         .map((document) => {
           const product = normalizePublicCatalogProduct({
             id: document.id,

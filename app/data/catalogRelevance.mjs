@@ -52,6 +52,14 @@ export const getCatalogComponentGroup = (product = {}) => {
   return componentRules.find((rule) => rule.pattern.test(text))?.group || "other";
 };
 
+// A tube-related description is not evidence that the item is a complete tube.
+export const isCtTubeProduct = (product = {}) => {
+  if (String(product.Modality || "").toUpperCase() !== "CT") return false;
+  const name = normalizeText(product.Name);
+  const accessory = /\b(cable|fan|hoist|gasket|spacer|cover|bracket|housing|connector|pump|heat exchanger|cooling|oil|filter|kit|tool|power supply|board|switch|bearing|rotor|stator)\b/;
+  return /\btube\b/.test(name) && !accessory.test(name);
+};
+
 export const getCatalogMerchandisingScore = (product = {}, interestScore = 0) => {
   const text = normalizeText(`${product.Name || ""} ${product.Description || ""}`);
   const matchingRules = componentRules.filter((rule) => rule.pattern.test(text));

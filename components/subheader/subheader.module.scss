@@ -24,9 +24,11 @@
         padding: 50px 0;
     }
     h1 {
-        display: none;
+        display: block;
         margin: 0;
-        font-size: 72px;
+        font-size: 42px;
+        overflow-wrap: anywhere;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         color: #F9F9FD;
         line-height: 1.25;
         text-transform: uppercase;
@@ -35,7 +37,7 @@
             font-weight: 100;
         }
         @media (max-width: $breakpoint_laptop) {
-            font-size: 62px;
+            font-size: 36px;
         }
         @media (max-width: $breakpoint_tablet) {
             font-size: 26px;

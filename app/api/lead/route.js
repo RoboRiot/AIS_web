@@ -17,6 +17,8 @@ import {
   readJsonBody,
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
+import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
+import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -115,23 +117,28 @@ const verifyRecaptcha = async ({ token, expectedAction }) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: params,
+    signal: AbortSignal.timeout(10_000),
   });
+
+  if (!response.ok) throw new Error("reCAPTCHA verification service unavailable.");
 
   const result = await response.json();
   const minimumScore = Number(process.env.RECAPTCHA_MIN_SCORE || 0.5);
 
-  return Boolean(
-    result.success &&
-      result.action === expectedAction &&
-      typeof result.score === "number" &&
-      result.score >= minimumScore
-  );
+  return assessRecaptcha(result, {
+    expectedAction,
+    minimumScore,
+    allowedHosts: [PRODUCTION_HOSTNAME, ...PRODUCTION_HOST_ALIASES,
+      ...(process.env.RECAPTCHA_ALLOWED_HOSTS || "").split(",").map((host) => host.trim().toLowerCase()).filter(Boolean),
+      ...(process.env.NODE_ENV === "development" ? ["localhost", "127.0.0.1"] : []),
+    ],
+  });
 };
 
 export async function POST(request) {
   try {
     if (!isTrustedOrigin(request)) {
-      return NextResponse.json({ error: "Invalid submission origin." }, { status: 403 });
+      return NextResponse.json({ error: "Please open this form on advancedimagingparts.com and try again.", code: "invalid_origin" }, { status: 403 });
     }
 
     const payload = await readJsonBody(request, 16_384);
@@ -141,8 +148,11 @@ export async function POST(request) {
     const leadHash = hashIdentifier(leadId, "website-lead");
     const startedAt = Number(payload.startedAt || 0);
     const elapsed = Date.now() - startedAt;
-    if (cleanText(payload.website, 200) || !startedAt || elapsed < 2_500 || elapsed > 86_400_000) {
-      return NextResponse.json({ error: "Submission blocked." }, { status: 403 });
+    if (cleanText(payload.website, 200)) {
+      return NextResponse.json({ error: "Submission blocked. Please call (559) 537-6851 for help.", code: "honeypot" }, { status: 403 });
+    }
+    if (!Number.isFinite(startedAt) || !startedAt || elapsed < 2_500 || elapsed > 86_400_000) {
+      return NextResponse.json({ error: "Please refresh this form and try again, or call (559) 537-6851.", code: "form_timing" }, { status: 403 });
     }
 
     const db = getAdminDb();
@@ -163,12 +173,17 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid form submission." }, { status: 400 });
     }
 
-    const recaptchaOk = await verifyRecaptcha({
+    const verification = await verifyRecaptcha({
       token: payload.token,
       expectedAction: config.expectedAction,
     });
-    if (!recaptchaOk) {
-      return NextResponse.json({ error: "reCAPTCHA verification failed." }, { status: 403 });
+    if (!verification.ok) {
+      console.warn("Lead verification rejected", { code: verification.code, formType: payload.formType });
+      return NextResponse.json({
+        error: "We could not verify this request. Please try again or call (559) 537-6851.",
+        code: verification.code,
+        retryable: verification.retryable,
+      }, { status: 403 });
     }
 
     const { sanitized, errors } = sanitizeLeadForm({
@@ -235,6 +250,7 @@ export async function POST(request) {
         formType: payload.formType,
         createdAt: FieldValue.serverTimestamp(),
         leadType: config.label,
+        qualificationStatus: "unreviewed",
         sourcePage: leadDetails.sourcePage,
         context: leadDetails.context || null,
         acquisitionSource: analytics.acquisitionSource,
@@ -311,6 +327,7 @@ export async function POST(request) {
           milestones: { form_submit: true },
           milestoneDates: { form_submit: date },
           leadDocumentId: mailReference.id,
+          qualificationStatus: "unreviewed",
           createdAt: funnelSnapshot?.exists
             ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
             : FieldValue.serverTimestamp(),
@@ -361,6 +378,7 @@ export async function POST(request) {
     return NextResponse.json({
       ok: true,
       leadId: mailReference.id,
+      analyticsLeadId: leadHash,
       duplicate: duplicateSubmission,
     });
   } catch (error) {

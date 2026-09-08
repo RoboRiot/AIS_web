@@ -1,5 +1,6 @@
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
 import { getLeadEventName } from "@/app/data/leadAnalytics.mjs";
+import { redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
@@ -43,7 +44,9 @@ const sessionAttribution = () => {
     const stored = window.sessionStorage.getItem(ATTRIBUTION_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (parsed?.acquisition_source && parsed?.landing_path) return parsed;
+      if (parsed?.acquisition_source && parsed?.landing_path) {
+        return { ...parsed, landing_path: String(parsed.landing_path).split(/[?#]/)[0] };
+      }
     }
 
     const landingUrl = new URL(window.location.href);
@@ -73,7 +76,7 @@ const sessionAttribution = () => {
 
     const attribution = {
       acquisition_source: acquisitionSource,
-      landing_path: `${landingUrl.pathname}${landingUrl.search}`.slice(0, 300),
+      landing_path: landingUrl.pathname.slice(0, 300),
       referrer_host: referrerHost.slice(0, 120),
       utm_source: (landingUrl.searchParams.get("utm_source") || "").slice(0, 80),
       utm_medium: (landingUrl.searchParams.get("utm_medium") || "").slice(0, 80),
@@ -92,6 +95,7 @@ const sessionAttribution = () => {
 
 export const getLeadAnalyticsContext = (leadId = "") => {
   if (typeof window === "undefined") return {};
+  try {
   let lastPartSearch = {};
   try {
     lastPartSearch = JSON.parse(window.sessionStorage.getItem(LAST_PART_SEARCH_KEY) || "{}");
@@ -102,17 +106,21 @@ export const getLeadAnalyticsContext = (leadId = "") => {
     leadId: leadId || createLeadId(),
     visitorId: storedId(window.localStorage, VISITOR_KEY),
     sessionId: storedId(window.sessionStorage, SESSION_KEY),
-    sourcePage: `${window.location.pathname}${window.location.search}`.slice(0, 300),
+    sourcePage: window.location.pathname.slice(0, 300),
     referrer: document.referrer.slice(0, 300),
-    search_term: String(lastPartSearch.search_term || "").slice(0, 100),
+    search_term: redactAnalyticsText(lastPartSearch.search_term || "", 100),
     search_kind: String(lastPartSearch.search_kind || "").slice(0, 40),
     ...sessionAttribution(),
   };
+  } catch {
+    // Restricted browser storage must not prevent a customer from contacting us.
+    return { leadId: leadId || createLeadId() };
+  }
 };
 
 
 
-export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
+const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
   if (typeof window === "undefined") return;
   if (navigator.doNotTrack === "1") return;
   if (
@@ -131,6 +139,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
       .filter(([key]) => !CLICK_ID_KEYS.includes(key))
       .filter(([key]) => key !== "source")
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
+      .map(([key, value]) => [key, typeof value === "string" ? redactAnalyticsText(value, 300) : value])
       .slice(0, 20)
   );
   if (
@@ -152,7 +161,7 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
   }
   const payload = {
     eventType,
-    path: `${window.location.pathname}${window.location.search}`.slice(0, 300),
+    path: window.location.pathname.slice(0, 300),
     referrer: document.referrer.slice(0, 300),
     visitorId: storedId(window.localStorage, VISITOR_KEY),
     sessionId: storedId(window.sessionStorage, SESSION_KEY),
@@ -182,6 +191,14 @@ export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
         window.gtag("event", specificLeadEvent, gaProperties);
       }
     }
+  }
+};
+
+export const trackWebsiteEvent = (eventType, properties = {}, options = {}) => {
+  try {
+    recordWebsiteEvent(eventType, properties, options);
+  } catch {
+    // Analytics failure must never turn an accepted inquiry into a form error.
   }
 };
 

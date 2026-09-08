@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
+import { redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
 import {
@@ -38,10 +39,7 @@ const EVENT_TYPES = new Set([
 ]);
 const SEARCH_KINDS = new Set(["keyword", "part_number"]);
 
-const redact = (value) =>
-  cleanText(value, 140)
-    .replace(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g, "[redacted-email]")
-    .replace(/(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, "[redacted-phone]");
+const redact = redactAnalyticsText;
 
 const safeProperties = (value) => {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};

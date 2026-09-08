@@ -119,6 +119,10 @@ export function getGeneralCatalogSearchScore(product = {}, query = "") {
   if (!terms.length) return 0;
 
   const groups = getSearchGroups(product);
+  const completePartNumber = normalizePartNumber(query);
+  if (groups.partNumbers.includes(completePartNumber) || groups.itemIds.includes(completePartNumber)) {
+    return 400;
+  }
   let score = 0;
 
   for (const term of terms) {

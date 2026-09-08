@@ -89,3 +89,17 @@ export const getCatalogSearchLookupTerm = (query = "") => {
 
 export const getCatalogPartNumberLookupTerm = (query = "") =>
   normalizeCatalogPartNumber(query).slice(0, MAX_PREFIX_LENGTH);
+
+export const getCatalogLookupPlans = ({ name = "", partNumber = "" } = {}) => {
+  const plans = [];
+  const number = partNumber || (/\d/.test(name) ? name : "");
+  if (number) {
+    const value = getCatalogPartNumberLookupTerm(number);
+    if (value.length >= 2) plans.push({ field: "PNPrefixes", value });
+  }
+  if (name && !partNumber) {
+    const value = getCatalogSearchLookupTerm(name);
+    if (value.length >= 2) plans.push({ field: "SearchTerms", value });
+  }
+  return plans;
+};

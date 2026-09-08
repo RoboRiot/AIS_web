@@ -12,6 +12,7 @@ import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
 import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
+import { inferLeadFormType, requiresContactPhone } from '@/app/data/leadIntent.mjs';
 
 const FORM_COPY = {
   contact_form: {
@@ -51,23 +52,6 @@ const humanizeContext = (value) =>
   (value || "")
     .replace(/-/g, " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
-
-const inferFormType = (selectedType, requestMessage) => {
-  if (selectedType !== "contact_form") return selectedType;
-
-  const normalized = String(requestMessage || "").toLowerCase();
-  if (
-    /\b(trailer|mobile (?:mri|ct|pet|imaging)|temporary scanner|scanner rental|rental unit|trailer lease)\b/.test(normalized)
-  ) {
-    return "trailer_request";
-  }
-  if (
-    /\b(service|repair|downtime|scanner down|error code|preventive maintenance|remote support)\b/.test(normalized)
-  ) {
-    return "service_request";
-  }
-  return selectedType;
-};
 
 export default function Contact() {
 //   useEffect(() => {
@@ -115,6 +99,8 @@ export default function Contact() {
     const context = params.get("source") || "contact_page";
     setFormType(nextFormType);
     setFormContext(context);
+    setPartNumber((params.get("pn") || "").slice(0, FORM_LIMITS.partNumber));
+    setMessage((params.get("message") || "").slice(0, FORM_LIMITS.message));
     announceFormOpen(nextFormType, context, leadId);
   }, [leadId]);
 
@@ -131,7 +117,7 @@ export default function Contact() {
     e.preventDefault();
     if (isSubmitting) return;
 
-    const submissionFormType = inferFormType(formType, message);
+    const submissionFormType = inferLeadFormType(formType, message);
 
     const botSignals = evaluateBotSignals({
       honeypotValue: honeypot,
@@ -144,7 +130,7 @@ export default function Contact() {
       return;
     }
 
-    const specializedRequest = submissionFormType === "service_request" || submissionFormType === "trailer_request";
+    const specializedRequest = requiresContactPhone(formType);
     if (specializedRequest && phone.replace(/\D/g, "").length < 7) {
       setIsError(true);
       setFeedbackMessage("Please enter a valid phone number.");
@@ -209,7 +195,7 @@ export default function Contact() {
       setMessage("");
     } catch (error) {
       console.error("Error sending email: ", error);
-      recordError("lead_request", String(error?.status || "request_failed"));
+      recordError("lead_request", String(error?.code || error?.status || "request_failed"));
       setIsError(true);
       setFeedbackMessage(error?.message || "We could not send your request. Please try again.");
     }
@@ -293,10 +279,9 @@ export default function Contact() {
                 onChange={(e) => setEmail(e.target.value)}
                 required />
               </li>
-              {formType !== "contact_form" && (
                 <li className={styles.field}>
                   <label htmlFor="contact-phone">
-                    Phone{formType === "part_request" ? " (optional)" : ""}
+                    Phone{requiresContactPhone(formType) ? "" : " (optional)"}
                   </label>
                   <input
                     id="contact-phone"
@@ -306,10 +291,9 @@ export default function Contact() {
                     maxLength={30}
                     autoComplete="tel"
                     onChange={(e) => setPhone(e.target.value)}
-                    required={formType === "service_request" || formType === "trailer_request"}
+                    required={requiresContactPhone(formType)}
                   />
                 </li>
-              )}
               {formType === "part_request" && (
                 <li className={styles.field}>
                   <label htmlFor="contact-part-number">OEM part number</label>

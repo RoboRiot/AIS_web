@@ -100,7 +100,7 @@ export default function QuickInquiryForm({
       );
       setSubmitted(true);
     } catch (error) {
-      recordError("lead_request", String(error?.status || "request_failed"));
+      recordError("lead_request", String(error?.code || error?.status || "request_failed"));
       setFeedback(error?.message || "We could not send your request. Please try again.");
     } finally {
       setSubmitting(false);

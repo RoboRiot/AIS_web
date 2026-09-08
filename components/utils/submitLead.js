@@ -1,4 +1,6 @@
 import { shouldTrackLeadConversion } from "@/app/data/leadAnalytics.mjs";
+import { postLeadWithRetry } from "@/app/data/leadSubmission.mjs";
+import { executeRecaptcha } from "./recaptcha";
 import {
   createLeadId,
   getLeadAnalyticsContext,
@@ -19,12 +21,7 @@ export const submitLead = async ({
   leadId = "",
 }) => {
   const resolvedLeadId = leadId || createLeadId();
-  const response = await fetch("/api/lead", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  const data = await postLeadWithRetry({
       token,
       action,
       formType,
@@ -37,15 +34,9 @@ export const submitLead = async ({
       context,
       message,
       analytics: getLeadAnalyticsContext(resolvedLeadId),
-    }),
+    }, {
+      refreshToken: () => executeRecaptcha(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY, action),
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = new Error(data.error || "Submission failed. Please try again.");
-    error.status = response.status;
-    throw error;
-  }
 
   if (shouldTrackLeadConversion(data)) {
     trackWebsiteEvent(
@@ -54,7 +45,7 @@ export const submitLead = async ({
         form_type: formType,
         form_source: context,
         lead_category: formType.replace(/_request$|_form$/g, ""),
-        lead_id: resolvedLeadId,
+        lead_id: data.analyticsLeadId || resolvedLeadId,
       },
       { recordInternally: false }
     );

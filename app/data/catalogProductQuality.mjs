@@ -20,7 +20,7 @@ const valuesFrom = (value) => {
 };
 
 export const cleanCatalogProductName = (product = {}) => {
-  const name = cleanValue(product.Name).replace(/\?{2,}/g, " ");
+  const name = cleanValue(product.Name).replace(/\?{2,}|\{\s*\}|\[\s*\]/g, " ");
   const suffixMatch = name.match(/^-(\d+)\s+(.+)$/);
   if (!suffixMatch) return cleanValue(name);
 

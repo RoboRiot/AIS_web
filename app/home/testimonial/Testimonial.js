@@ -15,7 +15,7 @@ export default function Testimonial() {
         <>
             <div className={`part_wrapper testimonial_wrap ${styles.testimonial_wrap}`}>
                 <div className="container">
-                    <h2 className="main-title">What Our <span>Clients says</span></h2>
+                    <h2 className="main-title">What Our <span>Clients Say</span></h2>
                     <div className={styles.testimonial_slide}>
                     <Swiper
                         slidesPerView={2}

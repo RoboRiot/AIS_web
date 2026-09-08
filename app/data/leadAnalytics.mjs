@@ -1,3 +1,5 @@
+import { redactAnalyticsText } from "./analyticsPrivacy.mjs";
+
 const FORM_TYPES = new Set([
   "contact_form",
   "part_request",
@@ -76,7 +78,7 @@ export const normalizeLeadAnalytics = (value = {}) => {
     clickIdPresent: Boolean(
       analytics.click_id_present || Object.values(clickIds).some(Boolean)
     ),
-    searchTerm: clean(analytics.search_term, 100).toLowerCase(),
+    searchTerm: redactAnalyticsText(analytics.search_term, 100).toLowerCase(),
     searchKind: clean(analytics.search_kind, 40),
   };
 };

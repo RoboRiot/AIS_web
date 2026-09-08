@@ -9,10 +9,11 @@ import Link from 'next/link';
 import { fetchProducts } from "@/components/fetchProducts/fetchedProducts";
 import { getPrimaryImagePath, ImageComponent } from '@/components/fetchImages/Image';
 import { buildProductHref } from "@/app/data/seoProducts";
+import { isCtTubeProduct } from "@/app/data/catalogRelevance.mjs";
 
 
 
-export default function PartCard({ mainTitle, initialProducts = [], modality = "" }) {
+export default function PartCard({ mainTitle, initialProducts = [], modality = "", tubesOnly = false }) {
 
     const [products, setProducts] = useState(initialProducts);
     const hasInitialProducts = initialProducts.length > 0;
@@ -31,7 +32,7 @@ export default function PartCard({ mainTitle, initialProducts = [], modality = "
                     limit: 12,
                     signal: controller.signal,
                 });
-                if (active) setProducts(data);
+                if (active) setProducts(tubesOnly ? data.filter(isCtTubeProduct) : data);
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
@@ -42,7 +43,9 @@ export default function PartCard({ mainTitle, initialProducts = [], modality = "
             active = false;
             controller.abort();
         };
-    }, [hasInitialProducts, modality]);
+    }, [hasInitialProducts, modality, tubesOnly]);
+
+    if (!products.length) return null;
     
     return(
         <>
@@ -81,7 +84,7 @@ export default function PartCard({ mainTitle, initialProducts = [], modality = "
                                 return(
                                     <SwiperSlide key={id} className="flex items-center">
                                         <Link
-                                            href={buildProductHref({ id, Name }) || "/product-detail"}
+                                            href={buildProductHref(product) || "/parts"}
                                             onClick={() => {
                                                 try {
                                                     localStorage.setItem(

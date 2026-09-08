@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import Subheader from "@/components/subheader/Subheader";
@@ -20,13 +21,10 @@ import { fetchProductById, fetchProductBySlug } from "@/app/data/serverFirestore
 import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
-export const revalidate = 3600;
+// Cache product data, not redirect HTML: ISR can retain a 308 without Location.
+export const dynamic = "force-dynamic";
 
-export function generateStaticParams() {
-  return [];
-}
-
-const getProductBySlug = cache(async (slug) => {
+const getProductBySlug = cache(unstable_cache(async (slug) => {
   const { id, nameSlug } = parseProductSlug(slug);
   if (!nameSlug) return null;
 
@@ -37,7 +35,7 @@ const getProductBySlug = cache(async (slug) => {
 
   const product = await fetchProductBySlug(nameSlug);
   return product && isCampaignReadyProduct(product) ? product : null;
-});
+}, ["public-product-resolution-v1"], { revalidate: 900 }));
 
 export async function generateMetadata({ params }) {
   const product = await getProductBySlug(params.slug);
@@ -46,6 +44,9 @@ export async function generateMetadata({ params }) {
   }
 
   const canonicalSlug = buildProductSlug(product);
+  if (params.slug !== canonicalSlug) {
+    permanentRedirect(`/products/${canonicalSlug}`);
+  }
   const url = getProductUrl(canonicalSlug);
   const title = buildProductSeoTitle(product);
   const description = buildProductSeoDescription(product);

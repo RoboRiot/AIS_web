@@ -53,12 +53,13 @@ export default async function Home() {
       <BuySearch/>
       <Services/>
       <PartCard
-        mainTitle={["Most Requested ", <span key="1">Parts</span>]}
+        mainTitle={["Featured Imaging ", <span key="1">Parts</span>]}
         initialProducts={homepageProducts.mostRequested}
       />
       <GetInTouch/>
       <PartCard
-        mainTitle={["CT Tubes ", <span key="2">Available</span>]}
+        mainTitle={["CT ", <span key="2">Tubes</span>]}
+        tubesOnly
         initialProducts={homepageProducts.ctTubes}
         modality="CT"
       />

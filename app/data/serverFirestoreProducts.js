@@ -2,6 +2,8 @@ import { FieldPath } from "firebase-admin/firestore";
 import { unstable_cache } from "next/cache";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
 import { toPlainFirestoreData } from "@/app/data/plainFirestoreData.mjs";
+import legacyCatalog from "@/public/assets/data/parts.json";
+import { buildLegacyProductAliases, matchesLegacyProduct } from "@/app/data/legacyProductAliases.mjs";
 import {
   isCampaignReadyProduct,
   normalizePublicCatalogProduct,
@@ -38,6 +40,15 @@ export const fetchProductBySlug = async (slug) => {
     .limit(1)
     .get();
   return snapshot.empty ? null : productFromDocument(snapshot.docs[0]);
+};
+
+const legacyAliases = buildLegacyProductAliases(legacyCatalog);
+
+export const fetchProductByLegacySlug = async (slug) => {
+  const reference = legacyAliases.get(slug);
+  if (!reference) return null;
+  const product = await fetchProductById(reference.id);
+  return matchesLegacyProduct(reference, product) && isCampaignReadyProduct(product) ? product : null;
 };
 
 export const fetchAllProducts = async () => {

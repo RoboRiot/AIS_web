@@ -73,8 +73,8 @@ export default function Contact() {
   const [partNumber, setPartNumber] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
-  const [formStartedAt] = useState(() => Date.now());
-  const [leadId] = useState(createLeadId);
+  const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
+  const [leadId, setLeadId] = useState(createLeadId);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -101,8 +101,11 @@ export default function Contact() {
     setFormContext(context);
     setPartNumber((params.get("pn") || "").slice(0, FORM_LIMITS.partNumber));
     setMessage((params.get("message") || "").slice(0, FORM_LIMITS.message));
-    announceFormOpen(nextFormType, context, leadId);
-  }, [leadId]);
+  }, []);
+
+  useEffect(() => {
+    announceFormOpen(formType, formContext || "contact_page", leadId);
+  }, [formType, formContext, leadId]);
 
   const copy = FORM_COPY[formType] || FORM_COPY.contact_form;
   const recordError = (stage, reason = "") => {
@@ -193,6 +196,8 @@ export default function Contact() {
       setPhone("");
       setPartNumber("");
       setMessage("");
+      setLeadId(createLeadId());
+      setFormStartedAt(Date.now());
     } catch (error) {
       console.error("Error sending email: ", error);
       recordError("lead_request", String(error?.code || error?.status || "request_failed"));

@@ -11,6 +11,9 @@ import {
   isTrustedOrigin,
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
+import { formTimingFailure } from "@/app/data/formTiming.mjs";
+import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
+import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -87,14 +90,18 @@ const verifyRecaptcha = async ({ token, expectedAction }) => {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: params,
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
+  if (!response.ok) throw new Error("reCAPTCHA verification service unavailable.");
   const result = await response.json();
   const minimumScore = Number(process.env.RECAPTCHA_MIN_SCORE || 0.5);
-  return Boolean(
-    result.success &&
-      result.action === expectedAction &&
-      Number(result.score) >= minimumScore
-  );
+  return assessRecaptcha(result, {
+    expectedAction, minimumScore,
+    allowedHosts: [PRODUCTION_HOSTNAME, ...PRODUCTION_HOST_ALIASES,
+      ...(process.env.RECAPTCHA_ALLOWED_HOSTS || "").split(",").map((host) => host.trim().toLowerCase()).filter(Boolean),
+      ...(process.env.NODE_ENV === "development" ? ["localhost", "127.0.0.1"] : []),
+    ],
+  });
 };
 
 const hasBytes = (buffer, offset, bytes) =>
@@ -229,23 +236,25 @@ export async function POST(request) {
     const analytics = normalizeLeadAnalytics(rawAnalytics);
     const leadId = analytics.leadId || crypto.randomUUID();
     const leadHash = hashIdentifier(leadId, "website-lead");
-    const startedAt = Number(formData.get("startedAt") || 0);
-    const elapsed = Date.now() - startedAt;
     if (
       cleanText(formData.get("website"), 200) ||
-      !startedAt ||
-      elapsed < 2_500 ||
-      elapsed > 86_400_000 ||
       formData.get("action") !== "service_request"
     ) {
       return fail("Submission blocked.", 403);
+    }
+    const timingReason = formTimingFailure({ startedAt: formData.get("startedAt"), formSession: formData.get("formSession"),
+      formType: "service_request", leadId, secret: process.env.RECAPTCHA_SECRET_KEY });
+    if (timingReason) {
+      console.warn("Service request timing rejected", { reason: timingReason });
+      return NextResponse.json({ error: "Please refresh this form and try again.", code: "form_timing", timingReason, retryable: true }, { status: 403 });
     }
 
     const recaptchaOk = await verifyRecaptcha({
       token: cleanText(formData.get("token"), 10_000),
       expectedAction: "service_request",
     });
-    if (!recaptchaOk) return fail("reCAPTCHA verification failed.", 403);
+    if (!recaptchaOk.ok) return NextResponse.json({ error: "reCAPTCHA verification failed.",
+      code: recaptchaOk.code, retryable: recaptchaOk.retryable }, { status: 403 });
 
     const payload = sanitizePayload(formData);
     const invalid = validationError(payload);
@@ -272,6 +281,7 @@ export async function POST(request) {
         {
           ok: true,
           duplicate: true,
+          analyticsLeadId: leadHash,
           requestId: requestReference.id,
           requestNumber: existingRequest.get("requestNumber"),
         },
@@ -477,7 +487,7 @@ export async function POST(request) {
     }
 
     return NextResponse.json(
-      { ok: true, requestId: requestReference.id, requestNumber },
+      { ok: true, requestId: requestReference.id, requestNumber, analyticsLeadId: leadHash },
       { status: 201 }
     );
   } catch (error) {

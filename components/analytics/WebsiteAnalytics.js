@@ -40,7 +40,7 @@ export default function WebsiteAnalytics() {
   }, [pathname]);
 
   useEffect(() => {
-    const startedForms = new WeakSet();
+    const startedForms = new WeakMap();
 
     const onClick = (event) => {
       const element = event.target.closest?.("a, button, [data-analytics]");
@@ -63,9 +63,10 @@ export default function WebsiteAnalytics() {
     const onFocus = (event) => {
       const form = event.target.closest?.("form");
       const formType = form?.dataset.formType;
-      if (!formType || startedForms.has(form)) return;
-      startedForms.add(form);
+      if (!formType) return;
       const leadId = form.dataset.leadId || createLeadId();
+      if (startedForms.get(form) === leadId) return;
+      startedForms.set(form, leadId);
       form.dataset.leadId = leadId;
       trackWebsiteEvent("form_start", {
         form_type: formType,

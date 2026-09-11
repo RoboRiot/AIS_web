@@ -10,6 +10,7 @@ import {
   trackWebsiteEvent,
 } from "@/components/utils/analytics";
 import { shouldTrackLeadConversion } from "@/app/data/leadAnalytics.mjs";
+import { postLeadWithRetry } from "@/app/data/leadSubmission.mjs";
 import { COUNTRIES } from "./countries";
 import styles from "./serviceRequest.module.scss";
 
@@ -215,14 +216,10 @@ export default function ServiceRequestForm() {
       payload.append("analytics", JSON.stringify(getLeadAnalyticsContext(leadId)));
       files.forEach((file) => payload.append("files", file, file.name));
 
-      const response = await fetch("/api/service-requests", {
-        method: "POST",
-        body: payload,
+      const result = await postLeadWithRetry(payload, {
+        endpoint: "/api/service-requests", formType: "service_request", leadId,
+        refreshToken: () => executeRecaptcha(recaptchaSiteKey, "service_request"),
       });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(result.error || "We could not submit your request.");
-      }
 
       if (shouldTrackLeadConversion(result)) {
         trackWebsiteEvent(
@@ -231,7 +228,7 @@ export default function ServiceRequestForm() {
             form_type: "service_request",
             form_source: "service_request_page",
             lead_category: "service",
-            lead_id: leadId,
+            lead_id: result.analyticsLeadId || leadId,
           },
           { recordInternally: false }
         );
@@ -250,6 +247,7 @@ export default function ServiceRequestForm() {
       trackWebsiteEvent("form_error", {
         form_type: "service_request",
         error_stage: "request_submission",
+        error_reason: error?.code || "request_failed",
       });
       setFeedback({
         type: "error",

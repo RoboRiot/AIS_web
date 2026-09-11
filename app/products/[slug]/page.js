@@ -17,7 +17,7 @@ import {
   parseProductSpecs,
 } from "@/app/data/seoProducts";
 import SeoProductClient from "./SeoProductClient";
-import { fetchProductById, fetchProductBySlug } from "@/app/data/serverFirestoreProducts";
+import { fetchProductById, fetchProductBySlug, fetchProductByLegacySlug } from "@/app/data/serverFirestoreProducts";
 import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 
@@ -33,9 +33,9 @@ const getProductBySlug = cache(unstable_cache(async (slug) => {
     if (product && isCampaignReadyProduct(product)) return product;
   }
 
-  const product = await fetchProductBySlug(nameSlug);
+  const product = await fetchProductBySlug(nameSlug) || await fetchProductByLegacySlug(nameSlug);
   return product && isCampaignReadyProduct(product) ? product : null;
-}, ["public-product-resolution-v1"], { revalidate: 900 }));
+}, ["public-product-resolution-v2"], { revalidate: 900 }));
 
 export async function generateMetadata({ params }) {
   const product = await getProductBySlug(params.slug);

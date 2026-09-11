@@ -18,6 +18,7 @@ import {
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
+import { formTimingFailure } from "@/app/data/formTiming.mjs";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -146,13 +147,14 @@ export async function POST(request) {
     const analytics = normalizeLeadAnalytics(payload.analytics);
     const leadId = analytics.leadId || crypto.randomUUID();
     const leadHash = hashIdentifier(leadId, "website-lead");
-    const startedAt = Number(payload.startedAt || 0);
-    const elapsed = Date.now() - startedAt;
     if (cleanText(payload.website, 200)) {
       return NextResponse.json({ error: "Submission blocked. Please call (559) 537-6851 for help.", code: "honeypot" }, { status: 403 });
     }
-    if (!Number.isFinite(startedAt) || !startedAt || elapsed < 2_500 || elapsed > 86_400_000) {
-      return NextResponse.json({ error: "Please refresh this form and try again, or call (559) 537-6851.", code: "form_timing" }, { status: 403 });
+    const timingReason = formTimingFailure({ startedAt: payload.startedAt, formSession: payload.formSession,
+      formType: payload.formType, leadId, secret: process.env.RECAPTCHA_SECRET_KEY });
+    if (timingReason) {
+      console.warn("Lead timing rejected", { reason: timingReason, formType: payload.formType });
+      return NextResponse.json({ error: "Please refresh this form and try again, or call (559) 537-6851.", code: "form_timing", timingReason, retryable: true }, { status: 403 });
     }
 
     const db = getAdminDb();

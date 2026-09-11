@@ -89,4 +89,4 @@ export const getFormMilestone = (eventType) =>
     : "";
 
 export const shouldTrackLeadConversion = (result) =>
-  Boolean(result?.ok) && result?.duplicate !== true;
+  Boolean(result?.ok);

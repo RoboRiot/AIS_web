@@ -5,6 +5,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
 import { analyticsPageUrl } from "@/app/data/analyticsPrivacy.mjs";
+import { ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-L0236JT5N3";
 
@@ -39,22 +40,7 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     if (!enabled) return;
 
-    window.dataLayer = window.dataLayer || [];
-    window.gtag =
-      window.gtag ||
-      function gtag() {
-        window.dataLayer.push(arguments);
-      };
-
-    if (window.__aisGaMeasurementId !== measurementId) {
-      window.gtag("js", new Date());
-      window.gtag("config", measurementId, {
-        anonymize_ip: true,
-        send_page_view: false,
-        page_location: analyticsPageUrl(window.location.href),
-      });
-      window.__aisGaMeasurementId = measurementId;
-    }
+    ensureGoogleAnalytics(window, measurementId);
     setReady(true);
   }, [enabled]);
 

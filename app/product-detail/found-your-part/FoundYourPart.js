@@ -13,8 +13,8 @@ export default function FoundYourPart() {
     const [partNumber, setPartNumber] = useState("");
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
-    const [formStartedAt] = useState(() => Date.now());
-    const [leadId] = useState(createLeadId);
+    const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
+    const [leadId, setLeadId] = useState(createLeadId);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -86,6 +86,8 @@ export default function FoundYourPart() {
             setName("");
             setEmail("");
             setMessage("");
+            setLeadId(createLeadId());
+            setFormStartedAt(Date.now());
             setPartNumber("");
         } catch (error) {
             console.error("Error sending email: ", error);

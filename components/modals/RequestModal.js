@@ -11,8 +11,8 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
     const [partNumber, setPartNumber] = useState("");
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
-    const [formStartedAt] = useState(() => Date.now());
-    const [leadId] = useState(createLeadId);
+    const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
+    const [leadId, setLeadId] = useState(createLeadId);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,6 +96,8 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
             setName("");
             setEmail("");
             setMessage("");
+            setLeadId(createLeadId());
+            setFormStartedAt(Date.now());
         } catch (error) {
             console.error("Error sending email: ", error);
             setIsError(true);

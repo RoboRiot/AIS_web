@@ -49,10 +49,10 @@ test("maps accepted form types to distinct GA lead events", () => {
   assert.equal(getLeadEventName("unknown"), "");
 });
 
-test("tracks only newly accepted leads as conversions", () => {
+test("accepts confirmed retry responses for lead-level deduplication", () => {
   assert.equal(shouldTrackLeadConversion({ ok: true }), true);
   assert.equal(shouldTrackLeadConversion({ ok: true, duplicate: false }), true);
-  assert.equal(shouldTrackLeadConversion({ ok: true, duplicate: true }), false);
+  assert.equal(shouldTrackLeadConversion({ ok: true, duplicate: true }), true);
   assert.equal(shouldTrackLeadConversion({ ok: false }), false);
   assert.equal(shouldTrackLeadConversion(null), false);
 });

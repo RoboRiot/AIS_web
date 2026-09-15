@@ -271,23 +271,64 @@
         }
     }
 }
+.catalog_layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 60px;
+    align-items: start;
+
+    & > .content_wrapper {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        padding-left: 0;
+    }
+
+    // The global container clearfix must not become an extra grid item.
+    &::after {
+        display: none;
+    }
+
+    @media (max-width: $breakpoint_tablet) {
+        column-gap: 20px;
+    }
+
+    @media (max-width: $breakpoint_mobile_landscape) {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+        gap: 24px;
+
+        & > .content_wrapper {
+            grid-column: auto;
+            grid-row: auto;
+        }
+    }
+}
+
+.catalog_support {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+    width: 100%;
+
+    @media (max-width: $breakpoint_mobile_landscape) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
 .search_sidebar {
     display: flex;
     flex-direction: column;
     width: 300px;
+    min-width: 0;
     flex: 0 0 300px;
-    // overflow: hidden;
     align-items: flex-start;
     z-index: 9;
-    @media (max-width: $breakpoint_mobile_portrait) {
-        position: absolute;
-        left: 0;
-        top: 0;
+    @media (max-width: $breakpoint_mobile_landscape) {
         display: none;
         width: 100%;
-        flex: 0 0 100%;
-        background-color: rgba(255,255,255,0.8);
-        padding: 10px;
+        flex: 0 0 auto;
         &.active { display: block;}
     }
     .filter_wrap {
@@ -330,6 +371,7 @@
     } 
     select {
         height: 50px;
+        min-width: 0;
         width: 100%;
         background-color: #FFFFFF;
         padding-left: 15px;
@@ -355,7 +397,14 @@
                 position: relative;
                 margin-bottom: 10px;
                 &:last-child { margin-bottom: 0;}
-                input { font-size: 13px;}
+                input {
+                    font-size: 13px;
+
+                    @media (max-width: $breakpoint_tablet) {
+                        font-size: 16px;
+                        padding-left: 16px;
+                    }
+                }
             }
         }
     }
@@ -440,6 +489,8 @@
 }
 .content_wrapper {
     width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
     padding-left: 60px;
     @media (max-width: $breakpoint_tablet) {
         padding-left: 20px;
@@ -462,7 +513,7 @@
                 margin-bottom: 30px;
                 padding: 0 7px;
             }
-            @media (max-width: $breakpoint_mobile_portrait) {
+            @media (max-width: $breakpoint_mobile_landscape) {
                 width: 100%;
             }
             &.no_product {
@@ -607,7 +658,7 @@
                 transition: all 0.4s ease-in-out;
             }
         }
-        @media (max-width: $breakpoint_mobile_portrait) {
+        @media (max-width: $breakpoint_mobile_landscape) {
             display: block;
         }
     }
@@ -623,6 +674,7 @@
         -moz-appearance: none;
         background: url('../../public/assets/images/arrow_down.svg') no-repeat calc(100% - 20px) center;
         @media (max-width: $breakpoint_tablet) {
+            font-size: 16px;
             height: 50px;
         }
     }
@@ -726,6 +778,9 @@
     pointer-events: none;
 }
 .recent_products {
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
     padding: 30px 0 20px;
     h2 {
         font-weight: bold;
@@ -738,6 +793,10 @@
                 display: flex;
                 align-items: center;
                 gap: 20px;
+                & > div {
+                    flex: 0 0 80px;
+                    width: 80px;
+                }
                 &:hover {
                     h6 {
                         color: #F7A765;
@@ -745,11 +804,12 @@
                 }
                 img {
                     width: 80px;
-                    height: auto;
+                    height: 80px;
                     object-fit: contain;
 
                 }
                 h6 {
+                    min-width: 0;
                     transition: all 0.4s ease-in-out;
                     font-size: 16px;
                     margin-bottom: 0;

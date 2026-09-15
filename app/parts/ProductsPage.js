@@ -403,12 +403,14 @@ export default function ProductsPage({
                         <button
                             type="button"
                             aria-label="Toggle filters"
+                            aria-expanded={showMenu}
+                            aria-controls="parts-search-filters"
                             onClick={() => setShowMenu((current) => !current)}
                             className={`${styles.menu_btn} ${showMenu ? styles.active : ''}`}
                         >
                             <span></span>
                         </button>
-                        <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                        <select aria-label="Sort parts" value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
                             <option
                                 value="relevant"
                                 disabled={!debouncedSearch && !debouncedSku && Boolean(selectedBrand || selectedType || selectedModel)}
@@ -421,8 +423,8 @@ export default function ProductsPage({
                     </section>
                 </div>
             </div>
-            <div className='flex items-start container'>
-                <div className={`${styles.search_sidebar} ${showMenu ? styles.active : ''}`}>
+            <div className={`container ${styles.catalog_layout}`}>
+                <div id="parts-search-filters" className={`${styles.search_sidebar} ${showMenu ? styles.active : ''}`}>
                     <div className={styles.search_product}>
                         <form onSubmit={(event) => event.preventDefault()}>
                             <ul className='list-none'>
@@ -430,6 +432,7 @@ export default function ProductsPage({
                                     <Image src={searchIcon} alt="" />
                                     <input
                                         type="search"
+                                        aria-label="Search by name or keyword"
                                         placeholder='SEARCH BY NAME OR KEYWORD'
                                         value={searchQuery}
                                         maxLength={120}
@@ -440,6 +443,7 @@ export default function ProductsPage({
                                     <Image src={searchIcon} alt="" />
                                     <input
                                         type="search"
+                                        aria-label="Search by part number"
                                         placeholder='SEARCH BY PART NUMBER'
                                         value={skuQuery}
                                         maxLength={120}
@@ -471,6 +475,7 @@ export default function ProductsPage({
                             </>
                         )}
                         <select
+                            aria-label="Model"
                             disabled={!selectedType}
                             value={selectedModel}
                             onChange={handleModelChange}
@@ -482,8 +487,6 @@ export default function ProductsPage({
                         </select>
                         <button className="simple-btn white-btn" type="button" onClick={handleClear}>Clear</button>
                     </div>
-                    <RecentProducts />
-                    <SidebarFoundYourPart />
                 </div>
                 <div className={styles.content_wrapper}>
                     <ul className='list-none flex flex-wrap'>
@@ -548,6 +551,10 @@ export default function ProductsPage({
                             </button>
                         </div>
                     )}
+                </div>
+                <div className={styles.catalog_support}>
+                    <RecentProducts />
+                    <SidebarFoundYourPart />
                 </div>
             </div>
         </div>

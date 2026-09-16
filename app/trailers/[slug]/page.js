@@ -198,13 +198,16 @@ export default function TrailerLandingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <section className={`${styles.section} ${styles.landingHero}`}>
+      <section className={`${styles.section} ${styles.landingHero} ${styles.trailerHero}`}>
         <div className="container">
           <div className={styles.introGrid}>
             <article className={styles.heroCopy}>
-              <span className={styles.kicker}>Mobile imaging rental and lease planning</span>
+              <span className={styles.kicker}>For hospitals and imaging centers</span>
               <h1 className={styles.title}>{page.h1}</h1>
-              <p className={styles.lead}>{page.intro}</p>
+              <p className={styles.lead}>
+                Mobile {modalityLabel} capacity for scanner downtime, renovations, and added clinical volume.
+                Rental and lease planning with nationwide technical support.
+              </p>
               <div className={styles.ctaRow}>
                 <a
                   href="#request"
@@ -227,35 +230,46 @@ export default function TrailerLandingPage({ params }) {
                 <li>OEM-specific fleet options</li>
                 <li>Technical service support</li>
               </ul>
-              <div className={styles.heroSystems}>
-                <h3>Systems We Cover</h3>
-                <ul className="list-none">
-                  {page.systems.map((system) => (
-                    <li key={system}>{system}</li>
-                  ))}
-                </ul>
-              </div>
-              <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
-                {modelCoverage.length > 0 && <a href="#mri-models">{brandLabel} MRI Models</a>}
-                <a href="#pricing">Pricing</a>
-                <a href="#rental-use-cases">Use Cases</a>
-                <a href="#rental-workflow">Rental Workflow</a>
-                <a href="#related">Related Pages</a>
-              </nav>
+              <p className={styles.rentalTerms}>
+                Equipment rentals for facilities, not patient scan appointments.
+                {fleetPricing.length > 0 && <> <a href="#pricing">View one-year lease pricing</a>.</>}
+              </p>
             </article>
             <TrailerImageCarousel title={page.h1} galleryKey={page.slug} slides={trailerImages} />
           </div>
         </div>
       </section>
       <QuickInquiryForm
+        compact
         formType="trailer_request"
         source={page.slug}
         title={`Check ${page.shortTitle} Availability`}
-        intro="Share the location, target dates, modality, and preferred system. Our team will review fleet timing and the most practical coverage path."
+        intro="Tell us your facility, location, and dates. An imaging specialist will confirm fleet availability, configuration, and pricing."
         detailsLabel="Project details"
         detailsPlaceholder="Facility and state, target dates, expected term, preferred system, and clinical volume"
         submitLabel="Check Availability"
       />
+      <div className={`${styles.trailerMobileGallery} container`}>
+        <TrailerImageCarousel title={page.h1} slides={trailerImages} priority={false} />
+      </div>
+      <section className={styles.trailerOverview}>
+        <div className="container">
+          <p className={styles.sectionCopy}>{page.intro}</p>
+          <div className={styles.heroSystems}>
+            <h2>Systems We Cover</h2>
+            <ul className="list-none">
+              {page.systems.map((system) => <li key={system}>{system}</li>)}
+            </ul>
+          </div>
+          <nav className={styles.quickNav} aria-label={`${page.h1} page sections`}>
+            {modelCoverage.length > 0 && <a href="#mri-models">{brandLabel} MRI Models</a>}
+            <a href="#pricing">Pricing</a>
+            <a href="#rental-use-cases">Use Cases</a>
+            <a href="#rental-workflow">Rental Workflow</a>
+            <a href="#related">Related Pages</a>
+          </nav>
+        </div>
+      </section>
       {modelCoverage.length > 0 && (
         <section id="mri-models" className={styles.modelCoverageSection}>
           <div className="container">

@@ -1,3 +1,5 @@
+import { getVerifiedLegacyMetadata } from "./legacyCatalogMetadata.mjs";
+
 const cleanValue = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
 const legacyPhonePattern = /(?:\+?1[-.\s]?)?\(?800\)?[-.\s]*200[-.\s]*3583/gi;
 
@@ -17,6 +19,20 @@ const valuesFrom = (value) => {
   if (Array.isArray(value)) return value.flatMap(valuesFrom);
   if (value == null || typeof value === "object") return [];
   return [cleanValue(value)].filter(Boolean);
+};
+
+export const getCatalogIdentifiers = (product = {}) => {
+  const specs = {};
+  const verified = getVerifiedLegacyMetadata(product);
+  for (const line of String(product.Description || "").split(/\r?\n/)) {
+    const match = line.match(/^\s*(Part Number|System Manufacturer|Category)\s*:\s*(.+)$/i);
+    if (match) specs[match[1].toLowerCase()] = cleanValue(match[2].replace(/\?/g, " "));
+  }
+  return {
+    PN: verified.PN || cleanValue(product.PN) || specs["part number"] || "",
+    OEM: cleanValue(product.OEM) || specs["system manufacturer"] || verified.OEM || "",
+    Modality: cleanValue(product.Modality) || specs.category || verified.Modality || "",
+  };
 };
 
 export const cleanCatalogProductName = (product = {}) => {
@@ -58,6 +74,7 @@ export const hasCatalogImage = (product = {}) =>
 
 export const getCampaignReadinessIssues = (product = {}) => {
   const issues = [];
+  const identifiers = getCatalogIdentifiers(product);
   const name = cleanCatalogProductName(product);
   const normalizedName = name.toLowerCase();
   const visibility = cleanValue(
@@ -77,9 +94,9 @@ export const getCampaignReadinessIssues = (product = {}) => {
   if (name.length < 3 || placeholderNames.has(normalizedName)) {
     issues.push("invalid-name");
   }
-  if (!cleanValue(product.PN)) issues.push("missing-part-number");
-  if (!cleanValue(product.OEM)) issues.push("missing-oem");
-  if (!cleanValue(product.Modality)) issues.push("missing-modality");
+  if (!identifiers.PN) issues.push("missing-part-number");
+  if (!identifiers.OEM) issues.push("missing-oem");
+  if (!identifiers.Modality) issues.push("missing-modality");
   if (!hasCatalogImage(product)) issues.push("missing-image");
 
   return issues;
@@ -90,10 +107,8 @@ export const isCampaignReadyProduct = (product = {}) =>
 
 export const normalizePublicCatalogProduct = (product = {}) => ({
   ...product,
+  ...getCatalogIdentifiers(product),
   Name: cleanCatalogProductName(product),
   Description: cleanCatalogDescription(product.Description),
-  PN: cleanValue(product.PN),
-  OEM: cleanValue(product.OEM),
-  Modality: cleanValue(product.Modality),
   Machine: cleanValue(product.Machine),
 });

@@ -1,6 +1,6 @@
 import { PRODUCTION_SITE_URL } from "../../site.config.mjs";
-import { buildProductIdSuffix, parseProductIdSuffix } from "@/app/data/productIdSlug.mjs";
-import { cleanCatalogProductName } from "@/app/data/catalogProductQuality.mjs";
+import { buildProductIdSuffix, parseProductIdSuffix } from "./productIdSlug.mjs";
+import { cleanCatalogProductName } from "./catalogProductQuality.mjs";
 
 export const BASE_URL = PRODUCTION_SITE_URL;
 
@@ -96,26 +96,16 @@ export const getProductUrl = (slug) =>
 
 export const parseProductSpecs = (product) => {
   const specs = {};
-  const description = product?.Description || "";
-
-  description
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .forEach((line) => {
-      const [rawKey, ...rawValue] = line.split(":");
-      if (!rawKey || rawValue.length === 0) return;
-      const key = cleanText(rawKey).toLowerCase();
-      const value = cleanText(rawValue.join(":"));
-      if (!value) return;
-
-      if (key.includes("part number")) specs.partNumber = value;
-      if (key.includes("serial number")) specs.serialNumber = value;
-      if (key.includes("system model")) specs.systemModel = value;
-      if (key.includes("system manufacturer")) specs.manufacturer = value;
-      if (key.includes("category")) specs.category = value;
-    });
-
+  const fields = { "part number": "partNumber", "serial number": "serialNumber",
+    "system model": "systemModel", "system manufacturer": "manufacturer", category: "category" };
+  // Catalog normalization may flatten newlines; a following label still ends the value.
+  const labels = [...Object.keys(fields), "call for pricing", "description"].join("|");
+  const pattern = new RegExp(`\\b(${labels})\\s*:\\s*([^\\r\\n]*?)(?=\\r?\\n|\\b(?:${labels})\\s*:|$)`, "gi");
+  for (const match of String(product?.Description || "").matchAll(pattern)) {
+    const field = fields[match[1].toLowerCase()];
+    const value = cleanText(match[2]);
+    if (field && value) specs[field] = value;
+  }
   return specs;
 };
 

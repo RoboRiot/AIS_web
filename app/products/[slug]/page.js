@@ -20,6 +20,8 @@ import SeoProductClient from "./SeoProductClient";
 import { fetchProductById, fetchProductBySlug, fetchProductByLegacySlug } from "@/app/data/serverFirestoreProducts";
 import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
+import { legacyProductGroups, matchesLegacyGroupMember } from "@/app/data/legacyProductGroups.mjs";
+import LegacyProductGroup from "./LegacyProductGroup";
 
 // Cache product data, not redirect HTML: ISR can retain a 308 without Location.
 export const dynamic = "force-dynamic";
@@ -35,9 +37,30 @@ const getProductBySlug = cache(unstable_cache(async (slug) => {
 
   const product = await fetchProductBySlug(nameSlug) || await fetchProductByLegacySlug(nameSlug);
   return product && isCampaignReadyProduct(product) ? product : null;
-}, ["public-product-resolution-v2"], { revalidate: 900 }));
+}, ["public-product-resolution-v4"], { revalidate: 900 }));
+
+const getLegacyGroup = cache(async (slug) => {
+  if (!Object.hasOwn(legacyProductGroups, slug)) return null;
+  const group = legacyProductGroups[slug];
+  if (!group) return null;
+  const products = await Promise.all(group.members.map(async (member) => {
+    const product = await fetchProductById(member.id);
+    return product && isCampaignReadyProduct(product) &&
+      matchesLegacyGroupMember(member, product, getProductPartNumbers(product))
+      ? { product, partNumber: member.partNumber } : null;
+  }));
+  const visibleProducts = products.filter(Boolean);
+  return visibleProducts.length ? { group, products: visibleProducts } : null;
+});
 
 export async function generateMetadata({ params }) {
+  const legacyGroup = await getLegacyGroup(params.slug);
+  if (legacyGroup) return {
+    title: `${legacyGroup.group.title} | Advanced Imaging Services`,
+    description: legacyGroup.group.description,
+    alternates: { canonical: getProductUrl(params.slug) },
+    robots: { index: false, follow: true },
+  };
   const product = await getProductBySlug(params.slug);
   if (!product) {
     return {};
@@ -80,6 +103,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductSeoPage({ params }) {
+  const legacyGroup = await getLegacyGroup(params.slug);
+  if (legacyGroup) return <LegacyProductGroup {...legacyGroup} />;
   const product = await getProductBySlug(params.slug);
   if (!product) {
     notFound();

@@ -29,6 +29,21 @@ const legacyPaths = [
   "/products/2-hd-nv-array",
   "/products/terminal-servrer-pwr-supply",
   "/products/lightspeed-performix-40-plus-ct-tube-liquid-bearing",
+  "/products/4-slice-pci-dip",
+  "/products/16-slice-dip",
+  "/products/transmitter",
+  "/products/aquilion-one-cxb750e-ct-tube",
+  "/products/vct-signal-interface-board-5128204",
+  "/products/4-jedi-h4-mp-hv-tank",
+  "/products/gtts-positioning-gt",
+  "/products/3-converter-board",
+  "/products/3-center-digital-module-kit",
+  "/products/3-5-connectors",
+  "/products/left-control",
+  "/products/signal-brushblock-replacemen-heli-2302509",
+  "/products/2382217-sagital-laser-assembly",
+  "/products/bsx73-e-adc2-board",
+  "/products/toshiba-cxb-400c-ct-tube",
 ];
 for (const oldPath of legacyPaths) {
   for (let pass = 0; pass < 2; pass++) {
@@ -40,6 +55,26 @@ for (const oldPath of legacyPaths) {
     assert.equal(canonical.status, 200, destination.pathname);
     console.log(`Legacy redirect ${pass ? "warm" : "cold"}: 308 -> 200 ${oldPath}`);
   }
+}
+for (const slug of ["opconta-px79", "mrc-rot-gs"]) {
+  const response = await fetch(`${base}/products/${slug}`, { redirect: "manual" });
+  assert.equal(response.status, 200, slug);
+  const html = await response.text();
+  assert.match(html, /noindex/);
+  assert.match(html, /--id-/);
+  assert.match(html, /Need help matching your part/);
+  assert.doesNotMatch(html, /"@type":"Product"/);
+  console.log(`Legacy product selection: 200, noindex, exact product links /products/${slug}`);
+}
+for (const slug of ["mx200", "2241515-3-high-voltage-tank", "46-186852-p2-relay-k2-back-up-connection"]) {
+  const legacy = await fetch(`${base}/product/${slug}`, { redirect: "manual" });
+  assert.equal(legacy.status, 308);
+  assert.equal(new URL(legacy.headers.get("location"), base).pathname, `/products/${slug}`);
+  const product = await fetch(`${base}/products/${slug}`, { redirect: "manual" });
+  assert.equal(product.status, 308);
+  const canonical = await fetch(new URL(product.headers.get("location"), base));
+  assert.equal(canonical.status, 200);
+  console.log(`WordPress redirect: 308 -> 308 -> 200 /product/${slug}`);
 }
 
 const browser = await chromium.launch({ headless: true, channel: "chrome" });

@@ -118,6 +118,9 @@ export default function createNextConfig(phase) {
         }
       : {}),
     poweredByHeader: false,
+    async redirects() {
+      return [{ source: "/product/:slug", destination: "/products/:slug", permanent: true }];
+    },
     images: {
       remotePatterns: [
         {

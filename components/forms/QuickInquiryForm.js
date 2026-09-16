@@ -16,6 +16,7 @@ export default function QuickInquiryForm({
   detailsLabel,
   detailsPlaceholder,
   submitLabel,
+  compact = false,
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -108,17 +109,17 @@ export default function QuickInquiryForm({
   };
 
   return (
-    <section id="request" className={styles.quickInquirySection}>
+    <section id="request" className={`${styles.quickInquirySection} ${compact ? styles.quickInquiryCompact : ""}`} aria-label={title}>
       <div className="container">
         <div className={styles.quickInquiryLayout}>
           <div className={styles.quickInquiryIntro}>
-            <span>Direct response from our imaging team</span>
+            <span>{compact ? "Facility rental inquiries" : "Direct response from our imaging team"}</span>
             <h2>{title}</h2>
             <p>{intro}</p>
             <a href="tel:+15595376851">Call (559) 537-6851</a>
-            <ul className="list-none">
+            {!compact && <ul className="list-none">
               {nextSteps.map((step) => <li key={step}>{step}</li>)}
-            </ul>
+            </ul>}
           </div>
           {submitted ? (
             <div className={styles.quickInquirySuccess} role="status">
@@ -192,7 +193,7 @@ export default function QuickInquiryForm({
                   value={details}
                   onChange={(event) => setDetails(event.target.value)}
                   maxLength={1600}
-                  rows={4}
+                  rows={compact ? 3 : 4}
                   placeholder={detailsPlaceholder}
                   required
                 />

@@ -1286,10 +1286,87 @@
 }
 
 .quickInquirySection {
+  scroll-margin-top: 150px;
   background: #eef2f7;
   border-bottom: 1px solid #dfe4ec;
   border-top: 1px solid #dfe4ec;
   padding: 72px 0;
+}
+
+.trailerHero {
+  padding-top: 28px;
+  padding-bottom: 30px;
+  .heroCopy, .figure { animation: none; }
+
+  .introGrid { gap: 36px; align-items: start; }
+  .title { font-size: 40px; margin-bottom: 14px; }
+  .lead { font-size: 17px; line-height: 1.5; margin-bottom: 20px; }
+  .ctaRow { margin-bottom: 24px; gap: 16px; }
+  .heroProofList { margin-bottom: 12px; gap: 8px 18px; }
+  .carouselFigure::before { display: none; }
+  .carouselFrame { min-height: 0; aspect-ratio: 16 / 9; border-radius: 6px; box-shadow: none; }
+  .carouselFrame img { object-fit: contain; border-radius: 0; box-shadow: none; transform: none; }
+  .carouselDots { margin-top: 12px; gap: 6px; flex-wrap: wrap; }
+  .carouselDots button { background: #c6d0dc; border-color: #8796a7; width: 18px; height: 18px; }
+  .carouselDots .carouselDotActive { background: #263f63; border-color: #263f63; }
+  .carouselCategoryBadge { border-radius: 4px; letter-spacing: 0; }
+
+  @media (max-width: $breakpoint_tablet) {
+    .title { font-size: 32px; }
+    .introGrid { gap: 24px; }
+    .carouselFigure { display: none; }
+  }
+}
+
+.rentalTerms {
+  color: #53606d;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  a { color: #263f63; text-decoration: underline; }
+}
+
+.trailerGalleryDetails {
+  margin-top: 12px;
+  summary { cursor: pointer; color: #263f63; font-size: 14px; padding: 8px 0; }
+  .carouselThumbTable { margin-top: 8px; }
+  .carouselThumbSection { border: 0; border-radius: 0; padding: 0; }
+  .carouselThumbGrid { max-height: 150px; }
+}
+
+.trailerOverview { padding: 36px 0; }
+
+.trailerMobileGallery {
+  .figure { animation: none; }
+  display: none;
+  @media (max-width: $breakpoint_tablet) {
+    display: block;
+    padding-top: 28px;
+    .carouselFigure::before { display: none; }
+    .carouselFrame { min-height: 0; aspect-ratio: 4 / 3; border-radius: 6px; box-shadow: none; }
+    .carouselFrame img { object-fit: contain; border-radius: 0; box-shadow: none; transform: none; }
+    .carouselDots { margin-top: 12px; }
+    .carouselDots button { background: #c6d0dc; border-color: #8796a7; width: 18px; height: 18px; }
+    .carouselDots .carouselDotActive { background: #263f63; border-color: #263f63; }
+  }
+}
+
+.quickInquiryCompact {
+  padding: 32px 0;
+  .quickInquiryLayout { gap: 32px; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); }
+  .quickInquiryIntro h2 { font-size: 26px; text-transform: none; }
+  .quickInquiryIntro p { font-size: 16px; }
+  .quickInquiryIntro > a { font-size: 18px; margin-bottom: 0; }
+  .quickInquiryForm { gap: 12px; padding: 20px; }
+  .quickInquiryForm textarea { min-height: 88px; }
+  .quickInquiryForm button { grid-column: 1 / -1; }
+  .quickInquiryForm > small { grid-column: 1 / -1; }
+
+  @media (max-width: $breakpoint_tablet) {
+    scroll-margin-top: 90px;
+    .quickInquiryLayout { grid-template-columns: 1fr; gap: 18px; }
+    .quickInquiryIntro h2 { font-size: 24px; margin-bottom: 10px; }
+  }
 }
 
 .quickInquiryLayout {

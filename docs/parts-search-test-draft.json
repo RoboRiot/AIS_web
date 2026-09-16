@@ -1,0 +1,44 @@
+{
+  "status": "GOOGLE_ADS_DRAFT_AWAITING_IDENTITY_VERIFICATION",
+  "googleAdsDraftId": "10214322612",
+  "googleAdsProvisionalCampaignId": "281499230214493",
+  "launchBlockedBy": ["Complete Google account identity verification for ad destination changes", "Finish and verify all three ad groups and $5/day budget", "Reduce MRI budget to $5/day before enabling the $5/day parts test"],
+  "availabilityPolicy": "Quote and sourcing inquiries only; no in-stock, condition, delivery-time or price guarantees. Staff confirm current availability and compatibility.",
+  "campaignName": "Parts - Selected GE Part Numbers",
+  "campaignType": "Search",
+  "proposedDailyBudgetUSD": 5,
+  "totalAccountDailyBudgetCeilingUSD": 20,
+  "location": "United States",
+  "locationTargeting": "Presence",
+  "language": "English",
+  "searchPartners": false,
+  "displayNetwork": false,
+  "initialBidding": { "strategy": "Maximize clicks", "proposedMaxCpcUSD": 3, "note": "Experimental cap, not a CPC forecast. Reassess delivery without raising the total budget." },
+  "conversionGoals": ["Accepted website inquiry", "Connected calls from ads (60s)"],
+  "adGroups": [
+    {
+      "name": "GE 2222564-30-H Chiller",
+      "partNumber": "2222564-30-H",
+      "keywords": ["[2222564-30-H]", "[GE 2222564-30-H]"],
+      "finalUrl": "https://advancedimagingparts.com/products/gradient-water-chiller-for-mri-systems-2222564-30-h-2222564-30-h-sc8ba742fbfa25--id-5343384241373432464246413235",
+      "headlines": ["GE 2222564-30-H", "MRI Gradient Water Chiller", "Request Part Availability", "Confirm System Compatibility", "Advanced Imaging Parts"],
+      "descriptions": ["Ask about GE 2222564-30-H availability, condition and compatibility for your MRI system.", "Send your system details for a parts quote from Advanced Imaging Services."]
+    },
+    {
+      "name": "GE 2258273 MDAS Card",
+      "partNumber": "2258273",
+      "keywords": ["[2258273]", "[GE 2258273]"],
+      "finalUrl": "https://advancedimagingparts.com/products/mdas-converter-card-2258273-1db775068fcf-2258273--id-316462373735303638666366",
+      "headlines": ["GE 2258273 MDAS Card", "CT Converter Card Sourcing", "Request Part Availability", "Confirm System Compatibility", "Advanced Imaging Parts"],
+      "descriptions": ["Request availability and pricing for GE 2258273 MDAS converter cards for CT systems.", "Share the exact part number and scanner model so our team can confirm compatibility."]
+    },
+    {
+      "name": "GE 5146634-5 Coil Mirror",
+      "partNumber": "5146634-5",
+      "keywords": ["[5146634-5]", "[GE 5146634-5]"],
+      "finalUrl": "https://advancedimagingparts.com/products/8-channel-high-resolution-brain-coil-inferior-mirror-5146634-5-scfd449f4382c9-5146634-5--id-5343464434343946343338324339",
+      "headlines": ["GE 5146634-5 Coil Mirror", "Brain Coil Inferior Mirror", "Request Part Availability", "Confirm System Compatibility", "Advanced Imaging Parts"],
+      "descriptions": ["Ask about GE 5146634-5 brain coil inferior mirror availability and compatibility.", "Get sourcing support for your imaging facility. Request current condition and pricing."]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import styles from "@/app/services/landingPage.module.scss";
 
@@ -47,24 +47,12 @@ const buildThumbnailGroups = (slides) =>
       .filter((slide) => slide.category === category),
   }));
 
-export default function TrailerImageCarousel({ title, slides = [] }) {
+export default function TrailerImageCarousel({ title, slides = [], priority = true }) {
   const trailerSlides = slides.length > 0 ? slides : fallbackSlides;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  useEffect(() => {
-    if (!isAutoPlaying || trailerSlides.length < 2) return undefined;
-
-    const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % trailerSlides.length);
-    }, 4500);
-
-    return () => window.clearInterval(interval);
-  }, [isAutoPlaying, trailerSlides.length]);
 
   const showSlide = (index) => {
     setActiveIndex(index);
-    setIsAutoPlaying(false);
   };
 
   const thumbnailGroups = buildThumbnailGroups(trailerSlides);
@@ -78,7 +66,7 @@ export default function TrailerImageCarousel({ title, slides = [] }) {
           src={activeSlide.src}
           alt={`${title}: ${activeSlide.alt}`}
           fill
-          priority={activeIndex === 0}
+          priority={priority && activeIndex === 0}
           sizes="(max-width: 1100px) 100vw, 45vw"
           className={styles.carouselActive}
         />
@@ -98,9 +86,8 @@ export default function TrailerImageCarousel({ title, slides = [] }) {
           ))}
         </div>
       )}
-      <div className={styles.carouselGalleryStatus} aria-live="polite">
-        <span>{trailerSlides.length} images</span>
-      </div>
+      <details className={styles.trailerGalleryDetails}>
+        <summary>Exterior and interior photos ({trailerSlides.length})</summary>
       <div className={styles.carouselThumbTable} aria-label="Trailer image thumbnails">
         {thumbnailGroups.map((group) => (
           <section key={group.category} className={styles.carouselThumbSection}>
@@ -111,7 +98,7 @@ export default function TrailerImageCarousel({ title, slides = [] }) {
                   <button
                     key={`${slide.id}-thumbnail`}
                     type="button"
-                    aria-label={`View ${slide.category.toLowerCase()} trailer image`}
+                    aria-label={`View ${slide.category.toLowerCase()} trailer image ${slide.index + 1}`}
                     aria-current={slide.index === activeIndex ? "true" : undefined}
                     onClick={() => showSlide(slide.index)}
                     className={`${styles.carouselThumbButton} ${slide.index === activeIndex ? styles.carouselThumbActive : ""}`}
@@ -128,6 +115,7 @@ export default function TrailerImageCarousel({ title, slides = [] }) {
           </section>
         ))}
       </div>
+      </details>
     </figure>
   );
 }

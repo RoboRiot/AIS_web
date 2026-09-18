@@ -7,9 +7,10 @@ export const redactAnalyticsText = (value, maxLength = 140) =>
 
 export function analyticsPageUrl(value) {
   const url = new URL(value);
-  const attributionKeys = new Set(["gclid", "gbraid", "wbraid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_id"]);
+  const attributionKeys = new Set(["gclid", "gbraid", "wbraid", "msclkid", "utm_source", "utm_medium", "utm_campaign", "utm_id", "utm_content", "utm_term"]);
   for (const key of [...url.searchParams.keys()]) {
     if (!attributionKeys.has(key)) url.searchParams.delete(key);
+    else if (key.startsWith("utm_")) url.searchParams.set(key, redactAnalyticsText(url.searchParams.get(key), 100));
   }
   url.hash = "";
   return url.href;

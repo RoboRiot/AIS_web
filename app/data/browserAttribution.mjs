@@ -1,3 +1,5 @@
+import { classifyAcquisition, normalizeCampaignTags, UTM_LIMITS } from "./campaignAttribution.mjs";
+
 export const CLICK_ID_KEYS = ["gclid", "gbraid", "wbraid", "msclkid"];
 const SESSION_IDLE_MS = 30 * 60_000;
 const STORAGE_KEY = "ais_session_attribution";
@@ -10,14 +12,11 @@ export function resolveAttribution({ href, referrer = "", previous, entry = fals
   try { referrerHost = new URL(referrer).hostname.toLowerCase(); } catch { /* No valid referrer. */ }
   const external = referrerHost && referrerHost !== url.hostname.toLowerCase();
   const ids = Object.fromEntries(CLICK_ID_KEYS.map((key) => [key, clickId(url.searchParams.get(key))]));
-  const source = (url.searchParams.get("utm_source") || "").slice(0, 80);
-  const medium = (url.searchParams.get("utm_medium") || "").slice(0, 80);
-  const campaign = (url.searchParams.get("utm_campaign") || "").slice(0, 100);
-  const tagged = Object.values(ids).some(Boolean) || source || medium || campaign;
+  const tags = normalizeCampaignTags(Object.fromEntries(Object.keys(UTM_LIMITS).map((key) => [key, url.searchParams.get(key)])));
+  const tagged = Object.values(ids).some(Boolean) || Object.values(tags).some(Boolean);
   const changedCampaign = tagged && (
     CLICK_ID_KEYS.some((key) => ids[key] !== (previous?.[key] || "")) ||
-    source !== (previous?.utm_source || "") || medium !== (previous?.utm_medium || "") ||
-    campaign !== (previous?.utm_campaign || "")
+    Object.entries(tags).some(([key, value]) => value !== (previous?.[key] || ""))
   );
   const age = now - Number(previous?.observed_at || now);
   if (previous?.acquisition_source && previous?.landing_path && age >= 0 && age < SESSION_IDLE_MS &&
@@ -25,22 +24,12 @@ export function resolveAttribution({ href, referrer = "", previous, entry = fals
     return { ...previous, landing_path: String(previous.landing_path).split(/[?#]/)[0], observed_at: now };
   }
 
-  let acquisitionSource = "direct";
-  if (Object.values(ids).some(Boolean) || /(cpc|ppc|paid|display)/i.test(medium)) {
-    acquisitionSource = "paid_search";
-  } else if (/(^|\.)google\./.test(referrerHost) || source.toLowerCase() === "google") {
-    acquisitionSource = "google_organic";
-  } else if (/(^|\.)(bing\.com|search\.yahoo\.com|duckduckgo\.com)$/.test(referrerHost) ||
-      /^(bing|yahoo|duckduckgo)$/i.test(source)) {
-    acquisitionSource = "other_organic";
-  } else if (external) {
-    acquisitionSource = "referral";
-  }
+  const acquisitionSource = classifyAcquisition({ tags, referrerHost, external, hasClickId: Object.values(ids).some(Boolean) });
   return {
     acquisition_source: acquisitionSource,
     landing_path: url.pathname.slice(0, 300),
     referrer_host: referrerHost.slice(0, 120),
-    utm_source: source, utm_medium: medium, utm_campaign: campaign,
+    ...tags,
     ...ids,
     click_id_present: Object.values(ids).some(Boolean),
     observed_at: now,

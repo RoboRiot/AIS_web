@@ -1,4 +1,5 @@
 import { PRODUCTION_SITE_URL } from "./site.config.mjs";
+import { LEGACY_TRAILER_REDIRECTS } from "./app/data/seoRoutes.mjs";
 import {
   PHASE_DEVELOPMENT_SERVER,
   PHASE_PRODUCTION_BUILD,
@@ -119,7 +120,10 @@ export default function createNextConfig(phase) {
       : {}),
     poweredByHeader: false,
     async redirects() {
-      return [{ source: "/product/:slug", destination: "/products/:slug", permanent: true }];
+      return [
+        { source: "/product/:slug", destination: "/products/:slug", permanent: true },
+        ...LEGACY_TRAILER_REDIRECTS,
+      ];
     },
     images: {
       remotePatterns: [

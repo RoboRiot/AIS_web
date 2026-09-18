@@ -32,3 +32,10 @@ export const SITEMAP_PATHS = [
   "/sitemaps/trailers/sitemap.xml",
   "/sitemaps/products/sitemap.xml",
 ];
+
+export const LEGACY_TRAILER_REDIRECTS = [
+  ["/mobile-mri-and-ct-trailer-rentals", "/trailers"],
+  ["/services/mobile-mri-trailer-rental", "/trailers/mobile-mri-trailer-rental"],
+  ["/services/mobile-ct-trailer-rental", "/trailers/mobile-ct-trailer-rental"],
+  ["/services/mobile-pet-ct-trailer", "/trailers/mobile-pet-ct-trailer-rental"],
+].map(([source, destination]) => ({ source, destination, permanent: true }));

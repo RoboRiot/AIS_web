@@ -113,6 +113,7 @@ export default function Contact() {
       form_type: formType,
       error_stage: stage,
       error_reason: reason,
+      lead_id: leadId,
     });
   };
 
@@ -158,16 +159,13 @@ export default function Contact() {
 
     setIsSubmitting(true);
 
-    const token = await executeRecaptcha(recaptchaSiteKey, submissionFormType);
-    if (!token) {
-      setIsError(true);
-      setFeedbackMessage("Error with reCAPTCHA. Please try again.");
-      recordError("recaptcha_token");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
+      const token = await executeRecaptcha(recaptchaSiteKey, submissionFormType);
+      if (!token) {
+        const error = new Error("Verification is temporarily unavailable. Please try again or call (559) 537-6851.");
+        error.code = "recaptcha_token";
+        throw error;
+      }
       const result = await submitLead({
         ...sanitized,
         token,
@@ -200,12 +198,13 @@ export default function Contact() {
       setFormStartedAt(Date.now());
     } catch (error) {
       console.error("Error sending email: ", error);
-      recordError("lead_request", String(error?.code || error?.status || "request_failed"));
+      recordError(error?.code === "recaptcha_token" ? "recaptcha_token" : "lead_request",
+        String(error?.code || error?.status || "request_failed"));
       setIsError(true);
       setFeedbackMessage(error?.message || "We could not send your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (

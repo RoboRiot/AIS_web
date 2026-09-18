@@ -71,8 +71,10 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
     webdriver: navigator.webdriver,
   })) return;
 
+  const attribution = Object.fromEntries(Object.entries(sessionAttribution())
+    .filter(([key]) => !CLICK_ID_KEYS.includes(key)));
   const safeProperties = Object.fromEntries(
-    Object.entries({ ...properties, ...sessionAttribution() })
+    Object.entries(properties)
       .filter(([key]) => !CLICK_ID_KEYS.includes(key) && key !== "source")
       .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
       .map(([key, value]) => [key, typeof value === "string" ? redactAnalyticsText(value, 300) : value])
@@ -94,6 +96,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
     sessionId: storedId(browserStorage("sessionStorage"), SESSION_KEY),
     occurredAt: new Date().toISOString(),
     properties: safeProperties,
+    attribution,
   };
   if (options.recordInternally !== false) {
     fetch("/api/analytics", {
@@ -106,6 +109,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
     const gtag = ensureGoogleAnalytics(window, measurementId);
     const gaProperties = {
       ...safeProperties,
+      ...attribution,
       page_path: payload.path,
       page_location: analyticsPageUrl(window.location.href),
       send_to: measurementId,

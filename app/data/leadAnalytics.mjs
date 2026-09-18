@@ -1,4 +1,5 @@
 import { redactAnalyticsText } from "./analyticsPrivacy.mjs";
+import { ACQUISITION_SOURCES, normalizeCampaignTags } from "./campaignAttribution.mjs";
 
 const FORM_TYPES = new Set([
   "contact_form",
@@ -13,15 +14,6 @@ const LEAD_EVENT_NAMES = Object.freeze({
   service_request: "generate_service_lead",
   trailer_request: "generate_trailer_lead",
 });
-
-const ACQUISITION_SOURCES = new Set([
-  "direct",
-  "google_organic",
-  "other_organic",
-  "paid_search",
-  "referral",
-  "unknown",
-]);
 
 const clean = (value, maxLength = 120) =>
   String(value ?? "")
@@ -53,6 +45,7 @@ export const normalizeLeadAnalytics = (value = {}) => {
     ? value
     : {};
   const source = clean(analytics.acquisition_source, 40);
+  const tags = normalizeCampaignTags(analytics);
   const clickIds = {
     gclid: cleanClickId(analytics.gclid),
     gbraid: cleanClickId(analytics.gbraid),
@@ -70,9 +63,12 @@ export const normalizeLeadAnalytics = (value = {}) => {
     referrerHost: clean(analytics.referrer_host, 120),
     acquisitionSource: ACQUISITION_SOURCES.has(source) ? source : "unknown",
     utm: {
-      source: clean(analytics.utm_source, 80),
-      medium: clean(analytics.utm_medium, 80),
-      campaign: clean(analytics.utm_campaign, 100),
+      source: tags.utm_source,
+      medium: tags.utm_medium,
+      campaign: tags.utm_campaign,
+      content: tags.utm_content,
+      term: tags.utm_term,
+      id: tags.utm_id,
     },
     clickIds,
     clickIdPresent: Boolean(

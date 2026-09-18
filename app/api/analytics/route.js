@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
+import { normalizeEventAttribution } from "@/app/data/campaignAttribution.mjs";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminDb } from "@/app/data/firebaseAdmin";
 import {
@@ -142,13 +143,14 @@ export async function POST(request) {
     const userAgent = cleanText(request.headers.get("user-agent"), 300);
     const rawPath = cleanPath(payload.path);
     const pathUrl = new URL(rawPath, "https://advancedimagingparts.com");
+    const attribution = normalizeEventAttribution(payload, pathUrl);
     const event = {
       eventType,
       date,
       path: pathUrl.pathname,
-      properties,
+      properties: { ...properties, ...attribution },
       formType: formType || null,
-      referrerHost: referrerHost(payload.referrer || request.headers.get("referer")),
+      referrerHost: attribution.referrer_host || referrerHost(payload.referrer),
       visitorHash: hashIdentifier(payload.visitorId, "website-visitor"),
       sessionHash: hashIdentifier(payload.sessionId, "website-session"),
       browser: browserFamily(userAgent),
@@ -158,11 +160,16 @@ export async function POST(request) {
         8
       ),
       utm: {
-        source: cleanText(pathUrl.searchParams.get("utm_source"), 80),
-        medium: cleanText(pathUrl.searchParams.get("utm_medium"), 80),
-        campaign: cleanText(pathUrl.searchParams.get("utm_campaign"), 100),
+        source: attribution.utm_source,
+        medium: attribution.utm_medium,
+        campaign: attribution.utm_campaign,
+        content: attribution.utm_content,
+        term: attribution.utm_term,
+        id: attribution.utm_id,
       },
-      analyticsVersion: 2,
+      acquisitionSource: attribution.acquisition_source,
+      landingPath: attribution.landing_path,
+      analyticsVersion: 3,
       trafficClass: "human",
       aggregateVersion: isPartSearch || isPartSearchSelection ? 2 : null,
       createdAt: FieldValue.serverTimestamp(),
@@ -213,8 +220,9 @@ export async function POST(request) {
             formType,
             source: cleanText(properties.form_source, 100),
             path: pathUrl.pathname,
-            acquisitionSource: cleanText(properties.acquisition_source, 40) || "unknown",
-            landingPath: cleanPath(properties.landing_path),
+            acquisitionSource: event.acquisitionSource,
+            landingPath: event.landingPath,
+            utm: event.utm,
             sessionHash: event.sessionHash,
             visitorHash: event.visitorHash,
             milestones: { [formMilestone]: true },

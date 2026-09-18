@@ -321,6 +321,7 @@ export async function POST(request) {
           path: leadDetails.sourcePage,
           acquisitionSource: analytics.acquisitionSource,
           landingPath: cleanPath(analytics.landingPath),
+          utm: analytics.utm,
           clickIdPresent: analytics.clickIdPresent,
           country: trafficCountry,
           reviewFlags: reviewFlag ? ["outside_us"] : [],

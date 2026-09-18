@@ -441,6 +441,7 @@ export async function POST(request) {
               path: cleanPath(analytics.sourcePage || "/service-request"),
               acquisitionSource: analytics.acquisitionSource,
               landingPath: cleanPath(analytics.landingPath),
+              utm: analytics.utm,
               clickIdPresent: analytics.clickIdPresent,
               country: trafficCountry,
               reviewFlags,

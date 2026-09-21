@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
 import { analyticsPageUrl } from "@/app/data/analyticsPrivacy.mjs";
 import { ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
+import WebsiteCallTracking from "./WebsiteCallTracking";
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-L0236JT5N3";
 
@@ -15,7 +16,7 @@ export default function GoogleAnalytics() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (navigator.doNotTrack === "1") {
+    if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true) {
       setEnabled(false);
       return;
     }
@@ -34,6 +35,7 @@ export default function GoogleAnalytics() {
       page_path: window.location.pathname,
       page_location: analyticsPageUrl(window.location.href),
       page_title: document.title,
+      send_to: measurementId,
     });
   }, [enabled, pathname, ready]);
 
@@ -46,9 +48,12 @@ export default function GoogleAnalytics() {
 
   if (!measurementId || !enabled) return null;
   return (
-    <Script
-      src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-      strategy="afterInteractive"
-    />
+    <>
+      <WebsiteCallTracking enabled={enabled && ready} />
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        strategy="afterInteractive"
+      />
+    </>
   );
 }

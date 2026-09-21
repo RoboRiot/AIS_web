@@ -20,7 +20,7 @@ try {
   const db = getFirestore(app);
   const snapshot = await db.collection("WebsiteAnalyticsEvents").where("date", ">=", start)
     .where("date", "<=", end).orderBy("date").limit(10001)
-    .select("eventType", "visitorHash", "formType", "acquisitionSource", "referrerHost", "utm",
+    .select("eventType", "visitorHash", "formType", "businessCategory", "acquisitionSource", "referrerHost", "utm",
       "properties.lead_id", "properties.confirmed_by", "properties.acquisition_source", "properties.referrer_host",
       "properties.utm_source", "properties.utm_medium", "properties.utm_campaign", "properties.utm_content").get();
   const events = snapshot.docs.slice(0, 10000).map((doc) => ({ id: doc.id, ...doc.data() }));

@@ -11,6 +11,7 @@ export const submitLead = async ({
   token,
   action,
   formType,
+  selectedFormType = formType,
   name,
   email,
   partNumber,
@@ -25,6 +26,7 @@ export const submitLead = async ({
       token,
       action,
       formType,
+      selectedFormType,
       name,
       email,
       partNumber,
@@ -42,9 +44,12 @@ export const submitLead = async ({
     trackWebsiteEvent(
       "form_submit",
       {
-        form_type: formType,
+        form_type: data.formType || formType,
         form_source: context,
-        lead_category: formType.replace(/_request$|_form$/g, ""),
+        lead_category: (data.formType || formType).replace(/_request$|_form$/g, ""),
+        business_category: data.businessCategory || "",
+        modality: data.modality || "unknown",
+        selected_form_type: selectedFormType,
         lead_id: data.analyticsLeadId || resolvedLeadId,
       },
       { recordInternally: false }

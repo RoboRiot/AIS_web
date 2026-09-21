@@ -16,7 +16,8 @@ import {
   isTrustedOrigin,
   readJsonBody,
 } from "@/app/data/requestSecurity";
-import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
+import { normalizeLeadAnalytics, normalizeFormType } from "@/app/data/leadAnalytics.mjs";
+import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
@@ -213,6 +214,12 @@ export async function POST(request) {
       trafficCountry,
       reviewFlag,
     };
+    const selectedFormType = normalizeFormType(payload.selectedFormType) || payload.formType;
+    const intent = classifyLeadIntent(payload.formType, sanitized.message);
+    const reportingFormType = getBusinessFormType(intent);
+    if (reportingFormType !== selectedFormType) intent.intentSource = "message_inference";
+    const reportingConfig = FORM_CONFIG[reportingFormType];
+    leadDetails.leadType = reportingConfig.label;
 
     const to = getRecipients();
     if (!to.length) {
@@ -240,7 +247,7 @@ export async function POST(request) {
     const mailPayload = {
       to,
       message: {
-        subject: config.subject,
+        subject: reportingConfig.subject,
         text: buildLeadText(leadDetails),
         replyTo: sanitized.email,
         email: sanitized.email,
@@ -249,9 +256,11 @@ export async function POST(request) {
       },
       metadata: {
         leadId: mailReference.id,
-        formType: payload.formType,
+        formType: reportingFormType,
+        selectedFormType,
+        ...intent,
         createdAt: FieldValue.serverTimestamp(),
-        leadType: config.label,
+        leadType: reportingConfig.label,
         qualificationStatus: "unreviewed",
         sourcePage: leadDetails.sourcePage,
         context: leadDetails.context || null,
@@ -259,6 +268,7 @@ export async function POST(request) {
         landingPath: analytics.landingPath || null,
         utm: analytics.utm,
         clickIds: analytics.clickIds,
+        attributionHistory: analytics.attributionHistory,
         attributedPartSearch: analytics.searchTerm || null,
         trafficCountry,
         reviewFlags: reviewFlag ? ["outside_us"] : [],
@@ -269,15 +279,20 @@ export async function POST(request) {
       date,
       path: leadDetails.sourcePage,
       properties: {
-        form_type: payload.formType,
+        form_type: reportingFormType,
         context: leadDetails.context || "",
         confirmed_by: "lead_api",
         lead_id: leadHash,
         acquisition_source: analytics.acquisitionSource,
         landing_path: analytics.landingPath || "",
+        business_category: intent.businessCategory,
+        modality: intent.modality,
+        selected_form_type: selectedFormType,
         search_term: analytics.searchTerm || "",
       },
-      formType: payload.formType,
+      formType: reportingFormType,
+      selectedFormType,
+      ...intent,
       referrerHost: analytics.referrerHost || "direct",
       visitorHash: analytics.visitorId
         ? hashIdentifier(analytics.visitorId, "website-visitor")
@@ -301,10 +316,14 @@ export async function POST(request) {
     };
 
     let duplicateSubmission = false;
+    let acceptedClassification = { formType: reportingFormType, businessCategory: intent.businessCategory, modality: intent.modality };
     await db.runTransaction(async (transaction) => {
       const mailSnapshot = await transaction.get(mailReference);
       if (mailSnapshot.exists) {
         duplicateSubmission = true;
+        const existing = mailSnapshot.get("metadata") || {};
+        acceptedClassification = { formType: existing.formType || reportingFormType,
+          businessCategory: existing.businessCategory || "unknown", modality: existing.modality || "unknown" };
         return;
       }
       const dailySnapshot = verifiedAnalytics ? await transaction.get(dailyReference) : null;
@@ -316,7 +335,9 @@ export async function POST(request) {
       transaction.set(
         funnelReference,
         {
-          formType: payload.formType,
+          formType: reportingFormType,
+          selectedFormType,
+          ...intent,
           source: leadDetails.context || "",
           path: leadDetails.sourcePage,
           acquisitionSource: analytics.acquisitionSource,
@@ -357,8 +378,8 @@ export async function POST(request) {
         transaction.update(dailyReference, {
           "totals.form_submit": FieldValue.increment(1),
           "humanTotals.form_submit": FieldValue.increment(1),
-          [`forms.${payload.formType}.form_submit`]: FieldValue.increment(1),
-          [`humanForms.${payload.formType}.form_submit`]: FieldValue.increment(1),
+          [`forms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
+          [`humanForms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
           totalEvents: FieldValue.increment(1),
           humanTotalEvents: FieldValue.increment(1),
           updatedAt: FieldValue.serverTimestamp(),
@@ -370,8 +391,8 @@ export async function POST(request) {
           humanTotalEvents: 1,
           totals: { form_submit: 1 },
           humanTotals: { form_submit: 1 },
-          forms: { [payload.formType]: { form_submit: 1 } },
-          humanForms: { [payload.formType]: { form_submit: 1 } },
+          forms: { [reportingFormType]: { form_submit: 1 } },
+          humanForms: { [reportingFormType]: { form_submit: 1 } },
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
         });
@@ -382,6 +403,7 @@ export async function POST(request) {
       ok: true,
       leadId: mailReference.id,
       analyticsLeadId: leadHash,
+      ...acceptedClassification,
       duplicate: duplicateSubmission,
     });
   } catch (error) {

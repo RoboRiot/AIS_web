@@ -37,6 +37,8 @@ const EVENT_TYPES = new Set([
   "form_submit",
   "form_error",
   "page_not_found",
+  "lead_event_queued",
+  "lead_tag_processed",
 ]);
 const SEARCH_KINDS = new Set(["keyword", "part_number"]);
 
@@ -217,14 +219,17 @@ export async function POST(request) {
         transaction.set(
           funnelReference,
           {
-            formType,
-            source: cleanText(properties.form_source, 100),
-            path: pathUrl.pathname,
-            acquisitionSource: event.acquisitionSource,
-            landingPath: event.landingPath,
-            utm: event.utm,
-            sessionHash: event.sessionHash,
-            visitorHash: event.visitorHash,
+            // Late browser milestones must not undo server-confirmed intent or attribution.
+            ...(funnelSnapshot?.get("milestones.form_submit") ? {} : {
+              formType,
+              source: cleanText(properties.form_source, 100),
+              path: pathUrl.pathname,
+              acquisitionSource: event.acquisitionSource,
+              landingPath: event.landingPath,
+              utm: event.utm,
+              sessionHash: event.sessionHash,
+              visitorHash: event.visitorHash,
+            }),
             milestones: { [formMilestone]: true },
             milestoneDates: { [formMilestone]: date },
             createdAt: funnelSnapshot?.exists

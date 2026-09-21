@@ -1,4 +1,5 @@
 import { redactAnalyticsText } from "./analyticsPrivacy.mjs";
+import { getBusinessFormType } from "./leadIntent.mjs";
 
 export function buildChannelReport(events, qualifications = {}) {
   const groups = new Map();
@@ -32,7 +33,7 @@ export function buildChannelReport(events, qualifications = {}) {
     if (event.eventType !== "form_submit" || !leadId || event.id !== `lead-${leadId}` ||
         !["lead_api", "service_request_api"].includes(properties.confirmed_by) || row.accepted.has(leadId)) continue;
     row.accepted.add(leadId);
-    if (event.formType === "trailer_request") row.trailerInquiries++;
+    if (getBusinessFormType(event) === "trailer_request") row.trailerInquiries++;
     else row.otherInquiries++;
     const qualification = qualifications[leadId];
     if (["qualified", "quoted", "won"].includes(qualification)) row.qualified.add(leadId);

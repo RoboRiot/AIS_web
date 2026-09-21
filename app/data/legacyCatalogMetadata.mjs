@@ -16,6 +16,15 @@ export const getVerifiedLegacyMetadata = (product = {}) => {
   // Research and source links are recorded in docs/product-url-research-2026-09-16.md.
   const id = String(product.id);
   const pn = String(product.PN || "").trim().toUpperCase();
+  // Exact record + name guards; evidence is in docs/lead-measurement-repairs-2026-09-21.md.
+  if (id === "temp-41" && (!pn || pn === "46-170021P10") &&
+      /^46-170021p10\s+fuse$/i.test(String(product.Name || "").trim())) {
+    return { PN: "46-170021P10", OEM: "GE", Modality: "CT" };
+  }
+  if (id === "a60097f343dc" && (!pn || pn === "BSX73-0893E") &&
+      /^BSX73-0893E\s+Converter-16$/i.test(String(product.Name || "").trim())) {
+    return { PN: "BSX73-0893E", OEM: "Toshiba", Modality: "CT" };
+  }
   if (id === "b2ede27a56cb" && ["0977", "BSX73-0977E"].includes(pn) &&
       /BSX73-0977\*?E\s+ADC2/i.test(product.Description || "")) {
     return { PN: "BSX73-0977E", OEM: "Toshiba", Modality: "CT" };

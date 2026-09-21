@@ -2,6 +2,8 @@ import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
 import { analyticsPageUrl, redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
 import { CLICK_ID_KEYS, createAttributionReader } from "@/app/data/browserAttribution.mjs";
 import { createLeadEventDispatcher, ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
+import { readAttributionHistory } from "@/app/data/attributionHistory.mjs";
+import { marketingConsent } from "@/app/data/marketingConsent.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
@@ -39,14 +41,23 @@ const gaEventName = (eventType) => ({
   search: "search",
 }[eventType] || eventType);
 
-const sessionAttribution = () => readAttribution({
-  href: window.location.href,
-  referrer: document.referrer,
-  storage: browserStorage("sessionStorage"),
-});
+const sessionAttribution = () => {
+  const current = readAttribution({ href: window.location.href, referrer: document.referrer,
+    storage: browserStorage("sessionStorage") });
+  readAttributionHistory({ current, storage: browserStorage("localStorage"),
+    allowed: marketingConsent({ storage: browserStorage("localStorage"), navigator }) === "granted" });
+  return current;
+};
+
+export const refreshMarketingAttribution = () => {
+  if (typeof window === "undefined") return;
+  try { sessionAttribution(); } catch { /* Optional measurement must not interrupt consent. */ }
+};
 
 export const getLeadAnalyticsContext = (leadId = "") => {
   if (typeof window === "undefined") return {};
+  if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true) return { leadId };
+  const attribution = sessionAttribution();
   let lastPartSearch = {};
   try {
     lastPartSearch = JSON.parse(browserStorage("sessionStorage")?.getItem(LAST_PART_SEARCH_KEY) || "{}");
@@ -59,12 +70,14 @@ export const getLeadAnalyticsContext = (leadId = "") => {
     referrer: document.referrer.slice(0, 300),
     search_term: redactAnalyticsText(lastPartSearch?.search_term || "", 100),
     search_kind: String(lastPartSearch?.search_kind || "").slice(0, 40),
-    ...sessionAttribution(),
+    ...attribution,
+    attribution_history: readAttributionHistory({ current: attribution, storage: browserStorage("localStorage"),
+      allowed: marketingConsent({ storage: browserStorage("localStorage"), navigator }) === "granted" }),
   };
 };
 
 const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
-  if (typeof window === "undefined" || navigator.doNotTrack === "1") return;
+  if (typeof window === "undefined" || navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true) return;
   if (!shouldCollectBrowserAnalytics({
     hostname: window.location.hostname,
     userAgent: navigator.userAgent,
@@ -115,7 +128,17 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
       send_to: measurementId,
     };
     if (eventType === "form_submit") {
-      dispatchLead({ gtag, properties: gaProperties, storage: browserStorage("localStorage") });
+      // These are delivery diagnostics, not additional leads or proof of GA receipt.
+      const diagnostic = (type) => {
+        fetch("/api/analytics", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...payload, eventType: type,
+            properties: { lead_id: safeProperties.lead_id, form_type: safeProperties.form_type } }),
+          keepalive: true,
+        }).catch(() => {});
+      };
+      if (dispatchLead({ gtag, properties: gaProperties, storage: browserStorage("localStorage"),
+        onProcessed: () => diagnostic("lead_tag_processed") })) diagnostic("lead_event_queued");
     } else {
       gtag("event", gaEventName(eventType), gaProperties);
     }

@@ -11,6 +11,7 @@ import {
   isTrustedOrigin,
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
+import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
@@ -284,6 +285,9 @@ export async function POST(request) {
           analyticsLeadId: leadHash,
           requestId: requestReference.id,
           requestNumber: existingRequest.get("requestNumber"),
+          formType: getBusinessFormType({ formType: "service_request", ...existingRequest.data() }),
+          businessCategory: existingRequest.get("businessCategory") || "service",
+          modality: existingRequest.get("modality") || "unknown",
         },
         { status: 200 }
       );
@@ -350,8 +354,12 @@ export async function POST(request) {
       ? ["outside_us"]
       : [];
 
+    const intent = classifyLeadIntent("service_request", `${payload.issueTitle || ""} ${payload.description || ""}`);
+    const reportingFormType = getBusinessFormType(intent);
     await requestReference.set({
       ...payload,
+      ...intent,
+      selectedFormType: "service_request",
       requestNumber,
       locationText,
       contactName: `${payload.firstName} ${payload.lastName}`.trim(),
@@ -374,6 +382,7 @@ export async function POST(request) {
         utm: analytics.utm,
         clickIds: analytics.clickIds,
         clickIdPresent: analytics.clickIdPresent,
+        attributionHistory: analytics.attributionHistory,
         visitorHash: analytics.visitorId
           ? hashIdentifier(analytics.visitorId, "website-visitor")
           : null,
@@ -408,14 +417,19 @@ export async function POST(request) {
             date,
             path: cleanPath(analytics.sourcePage || "/service-request"),
             properties: {
-              form_type: "service_request",
+              form_type: reportingFormType,
+              selected_form_type: "service_request",
+              business_category: intent.businessCategory,
+              modality: intent.modality,
               context: requestNumber,
               confirmed_by: "service_request_api",
               lead_id: leadHash,
               acquisition_source: analytics.acquisitionSource,
               landing_path: analytics.landingPath || "",
             },
-            formType: "service_request",
+            formType: reportingFormType,
+            selectedFormType: "service_request",
+            ...intent,
             referrerHost: analytics.referrerHost || "direct",
             visitorHash,
             sessionHash,
@@ -436,7 +450,9 @@ export async function POST(request) {
           transaction.set(
             funnelReference,
             {
-              formType: "service_request",
+              formType: reportingFormType,
+              selectedFormType: "service_request",
+              ...intent,
               source: "service_request_page",
               path: cleanPath(analytics.sourcePage || "/service-request"),
               acquisitionSource: analytics.acquisitionSource,
@@ -462,8 +478,8 @@ export async function POST(request) {
             transaction.update(dailyReference, {
               "totals.form_submit": FieldValue.increment(1),
               "humanTotals.form_submit": FieldValue.increment(1),
-              "forms.service_request.form_submit": FieldValue.increment(1),
-              "humanForms.service_request.form_submit": FieldValue.increment(1),
+              [`forms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
+              [`humanForms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
               totalEvents: FieldValue.increment(1),
               humanTotalEvents: FieldValue.increment(1),
               updatedAt: FieldValue.serverTimestamp(),
@@ -475,8 +491,8 @@ export async function POST(request) {
               humanTotalEvents: 1,
               totals: { form_submit: 1 },
               humanTotals: { form_submit: 1 },
-              forms: { service_request: { form_submit: 1 } },
-              humanForms: { service_request: { form_submit: 1 } },
+              forms: { [reportingFormType]: { form_submit: 1 } },
+              humanForms: { [reportingFormType]: { form_submit: 1 } },
               createdAt: FieldValue.serverTimestamp(),
               updatedAt: FieldValue.serverTimestamp(),
             });
@@ -488,7 +504,8 @@ export async function POST(request) {
     }
 
     return NextResponse.json(
-      { ok: true, requestId: requestReference.id, requestNumber, analyticsLeadId: leadHash },
+      { ok: true, requestId: requestReference.id, requestNumber, analyticsLeadId: leadHash,
+        formType: reportingFormType, businessCategory: intent.businessCategory, modality: intent.modality },
       { status: 201 }
     );
   } catch (error) {

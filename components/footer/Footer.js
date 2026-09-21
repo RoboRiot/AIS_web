@@ -6,10 +6,12 @@ import phoneIcon from "@/public/assets/images/phoneicon.svg"
 import emailIcon from "@/public/assets/images/emailicon.svg"
 import locationIcon from "@/public/assets/images/location.svg"
 import heartIcon from "@/public/assets/images/heart.svg"
+import MarketingPreferences from "@/components/analytics/MarketingPreferences";
 
 const popularPages = [
     { href: "/services/mri-service", label: "MRI Service" },
     { href: "/services/ct-service", label: "CT Service" },
+    { href: "/services/pet-ct-service", label: "PET/CT Service" },
     { href: "/trailers/mobile-mri-trailer-rental", label: "MRI Trailer Rental" },
     { href: "/trailers/mobile-ct-trailer-rental", label: "CT Trailer Rental" },
     { href: "/parts/ge/mri", label: "GE MRI Parts" },
@@ -66,6 +68,7 @@ export default function Footer() {
                     </div>
                 </div>
             </footer>
+            <MarketingPreferences />
         </>
     )
 }

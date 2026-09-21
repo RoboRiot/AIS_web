@@ -51,8 +51,11 @@ test("lead queue recovers an accepted duplicate response once, including after r
   assert.equal(createLeadEventDispatcher()({ gtag, properties, storage }), false);
   assert.equal(browser.dataLayer.filter((args) => args[1] === "generate_lead").length, 1);
   assert.equal(browser.dataLayer.filter((args) => args[1] === "generate_trailer_lead").length, 1);
-  assert.equal(browser.dataLayer[1][1], "G-TEST");
-  assert.equal(browser.dataLayer[1][2].page_location, `${origin}/contact`);
+  const config = browser.dataLayer.find((args) => args[0] === "config");
+  assert.equal(config[1], "G-TEST");
+  assert.equal(config[2].page_location, `${origin}/contact`);
+  assert.equal(browser.dataLayer[0][0], "consent");
+  assert.equal(browser.dataLayer[0][2].ad_storage, "denied");
 });
 
 test("a synchronous dispatch error does not permanently suppress retry", () => {

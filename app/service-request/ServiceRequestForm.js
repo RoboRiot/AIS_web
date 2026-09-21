@@ -225,9 +225,11 @@ export default function ServiceRequestForm() {
         trackWebsiteEvent(
           "form_submit",
           {
-            form_type: "service_request",
+            form_type: result.formType || "service_request",
             form_source: "service_request_page",
-            lead_category: "service",
+            lead_category: result.businessCategory || "service",
+            selected_form_type: "service_request",
+            modality: result.modality || "unknown",
             lead_id: result.analyticsLeadId || leadId,
           },
           { recordInternally: false }

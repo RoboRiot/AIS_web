@@ -171,6 +171,7 @@ export default function Contact() {
         token,
         action: submissionFormType,
         formType: submissionFormType,
+        selectedFormType: formType,
         startedAt: formStartedAt,
         website: honeypot,
         context: formContext,

@@ -4,6 +4,7 @@ import { CLICK_ID_KEYS, createAttributionReader } from "@/app/data/browserAttrib
 import { createLeadEventDispatcher, ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
 import { readAttributionHistory } from "@/app/data/attributionHistory.mjs";
 import { marketingConsent } from "@/app/data/marketingConsent.mjs";
+import { getLeadMeasurement } from "@/app/data/leadMeasurement.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
@@ -56,7 +57,9 @@ export const refreshMarketingAttribution = () => {
 
 export const getLeadAnalyticsContext = (leadId = "") => {
   if (typeof window === "undefined") return {};
-  if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true) return { leadId };
+  const measurement = getLeadMeasurement({ browser: window, navigator,
+    consent: marketingConsent({ storage: browserStorage("localStorage"), navigator }) });
+  if (measurement.eligibility !== "eligible") return { leadId, measurement };
   const attribution = sessionAttribution();
   let lastPartSearch = {};
   try {
@@ -64,6 +67,7 @@ export const getLeadAnalyticsContext = (leadId = "") => {
   } catch { /* Search attribution is optional. */ }
   return {
     leadId: leadId || createLeadId(),
+    measurement,
     visitorId: storedId(browserStorage("localStorage"), VISITOR_KEY),
     sessionId: storedId(browserStorage("sessionStorage"), SESSION_KEY),
     sourcePage: window.location.pathname.slice(0, 300),

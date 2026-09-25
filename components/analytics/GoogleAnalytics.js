@@ -53,6 +53,8 @@ export default function GoogleAnalytics() {
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
+        onReady={() => { window.__aisGoogleTagState = "loaded"; }}
+        onError={() => { window.__aisGoogleTagState = "failed"; }}
       />
     </>
   );

@@ -1,6 +1,7 @@
 import { redactAnalyticsText } from "./analyticsPrivacy.mjs";
 import { ACQUISITION_SOURCES, normalizeCampaignTags } from "./campaignAttribution.mjs";
 import { normalizeAttributionHistory } from "./attributionHistory.mjs";
+import { normalizeLeadMeasurement } from "./leadMeasurement.mjs";
 
 const FORM_TYPES = new Set([
   "contact_form",
@@ -78,6 +79,7 @@ export const normalizeLeadAnalytics = (value = {}) => {
     searchTerm: redactAnalyticsText(analytics.search_term, 100).toLowerCase(),
     searchKind: clean(analytics.search_kind, 40),
     attributionHistory: normalizeAttributionHistory(analytics.attribution_history),
+    measurement: normalizeLeadMeasurement(analytics.measurement),
   };
 };
 

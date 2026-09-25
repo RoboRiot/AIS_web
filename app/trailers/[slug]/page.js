@@ -65,7 +65,7 @@ export default function TrailerLandingPage({ params }) {
     return !service.brand && service.modality === page.modality;
   });
   const relatedTrailers = trailerLandingPages
-    .filter((item) => item.slug !== page.slug && (item.brand === page.brand || item.modality === page.modality))
+    .filter((item) => item.slug !== page.slug && item.modality === page.modality)
     .slice(0, 6);
   const rentalWorkflow = [
     {
@@ -105,6 +105,18 @@ export default function TrailerLandingPage({ params }) {
     {
       question: `What happens after a mobile ${modalityLabel} trailer request is submitted?`,
       answer: "An imaging specialist reviews the requested dates, location, system requirements, and site needs, then contacts the facility to confirm availability and next steps.",
+    },
+    {
+      question: `What site information should our facility prepare for a mobile ${modalityLabel} rental?`,
+      answer: `${page.planningPoints?.[0] || "Confirm site access, utilities, connectivity, and patient flow before deployment."} Ask for the selected unit's site-planning documents before committing to site work; electrical requirements, dimensions, clearances, and connections depend on the actual trailer and configuration.`,
+    },
+    {
+      question: "Does the listed monthly lease price include every project cost?",
+      answer: "No. Listed amounts are illustrative monthly starting points for a one-year lease, not an all-inclusive project quote. Ask AIS to confirm the rental term, equipment configuration, transport, site work, and technical-service scope for your facility. Shorter rental terms require a separate availability and pricing review.",
+    },
+    {
+      question: `How do we confirm a mobile ${modalityLabel} scanner and delivery date?`,
+      answer: "Submit your facility location, required start date, expected term, and clinical requirements. Availability and configuration must be confirmed for your dates. Coordinate the delivery schedule with site readiness and your facility's acceptance process; a website inquiry does not reserve a trailer.",
     },
     ...(page.modality === "mri"
       ? [{

@@ -383,6 +383,7 @@ export async function POST(request) {
         clickIds: analytics.clickIds,
         clickIdPresent: analytics.clickIdPresent,
         attributionHistory: analytics.attributionHistory,
+        measurement: analytics.measurement,
         visitorHash: analytics.visitorId
           ? hashIdentifier(analytics.visitorId, "website-visitor")
           : null,
@@ -414,6 +415,7 @@ export async function POST(request) {
           const shouldAggregate = !funnelSnapshot.get("milestones.form_submit");
           transaction.set(eventReference, {
             eventType: "form_submit",
+            measurement: analytics.measurement,
             date,
             path: cleanPath(analytics.sourcePage || "/service-request"),
             properties: {
@@ -466,6 +468,7 @@ export async function POST(request) {
               milestones: { form_submit: true },
               milestoneDates: { form_submit: date },
               leadDocumentId: requestReference.id,
+              measurement: analytics.measurement,
               createdAt: funnelSnapshot.exists
                 ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
                 : FieldValue.serverTimestamp(),

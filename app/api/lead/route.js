@@ -269,6 +269,7 @@ export async function POST(request) {
         utm: analytics.utm,
         clickIds: analytics.clickIds,
         attributionHistory: analytics.attributionHistory,
+        measurement: analytics.measurement,
         attributedPartSearch: analytics.searchTerm || null,
         trafficCountry,
         reviewFlags: reviewFlag ? ["outside_us"] : [],
@@ -276,6 +277,7 @@ export async function POST(request) {
     };
     const confirmedSubmissionEvent = {
       eventType: "form_submit",
+      measurement: analytics.measurement,
       date,
       path: leadDetails.sourcePage,
       properties: {
@@ -352,6 +354,7 @@ export async function POST(request) {
           milestoneDates: { form_submit: date },
           leadDocumentId: mailReference.id,
           qualificationStatus: "unreviewed",
+          measurement: analytics.measurement,
           createdAt: funnelSnapshot?.exists
             ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
             : FieldValue.serverTimestamp(),

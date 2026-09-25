@@ -93,6 +93,7 @@ test("lead diagnostics do not dispatch a second primary conversion", () => {
   assert.equal(events.filter((row) => row[1] === "generate_lead").length, 1);
   assert.equal(processed, 0);
   events[0][2].event_callback();
+  events[0][2].event_callback();
   assert.equal(processed, 1);
 });
 

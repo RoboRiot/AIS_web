@@ -35,10 +35,16 @@ export function createLeadEventDispatcher() {
       }
     } catch { /* Memory deduplication still works when storage is restricted. */ }
     if (queued.has(id)) return false;
+    let processed = false;
+    const processedOnce = () => {
+      if (processed) return;
+      processed = true;
+      onProcessed?.();
+    };
     // An accepted duplicate response can recover a lost first response. Deduplicate by lead, not HTTP attempt.
     gtag("event", "generate_lead", {
       ...properties,
-      ...(onProcessed ? { event_callback: onProcessed } : {}),
+      ...(onProcessed ? { event_callback: processedOnce } : {}),
     });
     queued.set(id, now);
     try {

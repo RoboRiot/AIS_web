@@ -2,6 +2,7 @@ import nextEnv from "@next/env";
 import { cert, initializeApp, deleteApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { redactAnalyticsText } from "../app/data/analyticsPrivacy.mjs";
+import { buildLeadDeliveryReport } from "../app/data/leadMeasurement.mjs";
 
 // Read-only diagnostic counts; never export customer messages or raw click IDs.
 nextEnv.loadEnvConfig(process.cwd());
@@ -21,15 +22,11 @@ try {
     .where("date", ">=", start).where("date", "<=", end).orderBy("date").limit(10001)
     .select("date", "eventType", "path", "formType", "acquisitionSource", "properties.error_stage",
       "properties.error_reason", "properties.acquisition_source", "properties.form_type",
-      "properties.lead_id", "properties.confirmed_by").get();
+      "properties.lead_id", "properties.confirmed_by", "measurement").get();
   const groups = new Map();
-  const accepted = new Set(), queued = new Set(), processed = new Set();
+  const events = snapshot.docs.slice(0, 10000).map((doc) => ({ ...doc.data(), id: doc.id }));
   for (const doc of snapshot.docs.slice(0, 10000)) {
     const event = doc.data();
-    const id = event.properties?.lead_id;
-    if (id && doc.id === `lead-${id}` && event.properties?.confirmed_by) accepted.add(id);
-    if (id && event.eventType === "lead_event_queued") queued.add(id);
-    if (id && event.eventType === "lead_tag_processed") processed.add(id);
     if (!["form_error", "page_not_found"].includes(event.eventType)) continue;
     const group = {
       event: event.eventType,
@@ -46,11 +43,7 @@ try {
   }
   const rows = [...groups.values()].sort((a, b) => b.count - a.count);
   console.log(JSON.stringify({ period: { start, end, timezone: "UTC" }, truncated: snapshot.size > 10000,
-    deliveryDiagnostics: { accepted: accepted.size,
-      queued: [...accepted].filter((id) => queued.has(id)).length,
-      tagProcessed: [...accepted].filter((id) => processed.has(id)).length,
-      noBrowserDiagnostic: [...accepted].filter((id) => !queued.has(id) && !processed.has(id)).length,
-      note: "Diagnostics begin after deployment. Queued/processed does not prove GA receipt or Ads attribution. Missing signals may reflect privacy controls, blocked tags, or pre-deployment leads." },
+    deliveryDiagnostics: buildLeadDeliveryReport(events),
     formErrors: rows.filter((row) => row.event === "form_error"),
     paidNotFound: rows.filter((row) => row.event === "page_not_found" && row.channel === "paid_search"),
     topNotFound: rows.filter((row) => row.event === "page_not_found").slice(0, 10),

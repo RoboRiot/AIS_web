@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { classifyLeadIntent, getBusinessFormType } from "../app/data/leadIntent.mjs";
 import { ATTRIBUTION_RETENTION_MS, ATTRIBUTION_HISTORY_KEY, readAttributionHistory, normalizeAttributionHistory } from "../app/data/attributionHistory.mjs";
 import { MARKETING_CONSENT_KEY, marketingConsent } from "../app/data/marketingConsent.mjs";
-import { normalizeForwardingNumber, BUSINESS_PHONE_HREF, createPhoneNumberReplacement } from "../app/data/websiteCallTracking.mjs";
+import { normalizeForwardingNumber, BUSINESS_PHONE_HREF, createPhoneNumberReplacement, getPhoneClickMeasurement } from "../app/data/websiteCallTracking.mjs";
 import { createLeadEventDispatcher } from "../app/data/browserGoogleAnalytics.mjs";
 import { getCatalogIdentifiers, getCampaignReadinessIssues } from "../app/data/catalogProductQuality.mjs";
 
@@ -64,13 +64,17 @@ test("forwarding callback validates matching displayed/dialed US numbers", () =>
 test("number replacement preserves CTA text and restores original links on withdrawal", () => {
   const text = { nodeValue: "Call (559) 537-6851", isConnected: true };
   const anchor = { isConnected: true, href: BUSINESS_PHONE_HREF,
-    getAttribute() { return this.href; }, setAttribute(key, value) { this.href = value; } };
+    getAttribute(key) { return this[key] ?? null; }, setAttribute(key, value) { this[key] = value; },
+    removeAttribute(key) { delete this[key]; } };
   const document = { querySelectorAll: () => anchor.href === BUSINESS_PHONE_HREF ? [anchor] : [],
     createTreeWalker() { let seen = false; return { nextNode() { if (seen) return null; seen = true; return text; } }; } };
   const replacement = createPhoneNumberReplacement(document);
   replacement.apply(normalizeForwardingNumber("(800) 555-0123", "18005550123"));
   assert.equal(text.nodeValue, "Call (800) 555-0123");
   assert.equal(anchor.href, "tel:+18005550123");
+  assert.deepEqual(getPhoneClickMeasurement({ element: anchor, consent: "granted", tagState: "loaded" }), {
+    marketing_consent: "granted", google_tag_state: "loaded", call_number_type: "google_forwarding",
+  });
   // A React rerender may restore the original href on an existing element.
   anchor.href = BUSINESS_PHONE_HREF;
   text.nodeValue = "Call (559) 537-6851";
@@ -80,6 +84,22 @@ test("number replacement preserves CTA text and restores original links on withd
   replacement.restore();
   assert.equal(text.nodeValue, "Call (559) 537-6851");
   assert.equal(anchor.href, BUSINESS_PHONE_HREF);
+  assert.equal(anchor.getAttribute("data-ais-forwarding-href"), null);
+  assert.equal(getPhoneClickMeasurement({ element: anchor, consent: "denied" }).call_number_type, "business_number");
+});
+
+test("phone-click diagnostics never imply a confirmed lead or expose phone numbers", () => {
+  const element = (href, marker = null) => ({ getAttribute: (key) => key === "href" ? href : marker });
+  assert.deepEqual(getPhoneClickMeasurement({ element: element(BUSINESS_PHONE_HREF) }), {
+    marketing_consent: "unknown", google_tag_state: "not_loaded", call_number_type: "business_number",
+  });
+  const unmarked = getPhoneClickMeasurement({ element: element("tel:+18005550123"), consent: "invalid", tagState: "failed" });
+  assert.deepEqual(unmarked, { marketing_consent: "unknown", google_tag_state: "failed", call_number_type: "other" });
+  assert.equal(getPhoneClickMeasurement({ element: element("tel:+18005550124", "tel:+18005550123") }).call_number_type, "other");
+  assert.equal(getPhoneClickMeasurement({ element: element(BUSINESS_PHONE_HREF, "tel:+18005550123") }).call_number_type, "business_number");
+  assert.deepEqual(getPhoneClickMeasurement(), {
+    marketing_consent: "unknown", google_tag_state: "not_loaded", call_number_type: "other",
+  });
 });
 
 test("lead diagnostics do not dispatch a second primary conversion", () => {

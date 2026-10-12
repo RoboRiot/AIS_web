@@ -22,7 +22,8 @@ try {
     .where("date", ">=", start).where("date", "<=", end).orderBy("date").limit(10001)
     .select("date", "eventType", "path", "formType", "acquisitionSource", "properties.error_stage",
       "properties.error_reason", "properties.acquisition_source", "properties.form_type",
-      "properties.lead_id", "properties.confirmed_by", "measurement").get();
+      "properties.lead_id", "properties.confirmed_by", "measurement",
+      "properties.tag_state", "properties.tag_load_attempts", "properties.tag_load_error").get();
   const groups = new Map();
   const events = snapshot.docs.slice(0, 10000).map((doc) => ({ ...doc.data(), id: doc.id }));
   for (const doc of snapshot.docs.slice(0, 10000)) {
@@ -44,6 +45,12 @@ try {
   const rows = [...groups.values()].sort((a, b) => b.count - a.count);
   console.log(JSON.stringify({ period: { start, end, timezone: "UTC" }, truncated: snapshot.size > 10000,
     deliveryDiagnostics: buildLeadDeliveryReport(events),
+    googleTagHealth: Object.entries(events.filter((event) => event.eventType === "google_tag_status")
+      .reduce((counts, event) => {
+        const key = `${event.properties?.tag_state || "unknown"}:${event.properties?.tag_load_error || "unknown"}`;
+        counts[key] = (counts[key] || 0) + 1;
+        return counts;
+      }, {})).map(([status, count]) => ({ status, count })),
     formErrors: rows.filter((row) => row.event === "form_error"),
     paidNotFound: rows.filter((row) => row.event === "page_not_found" && row.channel === "paid_search"),
     topNotFound: rows.filter((row) => row.event === "page_not_found").slice(0, 10),

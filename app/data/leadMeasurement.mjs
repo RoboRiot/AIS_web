@@ -9,8 +9,15 @@ const enums = {
 // Operational context on an accepted inquiry only; never includes cookies, IDs or URLs.
 export function normalizeLeadMeasurement(value) {
   const input = value && typeof value === "object" && !Array.isArray(value) ? value : {};
-  return Object.fromEntries(Object.entries(enums).map(([key, allowed]) =>
+  const result = Object.fromEntries(Object.entries(enums).map(([key, allowed]) =>
     [key, allowed.includes(input[key]) ? input[key] : "unknown"]));
+  if (Number.isInteger(input.tagLoadAttempts) && input.tagLoadAttempts >= 0 && input.tagLoadAttempts <= 3) {
+    result.tagLoadAttempts = input.tagLoadAttempts;
+  }
+  if (["none", "offline", "script_error", "csp_blocked", "load_timeout"].includes(input.tagLoadError)) {
+    result.tagLoadError = input.tagLoadError;
+  }
+  return result;
 }
 
 export function getLeadMeasurement({ browser, navigator = {}, consent = "unknown" }) {
@@ -18,6 +25,7 @@ export function getLeadMeasurement({ browser, navigator = {}, consent = "unknown
   const eligible = shouldCollectBrowserAnalytics({ hostname: browser?.location?.hostname,
     userAgent: navigator.userAgent, webdriver: navigator.webdriver });
   return normalizeLeadMeasurement({
+    ...(!optedOut && eligible ? browser?.__aisGoogleTagDiagnostics : {}),
     eligibility: optedOut ? "privacy_opt_out" : eligible ? "eligible" : "excluded_environment",
     marketingConsent: optedOut ? "denied" : consent,
     tagState: optedOut || !eligible ? "not_initialized" : browser?.__aisGoogleTagState ||
@@ -41,10 +49,11 @@ export function buildLeadDeliveryReport(events) {
   const leads = [...accepted].map(([leadId, event]) => {
     const signal = signals.get(leadId) || { queued: 0, processed: 0 };
     const measurement = normalizeLeadMeasurement(event.measurement);
-    const status = signal.processed ? "tag_processed_receipt_unverified" : signal.queued ? "queued_receipt_unverified" :
+    const status = signal.processed ? "tag_processed_receipt_unverified" :
       measurement.eligibility === "privacy_opt_out" ? "privacy_opt_out" :
       measurement.eligibility === "excluded_environment" ? "excluded_environment" :
       measurement.tagState === "failed" ? "script_load_failed" :
+      signal.queued ? "queued_receipt_unverified" :
       measurement.eligibility === "unknown" ? "legacy_or_unknown" : "missing_browser_diagnostic";
     return { leadId, date: event.date, measurement, status,
       queuedSignals: signal.queued, processedSignals: signal.processed };
@@ -53,6 +62,7 @@ export function buildLeadDeliveryReport(events) {
     accepted: leads.length,
     queued: leads.filter((lead) => lead.queuedSignals).length,
     tagProcessed: leads.filter((lead) => lead.processedSignals).length,
+    scriptLoadFailed: leads.filter((lead) => lead.status === "script_load_failed").length,
     noBrowserDiagnostic: leads.filter((lead) => !lead.queuedSignals && !lead.processedSignals).length,
     duplicateDiagnosticLeads: leads.filter((lead) => lead.queuedSignals > 1 || lead.processedSignals > 1).length,
     note: "Browser context is client-reported at submission. Queued/processed does not prove GA receipt or Ads attribution. Legacy missing signals have an unknown cause; date boundaries can exclude later diagnostics.",

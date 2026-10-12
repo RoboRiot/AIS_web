@@ -39,6 +39,7 @@ const EVENT_TYPES = new Set([
   "page_not_found",
   "lead_event_queued",
   "lead_tag_processed",
+  "google_tag_status",
 ]);
 const SEARCH_KINDS = new Set(["keyword", "part_number"]);
 

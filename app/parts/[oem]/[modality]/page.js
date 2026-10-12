@@ -37,6 +37,7 @@ const categoryFor = (params) => {
 };
 
 export async function generateMetadata({ params }) {
+  params = await params;
   const category = categoryFor(params);
   if (!category) return {};
   const title = `${category.oem} ${category.modality} Parts | Advanced Imaging Services`;
@@ -66,6 +67,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function PartsCategoryPage({ params }) {
+  params = await params;
   const category = categoryFor(params);
   if (!category) notFound();
 
@@ -121,7 +123,7 @@ export default async function PartsCategoryPage({ params }) {
         </div>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList).replace(/</g, "\\u003c") }}
         />
       </section>
       <ProductsPage

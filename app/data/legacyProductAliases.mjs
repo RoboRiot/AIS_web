@@ -18,6 +18,12 @@ export function buildLegacyProductAliases(products) {
     if (String(product.id) === "97352cf7c8ab1" && /Lightspeed Performix MX200 CT Tube/i.test(name)) slugs.add("mx200");
     if (String(product.id) === "0f794eb65008" && identifiers.PN === "5128204") slugs.add("vct-signal-interface-board-5128204");
     if (String(product.id) === "temp-42" && identifiers.PN === "186852") slugs.add("46-186852-p2-relay-k2-back-up-connection");
+    if (String(product.id) === "a761c231a605" && identifiers.PN === "5136400-3" && /Center Digital Module Kit/i.test(name)) {
+      slugs.add("vct-64-center-digital-module-kit-sherlock-5136400-3");
+    }
+    if (String(product.id) === "bd1b36a1ab69" && identifiers.PN === "PX79-11217" && /KGTSM/i.test(name)) {
+      slugs.add("kgtsm-px79-11217");
+    }
     for (const slug of slugs) {
       if (!slug) continue;
       if (aliases.has(slug) && aliases.get(slug)?.id !== candidate.id) aliases.set(slug, null);

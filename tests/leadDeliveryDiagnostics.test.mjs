@@ -17,6 +17,10 @@ test("accepted-lead measurement context contains only allowlisted operational st
   const normalized = normalizeLeadAnalytics({ measurement: { eligibility: "eligible", tagState: "failed" } });
   assert.equal(normalized.measurement.tagState, "failed");
   assert.equal(normalized.acquisitionSource, "unknown");
+  assert.deepEqual(normalizeLeadMeasurement({ tagLoadAttempts: 999, tagLoadError: "private@example.com" }),
+    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown" });
+  assert.deepEqual(normalizeLeadMeasurement({ tagLoadAttempts: 2, tagLoadError: "offline" }),
+    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown", tagLoadAttempts: 2, tagLoadError: "offline" });
 });
 
 test("tag readiness does not override privacy, bot or local-environment exclusions", () => {

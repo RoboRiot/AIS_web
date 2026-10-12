@@ -18,6 +18,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
+  params = await params;
   const page = getServiceLandingPage(params.slug);
   if (!page) return {};
   const primaryImage = getServiceImages(page)[0];
@@ -50,7 +51,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function ServiceLandingPage({ params }) {
+export default async function ServiceLandingPage({ params }) {
+  params = await params;
   const page = getServiceLandingPage(params.slug);
   if (!page) notFound();
 

@@ -37,7 +37,7 @@ const getProductBySlug = cache(unstable_cache(async (slug) => {
 
   const product = await fetchProductBySlug(nameSlug) || await fetchProductByLegacySlug(nameSlug);
   return product && isCampaignReadyProduct(product) ? product : null;
-}, ["public-product-resolution-v5"], { revalidate: 900 }));
+}, ["public-product-resolution-v6"], { revalidate: 900 }));
 
 const getLegacyGroup = cache(async (slug) => {
   if (!Object.hasOwn(legacyProductGroups, slug)) return null;
@@ -54,6 +54,7 @@ const getLegacyGroup = cache(async (slug) => {
 });
 
 export async function generateMetadata({ params }) {
+  params = await params;
   const legacyGroup = await getLegacyGroup(params.slug);
   if (legacyGroup) return {
     title: `${legacyGroup.group.title} | Advanced Imaging Services`,
@@ -103,6 +104,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductSeoPage({ params }) {
+  params = await params;
   const legacyGroup = await getLegacyGroup(params.slug);
   if (legacyGroup) return <LegacyProductGroup {...legacyGroup} />;
   const product = await getProductBySlug(params.slug);
@@ -133,61 +135,24 @@ export default async function ProductSeoPage({ params }) {
   const categoryHref = manufacturer && modality
     ? buildPartsCategoryHref(manufacturer, modality)
     : "/parts";
-  const normalizedCondition = cleanText(product.Condition).toLowerCase();
-  const itemCondition = normalizedCondition.includes("new")
-    ? "https://schema.org/NewCondition"
-    : normalizedCondition.includes("used") || normalizedCondition.includes("refurb")
-      ? "https://schema.org/UsedCondition"
-      : undefined;
+  // Quote-only catalog pages have no published offers or product reviews.
+  // Describe the page without requesting an ineligible Product rich result.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": `${url}#product`,
-    name: product.Name || "",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    name: displayHeading,
     description,
-    category: modality || "Medical imaging part",
-    model: systemModel || primaryPartNumber || "",
-    sku: product.id || primaryPartNumber || "",
-    mpn: primaryPartNumber || "",
-    productID: primaryPartNumber || "",
-    itemCondition,
-    brand: manufacturer
-      ? {
-          "@type": "Brand",
-          name: manufacturer,
-        }
-      : undefined,
-    manufacturer: manufacturer
-      ? {
-          "@type": "Organization",
-          name: manufacturer,
-        }
-      : undefined,
+    isPartOf: { "@id": "https://advancedimagingparts.com/#website" },
+    about: {
+      "@type": "Thing",
+      name: productName,
+      identifier: partNumbers.map((value) => ({ "@type": "PropertyValue", name: "Part Number", value })),
+    },
     image: Array.isArray(product.Images)
       ? product.Images.filter((image) => typeof image === "string" && image.startsWith("http"))
       : undefined,
     url,
-    additionalProperty: [
-      ...partNumbers.map((partNumber) => ({
-        "@type": "PropertyValue",
-        name: "Part Number",
-        value: partNumber,
-      })),
-      systemModel
-        ? {
-            "@type": "PropertyValue",
-            name: "System Model",
-            value: systemModel,
-          }
-        : null,
-      modality
-        ? {
-            "@type": "PropertyValue",
-            name: "Modality",
-            value: modality,
-          }
-        : null,
-    ].filter(Boolean),
   };
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -220,11 +185,11 @@ export default async function ProductSeoPage({ params }) {
       <div className="container" data-product-id={product.id}>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
         />
         <div className="seo-fallback">
           <div className="grid-container-2" style={{ margin: "40px 0" }}>

@@ -121,7 +121,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
       body: JSON.stringify(payload), keepalive: true,
     }).catch(() => {});
   }
-  if (eventType !== "page_view") {
+  if (eventType !== "page_view" && options.sendToGoogle !== false) {
     // Queue safely even if the Google script has not finished loading. Privacy gates above still apply.
     const gtag = ensureGoogleAnalytics(window, measurementId);
     const gaProperties = {

@@ -20,6 +20,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
+  params = await params;
   const page = getTrailerLandingPage(params.slug);
   if (!page) return {};
   const primaryImage = getTrailerImages(page.slug)[0];
@@ -52,7 +53,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function TrailerLandingPage({ params }) {
+export default async function TrailerLandingPage({ params }) {
+  params = await params;
   const page = getTrailerLandingPage(params.slug);
   if (!page) notFound();
 

@@ -12,12 +12,15 @@ export function startGoogleTagLoader(browser, document, measurementId, onStatus 
       webdriver: browser.navigator?.webdriver,
     });
   if (!eligible() || !/^G-[A-Z0-9]+$/i.test(measurementId)) return null;
-  let attempts = 0, script = null, retryTimer = null, slowTimer = null;
+  let attempts = 0, failures = 0, sequence = 0, script = null, retryTimer = null, slowTimer = null;
   let stopped = false, cspBlocked = false;
-  const report = (state, reason = "none") => {
+  // One document can emit several retries and SPA page paths; it is not several lost leads.
+  const loadId = browser.crypto?.randomUUID?.() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  const report = (state, reason = "none", final = false) => {
     browser.__aisGoogleTagState = state;
     browser.__aisGoogleTagDiagnostics = { tagLoadAttempts: attempts, tagLoadError: reason };
-    try { onStatus({ tag_state: state, tag_load_attempts: attempts, tag_load_error: reason }); }
+    try { onStatus({ tag_state: state, tag_load_attempts: attempts, tag_load_error: reason,
+      tag_load_id: loadId, tag_load_sequence: ++sequence, tag_load_final: final }); }
     catch { /* Optional diagnostics must not affect tag loading. */ }
   };
   const clearTimers = () => {
@@ -35,7 +38,7 @@ export function startGoogleTagLoader(browser, document, measurementId, onStatus 
     detach();
   };
   const load = () => {
-    if (stopped || cspBlocked || attempts >= 3) return;
+    if (stopped || cspBlocked || failures >= 3) return;
     if (!eligible()) { stop(); return; }
     if (browser.navigator.onLine === false) { report("queued", "offline"); return; }
     clearTimers();
@@ -48,7 +51,7 @@ export function startGoogleTagLoader(browser, document, measurementId, onStatus 
     current.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     current.onload = () => {
       if (stopped || script !== current) return;
-      report("loaded");
+      report("loaded", "none", true);
       stop();
     };
     current.onerror = () => {
@@ -56,9 +59,13 @@ export function startGoogleTagLoader(browser, document, measurementId, onStatus 
       clearTimers();
       script = null;
       current.remove();
-      report("failed", cspBlocked ? "csp_blocked" : browser.navigator.onLine === false ? "offline" : "script_error");
-      if (cspBlocked || attempts >= 3) { stop(); return; }
-      if (browser.navigator.onLine !== false) retryTimer = browser.setTimeout(load, RETRY_DELAYS[attempts - 1]);
+      // Losing connectivity must not exhaust the online-error budget and permanently
+      // strand the existing queue. Resume that same queue on the next online event.
+      if (browser.navigator.onLine === false) { report("queued", "offline"); return; }
+      failures++;
+      report("failed", "script_error", failures >= 3);
+      if (failures >= 3) { stop(); return; }
+      retryTimer = browser.setTimeout(load, RETRY_DELAYS[failures - 1]);
     };
     // A slow request may still execute. Observe it, but never launch a concurrent copy.
     slowTimer = browser.setTimeout(() => {
@@ -75,7 +82,7 @@ export function startGoogleTagLoader(browser, document, measurementId, onStatus 
     try { url = new URL(event.blockedURI); } catch { return; }
     if (url.origin !== "https://www.googletagmanager.com" || !["/", "/gtag/js"].includes(url.pathname)) return;
     cspBlocked = true;
-    report("failed", "csp_blocked");
+    report("failed", "csp_blocked", true);
     stop();
   }
   const controller = { stop };

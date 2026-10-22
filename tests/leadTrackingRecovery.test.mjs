@@ -139,12 +139,16 @@ test("legacy names resolve only unique historical IDs with the same part number"
   const parts = JSON.parse(await readFile(new URL("../public/assets/data/parts.json", import.meta.url), "utf8"));
   const aliases = buildLegacyProductAliases(parts);
   for (const [slug, id] of [["vct-64-center-digital-module-kit-sherlock-5136400-3", "a761c231a605"],
-    ["kgtsm-px79-11217", "bd1b36a1ab69"]]) {
+    ["kgtsm-px79-11217", "bd1b36a1ab69"],
+    ["scsi-cable-vhd68-to-cent-50-linux-2324697-2", "d4da9b3f66bd"],
+    ["1-5t-preamp-46-264442g3", "bbebb2371560"]]) {
     const product = parts.find((item) => item.id === id);
     assert.equal(aliases.get(slug).id, id);
     assert.equal(matchesLegacyProduct(aliases.get(slug), product), true);
     assert.equal(matchesLegacyProduct(aliases.get(slug), { ...product, PN: "DIFFERENT" }), false);
   }
+  const changedPreamp = parts.map((part) => part.id === "bbebb2371560" ? { ...part, Name: "Different preamp" } : part);
+  assert.equal(buildLegacyProductAliases(changedPreamp).has("1-5t-preamp-46-264442g3"), false);
   for (const [slug, id] of [["2-hd-nv-array", "d71a15d4d849"], ["terminal-servrer-pwr-supply", "4a864487dab0"],
     ["lightspeed-performix-40-plus-ct-tube-liquid-bearing", "temp-204"]]) {
     assert.equal(aliases.get(slug).id, id);

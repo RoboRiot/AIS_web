@@ -24,6 +24,12 @@ export function buildLegacyProductAliases(products) {
     if (String(product.id) === "bd1b36a1ab69" && identifiers.PN === "PX79-11217" && /KGTSM/i.test(name)) {
       slugs.add("kgtsm-px79-11217");
     }
+    if (String(product.id) === "d4da9b3f66bd" && identifiers.PN === "2324697-2" && /SCSI CABLE/i.test(name)) {
+      slugs.add("scsi-cable-vhd68-to-cent-50-linux-2324697-2");
+    }
+    if (String(product.id) === "bbebb2371560" && identifiers.PN === "46-264442G3" && /1\.5T Preamp/i.test(name)) {
+      slugs.add("1-5t-preamp-46-264442g3");
+    }
     for (const slug of slugs) {
       if (!slug) continue;
       if (aliases.has(slug) && aliases.get(slug)?.id !== candidate.id) aliases.set(slug, null);

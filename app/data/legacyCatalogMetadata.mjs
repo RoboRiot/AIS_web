@@ -16,6 +16,11 @@ export const getVerifiedLegacyMetadata = (product = {}) => {
   // Research and source links are recorded in docs/product-url-research-2026-09-16.md.
   const id = String(product.id);
   const pn = String(product.PN || "").trim().toUpperCase();
+  // The historical and current record both identify this preamp in its name.
+  if (id === "bbebb2371560" && (!pn || pn === "46-264442G3") &&
+      /^46-264442G3\s+1\.5T\s+Preamp$/i.test(String(product.Name || "").trim())) {
+    return { PN: "46-264442G3", OEM: "GE", Modality: "MRI" };
+  }
   // Exact record + name guards; evidence is in docs/lead-measurement-repairs-2026-09-21.md.
   if (id === "temp-41" && (!pn || pn === "46-170021P10") &&
       /^46-170021p10\s+fuse$/i.test(String(product.Name || "").trim())) {

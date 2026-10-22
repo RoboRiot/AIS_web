@@ -82,6 +82,38 @@ test("a failed offline request resumes once and honors a newly enabled privacy s
   assert.equal(h.listeners.size, 0);
 });
 
+test("losing connectivity on the third request can recover the existing queue", () => {
+  const h = harness();
+  const gtag = ensureGoogleAnalytics(h.browser, "G-TEST");
+  createLeadEventDispatcher()({ gtag, properties: { lead_id: "offline-test", form_type: "trailer_request" } });
+  h.start();
+  h.scripts[0].onerror(); h.runTimer(1000);
+  h.scripts[1].onerror(); h.runTimer(5000);
+  h.browser.navigator.onLine = false; h.scripts[2].onerror();
+  assert.equal(h.browser.__aisGoogleTagState, "queued");
+  assert.equal(h.browser.__aisGoogleTagDiagnostics.tagLoadError, "offline");
+  assert.equal(h.statuses.at(-1).tag_load_final, false);
+  h.browser.navigator.onLine = true;
+  h.listeners.get("online")();
+  assert.equal(h.scripts.length, 4);
+  h.scripts[3].onload();
+  assert.equal(h.browser.__aisGoogleTagState, "loaded");
+  assert.equal(h.statuses.at(-1).tag_load_final, true);
+  assert.equal(h.browser.dataLayer.filter((row) => row[1] === "generate_lead").length, 1);
+  assert.equal(h.listeners.size, 0);
+});
+
+test("diagnostics identify one document, order retries, and distinguish final failure", () => {
+  const h = harness(); h.start();
+  h.scripts[0].onerror(); h.runTimer(1000);
+  h.browser.location = new URL("https://advancedimagingparts.com/trailers");
+  h.scripts[1].onerror(); h.runTimer(5000);
+  h.scripts[2].onerror();
+  assert.equal(new Set(h.statuses.map((status) => status.tag_load_id)).size, 1);
+  assert.deepEqual(h.statuses.map((status) => status.tag_load_sequence), [1, 2, 3, 4, 5, 6]);
+  assert.deepEqual(h.statuses.map((status) => status.tag_load_final), [false, false, false, false, false, true]);
+});
+
 test("CSP failures are identified and stop retries, but report-only policies do not", () => {
   const h = harness(); h.start();
   const csp = h.listeners.get("securitypolicyviolation");

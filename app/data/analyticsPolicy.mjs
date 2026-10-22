@@ -3,12 +3,12 @@ import {
   PRODUCTION_HOST_ALIASES,
 } from "../../site.config.mjs";
 
-const ANALYTICS_HOSTS = new Set([
+export const ANALYTICS_HOSTS = new Set([
   PRODUCTION_HOSTNAME,
   ...PRODUCTION_HOST_ALIASES,
 ]);
 
-const AUTOMATION_USER_AGENT_MARKERS = [
+export const AUTOMATION_USER_AGENT_MARKERS = [
   "bot",
   "crawler",
   "spider",

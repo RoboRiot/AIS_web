@@ -10,6 +10,7 @@ import WebsiteAnalytics from "@/components/analytics/WebsiteAnalytics";
 import AosInitializer from "@/components/animations/AosInitializer";
 import ClientRouteRecovery from "@/components/errors/ClientRouteRecovery";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
+import { GOOGLE_TAG_MANAGER_SCRIPT, GOOGLE_TAG_MANAGER_NOSCRIPT_URL } from "@/app/data/googleTagManager.mjs";
 
 const siteName = "Advanced Imaging Services";
 const geologica = Geologica({
@@ -136,11 +137,24 @@ export default function RootLayout({ children }) {
     <html lang="en" className={geologica.variable}>
       <head>
         <script
+          id="google-tag-manager"
+          dangerouslySetInnerHTML={{ __html: GOOGLE_TAG_MANAGER_SCRIPT }}
+        />
+        <script
           id="ais-static-recovery"
           dangerouslySetInnerHTML={{ __html: staleAssetRecoveryScript }}
         />
       </head>
       <body>
+        <noscript>
+          <iframe
+            title="Google Tag Manager"
+            src={GOOGLE_TAG_MANAGER_NOSCRIPT_URL}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <GoogleAnalytics />
         <WebsiteAnalytics />
         <AosInitializer />

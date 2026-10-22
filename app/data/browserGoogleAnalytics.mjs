@@ -1,13 +1,12 @@
 import { analyticsPageUrl } from "./analyticsPrivacy.mjs";
 import { getLeadEventName } from "./leadAnalytics.mjs";
+import { DEFAULT_MARKETING_CONSENT } from "./marketingConsent.mjs";
 
 export function ensureGoogleAnalytics(browser, measurementId) {
   browser.dataLayer = browser.dataLayer || [];
   browser.gtag = browser.gtag || function gtag() { browser.dataLayer.push(arguments); };
   if (!browser.__aisMarketingConsentInitialized) {
-    browser.gtag("consent", "default", {
-      ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
-    });
+    browser.gtag("consent", "default", { ...DEFAULT_MARKETING_CONSENT });
     browser.__aisMarketingConsentInitialized = true;
   }
   if (browser.__aisGaMeasurementId !== measurementId) {

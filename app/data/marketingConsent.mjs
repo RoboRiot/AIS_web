@@ -1,5 +1,10 @@
 export const MARKETING_CONSENT_KEY = "ais_marketing_measurement_consent";
 export const MARKETING_CONSENT_EVENT = "ais:marketing-consent";
+export const DEFAULT_MARKETING_CONSENT = {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+};
 const MAX_AGE = 180 * 24 * 60 * 60_000;
 
 export function marketingConsent({ storage, navigator = {}, now = Date.now() } = {}) {

@@ -1,14 +1,9 @@
 import { analyticsPageUrl } from "./analyticsPrivacy.mjs";
 import { getLeadEventName } from "./leadAnalytics.mjs";
-import { DEFAULT_MARKETING_CONSENT } from "./marketingConsent.mjs";
+import { synchronizeGoogleConsent } from "./marketingConsent.mjs";
 
 export function ensureGoogleAnalytics(browser, measurementId) {
-  browser.dataLayer = browser.dataLayer || [];
-  browser.gtag = browser.gtag || function gtag() { browser.dataLayer.push(arguments); };
-  if (!browser.__aisMarketingConsentInitialized) {
-    browser.gtag("consent", "default", { ...DEFAULT_MARKETING_CONSENT });
-    browser.__aisMarketingConsentInitialized = true;
-  }
+  synchronizeGoogleConsent(browser);
   if (browser.__aisGaMeasurementId !== measurementId) {
     browser.gtag("js", new Date());
     browser.gtag("config", measurementId, {

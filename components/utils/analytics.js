@@ -3,7 +3,7 @@ import { analyticsPageUrl, redactAnalyticsText } from "@/app/data/analyticsPriva
 import { CLICK_ID_KEYS, createAttributionReader } from "@/app/data/browserAttribution.mjs";
 import { createLeadEventDispatcher, ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
 import { readAttributionHistory } from "@/app/data/attributionHistory.mjs";
-import { marketingConsent } from "@/app/data/marketingConsent.mjs";
+import { browserMeasurementConsent } from "@/app/data/marketingConsent.mjs";
 import { getLeadMeasurement } from "@/app/data/leadMeasurement.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
@@ -23,6 +23,7 @@ export const createLeadId = () => randomId();
 const browserStorage = (name) => {
   try { return window[name]; } catch { return undefined; }
 };
+const analyticsStorage = (name) => browserMeasurementConsent(window).analytics === "granted" ? browserStorage(name) : undefined;
 
 const storedId = (storage, key) => {
   try {
@@ -44,9 +45,9 @@ const gaEventName = (eventType) => ({
 
 const sessionAttribution = () => {
   const current = readAttribution({ href: window.location.href, referrer: document.referrer,
-    storage: browserStorage("sessionStorage") });
+    storage: browserMeasurementConsent(window).advertising === "granted" ? browserStorage("sessionStorage") : undefined });
   readAttributionHistory({ current, storage: browserStorage("localStorage"),
-    allowed: marketingConsent({ storage: browserStorage("localStorage"), navigator }) === "granted" });
+    allowed: browserMeasurementConsent(window).advertising === "granted" });
   return current;
 };
 
@@ -58,25 +59,25 @@ export const refreshMarketingAttribution = () => {
 export const getLeadAnalyticsContext = (leadId = "") => {
   if (typeof window === "undefined") return {};
   const measurement = getLeadMeasurement({ browser: window, navigator,
-    consent: marketingConsent({ storage: browserStorage("localStorage"), navigator }) });
+    consent: browserMeasurementConsent(window).advertising });
   if (measurement.eligibility !== "eligible") return { leadId, measurement };
   const attribution = sessionAttribution();
   let lastPartSearch = {};
   try {
-    lastPartSearch = JSON.parse(browserStorage("sessionStorage")?.getItem(LAST_PART_SEARCH_KEY) || "{}");
+    lastPartSearch = JSON.parse(analyticsStorage("sessionStorage")?.getItem(LAST_PART_SEARCH_KEY) || "{}");
   } catch { /* Search attribution is optional. */ }
   return {
     leadId: leadId || createLeadId(),
     measurement,
-    visitorId: storedId(browserStorage("localStorage"), VISITOR_KEY),
-    sessionId: storedId(browserStorage("sessionStorage"), SESSION_KEY),
+    visitorId: storedId(analyticsStorage("localStorage"), VISITOR_KEY),
+    sessionId: storedId(analyticsStorage("sessionStorage"), SESSION_KEY),
     sourcePage: window.location.pathname.slice(0, 300),
     referrer: document.referrer.slice(0, 300),
     search_term: redactAnalyticsText(lastPartSearch?.search_term || "", 100),
     search_kind: String(lastPartSearch?.search_kind || "").slice(0, 40),
     ...attribution,
     attribution_history: readAttributionHistory({ current: attribution, storage: browserStorage("localStorage"),
-      allowed: marketingConsent({ storage: browserStorage("localStorage"), navigator }) === "granted" }),
+      allowed: browserMeasurementConsent(window).advertising === "granted" }),
   };
 };
 
@@ -99,7 +100,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
   );
   if (eventType === "search" && safeProperties.search_location === "parts_catalog" && safeProperties.search_term) {
     try {
-      browserStorage("sessionStorage")?.setItem(LAST_PART_SEARCH_KEY, JSON.stringify({
+      analyticsStorage("sessionStorage")?.setItem(LAST_PART_SEARCH_KEY, JSON.stringify({
         search_term: safeProperties.search_term,
         search_kind: safeProperties.search_kind || "keyword",
       }));
@@ -109,8 +110,8 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
     eventType,
     path: window.location.pathname.slice(0, 300),
     referrer: document.referrer.slice(0, 300),
-    visitorId: storedId(browserStorage("localStorage"), VISITOR_KEY),
-    sessionId: storedId(browserStorage("sessionStorage"), SESSION_KEY),
+    visitorId: storedId(analyticsStorage("localStorage"), VISITOR_KEY),
+    sessionId: storedId(analyticsStorage("sessionStorage"), SESSION_KEY),
     occurredAt: new Date().toISOString(),
     properties: safeProperties,
     attribution,

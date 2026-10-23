@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { createLeadId, trackWebsiteEvent } from "@/components/utils/analytics";
-import { marketingConsent } from "@/app/data/marketingConsent.mjs";
+import { browserMeasurementConsent } from "@/app/data/marketingConsent.mjs";
 import { getPhoneClickMeasurement } from "@/app/data/websiteCallTracking.mjs";
 
 const labelFor = (element) =>
@@ -55,14 +55,12 @@ export default function WebsiteAnalytics() {
       });
       const communicationEvent = communicationEventFor(element);
       if (communicationEvent) {
-        let storage;
-        try { storage = window.localStorage; } catch { /* Unknown is not consent. */ }
         trackWebsiteEvent(communicationEvent, {
           label: labelFor(element),
           destination: destinationFor(element),
           link_location: element.dataset.analyticsSource || pathname || "/",
           ...(communicationEvent === "phone_click" ? getPhoneClickMeasurement({
-            element, consent: marketingConsent({ storage, navigator }),
+            element, consent: browserMeasurementConsent(window).advertising,
             tagState: window.__aisGoogleTagState,
           }) : {}),
         });

@@ -7,21 +7,36 @@ The root layout includes the loader in `<head>` and the standard hidden
 using that layout. Next.js may insert an internal hidden placeholder before it.
 The JavaScript loader uses the existing production-host and automated-traffic
 exclusions and does not load for Do Not Track or Global Privacy Control.
-Advertising storage, user data and personalization default to denied before GTM
-loads. The existing Marketing privacy control continues to update consent.
-The current analytics-storage behavior is unchanged.
+All four consent signals are explicitly initialized before GTM loads. Valid
+saved choices are restored synchronously; unknown choices default to denied.
+Analytics and advertising are separate choices. Ad personalization stays denied.
+The Marketing privacy control updates consent before measurement listeners run.
 
-## Existing tracking stays in place
+## Measurement ownership (October 23 repair candidate)
 
-This installs the container only. GA4 configuration/page views, accepted-lead
-events, and Google Ads website-call tracking still run through the existing site
-integration. Do not publish duplicate GA4 configuration, page-view, lead, or Ads
-conversion tags in GTM without a separately tested migration that disables the
-equivalent site implementation.
+GA4 configuration/page views and accepted-lead events remain owned by the site.
+The technician's native GTM website-call tag owns number retrieval. The old
+application call-label request is removed in this candidate, not the historical
+Ads action. Do not add duplicate GA4 or accepted-lead tags in GTM.
 
-On October 22, 2026, a read-only fetch of the public container returned HTTP 200
-and resource version 1 with empty tags, predicates and rules. Future GTM publishes
-can change this independently of a website release.
+The new head script sets `ais_call_tracking_owner=site-consent-v1`. The app emits
+`ais_call_tracking_ready` after advertising consent and pathname transitions.
+The matching unpublished GTM workspace migration replaces the call tag's All
+Pages trigger with mutually exclusive legacy-page-load and new-ready-event
+triggers. It does not change any of the 26 page-view tags or Ads goals.
+
+Marked header/footer phone links provide the GTM-replaced number to the app's
+mobile/SPA link synchronizer. This does not request a second number or claim a
+connected call. Withdrawing advertising consent restores the business number.
+
+Release the website and matching GTM changes as a coordinated, preview-tested
+migration. Do not treat the saved workspace or this documentation as proof of a
+live release. See `google-measurement-review-2026-10-23.md` for research and gates.
+
+Historical checkpoint: on October 22, a public fetch returned resource version
+1 with empty tags. This is superseded by the October 23 UI check: live version 6
+contains 28 tags (26 page-view, Ads destination, and website call). GTM can change
+independently of a website release.
 
 ## Container safeguards and verification
 
@@ -38,10 +53,10 @@ can change this independently of a website release.
   genuine consented inquiry against first-party diagnostics and Google reports;
   do not create synthetic production leads.
 
-No campaign settings, budgets, remote GTM tags, privacy policy, or terms are
-changed by this installation.
+No campaign settings, budgets, privacy policy, or terms are changed by this
+repair. The remote GTM changes are an unpublished workspace draft until verified.
 
-## Local verification (October 22, 2026)
+## Historical installation verification (October 22, 2026)
 
 - All 105 unit tests and ESLint passed.
 - The production release build and asset-integrity checks passed. Existing Sass

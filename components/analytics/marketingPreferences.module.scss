@@ -36,6 +36,15 @@
   button { padding: 10px 16px; border: 1px solid #81909e; background: #fff; color: #202124; border-radius: 4px; }
   .accept { background: #176aab; color: #fff; border-color: #176aab; }
 }
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 10px;
+  input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; }
+}
 @media (max-width: 680px) {
   .panel { flex-direction: column; align-items: stretch; gap: 12px; bottom: 8px; left: 8px; right: 8px; padding: 14px; }
   .actions { justify-content: flex-end; }

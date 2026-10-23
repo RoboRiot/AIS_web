@@ -1,5 +1,5 @@
 import { ANALYTICS_HOSTS, AUTOMATION_USER_AGENT_MARKERS } from "./analyticsPolicy.mjs";
-import { DEFAULT_MARKETING_CONSENT } from "./marketingConsent.mjs";
+import { GOOGLE_CONSENT_BOOTSTRAP } from "./marketingConsent.mjs";
 
 export const GOOGLE_TAG_MANAGER_ID = "GTM-MQJJ4Z5S";
 export const GOOGLE_TAG_MANAGER_NOSCRIPT_URL =
@@ -16,12 +16,9 @@ export const GOOGLE_TAG_MANAGER_SCRIPT = `
      w.__aisGtmContainerId===i)return;
   w[l]=w[l]||[];
   w.gtag=w.gtag||function(){w[l].push(arguments);};
-  if(!w.__aisMarketingConsentInitialized){
-    w.gtag('consent','default',${JSON.stringify(DEFAULT_MARKETING_CONSENT)});
-    w.__aisMarketingConsentInitialized=true;
-  }
+  ${GOOGLE_CONSENT_BOOTSTRAP}
   w.__aisGtmContainerId=i;
-  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js',ais_call_tracking_owner:'site-consent-v1'});
   var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
   j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
   f.parentNode.insertBefore(j,f);

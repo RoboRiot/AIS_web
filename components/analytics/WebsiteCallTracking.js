@@ -1,64 +1,51 @@
 "use client";
 
-import { useEffect } from "react";
-import { marketingConsent, MARKETING_CONSENT_EVENT } from "@/app/data/marketingConsent.mjs";
-import { BUSINESS_PHONE, WEBSITE_CALL_DESTINATION, createPhoneNumberReplacement, normalizeForwardingNumber } from "@/app/data/websiteCallTracking.mjs";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { MARKETING_CONSENT_EVENT, MARKETING_CONSENT_KEY, synchronizeGoogleConsent } from "@/app/data/marketingConsent.mjs";
+import { createGtmPhoneNumberBridge, WEBSITE_CALL_GTM_EVENT } from "@/app/data/websiteCallTracking.mjs";
 
 export default function WebsiteCallTracking({ enabled }) {
+  const pathname = usePathname();
+  const lastRequestedPath = useRef(null);
   useEffect(() => {
-    if (!enabled || typeof window.gtag !== "function") return;
-    const replacement = createPhoneNumberReplacement(document);
-    let number = null;
+    if (!enabled) return;
+    const bridge = createGtmPhoneNumberBridge(document);
     let allowed = false;
-    let generation = 0;
-    const observer = new MutationObserver(() => {
-      if (allowed && number) replacement.apply(number);
-    });
     const synchronize = () => {
-      let storage;
-      try { storage = window.localStorage; } catch { /* No consent without storage. */ }
-      const next = marketingConsent({ storage, navigator }) === "granted";
-      window.gtag("consent", "update", {
-        ad_storage: next ? "granted" : "denied",
-        ad_user_data: next ? "granted" : "denied",
-        ad_personalization: "denied",
-      });
-      if (!next) {
-        generation++;
-        allowed = false;
-        number = null;
-        observer.disconnect();
-        replacement.restore();
-        return;
+      const state = synchronizeGoogleConsent(window);
+      const next = state.ad_storage === "granted" && state.ad_user_data === "granted";
+      bridge.synchronize(next);
+      if (next && !allowed) {
+        window.dataLayer.push({ event: WEBSITE_CALL_GTM_EVENT });
+        lastRequestedPath.current = window.location.pathname;
       }
-      if (allowed) return;
-      const token = ++generation;
-      allowed = true;
-      observer.observe(document.body, { childList: true, subtree: true });
-      window.gtag("config", WEBSITE_CALL_DESTINATION.split("/")[0], {
-        send_page_view: false, allow_ad_personalization_signals: false,
-      });
-      window.gtag("config", WEBSITE_CALL_DESTINATION, {
-        phone_conversion_number: BUSINESS_PHONE,
-        phone_conversion_options: { timeout: 5000, cache: false },
-        phone_conversion_callback: (formatted, dialable) => {
-          if (!allowed || token !== generation) return;
-          number = normalizeForwardingNumber(formatted, dialable);
-          if (number) replacement.apply(number);
-        },
-      });
+      if (!next) lastRequestedPath.current = null;
+      allowed = next;
     };
+    const storageChanged = (event) => {
+      if (event.key && event.key !== MARKETING_CONSENT_KEY) return;
+      delete window.__aisConsentChoice;
+      synchronize();
+    };
+    const observer = new MutationObserver(() => bridge.synchronize(allowed));
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true,
+      attributes: true, attributeFilter: ["href"] });
     synchronize();
     window.addEventListener(MARKETING_CONSENT_EVENT, synchronize);
-    window.addEventListener("storage", synchronize);
+    window.addEventListener("storage", storageChanged);
     return () => {
-      allowed = false;
-      generation++;
       observer.disconnect();
-      replacement.restore();
       window.removeEventListener(MARKETING_CONSENT_EVENT, synchronize);
-      window.removeEventListener("storage", synchronize);
+      window.removeEventListener("storage", storageChanged);
     };
   }, [enabled]);
+  useEffect(() => {
+    if (!enabled || lastRequestedPath.current === pathname) return;
+    const state = synchronizeGoogleConsent(window);
+    if (state.ad_storage !== "granted" || state.ad_user_data !== "granted") return;
+    window.dataLayer.push({ event: WEBSITE_CALL_GTM_EVENT });
+    lastRequestedPath.current = pathname;
+  }, [enabled, pathname]);
   return null;
 }

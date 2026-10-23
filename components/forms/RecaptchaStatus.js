@@ -18,15 +18,18 @@ export default function RecaptchaStatus() {
     }
   };
 
-  if (status !== "error" && status !== "retrying") return null;
+  if (!["error", "retrying", "retry-ready"].includes(status)) return null;
+  const checking = retrying || status === "retrying";
   return (
     <aside className={styles.notice} role="status" aria-live="polite">
       <div>
         <p>{status === "error"
           ? "The form security check could not connect. Your form entries are still here."
-          : "The security check has restarted. Try submitting your request again."}</p>
-        <button type="button" onClick={retry} disabled={retrying}>
-          {retrying ? "Retrying..." : "Retry security check"}
+          : status === "retrying"
+            ? "Restarting the security check. Your form entries are still here."
+            : "The security check has reloaded. Try submitting your request again."}</p>
+        <button type="button" onClick={retry} disabled={checking}>
+          {checking ? "Retrying..." : "Retry security check"}
         </button>
         <span>Need help? <a href="tel:+15595376851">Call (559) 537-6851</a>.</span>
       </div>

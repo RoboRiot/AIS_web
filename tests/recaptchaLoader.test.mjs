@@ -14,21 +14,56 @@ function fixture() {
   let executions = 0;
   let resets = 0;
   let renders = 0;
-  let widgetOptions;
-  const host = { id: "ais-recaptcha-host" };
+  let renderFrames = true;
+  const observers = new Set();
+  const clients = [];
+  const notify = () => [...observers].forEach((observer) => observer.callback());
+  const element = () => ({
+    children: [], parent: null, src: "", tag: "div",
+    get isConnected() { return this === host || Boolean(this.parent?.isConnected); },
+    querySelector() {
+      for (const child of this.children) {
+        if (child.tag === "iframe" && child.src.includes("/recaptcha/")) return child;
+        const found = child.querySelector();
+        if (found) return found;
+      }
+      return null;
+    },
+    replaceChildren(...children) {
+      this.children.forEach((child) => { child.parent = null; });
+      this.children = children;
+      children.forEach((child) => { child.parent = this; });
+      notify();
+    },
+  });
+  const host = element();
+  host.id = "ais-recaptcha-host";
+  const attachFrame = (mount) => {
+    const frame = element();
+    frame.tag = "iframe";
+    frame.src = "https://www.google.com/recaptcha/api2/anchor";
+    mount.replaceChildren(frame);
+  };
   const render = (element, options) => {
-    assert.equal(element, host);
+    assert.equal(element.parent, host);
     renders++;
-    widgetOptions = options;
-    return 0;
+    clients.push({ mount: element, options });
+    if (renderFrames) attachFrame(element);
+    return clients.length - 1;
   };
   const window = {
     setTimeout(fn) { const id = ++sequence; timers.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
+    MutationObserver: class {
+      constructor(callback) { this.callback = callback; }
+      observe() { observers.add(this); }
+      disconnect() { observers.delete(this); }
+    },
   };
   const document = {
     getElementById: (id) => id === host.id ? host : nodes.find((node) => node.id === id && !node.removed),
-    createElement() {
+    createElement(tag) {
+      if (tag !== "script") return element();
       const listeners = new Map();
       return { dataset: {}, removed: false,
         addEventListener: (event, handler) => listeners.set(event, handler),
@@ -41,19 +76,22 @@ function fixture() {
   };
   const context = vm.createContext({ window, document });
   vm.runInContext(`${source}\nthis.api = { ensureRecaptchaScript, executeRecaptcha, retryRecaptcha, subscribeRecaptchaStatus };`, context);
-  return { window, document, nodes, timers, queued, api: context.api,
+  return { window, document, nodes, timers, queued, clients, observers, host, api: context.api,
     get executions() { return executions; },
     get resets() { return resets; },
     get renders() { return renders; },
-    failWidget() { widgetOptions["error-callback"](); },
+    set renderFrames(value) { renderFrames = value; },
+    failWidget(index = clients.length - 1) { clients[index].options["error-callback"](); },
+    removeFrame() { clients.at(-1).mount.replaceChildren(element()); },
+    restoreFrame() { attachFrame(clients.at(-1).mount); },
     bootstrap() {
       window.grecaptcha = { ready: (callback) => queued.push(callback) };
       nodes.at(-1).emit("load");
     },
     ready() {
       window.grecaptcha.render = render;
-      window.grecaptcha.reset = (id) => { assert.equal(id, 0); resets++; };
-      window.grecaptcha.execute = async (id) => { assert.equal(id, 0); executions++; return "fixture-only-token"; };
+      window.grecaptcha.reset = (id) => { assert.ok(clients[id]); resets++; };
+      window.grecaptcha.execute = async (id) => { assert.equal(id, clients.length - 1); executions++; return "fixture-only-token"; };
       window.grecaptcha.ready = (callback) => callback();
       queued.splice(0).forEach((callback) => callback());
     },
@@ -142,7 +180,7 @@ test("late widget connection failure is reported and user retry resets only that
   f.failWidget();
   assert.equal(states.at(-1), "error");
   assert.equal(await f.api.retryRecaptcha("fixture-key"), true);
-  assert.equal(states.at(-1), "retrying");
+  assert.equal(states.at(-1), "retry-ready");
   assert.equal(f.resets, 1);
   assert.equal(f.executions, 0, "retry must not create a token or submit a lead");
   assert.equal(f.renders, 1);
@@ -168,6 +206,116 @@ test("submit retries a failed widget once and still fails closed if reset fails"
   assert.equal(await f.api.executeRecaptcha("fixture-key", "trailer_request"), null);
   assert.equal(f.executions, 1);
   assert.equal(await f.api.executeRecaptcha("different-key", "trailer_request"), null);
+});
+
+async function loadedFixture() {
+  const f = fixture();
+  const loaded = f.api.ensureRecaptchaScript("fixture-key");
+  f.bootstrap();
+  f.ready();
+  assert.equal(await loaded, true);
+  return f;
+}
+
+test("iframe replaced by error text without callback exposes error and rebuilds only widget", async () => {
+  const f = await loadedFixture();
+  const states = [];
+  f.api.subscribeRecaptchaStatus((state) => states.push(state));
+  const oldMount = f.clients[0].mount;
+  f.removeFrame();
+  f.expire();
+  assert.equal(states.at(-1), "error");
+  assert.equal(await f.api.retryRecaptcha("fixture-key"), true);
+  assert.equal(states.at(-1), "retry-ready");
+  assert.equal(f.renders, 2);
+  assert.equal(f.resets, 1);
+  assert.equal(oldMount.isConnected, false);
+  assert.equal(f.host.children.length, 1);
+  assert.equal(f.observers.size, 1);
+  assert.equal(f.nodes.length, 1);
+  assert.equal(f.nodes[0].removed, false);
+  assert.equal(f.executions, 0);
+  assert.equal(await f.api.executeRecaptcha("fixture-key", "trailer_request"), "fixture-only-token");
+});
+
+test("brief iframe replacement does not produce a false error", async () => {
+  const f = await loadedFixture();
+  const states = [];
+  f.api.subscribeRecaptchaStatus((state) => states.push(state));
+  f.removeFrame();
+  f.restoreFrame();
+  f.expire();
+  assert.deepEqual(states, ["idle"]);
+  assert.equal(f.renders, 1);
+});
+
+test("no initial frame and a failed rebuild time out without reporting recovery", async () => {
+  const f = fixture();
+  f.renderFrames = false;
+  const states = [];
+  f.api.subscribeRecaptchaStatus((state) => states.push(state));
+  const loaded = f.api.ensureRecaptchaScript("fixture-key");
+  f.bootstrap();
+  f.ready();
+  await loaded;
+  f.expire();
+  assert.equal(states.at(-1), "error");
+  const retry = f.api.retryRecaptcha("fixture-key");
+  await Promise.resolve();
+  f.expire();
+  assert.equal(await retry, false);
+  assert.equal(states.at(-1), "error");
+  assert.equal(f.renders, 2, "no automatic render loop");
+  assert.equal(f.executions, 0);
+});
+
+test("concurrent retries share one rebuild and ignore callbacks from the retired client", async () => {
+  const f = await loadedFixture();
+  const states = [];
+  f.api.subscribeRecaptchaStatus((state) => states.push(state));
+  f.removeFrame();
+  f.expire();
+  const first = f.api.retryRecaptcha("fixture-key");
+  assert.equal(first, f.api.retryRecaptcha("fixture-key"));
+  assert.equal(await first, true);
+  f.failWidget(0);
+  assert.equal(states.at(-1), "retry-ready");
+  assert.equal(f.renders, 2);
+  assert.equal(f.executions, 0);
+});
+
+test("a disconnected client can be rebuilt even when its old reset throws", async () => {
+  const f = await loadedFixture();
+  f.removeFrame();
+  f.expire();
+  f.window.grecaptcha.reset = () => { throw new Error("Frame is detached"); };
+  assert.equal(await f.api.retryRecaptcha("fixture-key"), true);
+  assert.equal(f.renders, 2);
+  assert.equal(f.executions, 0);
+});
+
+test("submission catches a missing frame before the observer grace timer expires", async () => {
+  const f = await loadedFixture();
+  f.removeFrame();
+  assert.equal(await f.api.executeRecaptcha("fixture-key", "trailer_request"), "fixture-only-token");
+  assert.equal(f.renders, 2);
+  assert.equal(f.executions, 1);
+});
+
+test("late tokens from retired clients cannot clear the current failure", async () => {
+  const f = await loadedFixture();
+  let complete;
+  f.window.grecaptcha.execute = () => new Promise((resolve) => { complete = resolve; });
+  const token = f.api.executeRecaptcha("fixture-key", "trailer_request");
+  await Promise.resolve();
+  f.removeFrame();
+  assert.equal(await f.api.retryRecaptcha("fixture-key"), true);
+  f.failWidget();
+  complete("stale-fixture-token");
+  assert.equal(await token, null);
+  const states = [];
+  f.api.subscribeRecaptchaStatus((state) => states.push(state));
+  assert.equal(states.at(-1), "error");
 });
 
 test("missing persistent host and failed explicit rendering cannot report ready", async () => {

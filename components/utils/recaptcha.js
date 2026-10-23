@@ -1,16 +1,80 @@
 let scriptPromise = null;
 const TIMEOUT_MS = 15_000;
 const HOST_ID = "ais-recaptcha-host";
+const FRAME_SELECTOR = 'iframe[src*="/recaptcha/"]';
 let widgetId = null;
 let widgetKey = null;
 let widgetFailed = false;
+let widgetMount = null;
+let widgetGeneration = 0;
+let widgetObserver = null;
+let widgetTimer = null;
+let recoveryPromise = null;
 let status = "idle";
 const listeners = new Set();
+const widgetWaiters = new Set();
 
 const setStatus = (next) => {
+  if (status === next) return;
   status = next;
   listeners.forEach((listener) => listener(next));
 };
+
+const hasWidgetFrame = () => Boolean(
+  widgetMount?.isConnected && widgetMount.querySelector(FRAME_SELECTOR),
+);
+
+const notifyWidgetWaiters = () => [...widgetWaiters].forEach((check) => check());
+const markWidgetFailed = () => {
+  widgetFailed = true;
+  setStatus("error");
+  notifyWidgetWaiters();
+};
+
+const watchWidget = (host, generation) => {
+  let sawFrame = hasWidgetFrame();
+  const inspect = () => {
+    if (generation !== widgetGeneration) return;
+    if (hasWidgetFrame()) {
+      sawFrame = true;
+      window.clearTimeout(widgetTimer);
+      widgetTimer = null;
+    } else if (widgetTimer === null) {
+      // A Google bootstrap failure can replace the iframe with text without
+      // invoking error-callback. Observe structure, not localized error wording.
+      widgetTimer = window.setTimeout(() => {
+        widgetTimer = null;
+        if (generation === widgetGeneration && !hasWidgetFrame()) markWidgetFailed();
+      }, sawFrame ? 250 : TIMEOUT_MS);
+    }
+    notifyWidgetWaiters();
+  };
+  if (typeof window.MutationObserver === "function") {
+    widgetObserver = new window.MutationObserver(inspect);
+    widgetObserver.observe(host, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+  }
+  inspect();
+};
+
+const waitForWidgetFrame = (generation) => new Promise((resolve) => {
+  let timeout;
+  const finish = (ok) => {
+    window.clearTimeout(timeout);
+    widgetWaiters.delete(check);
+    resolve(ok);
+  };
+  const check = () => {
+    if (generation !== widgetGeneration || widgetFailed) finish(false);
+    else if (hasWidgetFrame()) finish(true);
+  };
+  timeout = window.setTimeout(() => {
+    if (generation === widgetGeneration && !widgetFailed && hasWidgetFrame()) return finish(true);
+    if (generation === widgetGeneration) markWidgetFailed();
+    finish(false);
+  }, TIMEOUT_MS);
+  widgetWaiters.add(check);
+  check();
+});
 
 export const subscribeRecaptchaStatus = (listener) => {
   listeners.add(listener);
@@ -18,24 +82,37 @@ export const subscribeRecaptchaStatus = (listener) => {
   return () => listeners.delete(listener);
 };
 
-const renderWidget = (siteKey) => {
-  if (widgetId !== null) return widgetKey === siteKey;
+const renderWidget = (siteKey, replace = false) => {
+  if (widgetId !== null && !replace) return widgetKey === siteKey;
   const host = document.getElementById(HOST_ID);
   if (!host || typeof window.grecaptcha?.render !== "function") return false;
-  // Keep the widget outside route-owned forms. Google's documented v3 explicit
-  // rendering API supplies a client ID and exposes late connection failures.
-  const id = window.grecaptcha.render(host, {
+  const oldId = widgetId;
+  const generation = ++widgetGeneration;
+  widgetObserver?.disconnect();
+  window.clearTimeout(widgetTimer);
+  widgetTimer = null;
+  widgetId = null;
+  notifyWidgetWaiters();
+  if (replace && oldId !== null) {
+    // A removed iframe cannot be recovered reliably by reset alone. Retire the
+    // old client best-effort, then render into a fresh, isolated child mount.
+    try { window.grecaptcha.reset(oldId); } catch { /* The old frame may be gone. */ }
+  }
+  widgetMount = document.createElement("div");
+  host.replaceChildren(widgetMount);
+  widgetFailed = false;
+  const id = window.grecaptcha.render(widgetMount, {
     sitekey: siteKey,
     size: "invisible",
     badge: "bottomright",
     "error-callback": () => {
-      widgetFailed = true;
-      setStatus("error");
+      if (generation === widgetGeneration) markWidgetFailed();
     },
   });
   if (typeof id !== "number") return false;
   widgetId = id;
   widgetKey = siteKey;
+  watchWidget(host, generation);
   return true;
 };
 
@@ -120,19 +197,28 @@ export const ensureRecaptchaScript = (siteKey) => {
   return scriptPromise;
 };
 
-export const retryRecaptcha = async (siteKey) => {
-  if (!(await ensureRecaptchaScript(siteKey)) || widgetKey !== siteKey) return false;
-  try {
-    widgetFailed = false;
-    // Reset this client only; never remove/reload Google's runtime or erase forms.
-    setStatus("retrying");
-    window.grecaptcha.reset(widgetId);
-    return !widgetFailed;
-  } catch {
-    widgetFailed = true;
-    setStatus("error");
-    return false;
-  }
+export const retryRecaptcha = (siteKey) => {
+  if (!siteKey || (widgetKey && widgetKey !== siteKey)) return Promise.resolve(false);
+  if (recoveryPromise) return recoveryPromise;
+  recoveryPromise = (async () => {
+    try {
+      setStatus("retrying");
+      if (!(await ensureRecaptchaScript(siteKey)) || widgetKey !== siteKey) return false;
+      widgetFailed = false;
+      if (!hasWidgetFrame()) {
+        if (!renderWidget(siteKey, true)) throw new Error("Widget unavailable");
+      } else {
+        window.grecaptcha.reset(widgetId);
+      }
+      const restored = await waitForWidgetFrame(widgetGeneration);
+      if (restored) setStatus("retry-ready");
+      return restored;
+    } catch {
+      markWidgetFailed();
+      return false;
+    }
+  })().finally(() => { recoveryPromise = null; });
+  return recoveryPromise;
 };
 
 export const executeRecaptcha = async (siteKey, action) => {
@@ -140,7 +226,9 @@ export const executeRecaptcha = async (siteKey, action) => {
   if (!loaded || typeof window === "undefined" || !window.grecaptcha || widgetKey !== siteKey) {
     return null;
   }
-  if (widgetFailed && !(await retryRecaptcha(siteKey))) return null;
+  if ((widgetFailed || !hasWidgetFrame()) && !(await retryRecaptcha(siteKey))) return null;
+  const generation = widgetGeneration;
+  const clientId = widgetId;
 
   return new Promise((resolve) => {
     let settled = false;
@@ -148,6 +236,7 @@ export const executeRecaptcha = async (siteKey, action) => {
       if (settled) return;
       settled = true;
       window.clearTimeout(timeout);
+      if (generation !== widgetGeneration) return resolve(null);
       widgetFailed = !token;
       setStatus(token ? "idle" : "error");
       resolve(token || null);
@@ -155,9 +244,9 @@ export const executeRecaptcha = async (siteKey, action) => {
     const timeout = window.setTimeout(() => finish(null), TIMEOUT_MS);
     try {
       window.grecaptcha.ready(() => {
-        if (settled) return;
+        if (settled || generation !== widgetGeneration) return finish(null);
         try {
-          window.grecaptcha.execute(widgetId, { action }).then(finish).catch(() => finish(null));
+          window.grecaptcha.execute(clientId, { action }).then(finish).catch(() => finish(null));
         } catch {
           finish(null);
         }

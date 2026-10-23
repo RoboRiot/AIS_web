@@ -139,3 +139,54 @@ The separately approved email was sent from mack2356@gmail.com to
 mauricelm@xwf.google.com at 12:18 PM Pacific on October 23 in the existing
 `[4-6370000041195] Tracking update and follow-up questions` conversation. No CC,
 campaign, bid, budget, goal, or GTM changes were made in this follow-up.
+
+## Follow-up: silent iframe loss after release 13d2927
+
+The user deployed `13d2927d180f-mvlf04g0`. Fresh browser verification showed
+Google replacing its widget iframe with the connection-warning text without
+invoking the registered error callback. The application therefore displayed no
+retry notice. Reloading restored the frame, but the underlying connection cause
+is still unconfirmed. This is a separate recovery gap from bootstrap readiness.
+
+The local candidate now observes only the persistent widget host for missing
+frames, with a short grace period for transient replacements and a bounded
+initial-render timeout. User retry resets an existing frame or, when the frame
+has disappeared, renders one fresh child mount using Google's public API. It
+does not reinsert the bootstrap, clear form inputs, or submit anything. Concurrent
+retries share one recovery attempt; callbacks and tokens from retired clients
+cannot overwrite the current state. Failed tokens still block submission and
+server-side verification is unchanged. The notice distinguishes restarting from
+a structurally restored widget, without claiming successful verification.
+
+Verification for this local candidate:
+
+- 141 tests passed, including seven additional missing-frame/retry regressions.
+- Lint and isolated production build `recaptcha-recovery-20261023` passed.
+- In the local website fixture, removing the iframe without a callback exposed
+  the notice. Retry restored one frame in one mount, retained the entered name,
+  and performed one reset. No form was submitted.
+- The recovered mount and reset count persisted through CT rental -> CT service
+  client navigation. Desktop and 390px mobile notice layouts were inspected.
+- A separate local harness using Google's actual library and published v2 test
+  key rebuilt a removed widget. The replacement iframe remained present on a
+  later check, with no connection-warning text. This tests shared rendering API
+  mechanics only, not production v3 scoring or server verification. Generic
+  extension message-channel errors appeared later; their cause is unconfirmed.
+- No CAPTCHA was solved or token executed in the browser. No lead, email, call,
+  conversion upload, Ads/GTM change, or remote command was made.
+
+Evidence: `outputs/marketing-health/recaptcha-recovery-2026-10-23/` contains the
+local fixture, build log, and `missing-frame-desktop.png`. The website fixture
+blocks all submissions/APIs and third-party calls; the separate Google test-key
+harness has no analytics or lead endpoints.
+
+Release authorization: the user approved committing and pushing this scoped
+repair to master on October 23. Deployment remains the user's pull, rebuild,
+and PM2 restart step. After deployment, check the exact live build in fresh
+direct/internal navigations. Production token validation and downstream delivery
+remain unverified without a genuine inquiry or explicitly authorized test.
+
+The approved November 3 confirmation and 10.08% uplift clarification reply was
+sent to Mauricel in the existing tracking thread on October 23 at 3:39 PM Pacific.
+Gmail confirmed Message sent and the sender/recipient metadata. No CC, budget,
+bid, goal, or GTM changes were made.

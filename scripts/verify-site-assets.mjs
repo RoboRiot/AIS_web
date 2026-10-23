@@ -1,5 +1,9 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const { parse } = require("next/dist/compiled/node-html-parser");
 
 const DEFAULT_ROUTES = [
   "/",
@@ -9,8 +13,6 @@ const DEFAULT_ROUTES = [
   "/parts",
   "/contact",
 ];
-const INTERNAL_RESOURCE_PATTERN =
-  /(?:https?:\/\/[^"'\\\s<>]+)?\/(?:_next\/(?:static|image)|assets\/)[^"'\\\s<>,)]*/g;
 const CSS_URL_PATTERN = /url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
 const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
@@ -93,26 +95,59 @@ const normalizeResource = (resource, pageUrl) => {
   }
 };
 
-const extractInternalResources = (contents, pageUrl, baseOrigin) => {
-  const resources = [];
-  for (const match of contents.matchAll(INTERNAL_RESOURCE_PATTERN)) {
-    const resource = normalizeResource(match[0], pageUrl);
-    if (resource?.origin !== baseOrigin) continue;
-
-    // Next image candidates embedded in srcset/RSC payloads are not fetchable
-    // until their width parameter is present. The complete src/srcset URL is
-    // audited separately.
-    if (resource.pathname === "/_next/image" && !resource.searchParams.has("w")) {
-      continue;
+const srcsetUrls = (value) => {
+  const urls = [];
+  let remaining = value;
+  while (remaining) {
+    remaining = remaining.replace(/^[\s,]+/, "");
+    const url = remaining.match(/^\S+/)?.[0];
+    if (!url) break;
+    remaining = remaining.slice(url.length);
+    urls.push(url.replace(/,+$/, ""));
+    if (url.endsWith(",")) continue;
+    // Skip descriptors up to the next separator, respecting descriptor parentheses.
+    let depth = 0;
+    let end = 0;
+    for (; end < remaining.length; end++) {
+      if (remaining[end] === "(") depth++;
+      if (remaining[end] === ")") depth = Math.max(0, depth - 1);
+      if (remaining[end] === "," && depth === 0) break;
     }
+    remaining = remaining.slice(end + 1);
+  }
+  return urls;
+};
+
+export const extractInternalResources = (contents, pageUrl, baseOrigin) => {
+  const resources = new Set();
+  const add = (value) => {
+    if (!value) return;
+    const resource = normalizeResource(value, pageUrl);
+    if (resource?.origin !== baseOrigin ||
+      !/^\/(?:_next\/(?:static\/|image(?:$|\/))|assets\/)/.test(resource.pathname)) return;
     // Development output can include a non-module polyfill reference with an
     // ampersand where a query string would begin. Modern browsers ignore it,
     // and production output omits it.
-    if (resource.pathname.includes("polyfills.js&dpl=")) continue;
+    if (resource.pathname.includes("polyfills.js&dpl=")) return;
 
-    resources.push(resource.href);
+    resources.add(resource.href);
+  };
+  const addCss = (css) => {
+    for (const match of css.matchAll(CSS_URL_PATTERN)) add(match[2]);
+  };
+  // Parse rendered resource attributes, never serialized Next.js flight/script
+  // contents: those strings can split a valid URL across streaming chunks.
+  const document = parse(contents);
+  for (const element of document.querySelectorAll("[src], [href], [poster], [data], [srcset], [imagesrcset], [style], style")) {
+    for (const attribute of ["src", "href", "poster", "data"]) add(element.getAttribute(attribute));
+    for (const attribute of ["srcset", "imagesrcset"]) {
+      for (const url of srcsetUrls(element.getAttribute(attribute) || "")) add(url);
+    }
+    addCss(element.getAttribute("style") || "");
+    if (element.tagName === "STYLE") addCss(element.textContent);
   }
-  return resources;
+
+  return [...resources];
 };
 
 const sitemapLocations = (contents) =>

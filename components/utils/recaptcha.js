@@ -6,10 +6,6 @@ export const ensureRecaptchaScript = (siteKey) => {
     return Promise.resolve(false);
   }
 
-  if (typeof window.grecaptcha?.execute === "function") {
-    return Promise.resolve(true);
-  }
-
   if (scriptPromise) {
     return scriptPromise;
   }
@@ -18,26 +14,57 @@ export const ensureRecaptchaScript = (siteKey) => {
     const existing = document.getElementById("recaptcha-v3");
     const script = existing || document.createElement("script");
     let settled = false;
+    let loaded = existing?.dataset.recaptchaLoaded === "true";
     const finish = (ok) => {
       if (settled) return;
       settled = true;
       window.clearTimeout(timeout);
-      script.removeEventListener("load", loaded);
+      script.removeEventListener("load", onLoad);
       script.removeEventListener("error", failed);
-      if (!ok) script.remove();
       resolve(ok);
     };
-    const loaded = () => finish(typeof window.grecaptcha?.execute === "function");
-    const failed = () => finish(false);
-    const timeout = window.setTimeout(failed, TIMEOUT_MS);
-    script.addEventListener("load", loaded, { once: true });
+    const waitForReady = () => {
+      try {
+        if (typeof window.grecaptcha?.ready !== "function") return finish(false);
+        window.grecaptcha.ready(() => {
+          if (!settled) finish(typeof window.grecaptcha?.execute === "function");
+        });
+      } catch {
+        finish(false);
+      }
+    };
+    const onLoad = () => {
+      loaded = true;
+      script.dataset.recaptchaLoaded = "true";
+      // api.js loads a second script asynchronously; its load event is not API readiness.
+      waitForReady();
+    };
+    const failed = () => {
+      script.remove();
+      finish(false);
+    };
+    const timeout = window.setTimeout(() => {
+      // Do not reinsert a bootstrap that already ran while Google's ready queue
+      // is pending. A later user retry can wait on that same API without duplication.
+      if (!loaded && typeof window.grecaptcha?.ready !== "function") script.remove();
+      finish(false);
+    }, TIMEOUT_MS);
+    if (typeof window.grecaptcha?.ready === "function" || loaded) {
+      waitForReady();
+      return;
+    }
+    script.addEventListener("load", onLoad, { once: true });
     script.addEventListener("error", failed, { once: true });
     if (!existing) {
       script.id = "recaptcha-v3";
       script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
       script.async = true;
       script.defer = true;
-      document.head.appendChild(script);
+      try {
+        document.head.appendChild(script);
+      } catch {
+        failed();
+      }
     }
   }).then((ok) => {
     if (!ok) scriptPromise = null;
@@ -64,6 +91,7 @@ export const executeRecaptcha = async (siteKey, action) => {
     const timeout = window.setTimeout(() => finish(null), TIMEOUT_MS);
     try {
       window.grecaptcha.ready(() => {
+        if (settled) return;
         try {
           window.grecaptcha.execute(siteKey, { action }).then(finish).catch(() => finish(null));
         } catch {

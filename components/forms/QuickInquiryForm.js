@@ -84,7 +84,11 @@ export default function QuickInquiryForm({
     setFeedback("");
     try {
       const token = await executeRecaptcha(recaptchaSiteKey, formType);
-      if (!token) throw new Error("reCAPTCHA could not verify this request. Please try again.");
+      if (!token) {
+        const error = new Error("The security check could not finish. Please reload and try again, or call (559) 537-6851.");
+        error.code = "recaptcha_token";
+        throw error;
+      }
 
       const result = await submitLead({
         ...sanitized,
@@ -101,7 +105,8 @@ export default function QuickInquiryForm({
       );
       setSubmitted(true);
     } catch (error) {
-      recordError("lead_request", String(error?.code || error?.status || "request_failed"));
+      recordError(error?.code === "recaptcha_token" ? "recaptcha_token" : "lead_request",
+        String(error?.code || error?.status || "request_failed"));
       setFeedback(error?.message || "We could not send your request. Please try again.");
     } finally {
       setSubmitting(false);

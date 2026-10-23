@@ -204,7 +204,9 @@ export default function ServiceRequestForm() {
     try {
       const token = await executeRecaptcha(recaptchaSiteKey, "service_request");
       if (!token) {
-        throw new Error("reCAPTCHA could not verify this request. Please try again.");
+        const error = new Error("The security check could not finish. Please reload and try again, or call (559) 537-6851.");
+        error.code = "recaptcha_token";
+        throw error;
       }
 
       const payload = new FormData();
@@ -248,7 +250,7 @@ export default function ServiceRequestForm() {
     } catch (error) {
       trackWebsiteEvent("form_error", {
         form_type: "service_request",
-        error_stage: "request_submission",
+        error_stage: error?.code === "recaptcha_token" ? "recaptcha_token" : "request_submission",
         error_reason: error?.code || "request_failed",
       });
       setFeedback({

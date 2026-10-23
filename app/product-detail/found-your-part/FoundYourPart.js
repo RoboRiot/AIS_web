@@ -2,6 +2,7 @@
 import React, {useEffect, useState } from 'react';
 import styles from "./foundYourPart.module.scss"
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
+import RecaptchaStatus from '@/components/forms/RecaptchaStatus';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
@@ -159,6 +160,7 @@ export default function FoundYourPart() {
                                         onChange={(e) => setMessage(e.target.value)}
                                         ></textarea>
                         </li>
+                            <li><RecaptchaStatus /></li>
                             <li><button type="submit" className="simple-btn" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Request Availability"}</button></li>
                         </ul>
                     </form>

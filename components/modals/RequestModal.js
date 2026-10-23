@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
+import RecaptchaStatus from '@/components/forms/RecaptchaStatus';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
@@ -181,7 +182,8 @@ export default function RequestModal({ closeModal, initialPartNumber = "", produ
                                         ></textarea>
                                     </li>
                                 </ul>
-                                {feedbackMessage && 
+                                <RecaptchaStatus />
+                                {feedbackMessage &&
                                     <div className={isError ? 'response error' : 'response'} role="status" aria-live="polite">
                                         {
                                             isError ?

@@ -8,6 +8,7 @@ import emailIcon from "@/public/assets/images/emailicon.svg"
 import locationIcon from "@/public/assets/images/location.svg"
 import Testimonial from "../home/testimonial/Testimonial";
 import { ensureRecaptchaScript, executeRecaptcha } from '@/components/utils/recaptcha';
+import RecaptchaStatus from '@/components/forms/RecaptchaStatus';
 import { evaluateBotSignals } from '@/components/utils/antiBot';
 import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
@@ -322,6 +323,7 @@ export default function Contact() {
                 onChange={(e) => setMessage(e.target.value)}
                 required></textarea>
               </li>
+              <li><RecaptchaStatus /></li>
               <li>
                 <button
                   className="simple-btn"

@@ -171,6 +171,7 @@ export default function RootLayout({ children }) {
           </main>
           <Footer />
         </div>
+        <div id="ais-recaptcha-host" />
         <Script
           id="hs-script-loader"
           src="https://js-na2.hs-scripts.com/242600993.js"

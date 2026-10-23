@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { executeRecaptcha, ensureRecaptchaScript } from "@/components/utils/recaptcha";
+import RecaptchaStatus from "@/components/forms/RecaptchaStatus";
 import { evaluateBotSignals } from "@/components/utils/antiBot";
 import {
   announceFormOpen,
@@ -695,6 +696,7 @@ export default function ServiceRequestForm() {
               </div>
             </fieldset>
 
+            <RecaptchaStatus />
             <div className={styles.submitBar}>
               <div>
                 <strong>Ready to send?</strong>

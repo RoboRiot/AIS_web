@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import RecaptchaStatus from "@/components/forms/RecaptchaStatus";
 import { evaluateBotSignals } from "@/components/utils/antiBot";
 import { announceFormOpen, createLeadId, trackWebsiteEvent } from "@/components/utils/analytics";
 import { FORM_LIMITS, sanitizeLeadForm } from "@/components/utils/formSecurity";
@@ -204,6 +205,7 @@ export default function QuickInquiryForm({
                 />
               </label>
               {feedback ? <p className={styles.quickInquiryError} role="alert">{feedback}</p> : null}
+              <RecaptchaStatus />
               <button
                 type="submit"
                 className="simple-btn"

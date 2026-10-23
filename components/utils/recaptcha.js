@@ -1,5 +1,43 @@
 let scriptPromise = null;
 const TIMEOUT_MS = 15_000;
+const HOST_ID = "ais-recaptcha-host";
+let widgetId = null;
+let widgetKey = null;
+let widgetFailed = false;
+let status = "idle";
+const listeners = new Set();
+
+const setStatus = (next) => {
+  status = next;
+  listeners.forEach((listener) => listener(next));
+};
+
+export const subscribeRecaptchaStatus = (listener) => {
+  listeners.add(listener);
+  listener(status);
+  return () => listeners.delete(listener);
+};
+
+const renderWidget = (siteKey) => {
+  if (widgetId !== null) return widgetKey === siteKey;
+  const host = document.getElementById(HOST_ID);
+  if (!host || typeof window.grecaptcha?.render !== "function") return false;
+  // Keep the widget outside route-owned forms. Google's documented v3 explicit
+  // rendering API supplies a client ID and exposes late connection failures.
+  const id = window.grecaptcha.render(host, {
+    sitekey: siteKey,
+    size: "invisible",
+    badge: "bottomright",
+    "error-callback": () => {
+      widgetFailed = true;
+      setStatus("error");
+    },
+  });
+  if (typeof id !== "number") return false;
+  widgetId = id;
+  widgetKey = siteKey;
+  return true;
+};
 
 export const ensureRecaptchaScript = (siteKey) => {
   if (!siteKey || typeof window === "undefined") {
@@ -27,7 +65,12 @@ export const ensureRecaptchaScript = (siteKey) => {
       try {
         if (typeof window.grecaptcha?.ready !== "function") return finish(false);
         window.grecaptcha.ready(() => {
-          if (!settled) finish(typeof window.grecaptcha?.execute === "function");
+          if (settled) return;
+          try {
+            finish(typeof window.grecaptcha?.execute === "function" && renderWidget(siteKey));
+          } catch {
+            finish(false);
+          }
         });
       } catch {
         finish(false);
@@ -57,7 +100,7 @@ export const ensureRecaptchaScript = (siteKey) => {
     script.addEventListener("error", failed, { once: true });
     if (!existing) {
       script.id = "recaptcha-v3";
-      script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
+      script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
       script.async = true;
       script.defer = true;
       try {
@@ -67,18 +110,37 @@ export const ensureRecaptchaScript = (siteKey) => {
       }
     }
   }).then((ok) => {
-    if (!ok) scriptPromise = null;
+    if (!ok) {
+      scriptPromise = null;
+      setStatus("error");
+    }
     return ok;
   });
 
   return scriptPromise;
 };
 
+export const retryRecaptcha = async (siteKey) => {
+  if (!(await ensureRecaptchaScript(siteKey)) || widgetKey !== siteKey) return false;
+  try {
+    widgetFailed = false;
+    // Reset this client only; never remove/reload Google's runtime or erase forms.
+    setStatus("retrying");
+    window.grecaptcha.reset(widgetId);
+    return !widgetFailed;
+  } catch {
+    widgetFailed = true;
+    setStatus("error");
+    return false;
+  }
+};
+
 export const executeRecaptcha = async (siteKey, action) => {
   const loaded = await ensureRecaptchaScript(siteKey);
-  if (!loaded || typeof window === "undefined" || !window.grecaptcha) {
+  if (!loaded || typeof window === "undefined" || !window.grecaptcha || widgetKey !== siteKey) {
     return null;
   }
+  if (widgetFailed && !(await retryRecaptcha(siteKey))) return null;
 
   return new Promise((resolve) => {
     let settled = false;
@@ -86,6 +148,8 @@ export const executeRecaptcha = async (siteKey, action) => {
       if (settled) return;
       settled = true;
       window.clearTimeout(timeout);
+      widgetFailed = !token;
+      setStatus(token ? "idle" : "error");
       resolve(token || null);
     };
     const timeout = window.setTimeout(() => finish(null), TIMEOUT_MS);
@@ -93,7 +157,7 @@ export const executeRecaptcha = async (siteKey, action) => {
       window.grecaptcha.ready(() => {
         if (settled) return;
         try {
-          window.grecaptcha.execute(siteKey, { action }).then(finish).catch(() => finish(null));
+          window.grecaptcha.execute(widgetId, { action }).then(finish).catch(() => finish(null));
         } catch {
           finish(null);
         }

@@ -1,0 +1,25 @@
+.notice {
+  padding: 16px;
+  margin: 12px 0;
+  width: 100%;
+  grid-column: 1 / -1;
+  box-sizing: border-box;
+  scroll-margin-top: 140px;
+  background: #fff3cd;
+  color: #382d09;
+  border-bottom: 1px solid #d3b862;
+
+  p { margin: 0 0 10px; }
+  button {
+    padding: 8px 12px;
+    margin: 0 12px 8px 0;
+    background: #fff;
+    color: inherit;
+    border: 1px solid #776121;
+    border-radius: 4px;
+    cursor: pointer;
+    scroll-margin-top: 140px;
+  }
+  a { color: inherit; text-decoration: underline; }
+  span { display: inline-block; }
+}

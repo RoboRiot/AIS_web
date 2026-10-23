@@ -83,3 +83,59 @@ controlled test; page loading alone is insufficient.
 Google recommends asynchronous loading with readiness coordination, and documents
 the permitted CSP origins. The initial bootstrap response was also inspected
 read-only to confirm its secondary-script loading sequence.
+
+## Follow-up: late widget connection failure and local recovery repair
+
+The user deployed `f2658c57d4fd-mvla7pu5`. Public/browser checks confirmed that the
+bootstrap now stays loaded, but the Google widget can still replace its iframe
+with "Could not connect to the reCAPTCHA service" after initially rendering.
+This was reproduced around navigation from CT trailer to CT service and from
+service request to MRI trailer. A fresh reload restored the iframe temporarily.
+Google's own demo remained available in the same browser. These observations do
+not prove that navigation causes the failure or identify the network/extension/
+Google-side cause. No CAPTCHA was solved and no live form was submitted.
+
+The remaining confirmed application gap was caching API readiness with no widget
+error callback and no recovery except a full reload. This follow-up changes the
+shared loader to Google's documented explicit v3 rendering API:
+
+- One stable root-layout host; reuse its returned client ID across form mounts.
+- Catch late widget errors and show a scoped notice inside each inquiry form.
+- Offer a user-requested reset of that client without clearing entered fields,
+  reinserting Google scripts, or automatically submitting a request.
+- Retry a failed widget once when the user submits; missing/failed tokens still
+  prevent submission and retain the existing server-side validation.
+- Preserve existing branding/privacy and mobile badge styling in this scoped
+  recovery change; hiding a badge is not a connectivity repair.
+
+The API follows https://developers.google.com/recaptcha/docs/faq (explicit v3
+rendering uses `size: invisible` and the returned client ID) and
+https://developers.google.com/recaptcha/docs/invisible (`error-callback` and
+`grecaptcha.reset`). It does not use undocumented runtime internals or disable
+security, consent, CSP, extensions, or VPN.
+
+Local checks: 134 tests, lint, and isolated production build passed. Synthetic
+browser fixture verified late-error display, one reset, retained text in the
+inquiry field, and no navigation on retry. The fixture blocks outbound third-party
+resources and all API/submission requests; it cannot establish Google's real
+token delivery or production recovery. Evidence and the local-only fixture are
+under `outputs/marketing-health/recaptcha-recovery-2026-10-23/` and
+`outputs/marketing-health/deployed-audit-reconciliation-2026-10-23/`.
+
+Final visual checks covered desktop and a 390px mobile iframe viewport. The inline
+notice fits the inquiry form; the retry count and root widget persist across the
+CT trailer -> CT service client-side transition. An initial page-level notice was
+covered by the existing fixed header during testing and was replaced by the
+in-form component before handoff. No production form data was used.
+
+Release authorization: the user approved committing and pushing this follow-up
+to master on October 23, with budgets unchanged. Deployment remains pending the
+user's pull, rebuild, and PM2 restart. The network cause remains unconfirmed.
+After deployment, recheck direct and
+internal navigation, widget callbacks, and recovery with Google's real runtime.
+Do not claim the intermittent connection issue fully resolved from fixture tests.
+
+The separately approved email was sent from mack2356@gmail.com to
+mauricelm@xwf.google.com at 12:18 PM Pacific on October 23 in the existing
+`[4-6370000041195] Tracking update and follow-up questions` conversation. No CC,
+campaign, bid, budget, goal, or GTM changes were made in this follow-up.

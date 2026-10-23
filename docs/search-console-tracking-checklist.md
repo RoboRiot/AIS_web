@@ -1,5 +1,7 @@
 # Search Console Tracking Checklist
 
+> October 22, 2026: use the canonical URL matrix and separate AI impressions/citations/lead measures in [AI search optimization](ai-search-optimization-2026-10-22.md). The route list below predates the separation of equipment services and `/trailers/` rental pages.
+
 ## Goal
 Measure ranking progress for the new mobile imaging service pages and identify fast optimization wins every 14 days.
 

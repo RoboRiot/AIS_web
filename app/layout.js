@@ -24,22 +24,22 @@ const geologica = Geologica({
 export const metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Advanced Imaging Services | MRI, CT & PET/CT Service and Parts",
+    default: "Advanced Imaging Services | MRI & CT Service, Parts & Trailer Rentals",
     template: "%s",
   },
-  description: "Advanced Imaging Services provides MRI, CT, PET/CT, mobile imaging equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts across the United States.",
+  description: "Advanced Imaging Services (AIS) provides MRI, CT and PET/CT equipment repair, maintenance, tested parts, and mobile imaging trailer rental support across the United States.",
   openGraph: {
     type: "website",
     siteName,
-    title: "Advanced Imaging Services | MRI, CT & PET/CT Service and Parts",
-    description: "MRI, CT, PET/CT, mobile imaging equipment service, repair, preventive maintenance, emergency support, and tested medical imaging parts.",
+    title: "Advanced Imaging Services | MRI & CT Service, Parts & Trailer Rentals",
+    description: "MRI, CT and PET/CT equipment service, tested replacement parts, and mobile imaging trailer rental support across the United States.",
     url: BASE_URL,
     images: DEFAULT_SOCIAL_IMAGES,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Advanced Imaging Services | MRI, CT & PET/CT Service and Parts",
-    description: "Nationwide medical imaging equipment service, repair, mobile imaging support, and tested replacement parts.",
+    title: "Advanced Imaging Services | MRI & CT Service, Parts & Trailer Rentals",
+    description: "Nationwide medical imaging equipment service, repair, tested replacement parts, and mobile imaging trailer rental support.",
     images: DEFAULT_SOCIAL_IMAGES,
   },
   robots: {
@@ -59,7 +59,8 @@ const siteJsonLd = {
       "@type": ["Organization", "LocalBusiness"],
       "@id": `${BASE_URL}/#organization`,
       name: siteName,
-      alternateName: "Advanced Imaging Parts",
+      alternateName: ["AIS", "Advanced Imaging Parts"],
+      description: "Advanced Imaging Services (AIS) provides MRI, CT and PET/CT equipment service, tested replacement parts, and mobile imaging trailer rental support across the United States.",
       url: BASE_URL,
       logo: `${BASE_URL}/assets/images/logo.svg`,
       image: `${BASE_URL}${DEFAULT_SOCIAL_IMAGES[0].url}`,

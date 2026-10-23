@@ -4,6 +4,7 @@ import ServiceImageCarousel from "./ServiceImageCarousel";
 import QuickInquiryForm from "@/components/forms/QuickInquiryForm";
 import { BASE_URL } from "@/app/data/seoProducts";
 import { getServiceImages } from "@/app/data/serviceImages";
+import { getServiceAnswers } from "@/app/data/serviceAnswers.mjs";
 import {
   getServiceLandingPage,
   serviceLandingPages,
@@ -57,6 +58,8 @@ export default async function ServiceLandingPage({ params }) {
   if (!page) notFound();
 
   const brandLabel = page.brand || "Imaging";
+  const serviceAnswers = getServiceAnswers(page);
+  const modalityLabel = page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase();
   const serviceImages = getServiceImages(page);
   const modelCoverage = page.modelCoverage || [];
   const modelCoverageItems = modelCoverage.flatMap((group) => group.models);
@@ -68,7 +71,7 @@ export default async function ServiceLandingPage({ params }) {
   const workflowSteps = [
     {
       title: "Remote Support",
-      text: "Start with instant remote support to review symptoms, alarms, scanner history, and system status. Many issues can be resolved remotely and get the machine operating again right away.",
+      text: "Begin with remote support to review symptoms, alarms, scanner history, and system status. The findings help determine whether remote recovery, field service, or replacement parts are needed.",
     },
     {
       title: "Stabilize",
@@ -136,6 +139,19 @@ export default async function ServiceLandingPage({ params }) {
       { "@type": "ListItem", position: 3, name: page.shortTitle, item: `${BASE_URL}/services/${page.slug}` },
     ],
   };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${BASE_URL}/services/${page.slug}#faq`,
+    mainEntity: serviceAnswers.faqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
 
   return (
     <>
@@ -147,13 +163,17 @@ export default async function ServiceLandingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <section className={`${styles.section} ${styles.landingHero}`}>
         <div className="container">
           <div className={styles.introGrid}>
             <article className={styles.heroCopy}>
               <span className={styles.kicker}>{page.eyebrow}</span>
               <h1 className={styles.title}>{page.h1}</h1>
-              <p className={styles.lead}>{page.intro}</p>
+              <p className={styles.lead}>{serviceAnswers.summary}</p>
               <div className={styles.ctaRow}>
                 <a href="#request" className="simple-btn">Request Service</a>
                 <a
@@ -173,6 +193,7 @@ export default async function ServiceLandingPage({ params }) {
                 {modelCoverage.length > 0 && <a href="#mri-service-models">{brandLabel} MRI Models</a>}
                 <a href="#capabilities">Capabilities</a>
                 <a href="#workflow">Workflow</a>
+                <a href="#faq">Service FAQ</a>
                 <a href="#related">Related Pages</a>
               </nav>
             </article>
@@ -184,7 +205,7 @@ export default async function ServiceLandingPage({ params }) {
         formType="service_request"
         source={page.slug}
         title={`Request ${page.shortTitle}`}
-        intro="Remote diagnostics are the fastest first step and can often restore operation immediately. Share the system and current issue so our team can begin triage."
+        intro="Share the system and current issue so our team can review remote diagnostics, field service, and parts needs."
         detailsLabel="System and issue"
         detailsPlaceholder="OEM, model, error code or symptoms, facility and state, and urgency"
         submitLabel="Request Service Support"
@@ -237,10 +258,13 @@ export default async function ServiceLandingPage({ params }) {
             <article>
               <h2 className={styles.sectionHeading}>Service <span>Capabilities</span></h2>
               <p className={styles.sectionCopy}>
-                Advanced Imaging Services supports practical field-service needs: preventive maintenance,
-                emergency troubleshooting, diagnostics, tested replacement parts, and clear communication
-                for clinical teams that need equipment back online.
+                {page.intro}
               </p>
+              <ul className={`${styles.bulletList} list-none`} aria-label="Service at a glance">
+                {serviceAnswers.facts.map((fact) => (
+                  <li key={fact.label}><strong>{fact.label}:</strong> {fact.value}</li>
+                ))}
+              </ul>
             </article>
             <aside className={styles.panel}>
               <h2>What We Handle</h2>
@@ -257,9 +281,9 @@ export default async function ServiceLandingPage({ params }) {
         <div className="container">
           <h2 className={styles.sectionHeading}>How We <span>Support Uptime</span></h2>
           <p className={styles.sectionCopy}>
-            Support begins remotely. AIS can often connect quickly, review symptoms, guide your team through
-            recovery steps, and get the scanner operating immediately without waiting for a field visit. When
-            remote support is not enough, we move into dispatch, parts, and repair planning.
+            Support begins with a review of the system and symptoms. Remote diagnostics can help identify
+            recovery steps and determine whether a field visit or replacement parts are needed. AIS then
+            coordinates the next service steps with your facility.
           </p>
           <div className={styles.workflowGrid}>
             {workflowSteps.map((step, index) => (
@@ -272,12 +296,33 @@ export default async function ServiceLandingPage({ params }) {
           </div>
         </div>
       </section>
+      <section id="faq" className={styles.faqSection}>
+        <div className="container">
+          <h2 className={styles.sectionHeading}>{page.shortTitle} <span>Questions</span></h2>
+          <div className={styles.faqList}>
+            {serviceAnswers.faqs.map((item) => (
+              <article key={item.question} className={styles.faqItem}>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       {relatedServices.length > 0 && (
         <section id="related" className={styles.routeSection}>
           <div className="container">
             <h2 className={styles.sectionHeading}>Related <span>Service Pages</span></h2>
             <p className={styles.sectionCopy}>
               Continue into the most relevant service page for your modality or OEM platform.
+            </p>
+            <p className={styles.sectionCopy}>
+              Planning for scanner downtime or a replacement project? Explore{" "}
+              <Link href={`/trailers/mobile-${page.modality}-trailer-rental`}>
+                mobile {modalityLabel} trailer rental
+              </Link>{" "}
+              for temporary imaging capacity. Equipment, timing, and site requirements need a separate
+              availability review.
             </p>
             <div className={styles.routeGrid}>
               {relatedServices.map((item) => (

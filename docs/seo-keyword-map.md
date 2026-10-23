@@ -1,5 +1,7 @@
 # SEO Keyword-to-Page Map
 
+> October 22, 2026: the current service/rental canonical targets and AI search measurement plan are in [AI search optimization](ai-search-optimization-2026-10-22.md). The legacy `/services/*trailer*` and OEM mobile routes below are historical planning targets; use their canonical `/trailers/` destinations for new rental links and reports. Equipment service uses `/services/mri-service` and `/services/ct-service`.
+
 ## Objective
 Rank for high-intent mobile imaging trailer service queries by aligning each keyword cluster to a dedicated page with clear conversion intent.
 

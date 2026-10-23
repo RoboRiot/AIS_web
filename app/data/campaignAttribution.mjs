@@ -5,10 +5,28 @@ export const UTM_LIMITS = Object.freeze({
   utm_content: 100, utm_term: 100, utm_id: 100,
 });
 export const ACQUISITION_SOURCES = new Set([
-  "direct", "google_organic", "other_organic", "paid_search", "referral",
+  "direct", "google_organic", "other_organic", "paid_search", "referral", "ai_referral",
   "organic_social", "paid_social", "email", "display", "offline", "outreach",
   "other_campaign", "unknown",
 ]);
+
+const AI_REFERRER_HOSTS = [
+  "chatgpt.com", "chat.openai.com", "claude.ai", "grok.com", "perplexity.ai",
+  "copilot.microsoft.com", "gemini.google.com",
+];
+const AI_CAMPAIGN_SOURCES = new Set([
+  "chatgpt", "claude", "grok", "perplexity", "copilot", "microsoft_copilot",
+  "microsoft-copilot", "gemini", "google_gemini", "google-gemini",
+]);
+const AI_CAMPAIGN_MEDIA = new Set([
+  "", "referral", "organic", "ai", "llm", "ai_search", "ai-search",
+  "ai_referral", "ai-referral", "organic_ai", "organic-ai",
+]);
+const isAiReferrerHost = (value) => {
+  const host = String(value || "").toLowerCase().replace(/\.$/, "");
+  return /^[a-z0-9.-]+$/.test(host) && AI_REFERRER_HOSTS.some((domain) =>
+    host === domain || host.endsWith(`.${domain}`));
+};
 
 export const normalizeCampaignTags = (value = {}) => Object.fromEntries(
   Object.entries(UTM_LIMITS).map(([key, limit]) => [key, redactAnalyticsText(value?.[key], limit)])
@@ -23,12 +41,16 @@ export function classifyAcquisition({ tags = {}, referrerHost = "", external = f
   if (/^(offline|qr|print)$/.test(medium)) return "offline";
   if (medium === "outreach") return "outreach";
   if (/^(social|organic_social|social-network|social-media)$/.test(medium)) return "organic_social";
-  if (medium === "referral") return "referral";
   if (hasClickId || /^(cpc|ppc|paid|paid_search|paidsearch)$/.test(medium)) return "paid_search";
+  // Known assistant tags may identify a visit even when its browser omits the referrer.
+  if (AI_CAMPAIGN_MEDIA.has(medium) && (AI_CAMPAIGN_SOURCES.has(source) || isAiReferrerHost(source))) return "ai_referral";
+  if (medium === "referral") return "referral";
   if (source === "google" && (!medium || medium === "organic")) return "google_organic";
   if (/^(bing|yahoo|duckduckgo)$/.test(source) && (!medium || medium === "organic")) return "other_organic";
   if (Object.values(tags).some(Boolean)) return "other_campaign";
   if (!external) return "direct";
+  // Keep this before Google organic: Gemini has its own bounded Google subdomain.
+  if (isAiReferrerHost(referrerHost)) return "ai_referral";
   if (/(^|\.)google\./.test(referrerHost)) return "google_organic";
   if (/(^|\.)(bing\.com|search\.yahoo\.com|duckduckgo\.com)$/.test(referrerHost)) return "other_organic";
   if (/(^|\.)(linkedin\.com|lnkd\.in|facebook\.com|instagram\.com|t\.co|twitter\.com|x\.com)$/.test(referrerHost)) return "organic_social";

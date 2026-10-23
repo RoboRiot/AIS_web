@@ -219,8 +219,8 @@ export default async function TrailerLandingPage({ params }) {
               <span className={styles.kicker}>For hospitals and imaging centers</span>
               <h1 className={styles.title}>{page.h1}</h1>
               <p className={styles.lead}>
-                Mobile {modalityLabel} capacity for scanner downtime, renovations, and added clinical volume.
-                Rental and lease planning with nationwide technical support.
+                Advanced Imaging Services (AIS) helps hospitals and imaging centers plan mobile {modalityLabel}
+                {" "}trailer rentals for scanner downtime, renovations, and added capacity, with nationwide technical support.
               </p>
               <div className={styles.ctaRow}>
                 <a
@@ -246,6 +246,7 @@ export default async function TrailerLandingPage({ params }) {
               </ul>
               <p className={styles.rentalTerms}>
                 Equipment rentals for facilities, not patient scan appointments.
+                {" "}Confirm the selected system and availability for your location and dates.
                 {fleetPricing.length > 0 && <> <a href="#pricing">View one-year lease pricing</a>.</>}
               </p>
             </article>

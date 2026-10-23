@@ -29,7 +29,7 @@ export default function Footer() {
                     <div className={styles.footer_widget}>
                         <div className={styles.footer_info}>
                             <Link href="/"><Image src={logoImage} alt="footer_logo" /></Link>
-                            <p>At Advanced Imaging Parts, we believe that the best service comes from the knowledge and personal care of our staff. That is why we only hire the very best Field-Service Engineers, coupled with our proprietary support and remote diagnostic network, to ensure that the customer spends as little time down as possible, saving them money in the process. ISO: 9001-2015</p>
+                            <p>Advanced Imaging Services (AIS) provides MRI, CT, and PET/CT equipment service, replacement parts, and mobile imaging trailer rental support across the United States. Our field-service engineers and remote diagnostic network help facilities plan repairs, maintenance, and equipment downtime. ISO: 9001-2015</p>
                         </div>
                         <div className={styles.footer_links}>
                             <h4 className="footer_title">Quick Links</h4>

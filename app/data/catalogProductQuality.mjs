@@ -31,7 +31,9 @@ export const getCatalogIdentifiers = (product = {}) => {
   return {
     PN: verified.PN || cleanValue(product.PN) || specs["part number"] || "",
     OEM: cleanValue(product.OEM) || specs["system manufacturer"] || verified.OEM || "",
-    Modality: cleanValue(product.Modality) || specs.category || verified.Modality || "",
+    Modality: verified.replacesLegacyModality && cleanValue(product.Modality) === verified.replacesLegacyModality
+      ? verified.Modality
+      : cleanValue(product.Modality) || specs.category || verified.Modality || "",
   };
 };
 
@@ -109,6 +111,6 @@ export const normalizePublicCatalogProduct = (product = {}) => ({
   ...product,
   ...getCatalogIdentifiers(product),
   Name: cleanCatalogProductName(product),
-  Description: cleanCatalogDescription(product.Description),
+  Description: cleanCatalogDescription(getVerifiedLegacyMetadata(product).Description || product.Description),
   Machine: cleanValue(product.Machine),
 });

@@ -122,6 +122,8 @@ export default function createNextConfig(phase) {
     async redirects() {
       return [
         { source: "/product/:slug", destination: "/products/:slug", permanent: true },
+        // The old numbered archive is replaced by the searchable catalog.
+        { source: "/parts/page/:page([1-9]\\d*)", destination: "/parts", permanent: true },
         ...LEGACY_TRAILER_REDIRECTS,
       ];
     },

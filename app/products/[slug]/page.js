@@ -37,7 +37,7 @@ const getProductBySlug = cache(unstable_cache(async (slug) => {
 
   const product = await fetchProductBySlug(nameSlug) || await fetchProductByLegacySlug(nameSlug);
   return product && isCampaignReadyProduct(product) ? product : null;
-}, ["public-product-resolution-v6"], { revalidate: 900 }));
+}, ["public-product-resolution-v7"], { revalidate: 900 }));
 
 const getLegacyGroup = cache(async (slug) => {
   if (!Object.hasOwn(legacyProductGroups, slug)) return null;

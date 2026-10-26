@@ -16,6 +16,15 @@ export const getVerifiedLegacyMetadata = (product = {}) => {
   // Research and source links are recorded in docs/product-url-research-2026-09-16.md.
   const id = String(product.id);
   const pn = String(product.PN || "").trim().toUpperCase();
+  // Original item and official GE listing agree on the exact motor, not -H.
+  // The historical CT classification was an import error; see the URL audit.
+  if (id === "9f27cda675d8" && (!pn || pn === "46-282360P1") &&
+      /^46-282360P1\s+Long Drive Motor$/i.test(String(product.Name || "").trim()) &&
+      /^46-282360P1\s+Long Drive Motor MG3-A7\b/i.test(String(product.Description || "").trim()) &&
+      (!product.OEM || /^GE$/i.test(String(product.OEM)))) {
+    return { PN: "46-282360P1", OEM: "GE", Modality: "MRI", replacesLegacyModality: "CT",
+      Description: "GE MRI long drive motor, part number 46-282360P1. Contact Advanced Imaging Services to confirm compatibility, condition, current availability, and lead time." };
+  }
   // The historical and current record both identify this preamp in its name.
   if (id === "bbebb2371560" && (!pn || pn === "46-264442G3") &&
       /^46-264442G3\s+1\.5T\s+Preamp$/i.test(String(product.Name || "").trim())) {

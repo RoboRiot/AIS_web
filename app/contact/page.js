@@ -14,6 +14,9 @@ import { FORM_LIMITS, sanitizeLeadForm } from '@/components/utils/formSecurity';
 import { submitLead } from '@/components/utils/submitLead';
 import { announceFormOpen, createLeadId, trackWebsiteEvent } from '@/components/utils/analytics';
 import { inferLeadFormType, requiresContactPhone } from '@/app/data/leadIntent.mjs';
+import { BUSINESS_PHONE, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from '@/app/data/businessContact.mjs';
+import CustomerPhoneLinks from '@/components/contact/CustomerPhoneLinks';
+import useLocalFormPreview from '@/components/forms/useLocalFormPreview';
 
 const FORM_COPY = {
   contact_form: {
@@ -55,6 +58,7 @@ const humanizeContext = (value) =>
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 export default function Contact() {
+  const localPreview = useLocalFormPreview();
 //   useEffect(() => {
 //     // Load reCAPTCHA script dynamically when the component mounts
 //     const script = document.createElement('script');
@@ -120,7 +124,7 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || localPreview) return;
 
     const submissionFormType = inferLeadFormType(formType, message);
 
@@ -163,7 +167,7 @@ export default function Contact() {
     try {
       const token = await executeRecaptcha(recaptchaSiteKey, submissionFormType);
       if (!token) {
-        const error = new Error("Verification is temporarily unavailable. Please try again or call (559) 537-6851.");
+        const error = new Error(`Verification is temporarily unavailable. Please try again or call ${BUSINESS_PHONE}.`);
         error.code = "recaptcha_token";
         throw error;
       }
@@ -224,7 +228,7 @@ export default function Contact() {
           <p>{copy.intro}</p>
           {formType === "service_request" && (
             <p className={styles.urgent_note}>
-              Scanner down now? Call <a href="tel:+15595376851">(559) 537-6851</a> for immediate remote support.
+              Scanner down now? Call <a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a> for immediate remote support.
             </p>
           )}
         </div>
@@ -328,7 +332,7 @@ export default function Contact() {
                 <button
                   className="simple-btn"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || localPreview}
                   data-analytics="contact-form-submit"
                   data-analytics-label={copy.submitLabel}
                 >
@@ -357,7 +361,7 @@ export default function Contact() {
           <div className={styles.contact_info}>
             <h3>Contact Info</h3>
             <ul className={`list-none flex direction-column ${styles.contact_info_list}`}>
-              <li><Image src={phoneIcon} alt="icon" /><a href="tel:+15595376851">(559) 537-6851</a></li>
+              <li><Image src={phoneIcon} alt="icon" /><CustomerPhoneLinks /></li>
               <li><Image src={emailIcon} alt="icon" /><a href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</a></li>
               <li><Image src={locationIcon} alt="icon" /><span>17410 Murphy Pkwy. Lathrop, CA 95330</span></li>
             </ul>

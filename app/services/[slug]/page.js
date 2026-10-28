@@ -10,6 +10,7 @@ import {
   serviceLandingPages,
 } from "@/app/data/serviceLandingPages";
 import styles from "../landingPage.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF, BUSINESS_PHONE_E164 } from "@/app/data/businessContact.mjs";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -99,7 +100,7 @@ export default async function ServiceLandingPage({ params }) {
       "@type": "Organization",
       name: "Advanced Imaging Services",
       url: BASE_URL,
-      telephone: "+1-559-537-6851",
+      telephone: BUSINESS_PHONE_E164,
     },
     areaServed: {
       "@type": "Country",
@@ -109,7 +110,7 @@ export default async function ServiceLandingPage({ params }) {
       "@type": "ServiceChannel",
       servicePhone: {
         "@type": "ContactPoint",
-        telephone: "+1-559-537-6851",
+        telephone: BUSINESS_PHONE_E164,
         contactType: "technical support",
       },
     },
@@ -177,11 +178,11 @@ export default async function ServiceLandingPage({ params }) {
               <div className={styles.ctaRow}>
                 <a href="#request" className="simple-btn">Request Service</a>
                 <a
-                  href="tel:+15595376851"
+                  href={BUSINESS_PHONE_HREF}
                   data-analytics="service-hero-phone"
                   data-analytics-source={page.slug}
                 >
-                  Call (559) 537-6851
+                  Call {BUSINESS_PHONE}
                 </a>
               </div>
               <ul className={`${styles.heroProofList} list-none`} aria-label="Service support highlights">

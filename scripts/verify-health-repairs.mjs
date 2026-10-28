@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { BUSINESS_PHONE_HREF, SUPPORT_PHONE_HREF } from "../app/data/businessContact.mjs";
+import { serviceLandingPages, trailerLandingPages } from "../app/data/serviceLandingPages.js";
 
 // Read-only HTTP checks. Never submit forms, create analytics events or call Google.
 const base = new URL(process.argv[2] || "http://127.0.0.1:3096");
@@ -29,12 +31,15 @@ for (const [path, pn, id] of [
     checks.push({ path, pass: pass ? "warm" : "cold", status: response.status, target: target.pathname, targetStatus: product.status });
   }
 }
-for (const path of ["/", "/contact", "/service-request", "/parts/ge/mri", "/parts/toshiba/ct",
-  "/trailers/mobile-mri-trailer-rental", "/trailers/mobile-ct-trailer-rental", "/services/mri-service", "/services/ct-service"]) {
+for (const path of ["/", "/about", "/contact", "/service-request", "/parts", "/parts/ge/mri", "/parts/toshiba/ct", "/services", "/trailers",
+  ...serviceLandingPages.map(({ slug }) => `/services/${slug}`),
+  ...trailerLandingPages.map(({ slug }) => `/trailers/${slug}`)]) {
   const response = await request(path);
   assert.equal(response.status, 200, path);
   const html = await response.text();
-  assert.match(html, /tel:\+15595376851/);
+  assert.ok(html.includes(BUSINESS_PHONE_HREF), `${path}: approved business phone link must render`);
+  assert.ok(html.includes(SUPPORT_PHONE_HREF), `${path}: existing-customer phone link must render`);
+  assert.ok(html.includes("New Customers") && html.includes("Existing Customers"), `${path}: customer labels must render`);
   assert.ok(response.headers.get("content-security-policy").includes("https://*.google-analytics.com"));
   checks.push({ path, status: response.status, release: response.headers.get("x-ais-release") });
 }

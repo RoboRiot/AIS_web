@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { classifyLeadIntent, getBusinessFormType } from "../app/data/leadIntent.mjs";
 import { ATTRIBUTION_RETENTION_MS, ATTRIBUTION_HISTORY_KEY, readAttributionHistory, normalizeAttributionHistory } from "../app/data/attributionHistory.mjs";
 import { MARKETING_CONSENT_KEY, marketingConsent } from "../app/data/marketingConsent.mjs";
-import { normalizeForwardingNumber, BUSINESS_PHONE_HREF, createPhoneNumberReplacement, getPhoneClickMeasurement } from "../app/data/websiteCallTracking.mjs";
+import { normalizeForwardingNumber, BUSINESS_PHONE, BUSINESS_PHONE_HREF, createPhoneNumberReplacement, getPhoneClickMeasurement } from "../app/data/websiteCallTracking.mjs";
 import { createLeadEventDispatcher } from "../app/data/browserGoogleAnalytics.mjs";
 import { getCatalogIdentifiers, getCampaignReadinessIssues } from "../app/data/catalogProductQuality.mjs";
 
@@ -62,7 +62,7 @@ test("forwarding callback validates matching displayed/dialed US numbers", () =>
 });
 
 test("number replacement preserves CTA text and restores original links on withdrawal", () => {
-  const text = { nodeValue: "Call (559) 537-6851", isConnected: true };
+  const text = { nodeValue: `Call ${BUSINESS_PHONE}`, isConnected: true };
   const anchor = { isConnected: true, href: BUSINESS_PHONE_HREF,
     getAttribute(key) { return this[key] ?? null; }, setAttribute(key, value) { this[key] = value; },
     removeAttribute(key) { delete this[key]; } };
@@ -77,12 +77,12 @@ test("number replacement preserves CTA text and restores original links on withd
   });
   // A React rerender may restore the original href on an existing element.
   anchor.href = BUSINESS_PHONE_HREF;
-  text.nodeValue = "Call (559) 537-6851";
+  text.nodeValue = `Call ${BUSINESS_PHONE}`;
   replacement.apply(normalizeForwardingNumber("(800) 555-0123", "18005550123"));
   assert.equal(anchor.href, "tel:+18005550123");
   assert.equal(text.nodeValue, "Call (800) 555-0123");
   replacement.restore();
-  assert.equal(text.nodeValue, "Call (559) 537-6851");
+  assert.equal(text.nodeValue, `Call ${BUSINESS_PHONE}`);
   assert.equal(anchor.href, BUSINESS_PHONE_HREF);
   assert.equal(anchor.getAttribute("data-ais-forwarding-href"), null);
   assert.equal(getPhoneClickMeasurement({ element: anchor, consent: "denied" }).call_number_type, "business_number");

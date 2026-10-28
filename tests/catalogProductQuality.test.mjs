@@ -49,8 +49,15 @@ test("removes legacy call-for-pricing numbers from public descriptions", () => {
   );
   assert.equal(
     cleanCatalogDescription("For support call 800-200-3583."),
-    "For support call (559) 537-6851."
+    "For support call (800) 200-3583."
   );
+});
+
+test("normalizes public numbers without merging sales and customer support", () => {
+  for (const number of ["(559) 537-6851", "559-537-6851", "+15595376851", "559.537.6851"]) {
+    assert.equal(cleanCatalogDescription(`For support call ${number}.`), "For support call (559) 537-6851.");
+  }
+  assert.equal(cleanCatalogDescription("Call the manufacturer at (800) 555-0123."), "Call the manufacturer at (800) 555-0123.");
 });
 
 test("accepts a complete, visible product with an image", () => {

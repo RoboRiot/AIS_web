@@ -1,6 +1,7 @@
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF, SUPPORT_PHONE_HREF } from "./businessContact.mjs";
+export { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "./businessContact.mjs";
+
 export const WEBSITE_CALL_GTM_EVENT = "ais_call_tracking_ready";
-export const BUSINESS_PHONE = "(559) 537-6851";
-export const BUSINESS_PHONE_HREF = "tel:+15595376851";
 const FORWARDING_ATTRIBUTE = "data-ais-forwarding-href";
 
 export function getPhoneClickMeasurement({ element, consent, tagState } = {}) {
@@ -10,6 +11,7 @@ export function getPhoneClickMeasurement({ element, consent, tagState } = {}) {
     marketing_consent: ["granted", "denied"].includes(consent) ? consent : "unknown",
     google_tag_state: ["loaded", "failed"].includes(tagState) ? tagState : "not_loaded",
     call_number_type: href === BUSINESS_PHONE_HREF ? "business_number" :
+      href === SUPPORT_PHONE_HREF ? "existing_customer_number" :
       forwardingHref === href && /^tel:\+1\d{10}$/.test(href) ? "google_forwarding" : "other",
   };
 }
@@ -24,7 +26,6 @@ export function normalizeForwardingNumber(formatted, dialable) {
 // Preserve React's elements, icons, and CTA text; only change number text nodes.
 export function createPhoneNumberReplacement(document) {
   const originals = new Map();
-  const pattern = /\(559\) 537-6851/g;
   return {
     apply(number) {
       for (const anchor of document.querySelectorAll(
@@ -37,7 +38,7 @@ export function createPhoneNumberReplacement(document) {
         while ((node = walker.nextNode())) {
           if (!node.nodeValue.includes(BUSINESS_PHONE) && !node.nodeValue.includes(number.text)) continue;
           if (!original.texts.has(node)) original.texts.set(node, node.nodeValue.replaceAll(number.text, BUSINESS_PHONE));
-          const text = node.nodeValue.replace(pattern, number.text);
+          const text = node.nodeValue.replaceAll(BUSINESS_PHONE, number.text);
           if (node.nodeValue !== text) node.nodeValue = text;
         }
         originals.set(anchor, original);

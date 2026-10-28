@@ -12,6 +12,7 @@ import Image1 from "@/public/assets/images/loader2.png"
 import Enlarge from "@/public/assets/images/enlarge.svg"
 import Link from 'next/link';
 import RequestModal from '@/components/modals/RequestModal';
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from '@/app/data/businessContact.mjs';
 import { getPrimaryImagePath, resolveImageUrl } from '@/components/fetchImages/Image';
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -211,7 +212,7 @@ export default function Product({ clickedProduct }) {
                             <li><b>Category: </b> {modality || "N/A"}</li>
                         </ul>
 
-                        <p>Call for Pricing: <Link href="tel:+15595376851">(559) 537-6851</Link></p>
+                        <p>Call for Pricing: <Link href={BUSINESS_PHONE_HREF}>{BUSINESS_PHONE}</Link></p>
                         {clickedProduct?.Description &&
                             <>
                                 <p style={{ marginBottom: "5px" }}><b> Description: </b></p>

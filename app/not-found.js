@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NotFoundAnalytics from "@/components/analytics/NotFoundAnalytics";
 import styles from "./not-found.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
 
 export const metadata = {
   title: "Page Not Found | Advanced Imaging Services",
@@ -37,7 +38,7 @@ export default function NotFound() {
           </Link>
         </nav>
         <p className={styles.contact}>
-          Need help now? <a href="tel:+15595376851">Call (559) 537-6851</a>
+          Need help now? <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>
         </p>
       </div>
     </section>

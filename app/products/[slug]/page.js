@@ -22,6 +22,7 @@ import { isCampaignReadyProduct } from "@/app/data/catalogProductQuality.mjs";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 import { legacyProductGroups, matchesLegacyGroupMember } from "@/app/data/legacyProductGroups.mjs";
 import LegacyProductGroup from "./LegacyProductGroup";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
 
 // Cache product data, not redirect HTML: ISR can retain a 308 without Location.
 export const dynamic = "force-dynamic";
@@ -227,7 +228,7 @@ export default async function ProductSeoPage({ params }) {
                 )}
               </ul>
               <p>
-                Call for pricing: <Link href="tel:+15595376851">(559) 537-6851</Link> or{" "}
+                Call for pricing: <Link href={BUSINESS_PHONE_HREF}>{BUSINESS_PHONE}</Link> or{" "}
                 <Link href="/contact">request availability and compatibility support</Link>.
               </p>
             </div>

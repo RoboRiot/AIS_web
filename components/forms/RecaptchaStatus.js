@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { retryRecaptcha, subscribeRecaptchaStatus } from "@/components/utils/recaptcha";
 import styles from "./RecaptchaStatus.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
 
 export default function RecaptchaStatus() {
   const [status, setStatus] = useState("idle");
@@ -18,6 +19,12 @@ export default function RecaptchaStatus() {
     }
   };
 
+  if (status === "local-preview") return (
+    <aside className={`${styles.notice} ${styles.preview}`} role="status">
+      <p>Local preview: sending is disabled. Google&apos;s production security key does not allow localhost.</p>
+      <a href="https://advancedimagingparts.com/contact">Open the live contact form</a>
+    </aside>
+  );
   if (!["error", "retrying", "retry-ready"].includes(status)) return null;
   const checking = retrying || status === "retrying";
   return (
@@ -31,7 +38,7 @@ export default function RecaptchaStatus() {
         <button type="button" onClick={retry} disabled={checking}>
           {checking ? "Retrying..." : "Retry security check"}
         </button>
-        <span>Need help? <a href="tel:+15595376851">Call (559) 537-6851</a>.</span>
+        <span>Need help? <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>.</span>
       </div>
     </aside>
   );

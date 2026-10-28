@@ -20,6 +20,7 @@ import { normalizeLeadAnalytics, normalizeFormType } from "@/app/data/leadAnalyt
 import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
+import { BUSINESS_PHONE } from "@/app/data/businessContact.mjs";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -149,13 +150,13 @@ export async function POST(request) {
     const leadId = analytics.leadId || crypto.randomUUID();
     const leadHash = hashIdentifier(leadId, "website-lead");
     if (cleanText(payload.website, 200)) {
-      return NextResponse.json({ error: "Submission blocked. Please call (559) 537-6851 for help.", code: "honeypot" }, { status: 403 });
+      return NextResponse.json({ error: `Submission blocked. Please call ${BUSINESS_PHONE} for help.`, code: "honeypot" }, { status: 403 });
     }
     const timingReason = formTimingFailure({ startedAt: payload.startedAt, formSession: payload.formSession,
       formType: payload.formType, leadId, secret: process.env.RECAPTCHA_SECRET_KEY });
     if (timingReason) {
       console.warn("Lead timing rejected", { reason: timingReason, formType: payload.formType });
-      return NextResponse.json({ error: "Please refresh this form and try again, or call (559) 537-6851.", code: "form_timing", timingReason, retryable: true }, { status: 403 });
+      return NextResponse.json({ error: `Please refresh this form and try again, or call ${BUSINESS_PHONE}.`, code: "form_timing", timingReason, retryable: true }, { status: 403 });
     }
 
     const db = getAdminDb();
@@ -168,7 +169,7 @@ export async function POST(request) {
     });
     if (!allowed) {
       return NextResponse.json(
-        { error: "Too many requests. Please call (559) 537-6851 for immediate help." },
+        { error: `Too many requests. Please call ${BUSINESS_PHONE} for immediate help.` },
         { status: 429, headers: { "Retry-After": "900" } }
       );
     }
@@ -183,7 +184,7 @@ export async function POST(request) {
     if (!verification.ok) {
       console.warn("Lead verification rejected", { code: verification.code, formType: payload.formType });
       return NextResponse.json({
-        error: "We could not verify this request. Please try again or call (559) 537-6851.",
+        error: `We could not verify this request. Please try again or call ${BUSINESS_PHONE}.`,
         code: verification.code,
         retryable: verification.retryable,
       }, { status: 403 });

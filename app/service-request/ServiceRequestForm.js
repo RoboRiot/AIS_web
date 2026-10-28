@@ -14,6 +14,8 @@ import { shouldTrackLeadConversion } from "@/app/data/leadAnalytics.mjs";
 import { postLeadWithRetry } from "@/app/data/leadSubmission.mjs";
 import { COUNTRIES } from "./countries";
 import styles from "./serviceRequest.module.scss";
+import { SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/app/data/businessContact.mjs";
+import useLocalFormPreview from "@/components/forms/useLocalFormPreview";
 
 const MANUFACTURERS = [
   "GE Healthcare",
@@ -106,6 +108,7 @@ function Field({ id, label, required, hint, children, className = "" }) {
 }
 
 export default function ServiceRequestForm() {
+  const localPreview = useLocalFormPreview();
   const [form, setForm] = useState(initialForm);
   const [files, setFiles] = useState([]);
   const [honeypot, setHoneypot] = useState("");
@@ -180,7 +183,7 @@ export default function ServiceRequestForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (submitting) return;
+    if (submitting || localPreview) return;
 
     const botSignals = evaluateBotSignals({
       honeypotValue: honeypot,
@@ -205,7 +208,7 @@ export default function ServiceRequestForm() {
     try {
       const token = await executeRecaptcha(recaptchaSiteKey, "service_request");
       if (!token) {
-        const error = new Error("The security check could not finish. Please reload and try again, or call (559) 537-6851.");
+        const error = new Error(`The security check could not finish. Please reload and try again, or call ${SUPPORT_PHONE}.`);
         error.code = "recaptcha_token";
         throw error;
       }
@@ -285,7 +288,7 @@ export default function ServiceRequestForm() {
           <aside className={styles.emergencyCard}>
             <span>Scanner down now?</span>
             <strong>Call for immediate remote support</strong>
-            <a href="tel:+15595376851">(559) 537-6851</a>
+            <a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a>
             <small>Available for urgent MRI, CT, and PET/CT issues.</small>
           </aside>
         </div>
@@ -702,7 +705,7 @@ export default function ServiceRequestForm() {
                 <strong>Ready to send?</strong>
                 <span>Your request is protected by reCAPTCHA and secure server validation.</span>
               </div>
-              <button type="submit" disabled={submitting}>
+              <button type="submit" disabled={submitting || localPreview}>
                 {submitting ? "Submitting request…" : "Submit service request"}
                 <span aria-hidden="true">→</span>
               </button>

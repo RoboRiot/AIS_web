@@ -6,11 +6,12 @@ import styles from "./servicesSeo.module.scss";
 import { BASE_URL } from "@/app/data/seoProducts";
 import { serviceLandingPages, serviceModalities } from "@/app/data/serviceLandingPages";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
+import { BUSINESS_PHONE, BUSINESS_PHONE_E164 } from "@/app/data/businessContact.mjs";
 
 export const metadata = {
     title: "MRI, CT & PET/CT Service & Repair | 24/7 Remote Support",
     description:
-        "Nationwide MRI, CT, and PET/CT service with rapid remote diagnostics, emergency repair, preventive maintenance, and tested parts. Call (559) 537-6851.",
+        `Nationwide MRI, CT, and PET/CT service with rapid remote diagnostics, emergency repair, preventive maintenance, and tested parts. Call ${BUSINESS_PHONE}.`,
     keywords: [
         "MRI service",
         "CT service",
@@ -62,7 +63,7 @@ const servicesStructuredData = {
         "@id": `${BASE_URL}/#organization`,
         name: "Advanced Imaging Services",
         url: BASE_URL,
-        telephone: "+1-559-537-6851",
+        telephone: BUSINESS_PHONE_E164,
     },
     areaServed: {
         "@type": "Country",

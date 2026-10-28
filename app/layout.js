@@ -11,6 +11,7 @@ import AosInitializer from "@/components/animations/AosInitializer";
 import ClientRouteRecovery from "@/components/errors/ClientRouteRecovery";
 import { DEFAULT_SOCIAL_IMAGES } from "@/app/data/siteMetadata";
 import { GOOGLE_TAG_MANAGER_SCRIPT, GOOGLE_TAG_MANAGER_NOSCRIPT_URL } from "@/app/data/googleTagManager.mjs";
+import { BUSINESS_PHONE_E164, SUPPORT_PHONE_E164 } from "@/app/data/businessContact.mjs";
 
 const siteName = "Advanced Imaging Services";
 const geologica = Geologica({
@@ -64,7 +65,7 @@ const siteJsonLd = {
       url: BASE_URL,
       logo: `${BASE_URL}/assets/images/logo.svg`,
       image: `${BASE_URL}${DEFAULT_SOCIAL_IMAGES[0].url}`,
-      telephone: "+1-559-537-6851",
+      telephone: BUSINESS_PHONE_E164,
       email: "info@advancedimagingparts.com",
       address: {
         "@type": "PostalAddress",
@@ -78,12 +79,17 @@ const siteJsonLd = {
         "@type": "Country",
         name: "United States",
       },
-      contactPoint: {
+      contactPoint: [{
         "@type": "ContactPoint",
-        telephone: "+1-559-537-6851",
-        contactType: "sales and service",
+        telephone: BUSINESS_PHONE_E164,
+        contactType: "sales",
         areaServed: "US",
-      },
+      }, {
+        "@type": "ContactPoint",
+        telephone: SUPPORT_PHONE_E164,
+        contactType: "customer service",
+        areaServed: "US",
+      }],
     },
     {
       "@type": "WebSite",

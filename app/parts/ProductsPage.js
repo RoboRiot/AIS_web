@@ -13,6 +13,7 @@ import { buildProductHref, slugify } from '@/app/data/seoProducts';
 import { CATALOG_REQUEST_HEADERS } from '@/app/data/catalogRequestPolicy.mjs';
 import { trackWebsiteEvent } from '@/components/utils/analytics';
 import { buildPartSourcingHref } from '@/app/data/partSourcing.mjs';
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from '@/app/data/businessContact.mjs';
 
 const ITEMS_PER_PAGE = 12;
 const BRANDS = Object.keys(brandsModels);
@@ -529,7 +530,7 @@ export default function ProductsPage({
                                     query: debouncedSearch, partNumber: debouncedSku,
                                     oem: selectedBrand, modality: selectedType, model: selectedModel,
                                 })} data-analytics="parts-no-results-request">Request Part Sourcing</Link>
-                                <a href="tel:+15595376851">Call (559) 537-6851</a>
+                                <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>
                                 {(selectedBrand || selectedType || selectedModel) && (
                                     <Link href={`/parts?${new URLSearchParams({ q: debouncedSearch, pn: debouncedSku }).toString()}`}>Search all manufacturers and modalities</Link>
                                 )}

@@ -14,6 +14,7 @@ import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
 import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
+import { BUSINESS_PHONE } from "@/app/data/businessContact.mjs";
 import { PRODUCTION_HOSTNAME, PRODUCTION_HOST_ALIASES } from "@/site.config.mjs";
 
 export const dynamic = "force-dynamic";
@@ -221,7 +222,7 @@ export async function POST(request) {
     });
     if (!allowed) {
       return fail(
-        "Too many requests. Please call (559) 537-6851 for immediate help.",
+        `Too many requests. Please call ${BUSINESS_PHONE} for immediate help.`,
         429,
         { "Retry-After": "1800" }
       );

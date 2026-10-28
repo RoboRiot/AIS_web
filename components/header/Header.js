@@ -6,6 +6,7 @@ import Image from "next/image"
 import phoneIcon from "@/public/assets/images/phoneicon.svg"
 import emailIcon from "@/public/assets/images/emailicon.svg"
 import Navigation from "./Navigation"
+import CustomerPhoneLinks from "@/components/contact/CustomerPhoneLinks";
 
 
 export default function Header() {
@@ -31,7 +32,7 @@ export default function Header() {
                     <div className="container flex">
                         <span>ISO 9001:2015 Certified</span>
                         <ul className="list-none flex items-center ml-auto">
-                            <li className="flex items-center"><Image src={phoneIcon} alt="phone" /><Link data-ais-call-source="true" href="tel:+15595376851">(559) 537-6851</Link></li>
+                            <li className="flex items-center"><Image src={phoneIcon} alt="phone" /><CustomerPhoneLinks inline /></li>
                             <li className="flex items-center"><Image src={emailIcon} alt="email" /><Link href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</Link></li>
                         </ul>
                     </div>

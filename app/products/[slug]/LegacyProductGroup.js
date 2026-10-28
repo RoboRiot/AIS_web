@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buildProductHref } from "@/app/data/seoProducts";
 import styles from "./legacyProductGroup.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
 
 export default function LegacyProductGroup({ group, products }) {
   return (
@@ -24,7 +25,7 @@ export default function LegacyProductGroup({ group, products }) {
         <h2>Need help matching your part?</h2>
         <p>Have the full part number, revision and system model ready. Current availability and compatibility are confirmed with your quote.</p>
         <Link href="/contact">Contact our parts team</Link>
-        <a href="tel:+15595376851">(559) 537-6851</a>
+        <a href={BUSINESS_PHONE_HREF}>{BUSINESS_PHONE}</a>
       </section>
     </main>
   );

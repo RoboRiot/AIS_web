@@ -804,5 +804,5 @@ html[data-seo-product-loaded="true"] .seo-fallback {
 }
 
 @media (max-width: 999px) {
-  .grecaptcha-badge { display: none !important;}
+  .grecaptcha-badge { z-index: 1000; }
 }

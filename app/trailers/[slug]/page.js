@@ -11,6 +11,7 @@ import {
 } from "@/app/data/serviceLandingPages";
 import { getTrailerImages } from "@/app/data/trailerImages";
 import styles from "@/app/services/landingPage.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF, BUSINESS_PHONE_E164 } from "@/app/data/businessContact.mjs";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -145,7 +146,7 @@ export default async function TrailerLandingPage({ params }) {
       "@type": "Organization",
       name: "Advanced Imaging Services",
       url: BASE_URL,
-      telephone: "+1-559-537-6851",
+      telephone: BUSINESS_PHONE_E164,
     },
     areaServed: {
       "@type": "Country",
@@ -155,7 +156,7 @@ export default async function TrailerLandingPage({ params }) {
       "@type": "ServiceChannel",
       servicePhone: {
         "@type": "ContactPoint",
-        telephone: "+1-559-537-6851",
+        telephone: BUSINESS_PHONE_E164,
         contactType: "rental availability",
       },
     },
@@ -232,11 +233,11 @@ export default async function TrailerLandingPage({ params }) {
                   Check Trailer Availability
                 </a>
                 <a
-                  href="tel:+15595376851"
+                  href={BUSINESS_PHONE_HREF}
                   data-analytics="trailer-hero-phone"
                   data-analytics-source={page.slug}
                 >
-                  Call (559) 537-6851
+                  Call {BUSINESS_PHONE}
                 </a>
               </div>
               <ul className={`${styles.heroProofList} list-none`} aria-label="Rental support highlights">
@@ -467,7 +468,7 @@ export default async function TrailerLandingPage({ params }) {
       <div className={styles.mobileActionSpacer} aria-hidden="true" />
       <nav className={styles.mobileActionBar} aria-label={`${page.shortTitle} contact options`}>
         <a
-          href="tel:+15595376851"
+          href={BUSINESS_PHONE_HREF}
           data-analytics="trailer-mobile-phone"
           data-analytics-source={page.slug}
         >

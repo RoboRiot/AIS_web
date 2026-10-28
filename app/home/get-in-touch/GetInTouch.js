@@ -3,6 +3,7 @@ import styles from "./getInTouch.module.scss"
 import phoneIcon from "@/public/assets/images/phoneicon.svg"
 import emailIcon from "@/public/assets/images/emailicon.svg"
 import locationIcon from "@/public/assets/images/location.svg"
+import CustomerPhoneLinks from "@/components/contact/CustomerPhoneLinks";
 
 export default function GetInTouch() {
     return(
@@ -19,7 +20,7 @@ export default function GetInTouch() {
                         <div className={styles.contact_info} data-aos="fade-right" data-aos-duration="1000">
                             <h3>Contact Info</h3>
                             <ul className={`list-none flex direction-column ${styles.contact_info_list}`}>
-                                <li><Image src={phoneIcon} alt="phone" /><a href="tel:+15595376851">(559) 537-6851</a></li>
+                                <li><Image src={phoneIcon} alt="phone" /><CustomerPhoneLinks /></li>
                                 <li><Image src={emailIcon} alt="icon" /><a href="mailto:info@advancedimagingparts.com">info@advancedimagingparts.com</a></li>
                                 <li><Image src={locationIcon} alt="icon" /><span>17410 Murphy Pkwy. Lathrop, CA 95330</span></li>
                             </ul>

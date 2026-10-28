@@ -6,7 +6,7 @@ import { readFile } from "node:fs/promises";
 const source = (await readFile(new URL("../components/utils/recaptcha.js", import.meta.url), "utf8"))
   .replaceAll("export const ", "const ");
 
-function fixture() {
+function fixture(hostname = "advancedimagingparts.com") {
   const nodes = [];
   const timers = new Map();
   const queued = [];
@@ -52,6 +52,7 @@ function fixture() {
     return clients.length - 1;
   };
   const window = {
+    location: { hostname },
     setTimeout(fn) { const id = ++sequence; timers.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
     MutationObserver: class {
@@ -109,10 +110,33 @@ test("bootstrap load waits for Google's asynchronous ready callback", async () =
   await Promise.resolve();
   assert.equal(completed, false);
   assert.equal(f.nodes.length, 1);
+  assert.equal(f.nodes[0].src, "https://www.recaptcha.net/recaptcha/api.js?render=explicit");
   assert.equal(f.nodes[0].removed, false);
   f.ready();
   assert.equal(await first, true);
   assert.equal(f.timers.size, 0);
+});
+
+test("loopback previews cannot load a production key or produce submission tokens", async () => {
+  for (const hostname of ["localhost", "127.0.0.1", "[::1]", "preview.localhost"]) {
+    const f = fixture(hostname);
+    const statuses = [];
+    f.api.subscribeRecaptchaStatus((status) => statuses.push(status));
+    assert.equal(await f.api.ensureRecaptchaScript("fixture-key"), false);
+    assert.equal(await f.api.executeRecaptcha("fixture-key", "contact_form"), null);
+    assert.equal(f.nodes.length, 0);
+    assert.equal(f.executions, 0);
+    assert.equal(statuses.at(-1), "local-preview");
+  }
+});
+
+test("alternate reCAPTCHA transport is explicitly allowed by CSP", async () => {
+  const { default: config } = await import("../next.config.mjs");
+  const headers = await config("phase-development-server").headers();
+  const csp = headers.find((entry) => entry.source === "/(.*)").headers.find((header) => header.key === "Content-Security-Policy").value;
+  for (const directive of ["script-src", "frame-src", "connect-src"]) {
+    assert.match(csp.split("; ").find((entry) => entry.startsWith(`${directive} `)), /https:\/\/www\.recaptcha\.net\/recaptcha\//);
+  }
 });
 
 test("ready timeout retains the bootstrap and retry uses the same API", async () => {

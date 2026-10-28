@@ -14,6 +14,9 @@ let status = "idle";
 const listeners = new Set();
 const widgetWaiters = new Set();
 
+export const isLocalFormPreview = () => typeof window !== "undefined" &&
+  /^(?:localhost|127\.0\.0\.1|\[?::1\]?|.+\.localhost)$/i.test(window.location?.hostname || "");
+
 const setStatus = (next) => {
   if (status === next) return;
   status = next;
@@ -117,6 +120,11 @@ const renderWidget = (siteKey, replace = false) => {
 };
 
 export const ensureRecaptchaScript = (siteKey) => {
+  // Never send local previews through the production key or create real leads.
+  if (isLocalFormPreview()) {
+    setStatus("local-preview");
+    return Promise.resolve(false);
+  }
   if (!siteKey || typeof window === "undefined") {
     return Promise.resolve(false);
   }
@@ -177,7 +185,8 @@ export const ensureRecaptchaScript = (siteKey) => {
     script.addEventListener("error", failed, { once: true });
     if (!existing) {
       script.id = "recaptcha-v3";
-      script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
+      // Google's supported alternate domain avoids www.google.com restrictions.
+      script.src = "https://www.recaptcha.net/recaptcha/api.js?render=explicit";
       script.async = true;
       script.defer = true;
       try {

@@ -1,7 +1,8 @@
 import { getVerifiedLegacyMetadata } from "./legacyCatalogMetadata.mjs";
+import { BUSINESS_PHONE, SUPPORT_PHONE } from "./businessContact.mjs";
 
 const cleanValue = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
-const legacyPhonePattern = /(?:\+?1[-.\s]?)?\(?800\)?[-.\s]*200[-.\s]*3583/gi;
+const catalogPhonePattern = /(?:\+?1[-.\s]?)?(?:\(?800\)?[-.\s]*200[-.\s]*3583|\(?559\)?[-.\s]*537[-.\s]*6851)/gi;
 
 const hiddenValues = new Set(["hidden", "private", "draft", "unpublished"]);
 const placeholderNames = new Set([
@@ -59,7 +60,7 @@ export const cleanCatalogDescription = (value) =>
     .replace(/\?{2,}/g, " ")
     .replace(/(?:Description:\s*){2,}/gi, "Description: ")
     .replace(/\s*Call for Pricing:\s*(?:\+?1[-.\s]?)?\(?800\)?[-.\s]*200[-.\s]*3583/gi, " ")
-    .replace(legacyPhonePattern, "(559) 537-6851")
+    .replace(catalogPhonePattern, (number) => number.replace(/\D/g, "").endsWith("8002003583") ? SUPPORT_PHONE : BUSINESS_PHONE)
     .replace(/\s+/g, " ")
     .trim();
 

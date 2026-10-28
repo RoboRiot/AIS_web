@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import RecaptchaStatus from "@/components/forms/RecaptchaStatus";
+import useLocalFormPreview from "@/components/forms/useLocalFormPreview";
 import { evaluateBotSignals } from "@/components/utils/antiBot";
 import { announceFormOpen, createLeadId, trackWebsiteEvent } from "@/components/utils/analytics";
 import { FORM_LIMITS, sanitizeLeadForm } from "@/components/utils/formSecurity";
 import { ensureRecaptchaScript, executeRecaptcha } from "@/components/utils/recaptcha";
 import { submitLead } from "@/components/utils/submitLead";
 import styles from "@/app/services/landingPage.module.scss";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
 
 export default function QuickInquiryForm({
   formType,
@@ -19,6 +21,7 @@ export default function QuickInquiryForm({
   submitLabel,
   compact = false,
 }) {
+  const localPreview = useLocalFormPreview();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -59,7 +62,7 @@ export default function QuickInquiryForm({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (submitting || submitted) return;
+    if (submitting || submitted || localPreview) return;
 
     const botSignals = evaluateBotSignals({ honeypotValue: website, startedAt });
     if (botSignals.blocked) {
@@ -86,7 +89,7 @@ export default function QuickInquiryForm({
     try {
       const token = await executeRecaptcha(recaptchaSiteKey, formType);
       if (!token) {
-        const error = new Error("The security check could not finish. Please reload and try again, or call (559) 537-6851.");
+        const error = new Error(`The security check could not finish. Please reload and try again, or call ${BUSINESS_PHONE}.`);
         error.code = "recaptcha_token";
         throw error;
       }
@@ -122,7 +125,7 @@ export default function QuickInquiryForm({
             <span>{compact ? "Facility rental inquiries" : "Direct response from our imaging team"}</span>
             <h2>{title}</h2>
             <p>{intro}</p>
-            <a href="tel:+15595376851">Call (559) 537-6851</a>
+            <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>
             {!compact && <ul className="list-none">
               {nextSteps.map((step) => <li key={step}>{step}</li>)}
             </ul>}
@@ -133,11 +136,11 @@ export default function QuickInquiryForm({
               <p>Our team will review the details and follow up as quickly as possible.</p>
               {confirmationId ? <small>Reference {confirmationId}</small> : null}
               <a
-                href="tel:+15595376851"
+                href={BUSINESS_PHONE_HREF}
                 data-analytics="quick-inquiry-phone"
                 data-analytics-source={source}
               >
-                Need immediate help? Call (559) 537-6851
+                Need immediate help? Call {BUSINESS_PHONE}
               </a>
             </div>
           ) : (
@@ -209,7 +212,7 @@ export default function QuickInquiryForm({
               <button
                 type="submit"
                 className="simple-btn"
-                disabled={submitting}
+                disabled={submitting || localPreview}
                 data-analytics="quick-inquiry-submit"
                 data-analytics-label={submitLabel}
                 data-analytics-source={source}

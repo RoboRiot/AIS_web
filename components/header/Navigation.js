@@ -8,6 +8,7 @@ import searchIcon from "@/public/assets/images/search.svg"
 import { useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler';
 import productsData from "./partCardList.json";
+import CustomerPhoneLinks from "@/components/contact/CustomerPhoneLinks";
 import {
     navigationModalities,
     serviceNavigationLinks,
@@ -239,6 +240,7 @@ export default function Navigation() {
                                 </Link>
                             </li>
                         </ul>
+                        <div className={styles.mobile_phones}><CustomerPhoneLinks /></div>
                         <OutsideClickHandler
                             onOutsideClick={() => {
                                 setShowSearch(false)

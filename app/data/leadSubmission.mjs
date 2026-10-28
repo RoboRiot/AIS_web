@@ -1,3 +1,5 @@
+import { BUSINESS_PHONE } from "./businessContact.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function postLeadWithRetry(payload, {
@@ -20,7 +22,7 @@ export async function postLeadWithRetry(payload, {
       const data = (await response.json().catch(() => ({}))) || {};
       return { response, data };
     } catch {
-      const error = new Error("Unable to confirm your request. Please try again or call (559) 537-6851.");
+      const error = new Error(`Unable to confirm your request. Please try again or call ${BUSINESS_PHONE}.`);
       error.code = controller.signal.aborted ? "request_timeout" : "network_error";
       throw error;
     } finally {
@@ -60,7 +62,7 @@ export async function postLeadWithRetry(payload, {
         continue;
       }
     }
-    const error = new Error(data.error || "Unable to confirm your request. Please try again or call (559) 537-6851.");
+    const error = new Error(data.error || `Unable to confirm your request. Please try again or call ${BUSINESS_PHONE}.`);
     error.status = response.status;
     error.code = data.code || "request_failed";
     throw error;

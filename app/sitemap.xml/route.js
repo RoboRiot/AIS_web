@@ -1,10 +1,14 @@
 import { BASE_URL } from "@/app/data/seoProducts";
-import { SITEMAP_PATHS } from "@/app/data/seoRoutes.mjs";
+import { STATIC_SITEMAP_PATHS } from "@/app/data/seoRoutes.mjs";
+import { getProductSitemapEntries } from "@/app/data/serverProductSitemap";
+import { getProductSitemapIds, productSitemapPath } from "@/app/data/productSitemap.mjs";
 
 export const dynamic = "force-static";
 
-export function GET() {
-  const sitemapEntries = SITEMAP_PATHS.map(
+export async function GET() {
+  const productIds = getProductSitemapIds(await getProductSitemapEntries());
+  const paths = [...STATIC_SITEMAP_PATHS, ...productIds.map(({ id }) => productSitemapPath(id))];
+  const sitemapEntries = paths.map(
     (path) => `  <sitemap><loc>${BASE_URL}${path}</loc></sitemap>`
   ).join("\n");
 

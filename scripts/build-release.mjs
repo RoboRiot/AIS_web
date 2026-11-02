@@ -15,6 +15,7 @@ import {
   writeCurrentReleaseId,
 } from "./release-config.mjs";
 import { verifyBuildAssets } from "./verify-build-assets.mjs";
+import { verifyBuiltSitemaps } from "./verify-sitemaps.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
@@ -115,6 +116,8 @@ if (build.error) throw build.error;
 if (build.status !== 0) process.exit(build.status || 1);
 
 const integrity = verifyBuildAssets({ distDir, projectRoot });
+const sitemaps = await verifyBuiltSitemaps({ distDir, projectRoot });
+console.log(`Verified ${sitemaps.products} products in ${sitemaps.productSitemaps} complete sitemap files; largest XML response ${sitemaps.largestBytes} bytes.`);
 const staticDirectory = path.join(projectRoot, distDir, "static");
 const archiveRoot = path.join(projectRoot, "public", "assets", "next-static");
 

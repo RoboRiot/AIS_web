@@ -215,6 +215,13 @@ export function middleware(request) {
   const respond = (response) =>
     stagingRequest ? addStagingHeaders(response) : response;
 
+  // Next config redirects match case-insensitively; keep /parts out of this alias.
+  if (pathname === "/Parts") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/parts";
+    return respond(NextResponse.redirect(redirectUrl, 308));
+  }
+
   if (pathname === "/product-detail") {
     const rawQuery = request.nextUrl.search.replace(/^\?/, "");
     const redirectUrl = request.nextUrl.clone();

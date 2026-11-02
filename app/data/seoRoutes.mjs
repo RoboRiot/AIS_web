@@ -26,11 +26,10 @@ export const CORE_SITEMAP_ENTRIES = [
   })),
 ];
 
-export const SITEMAP_PATHS = [
+export const STATIC_SITEMAP_PATHS = [
   "/sitemaps/core/sitemap.xml",
   "/sitemaps/services/sitemap.xml",
   "/sitemaps/trailers/sitemap.xml",
-  "/sitemaps/products/sitemap.xml",
 ];
 
 export const LEGACY_TRAILER_REDIRECTS = [

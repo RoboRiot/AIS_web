@@ -46,7 +46,11 @@ test("asset audit still reports genuine HTTP failures, not RSC fragments", async
     requested.push(request.url);
     if (request.url === "/sitemap.xml") {
       response.setHeader("content-type", "application/xml");
-      return response.end("<urlset><url><loc>/</loc></url></urlset>");
+      return response.end("<sitemapindex><sitemap><loc>https://advancedimagingparts.com/sitemaps/pages/sitemap.xml</loc></sitemap></sitemapindex>");
+    }
+    if (request.url === "/sitemaps/pages/sitemap.xml") {
+      response.setHeader("content-type", "application/xml");
+      return response.end("<urlset><url><loc>https://advancedimagingparts.com/</loc></url></urlset>");
     }
     if (request.url === "/") {
       response.setHeader("content-type", "text/html");

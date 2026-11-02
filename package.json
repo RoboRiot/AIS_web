@@ -40,7 +40,8 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "15.5.27"
+    "eslint-config-next": "15.5.27",
+    "fast-xml-parser": "5.8.0"
   },
   "overrides": {
     "@grpc/grpc-js": "^1.14.6",

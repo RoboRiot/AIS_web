@@ -2,41 +2,28 @@ import {
   buildProductIdSuffix,
   parseProductIdSuffix,
 } from "../app/data/productIdSlug.mjs";
+import { readSitemapTree } from "./verify-sitemaps.mjs";
 
 const baseUrl = String(
   process.argv.find((argument) => argument.startsWith("--base-url="))?.split("=").slice(1).join("=") ||
   "http://127.0.0.1:3000"
 ).replace(/\/$/, "");
-const concurrency = Math.max(1, Math.min(20, Number(
-  process.argv.find((argument) => argument.startsWith("--concurrency="))?.split("=")[1] || 8
+const concurrency = Math.max(1, Math.min(2, Number(
+  process.argv.find((argument) => argument.startsWith("--concurrency="))?.split("=")[1] || 2
 )));
 const headers = {
   Accept: "text/html,application/json",
   "User-Agent": "Mozilla/5.0 AIS product-link audit",
 };
 
-const decodeXml = (value) =>
-  value
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'");
-
 const getCatalog = async () => {
-  const response = await fetch(
-    new URL("/sitemaps/products/sitemap.xml", baseUrl),
-    { headers }
-  );
-  if (!response.ok) {
-    throw new Error(
-      `Product sitemap failed with HTTP ${response.status}: ${await response.text()}`
-    );
-  }
-
-  const xml = await response.text();
-  return [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => {
-    const path = new URL(decodeXml(match[1])).pathname;
+  const { urls } = await readSitemapTree(async (pathname) => {
+    const response = await fetch(new URL(pathname, baseUrl), { headers, signal: AbortSignal.timeout(45000) });
+    if (!response.ok) throw new Error(`Sitemap ${pathname} failed with HTTP ${response.status}`);
+    return response.text();
+  });
+  return urls.filter((url) => new URL(url).pathname.startsWith("/products/")).map((url) => {
+    const path = new URL(url).pathname;
     const id = parseProductIdSuffix(path.split("/").pop());
     return { id, Slug: path.split("/").pop(), Name: path };
   });

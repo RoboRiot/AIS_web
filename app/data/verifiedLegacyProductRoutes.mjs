@@ -10,4 +10,5 @@ export const verifiedLegacyProductRoutes = [
   ["1-5t-hd-4ch-breast-coil-with-cable-5145567-2", "SCF3CFB5F1B321", "5145567-2", "GE"],
   ["absolute-encoder-multi-turnemc-2-2342726-2", "e7a82c6ba78a", "2342726-2", "GE"],
   ["gcifm-pwb-px77-99455", "cb3563dde7c4", "PX77-99455", "TOSHIBA"],
+  ["10gig-sfp-receiver-and-antenna-assembly-5311645-2", "b73f9b979f2d", "5311645-2", "GE"],
 ].map(([slug, id, partNumber, oem]) => ({ slug, id, partNumber, oem }));

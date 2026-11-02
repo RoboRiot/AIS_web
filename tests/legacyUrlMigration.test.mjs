@@ -68,3 +68,16 @@ test("only numeric historical archive pages redirect to the replacement parts ca
   assert.equal(rule.permanent, true);
   assert.ok(!redirects.some((item) => item.source === "/products/:slug"));
 });
+
+test("CT archive and old sitemap redirects have explicit replacements", async () => {
+  const redirects = await createNextConfig(PHASE_DEVELOPMENT_SERVER).redirects();
+  for (const source of ["/product-category/ct-scanner", "/product-category/ct-scanner/page/:page([1-9]\\d*)"]) {
+    assert.deepEqual(redirects.find((item) => item.source === source), {
+      source, destination: "/parts?modality=CT", permanent: true,
+    });
+  }
+  assert.deepEqual(redirects.find((item) => item.source === "/sitemaps/products/sitemap.xml"), {
+    source: "/sitemaps/products/sitemap.xml", destination: "/sitemap.xml", permanent: true,
+  });
+  assert.ok(!redirects.some((item) => item.source === "/Parts"), "Next config is case insensitive and would loop");
+});

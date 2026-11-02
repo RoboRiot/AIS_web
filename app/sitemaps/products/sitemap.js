@@ -1,30 +1,15 @@
-import { BASE_URL, buildProductSlug } from "@/app/data/seoProducts";
-import { fetchAllProducts } from "@/app/data/serverFirestoreProducts";
+import { notFound } from "next/navigation";
+import { getProductSitemapEntries } from "@/app/data/serverProductSitemap";
+import { getProductSitemapIds, getProductSitemapPage } from "@/app/data/productSitemap.mjs";
 
-export default async function sitemap() {
-  try {
-    const products = await fetchAllProducts();
-    const seen = new Set();
-    const urls = [];
+export const dynamic = "force-static";
 
-    for (const product of products) {
-      const slug = buildProductSlug(product);
-      if (!slug || seen.has(slug)) continue;
-      seen.add(slug);
-      const updatedAt = product.UpdatedAt ? new Date(product.UpdatedAt) : null;
-      urls.push({
-        url: `${BASE_URL}/products/${slug}`,
-        ...(updatedAt && Number.isFinite(updatedAt.getTime())
-          ? { lastModified: updatedAt }
-          : {}),
-        changeFrequency: "monthly",
-        priority: 0.7,
-      });
-    }
+export async function generateSitemaps() {
+  return getProductSitemapIds(await getProductSitemapEntries());
+}
 
-    return urls;
-  } catch (error) {
-    console.error("Unable to generate product sitemap:", error);
-    return [];
-  }
+export default async function sitemap({ id }) {
+  const page = getProductSitemapPage(await getProductSitemapEntries(), id);
+  if (!page) notFound();
+  return page;
 }

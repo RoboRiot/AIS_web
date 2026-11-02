@@ -1,18 +1,11 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { readSitemapTree } from "./verify-sitemaps.mjs";
 
 const require = createRequire(import.meta.url);
 const { parse } = require("next/dist/compiled/node-html-parser");
 
-const DEFAULT_ROUTES = [
-  "/",
-  "/about",
-  "/services",
-  "/trailers",
-  "/parts",
-  "/contact",
-];
 const CSS_URL_PATTERN = /url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
 const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
@@ -150,46 +143,13 @@ export const extractInternalResources = (contents, pageUrl, baseOrigin) => {
   return [...resources];
 };
 
-const sitemapLocations = (contents) =>
-  [...contents.matchAll(/<loc>(.*?)<\/loc>/g)]
-    .map((match) => match[1].replaceAll("&amp;", "&"))
-    .filter(Boolean);
-
 const loadRoutes = async (baseUrl) => {
-  const base = new URL(baseUrl);
-  const visitedSitemaps = new Set();
-
-  const readSitemap = async (sitemapUrl, depth = 0) => {
-    const supplied = new URL(sitemapUrl, base);
-    const resolved = new URL(`${supplied.pathname}${supplied.search}`, base);
-    if (visitedSitemaps.has(resolved.href) || depth > 3) {
-      return [];
-    }
-    visitedSitemaps.add(resolved.href);
-
-    const sitemap = await fetchWithTimeout(resolved, { readBody: true });
-    if (sitemap.status !== 200) return [];
-
-    const locations = sitemapLocations(sitemap.body);
-    if (sitemap.body.includes("<sitemapindex")) {
-      const nested = await Promise.all(
-        locations.map((location) => readSitemap(location, depth + 1)),
-      );
-      return nested.flat();
-    }
-
-    return locations.flatMap((location) => {
-      try {
-        const sourceUrl = new URL(location, base);
-        return [`${sourceUrl.pathname}${sourceUrl.search}`];
-      } catch {
-        return [];
-      }
-    });
-  };
-
-  const routes = await readSitemap(new URL("/sitemap.xml", base));
-  return routes.length > 0 ? [...new Set(routes)] : DEFAULT_ROUTES;
+  const { urls } = await readSitemapTree(async (pathname) => {
+    const sitemap = await fetchWithTimeout(new URL(pathname, baseUrl), { readBody: true });
+    if (sitemap.status !== 200) throw new Error(`Sitemap ${pathname}: ${sitemap.error || `HTTP ${sitemap.status}`}`);
+    return sitemap.body;
+  });
+  return urls.map((url) => new URL(url).pathname);
 };
 
 export const verifySiteAssets = async ({

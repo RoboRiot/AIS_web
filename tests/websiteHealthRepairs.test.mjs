@@ -3,12 +3,20 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import createNextConfig from "../next.config.mjs";
 
-test("regional GA collection is allowed without allowing arbitrary third-party connections", async () => {
+test("GA4 default and regional collectors are allowed without arbitrary third-party connections", async () => {
   const config = createNextConfig("phase-development-server");
   const headers = await config.headers();
   const csp = headers.find((row) => row.source === "/(.*)").headers.find((row) => row.key === "Content-Security-Policy").value;
   const connect = csp.split(";").find((directive) => directive.trim().startsWith("connect-src"));
-  assert.match(connect, /https:\/\/\*\.google-analytics\.com/);
+  const allowedSources = connect.trim().split(/\s+/).slice(1);
+  for (const collector of [
+    "https://*.google-analytics.com",
+    "https://analytics.google.com",
+    "https://*.analytics.google.com",
+  ]) {
+    assert.ok(allowedSources.includes(collector), `Missing GA4 collector: ${collector}`);
+  }
+  assert.ok(!allowedSources.includes("https://*.google.com"));
   assert.doesNotMatch(connect, /(?:^|\s)\*(?:\s|$)|(?:^|\s)https:(?:\s|$)/);
   assert.match(csp, /object-src 'none'/);
 });

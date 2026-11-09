@@ -1,4 +1,4 @@
-import { analyticsPageUrl } from "./analyticsPrivacy.mjs";
+import { analyticsPageUrl, analyticsReferrerUrl } from "./analyticsPrivacy.mjs";
 import { getLeadEventName } from "./leadAnalytics.mjs";
 import { synchronizeGoogleConsent } from "./marketingConsent.mjs";
 
@@ -9,6 +9,7 @@ export function ensureGoogleAnalytics(browser, measurementId) {
     browser.gtag("config", measurementId, {
       anonymize_ip: true, send_page_view: false,
       page_location: analyticsPageUrl(browser.location.href),
+      page_referrer: analyticsReferrerUrl(browser.document?.referrer),
     });
     browser.__aisGaMeasurementId = measurementId;
   }

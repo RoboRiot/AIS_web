@@ -15,3 +15,11 @@ export function analyticsPageUrl(value) {
   url.hash = "";
   return url.href;
 }
+
+export function analyticsReferrerUrl(value) {
+  try {
+    const url = new URL(value);
+    if (!["https:", "http:"].includes(url.protocol)) return "";
+    return `${url.origin}${url.pathname}`.slice(0, 300);
+  } catch { return ""; }
+}

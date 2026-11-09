@@ -2,6 +2,7 @@ import { redactAnalyticsText } from "./analyticsPrivacy.mjs";
 import { ACQUISITION_SOURCES, normalizeCampaignTags } from "./campaignAttribution.mjs";
 import { normalizeAttributionHistory } from "./attributionHistory.mjs";
 import { normalizeLeadMeasurement } from "./leadMeasurement.mjs";
+import { normalizeOpenAiClickId } from "./openAiConversionsConfig.mjs";
 
 const FORM_TYPES = new Set([
   "contact_form",
@@ -48,6 +49,7 @@ export const normalizeLeadAnalytics = (value = {}) => {
     : {};
   const source = clean(analytics.acquisition_source, 40);
   const tags = normalizeCampaignTags(analytics);
+  const measurement = normalizeLeadMeasurement(analytics.measurement);
   const clickIds = {
     gclid: cleanClickId(analytics.gclid),
     gbraid: cleanClickId(analytics.gbraid),
@@ -73,13 +75,17 @@ export const normalizeLeadAnalytics = (value = {}) => {
       id: tags.utm_id,
     },
     clickIds,
+    // Private conversion context only. Routes must never copy this into email,
+    // ordinary analytics properties, or third-party user matching fields.
+    openAiClickId: measurement.eligibility === "eligible" && measurement.marketingConsent === "granted"
+      ? normalizeOpenAiClickId(analytics.oppref) : "",
     clickIdPresent: Boolean(
       analytics.click_id_present || Object.values(clickIds).some(Boolean)
     ),
     searchTerm: redactAnalyticsText(analytics.search_term, 100).toLowerCase(),
     searchKind: clean(analytics.search_kind, 40),
     attributionHistory: normalizeAttributionHistory(analytics.attribution_history),
-    measurement: normalizeLeadMeasurement(analytics.measurement),
+    measurement,
   };
 };
 

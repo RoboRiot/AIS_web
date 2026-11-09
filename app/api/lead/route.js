@@ -17,6 +17,7 @@ import {
   readJsonBody,
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics, normalizeFormType } from "@/app/data/leadAnalytics.mjs";
+import { canMeasureOpenAiLead, createOpenAiConversion, deliverOpenAiConversion } from "@/app/data/openAiConversions.mjs";
 import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
@@ -230,6 +231,8 @@ export async function POST(request) {
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
     const verifiedAnalytics = isProductionAnalyticsRequest(request);
+    const openAiConversion = createOpenAiConversion({ analytics, formType: reportingFormType,
+      productionEligible: verifiedAnalytics, leadId, sourcePage: leadDetails.sourcePage, now: now.getTime() });
     const mailReference = db.collection("mail").doc(`website-${leadHash}`);
     const eventReference = db.collection("WebsiteAnalyticsEvents").doc(`lead-${leadHash}`);
     const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
@@ -277,6 +280,7 @@ export async function POST(request) {
       },
     };
     const confirmedSubmissionEvent = {
+      ...(openAiConversion ? { openAiConversion } : {}),
       eventType: "form_submit",
       measurement: analytics.measurement,
       date,
@@ -402,6 +406,10 @@ export async function POST(request) {
         });
       }
     });
+
+    await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
+      allowed: canMeasureOpenAiLead({ analytics, formType: acceptedClassification.formType,
+        productionEligible: verifiedAnalytics }) });
 
     return NextResponse.json({
       ok: true,

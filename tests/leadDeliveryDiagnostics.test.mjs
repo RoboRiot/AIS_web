@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { normalizeLeadAnalytics } from "../app/data/leadAnalytics.mjs";
 import { getLeadMeasurement, normalizeLeadMeasurement, buildLeadDeliveryReport } from "../app/data/leadMeasurement.mjs";
+import { readMeasurementConsent } from "../app/data/marketingConsent.mjs";
 
 const browser = { location: { hostname: "advancedimagingparts.com" }, __aisGaMeasurementId: "G-test" };
 const human = { userAgent: "Mozilla/5.0 Chrome/140.0.0.0 Safari/537.36" };
@@ -9,18 +10,18 @@ const human = { userAgent: "Mozilla/5.0 Chrome/140.0.0.0 Safari/537.36" };
 test("accepted-lead measurement context contains only allowlisted operational states", () => {
   assert.deepEqual(normalizeLeadMeasurement({ eligibility: "eligible", tagState: "loaded", marketingConsent: "granted",
     email: "private@example.com", gclid: "private-click-id", cookie: "private-cookie" }),
-  { eligibility: "eligible", tagState: "loaded", marketingConsent: "granted" });
+  { eligibility: "eligible", tagState: "loaded", marketingConsent: "granted", analyticsConsent: "unknown" });
   for (const input of [null, [], "bad", { eligibility: "private@example.com", tagState: "confirmed" }]) {
     assert.deepEqual(normalizeLeadMeasurement(input),
-      { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown" });
+      { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown", analyticsConsent: "unknown" });
   }
   const normalized = normalizeLeadAnalytics({ measurement: { eligibility: "eligible", tagState: "failed" } });
   assert.equal(normalized.measurement.tagState, "failed");
   assert.equal(normalized.acquisitionSource, "unknown");
   assert.deepEqual(normalizeLeadMeasurement({ tagLoadAttempts: 999, tagLoadError: "private@example.com" }),
-    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown" });
+    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown", analyticsConsent: "unknown" });
   assert.deepEqual(normalizeLeadMeasurement({ tagLoadAttempts: 2, tagLoadError: "offline" }),
-    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown", tagLoadAttempts: 2, tagLoadError: "offline" });
+    { eligibility: "unknown", tagState: "unknown", marketingConsent: "unknown", analyticsConsent: "unknown", tagLoadAttempts: 2, tagLoadError: "offline" });
 });
 
 test("tag readiness does not override privacy, bot or local-environment exclusions", () => {
@@ -28,8 +29,8 @@ test("tag readiness does not override privacy, bot or local-environment exclusio
   assert.equal(getLeadMeasurement({ browser: { ...browser, __aisGoogleTagState: "loaded" }, navigator: human }).tagState, "loaded");
   assert.equal(getLeadMeasurement({ browser: { ...browser, __aisGoogleTagState: "failed" }, navigator: human }).tagState, "failed");
   for (const navigator of [{ doNotTrack: "1" }, { globalPrivacyControl: true }]) {
-    assert.deepEqual(getLeadMeasurement({ browser, navigator, consent: "granted" }),
-      { eligibility: "privacy_opt_out", tagState: "not_initialized", marketingConsent: "denied" });
+    assert.deepEqual(getLeadMeasurement({ browser, navigator, consent: "granted", analyticsConsent: "granted" }),
+      { eligibility: "privacy_opt_out", tagState: "not_initialized", marketingConsent: "denied", analyticsConsent: "denied" });
   }
   for (const args of [{ browser, navigator: { webdriver: true } },
     { browser: { location: { hostname: "localhost" } } }, { browser, navigator: { userAgent: "Googlebot" } }]) {
@@ -42,6 +43,30 @@ test("tag readiness does not override privacy, bot or local-environment exclusio
 const accepted = (id, measurement) => ({ id: `lead-${id}`, eventType: "form_submit", date: "2026-09-25",
   properties: { lead_id: id, confirmed_by: "lead_api" }, measurement });
 const signal = (id, eventType) => ({ id: `signal-${id}`, eventType, properties: { lead_id: id } });
+
+test("separate consent choices survive accepted-lead normalization and reporting without expanding permission", () => {
+  const now = Date.now();
+  for (const advertising of ["granted", "denied", "unknown"]) {
+    for (const analytics of ["granted", "denied", "unknown"]) {
+      const consent = readMeasurementConsent({ choice: { status: advertising, analyticsStatus: analytics, at: now }, now });
+      const measurement = getLeadMeasurement({ browser, navigator: human,
+        consent: consent.advertising, analyticsConsent: consent.analytics });
+      const normalized = normalizeLeadAnalytics({ measurement });
+      const report = buildLeadDeliveryReport([accepted("lead-consent", normalized.measurement)]);
+      assert.equal(report.leads[0].measurement.marketingConsent, advertising);
+      assert.equal(report.leads[0].measurement.analyticsConsent, analytics);
+      assert.equal(report.accepted, 1);
+      assert.equal(report.tagProcessed, 0);
+    }
+  }
+  // Historical advertising-only records cannot establish analytics permission.
+  const legacy = readMeasurementConsent({ choice: { status: "granted", at: now }, now });
+  assert.equal(legacy.analytics, "unknown");
+  assert.equal(normalizeLeadAnalytics({ measurement: { marketingConsent: "granted" } }).measurement.analyticsConsent, "unknown");
+  for (const value of [true, null, "private@example.com", "GRANTED", {}, []]) {
+    assert.equal(normalizeLeadAnalytics({ measurement: { analyticsConsent: value } }).measurement.analyticsConsent, "unknown");
+  }
+});
 
 test("delivery report reconciles unique accepted leads without claiming Google receipt", () => {
   const report = buildLeadDeliveryReport([

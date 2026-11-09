@@ -1,16 +1,18 @@
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
-import { analyticsPageUrl, redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
+import { analyticsPageUrl, analyticsReferrerUrl, redactAnalyticsText } from "@/app/data/analyticsPrivacy.mjs";
 import { CLICK_ID_KEYS, createAttributionReader } from "@/app/data/browserAttribution.mjs";
 import { createLeadEventDispatcher, ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
 import { readAttributionHistory } from "@/app/data/attributionHistory.mjs";
 import { browserMeasurementConsent } from "@/app/data/marketingConsent.mjs";
 import { getLeadMeasurement } from "@/app/data/leadMeasurement.mjs";
+import { createOpenAiAttributionReader } from "@/app/data/openAiAttribution.mjs";
 
 const VISITOR_KEY = "ais_visitor_id";
 const SESSION_KEY = "ais_session_id";
 const LAST_PART_SEARCH_KEY = "ais_last_part_search";
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-L0236JT5N3";
 const readAttribution = createAttributionReader();
+const readOpenAiAttribution = createOpenAiAttributionReader();
 const dispatchLead = createLeadEventDispatcher();
 const memoryIds = new Map();
 
@@ -44,12 +46,21 @@ const gaEventName = (eventType) => ({
 }[eventType] || eventType);
 
 const sessionAttribution = () => {
+  openAiAttribution();
   const current = readAttribution({ href: window.location.href, referrer: document.referrer,
     storage: browserMeasurementConsent(window).advertising === "granted" ? browserStorage("sessionStorage") : undefined });
   readAttributionHistory({ current, storage: browserStorage("localStorage"),
     allowed: browserMeasurementConsent(window).advertising === "granted" });
   return current;
 };
+
+const openAiAttribution = () => readOpenAiAttribution({
+  href: window.location.href,
+  storage: browserStorage("localStorage"),
+  allowed: browserMeasurementConsent(window).advertising === "granted" &&
+    shouldCollectBrowserAnalytics({ hostname: window.location.hostname,
+      userAgent: navigator.userAgent, webdriver: navigator.webdriver }),
+});
 
 export const refreshMarketingAttribution = () => {
   if (typeof window === "undefined") return;
@@ -58,8 +69,9 @@ export const refreshMarketingAttribution = () => {
 
 export const getLeadAnalyticsContext = (leadId = "") => {
   if (typeof window === "undefined") return {};
+  const consent = browserMeasurementConsent(window);
   const measurement = getLeadMeasurement({ browser: window, navigator,
-    consent: browserMeasurementConsent(window).advertising });
+    consent: consent.advertising, analyticsConsent: consent.analytics });
   if (measurement.eligibility !== "eligible") return { leadId, measurement };
   const attribution = sessionAttribution();
   let lastPartSearch = {};
@@ -72,10 +84,11 @@ export const getLeadAnalyticsContext = (leadId = "") => {
     visitorId: storedId(analyticsStorage("localStorage"), VISITOR_KEY),
     sessionId: storedId(analyticsStorage("sessionStorage"), SESSION_KEY),
     sourcePage: window.location.pathname.slice(0, 300),
-    referrer: document.referrer.slice(0, 300),
+    referrer: analyticsReferrerUrl(document.referrer),
     search_term: redactAnalyticsText(lastPartSearch?.search_term || "", 100),
     search_kind: String(lastPartSearch?.search_kind || "").slice(0, 40),
     ...attribution,
+    oppref: openAiAttribution(),
     attribution_history: readAttributionHistory({ current: attribution, storage: browserStorage("localStorage"),
       allowed: browserMeasurementConsent(window).advertising === "granted" }),
   };
@@ -109,7 +122,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
   const payload = {
     eventType,
     path: window.location.pathname.slice(0, 300),
-    referrer: document.referrer.slice(0, 300),
+    referrer: analyticsReferrerUrl(document.referrer),
     visitorId: storedId(analyticsStorage("localStorage"), VISITOR_KEY),
     sessionId: storedId(analyticsStorage("sessionStorage"), SESSION_KEY),
     occurredAt: new Date().toISOString(),
@@ -130,6 +143,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
       ...attribution,
       page_path: payload.path,
       page_location: analyticsPageUrl(window.location.href),
+      page_referrer: analyticsReferrerUrl(document.referrer),
       send_to: measurementId,
     };
     if (eventType === "form_submit") {
@@ -142,7 +156,7 @@ const recordWebsiteEvent = (eventType, properties = {}, options = {}) => {
           keepalive: true,
         }).catch(() => {});
       };
-      if (dispatchLead({ gtag, properties: gaProperties, storage: browserStorage("localStorage"),
+      if (dispatchLead({ gtag, properties: gaProperties, storage: analyticsStorage("localStorage"),
         onProcessed: () => diagnostic("lead_tag_processed") })) diagnostic("lead_event_queued");
     } else {
       gtag("event", gaEventName(eventType), gaProperties);

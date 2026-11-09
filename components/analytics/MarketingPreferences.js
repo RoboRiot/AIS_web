@@ -52,7 +52,7 @@ export default function MarketingPreferences() {
         </label>
         <label className={styles.option}>
           <input type="checkbox" checked={advertising} disabled={restricted} onChange={(event) => setAdvertising(event.target.checked)} />
-          <span>Advertising measurement, including Google call tracking and remembering referral visits for up to 30 days.</span>
+          <span>Advertising measurement, including Google call tracking, OpenAI attribution for completed inquiries, and remembering referral visits for up to 30 days.</span>
         </label>
         {restricted && <p>Your browser privacy signal disables this measurement.</p>}
       </div>

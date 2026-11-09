@@ -11,6 +11,7 @@ import {
   isTrustedOrigin,
 } from "@/app/data/requestSecurity";
 import { normalizeLeadAnalytics } from "@/app/data/leadAnalytics.mjs";
+import { canMeasureOpenAiLead, createOpenAiConversion, deliverOpenAiConversion } from "@/app/data/openAiConversions.mjs";
 import { classifyLeadIntent, getBusinessFormType } from "@/app/data/leadIntent.mjs";
 import { formTimingFailure } from "@/app/data/formTiming.mjs";
 import { assessRecaptcha } from "@/app/data/recaptchaPolicy.mjs";
@@ -277,8 +278,14 @@ export async function POST(request) {
     }
 
     const requestReference = db.collection("ServiceRequests").doc(`web-${leadHash}`);
+    const eventReference = db.collection("WebsiteAnalyticsEvents").doc(`lead-${leadHash}`);
+    const verifiedAnalytics = isProductionAnalyticsRequest(request);
     const existingRequest = await requestReference.get();
     if (existingRequest.exists) {
+      await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
+        allowed: canMeasureOpenAiLead({ analytics,
+          formType: getBusinessFormType({ formType: "service_request", ...existingRequest.data() }),
+          productionEligible: verifiedAnalytics }) });
       return NextResponse.json(
         {
           ok: true,
@@ -396,13 +403,15 @@ export async function POST(request) {
       updatedAt: FieldValue.serverTimestamp(),
     });
 
-    if (isProductionAnalyticsRequest(request)) {
+    if (verifiedAnalytics) {
       try {
         const now = new Date();
         const date = now.toISOString().slice(0, 10);
         const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
         const funnelReference = db.collection("WebsiteLeadFunnels").doc(leadHash);
-        const eventReference = db.collection("WebsiteAnalyticsEvents").doc(`lead-${leadHash}`);
+        const openAiConversion = createOpenAiConversion({ analytics, formType: reportingFormType,
+          productionEligible: verifiedAnalytics, leadId, sourcePage: analytics.sourcePage || "/service-request",
+          now: now.getTime() });
         const sessionHash = analytics.sessionId
           ? hashIdentifier(analytics.sessionId, "website-session")
           : null;
@@ -413,8 +422,11 @@ export async function POST(request) {
         await db.runTransaction(async (transaction) => {
           const dailySnapshot = await transaction.get(dailyReference);
           const funnelSnapshot = await transaction.get(funnelReference);
+          const existingEvent = await transaction.get(eventReference);
+          const conversion = existingEvent.get("openAiConversion") || openAiConversion;
           const shouldAggregate = !funnelSnapshot.get("milestones.form_submit");
           transaction.set(eventReference, {
+            ...(conversion ? { openAiConversion: conversion } : {}),
             eventType: "form_submit",
             measurement: analytics.measurement,
             date,
@@ -506,6 +518,10 @@ export async function POST(request) {
         console.error("Service request analytics failed:", analyticsError);
       }
     }
+
+    await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
+      allowed: canMeasureOpenAiLead({ analytics, formType: reportingFormType,
+        productionEligible: verifiedAnalytics }) });
 
     return NextResponse.json(
       { ok: true, requestId: requestReference.id, requestNumber, analyticsLeadId: leadHash,

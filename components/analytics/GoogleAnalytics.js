@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { shouldCollectBrowserAnalytics } from "@/app/data/analyticsPolicy.mjs";
-import { analyticsPageUrl } from "@/app/data/analyticsPrivacy.mjs";
+import { analyticsPageUrl, analyticsReferrerUrl } from "@/app/data/analyticsPrivacy.mjs";
 import { ensureGoogleAnalytics } from "@/app/data/browserGoogleAnalytics.mjs";
 import { startGoogleTagLoader } from "@/app/data/googleTagLoader.mjs";
 import { trackWebsiteEvent } from "@/components/utils/analytics";
@@ -35,6 +35,7 @@ export default function GoogleAnalytics() {
     window.gtag("event", "page_view", {
       page_path: window.location.pathname,
       page_location: analyticsPageUrl(window.location.href),
+      page_referrer: analyticsReferrerUrl(document.referrer),
       page_title: document.title,
       send_to: measurementId,
     });

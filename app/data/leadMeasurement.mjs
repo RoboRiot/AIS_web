@@ -4,6 +4,7 @@ const enums = {
   eligibility: ["eligible", "privacy_opt_out", "excluded_environment", "unknown"],
   tagState: ["not_initialized", "queued", "loaded", "failed", "unknown"],
   marketingConsent: ["granted", "denied", "unknown"],
+  analyticsConsent: ["granted", "denied", "unknown"],
 };
 
 // Operational context on an accepted inquiry only; never includes cookies, IDs or URLs.
@@ -20,7 +21,7 @@ export function normalizeLeadMeasurement(value) {
   return result;
 }
 
-export function getLeadMeasurement({ browser, navigator = {}, consent = "unknown" }) {
+export function getLeadMeasurement({ browser, navigator = {}, consent = "unknown", analyticsConsent = "unknown" }) {
   const optedOut = navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true;
   const eligible = shouldCollectBrowserAnalytics({ hostname: browser?.location?.hostname,
     userAgent: navigator.userAgent, webdriver: navigator.webdriver });
@@ -28,6 +29,7 @@ export function getLeadMeasurement({ browser, navigator = {}, consent = "unknown
     ...(!optedOut && eligible ? browser?.__aisGoogleTagDiagnostics : {}),
     eligibility: optedOut ? "privacy_opt_out" : eligible ? "eligible" : "excluded_environment",
     marketingConsent: optedOut ? "denied" : consent,
+    analyticsConsent: optedOut ? "denied" : analyticsConsent,
     tagState: optedOut || !eligible ? "not_initialized" : browser?.__aisGoogleTagState ||
       (browser?.__aisGaMeasurementId ? "queued" : "not_initialized"),
   });

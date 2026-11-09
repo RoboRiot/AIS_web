@@ -1,3 +1,5 @@
+import { OPENAI_ATTRIBUTION_KEY } from "./openAiAttribution.mjs";
+
 export const MARKETING_CONSENT_KEY = "ais_marketing_measurement_consent";
 export const MARKETING_CONSENT_EVENT = "ais:marketing-consent";
 export const DEFAULT_MARKETING_CONSENT = {
@@ -79,11 +81,13 @@ export function saveMeasurementConsent(browser, { advertising, analytics }) {
   try {
     if (choice.analyticsStatus !== "granted") {
       browser.localStorage.removeItem("ais_visitor_id");
+      browser.localStorage.removeItem("ais_queued_lead_events");
       browser.sessionStorage?.removeItem("ais_session_id");
       browser.sessionStorage?.removeItem("ais_last_part_search");
     }
     if (choice.status !== "granted") {
       browser.sessionStorage?.removeItem("ais_session_attribution");
+      browser.localStorage.removeItem(OPENAI_ATTRIBUTION_KEY);
     }
   } catch { /* Optional measurement storage may be unavailable. */ }
   // Update before any consent listeners, measurement events, or route transition.

@@ -109,6 +109,7 @@ export default function Contact() {
   }, []);
 
   useEffect(() => {
+    if (!formContext) return;
     announceFormOpen(formType, formContext || "contact_page", leadId);
   }, [formType, formContext, leadId]);
 

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { guardRscDeployment } from "./app/data/rscDeploymentPolicy.mjs";
 import {
   DEFAULT_DEPRECATED_HOSTS,
   DEFAULT_STAGING_HOSTS,
@@ -261,7 +262,9 @@ export function middleware(request) {
 
   const isKnownGoodBot = KNOWN_GOOD_BOTS.some((bot) => ua.includes(bot));
   if (isKnownGoodBot) {
-    return respond(NextResponse.next());
+    return respond(
+      guardRscDeployment(request, process.env.NEXT_DEPLOYMENT_ID, NextResponse.next()),
+    );
   }
 
   const looksAutomated = LIKELY_AUTOMATION_UA.some((pattern) => ua.includes(pattern));
@@ -269,7 +272,9 @@ export function middleware(request) {
     return respond(new NextResponse("Forbidden", { status: 403 }));
   }
 
-  return respond(NextResponse.next());
+  return respond(
+    guardRscDeployment(request, process.env.NEXT_DEPLOYMENT_ID, NextResponse.next()),
+  );
 }
 
 export const config = {

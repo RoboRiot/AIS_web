@@ -1,0 +1,16 @@
+{
+  "manufacturer": "GE HealthCare",
+  "partNumber": "D3887T",
+  "catalogProductId": "temp-204",
+  "imageType": "Manufacturer reference image; not a photograph of a specific AIS inventory unit.",
+  "sourceUrl": "https://services.gehealthcare.com/medias/D3887T.png?context=bWFzdGVyfHJvb3R8MTAxNDkxNnxpbWFnZS9wbmd8YURCbEwyaGhZUzg1TnpJME1EQTRORE14TmpRMkwwUXpPRGczVkM1d2JtY3xhYTJiNGM0MTk2YjU1NjBiNTlkYzM2OTRkMjU3MWRjZWEyY2U4NjkxM2FlZTdkZjE3NDJiMzIyNzM5Y2UyMjY4",
+  "sourceCatalog": "data/CT/GE/final-CT-GE.json",
+  "verifiedAt": "2026-11-09",
+  "verifiedHttpStatus": 200,
+  "contentType": "image/png",
+  "asset": "public/assets/images/catalog/ge-d3887t-reference.png",
+  "sha256": "5d220963d8c6c566f592aef5ff0aa7ad2e994f2846fb992f280721afb0cc3f73",
+  "bytes": 1014916,
+  "replacesMissingStoragePath": "Parts/temp-204/temp-204.jpg",
+  "databaseChanged": false
+}

@@ -7,9 +7,20 @@ const storageBucket =
 const directImagePattern = /^(?:https?:|data:|blob:)/i;
 const imageExtensionPattern = /\.(?:avif|gif|jpe?g|png|webp)(?:\?.*)?$/i;
 
+// The legacy temp-204 record points to a missing Storage object. Use the matching
+// OEM D3887T reference image already identified in our GE catalog, without
+// changing inventory data. Source and checksum accompany the bundled image.
+const catalogImageReplacements = new Map([
+  ["Parts/temp-204/temp-204", "/assets/images/catalog/ge-d3887t-reference.png"],
+  ["Parts/temp-204/temp-204.jpg", "/assets/images/catalog/ge-d3887t-reference.png"],
+]);
+
 export const getImageUrl = async (imagePath) => {
   const normalizedPath = normalizeImagePath(imagePath);
   if (!normalizedPath) return null;
+  if (catalogImageReplacements.has(normalizedPath)) {
+    return catalogImageReplacements.get(normalizedPath);
+  }
 
   return `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(storageBucket)}/o/${encodeURIComponent(normalizedPath)}?alt=media`;
 };

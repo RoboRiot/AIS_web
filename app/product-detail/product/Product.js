@@ -14,11 +14,7 @@ import Link from 'next/link';
 import RequestModal from '@/components/modals/RequestModal';
 import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from '@/app/data/businessContact.mjs';
 import { getPrimaryImagePath, resolveImageUrl } from '@/components/fetchImages/Image';
-import LightGallery from 'lightgallery/react';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
-import 'lightgallery/scss/lightgallery.scss';
-import 'lightgallery/scss/lg-zoom.scss';
+import ProductImageLightbox from './ProductImageLightbox';
 import {
     buildPartsCategoryHref,
     buildProductImageAlt,
@@ -33,6 +29,7 @@ export default function Product({ clickedProduct }) {
     const [uniqueImages, setUniqueImages] = useState([]); // Array to store unique images URLs
 
     const [enlargeImage, setEnlargedImage] = useState(Image1);
+    const [lightboxImage, setLightboxImage] = useState(null);
 
     const swiperRef = useRef(null);
     const productSpecs = parseProductSpecs(clickedProduct);
@@ -41,16 +38,20 @@ export default function Product({ clickedProduct }) {
     const modality = cleanText(clickedProduct?.Modality || productSpecs.category);
     const systemModel = cleanText(clickedProduct?.Machine || productSpecs.systemModel);
 
-    // Handle image click for enlarging the image
-    const handleImageClick = (image) => {
-        setEnlargedImage(image); // Set the enlarged image
+    const handleThumbnailClick = (image, index) => {
+        setEnlargedImage(image);
+        swiperRef.current?.swiper?.slideTo(index);
+    };
+
+    const openImage = (image, index) => {
+        setLightboxImage({ src: image, alt: buildProductImageAlt(clickedProduct, index) });
     };
 
     // Handle slide change to get the current active image
     const handleSlideChange = (swiper) => {
         const currentSlideIndex = swiper.activeIndex;
         const currentImage = uniqueImages[currentSlideIndex];
-        setEnlargedImage(currentImage); // Set the enlarged image based on active slide
+        if (currentImage) setEnlargedImage(currentImage);
     };
 
 
@@ -94,20 +95,6 @@ export default function Product({ clickedProduct }) {
         setShowPop(!showPop);
     }
 
-    const onInit = () => {
-        console.log('lightGallery has been initialized');
-    };
-
-    const lgSettings = {
-        onInit: onInit,
-        speed: 500,
-        plugins: [lgThumbnail, lgZoom],
-        controls: false, // Disable navigation controls (arrows)
-        counter: false, // Disable image counter
-        download: false, // Disable download button
-        zoomFromOrigin: true, // Zoom from original size
-    };
-
     return (
         <>
             <div className={styles.product_details}>
@@ -127,10 +114,11 @@ export default function Product({ clickedProduct }) {
                             {uniqueImages.length > 0 ? (
                                 uniqueImages.map((image, index) => (
                                     <SwiperSlide key={index}>
-                                        <Image width={114} height={76} alt={buildProductImageAlt(clickedProduct, index)} src={image}
-                                            onClick={() => handleImageClick(image)} // Set enlarge image when clicked
-
-                                        />
+                                        <button type="button" className={styles.thumbnailButton}
+                                            aria-label={`View ${buildProductImageAlt(clickedProduct, index)}`}
+                                            onClick={() => handleThumbnailClick(image, index)}>
+                                            <Image width={114} height={76} alt={buildProductImageAlt(clickedProduct, index)} src={image} />
+                                        </button>
                                     </SwiperSlide>
                                 ))
                             ) : (
@@ -154,29 +142,29 @@ export default function Product({ clickedProduct }) {
                                 uniqueImages.map((image, index) => (
 
                                     <SwiperSlide key={index}>
-                                        <LightGallery {...lgSettings}>
-                                            <Image width={470} height={313} alt={buildProductImageAlt(clickedProduct, index)} src={image}
-                                                onClick={() => handleImageClick(image)} // Set enlarge image when clicked
-                                            />
-                                        </LightGallery>
+                                        <button type="button" className={styles.imageButton}
+                                            aria-label={`Enlarge ${buildProductImageAlt(clickedProduct, index)}`}
+                                            tabIndex={image === enlargeImage ? 0 : -1}
+                                            aria-haspopup="dialog" onClick={() => openImage(image, index)}>
+                                            <Image width={470} height={313} alt={buildProductImageAlt(clickedProduct, index)} src={image} />
+                                        </button>
                                     </SwiperSlide>
 
                                 ))
                             ) : (
                                 <SwiperSlide>
-                                    <LightGallery {...lgSettings}>
-                                        <Image width={470} height={313} alt="image" src={Image1} />
-                                    </LightGallery>
+                                    <Image width={470} height={313} alt="Loading product image" src={Image1} />
                                 </SwiperSlide>
                             )}
                         </Swiper>
 
                         {/* Enlarge image option */}
-                        <LightGallery {...lgSettings}>
-                            <a href={uniqueImages.length > 0 ? enlargeImage : Image1}>
-                                <Image src={Enlarge} alt="Enlarge" />
-                            </a>
-                        </LightGallery>
+                        <button type="button" className={styles.enlargeButton}
+                            aria-label="Enlarge selected product image" aria-haspopup="dialog"
+                            disabled={uniqueImages.length === 0}
+                            onClick={() => openImage(enlargeImage, Math.max(0, uniqueImages.indexOf(enlargeImage)))}>
+                            <Image src={Enlarge} alt="" />
+                        </button>
                     </div>
 
                     <div className={styles.detail_content}>
@@ -223,6 +211,9 @@ export default function Product({ clickedProduct }) {
                     </div>
                 </div>
             </div>
+            {lightboxImage && (
+                <ProductImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+            )}
             {showPop && (
                 <RequestModal
                     closeModal={() => setShowPop(false)}

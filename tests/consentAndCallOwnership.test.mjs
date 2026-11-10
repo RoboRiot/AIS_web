@@ -7,7 +7,8 @@ import { MARKETING_CONSENT_KEY, CONSENT_MAX_AGE, DEFAULT_MARKETING_CONSENT,
   readMeasurementConsent, browserMeasurementConsent, initializeGoogleConsent,
   saveMeasurementConsent, synchronizeGoogleConsent } from "../app/data/marketingConsent.mjs";
 import { ensureGoogleAnalytics } from "../app/data/browserGoogleAnalytics.mjs";
-import { BUSINESS_PHONE, BUSINESS_PHONE_HREF, createGtmPhoneNumberBridge } from "../app/data/websiteCallTracking.mjs";
+import { BUSINESS_PHONE, BUSINESS_PHONE_HREF, createGtmPhoneNumberBridge,
+  createPhoneNumberReplacement } from "../app/data/websiteCallTracking.mjs";
 
 const plain = (value) => JSON.parse(JSON.stringify(value));
 const memory = () => {
@@ -159,6 +160,88 @@ test("revocation restores numbers GTM inserted before hydration and rejects mism
   document.source.setAttribute("href", "tel:+18005550999");
   bridge.synchronize(true);
   assert.equal(earlyCta.getAttribute("href"), BUSINESS_PHONE_HREF);
+});
+
+test("a later GTM forwarding number updates existing text and mobile links without touching support", () => {
+  const document = phoneDocument();
+  const textCta = document.add(`Call ${BUSINESS_PHONE}`);
+  const mobileCta = document.add("Call for rental availability");
+  const support = document.add("Existing customers", "tel:+18002003583");
+  const bridge = createGtmPhoneNumberBridge(document);
+  // Synthetic DOM fixture only: no Google request or call is made.
+  document.source.node.nodeValue = "(800) 555-0123";
+  bridge.synchronize(true);
+  document.source.node.nodeValue = "(800) 555-0124";
+  document.source.setAttribute("href", "tel:+18005550124");
+  bridge.synchronize(true);
+  for (const anchor of [document.source, textCta, mobileCta]) {
+    assert.equal(anchor.getAttribute("href"), "tel:+18005550124");
+    assert.equal(anchor.getAttribute("data-ais-forwarding-href"), "tel:+18005550124");
+  }
+  assert.equal(textCta.textContent, "Call (800) 555-0124");
+  assert.equal(mobileCta.textContent, "Call for rental availability");
+  assert.equal(support.getAttribute("href"), "tel:+18002003583");
+  const writes = document.anchors.reduce((sum, anchor) => sum + anchor.writes, 0);
+  bridge.synchronize(true);
+  assert.equal(document.anchors.reduce((sum, anchor) => sum + anchor.writes, 0), writes);
+  bridge.synchronize(false);
+  for (const anchor of [document.source, textCta, mobileCta]) assert.equal(anchor.getAttribute("href"), BUSINESS_PHONE_HREF);
+  assert.equal(textCta.textContent, `Call ${BUSINESS_PHONE}`);
+  assert.equal(mobileCta.textContent, "Call for rental availability");
+  assert.equal(support.getAttribute("href"), "tel:+18002003583");
+});
+
+test("repurposed support links stay untouched when replacement or withdrawal follows a React update", () => {
+  for (const applyAgain of [false, true]) {
+    const document = phoneDocument();
+    const cta = document.add(`Call ${BUSINESS_PHONE}`);
+    const replacement = createPhoneNumberReplacement(document);
+    replacement.apply({ text: "(800) 555-0123", href: "tel:+18005550123" });
+    cta.setAttribute("href", "tel:+18002003583");
+    cta.node.nodeValue = "Existing customers";
+    if (applyAgain) replacement.apply({ text: "(800) 555-0124", href: "tel:+18005550124" });
+    assert.equal(cta.getAttribute("href"), "tel:+18002003583");
+    assert.equal(cta.textContent, "Existing customers");
+    replacement.restore();
+    assert.equal(cta.getAttribute("href"), "tel:+18002003583");
+    assert.equal(cta.textContent, "Existing customers");
+    assert.equal(cta.getAttribute("data-ais-forwarding-href"), null);
+  }
+});
+
+test("withdrawal preserves the current React CTA text before or after another replacement", () => {
+  for (const applyAgain of [false, true]) {
+    const document = phoneDocument();
+    const cta = document.add(`Call ${BUSINESS_PHONE}`);
+    const replacement = createPhoneNumberReplacement(document);
+    replacement.apply({ text: "(800) 555-0123", href: "tel:+18005550123" });
+    cta.node.nodeValue = "Rental help: (800) 555-0123";
+    if (applyAgain) replacement.apply({ text: "(800) 555-0124", href: "tel:+18005550124" });
+    replacement.restore();
+    assert.equal(cta.getAttribute("href"), BUSINESS_PHONE_HREF);
+    assert.equal(cta.textContent, `Rental help: ${BUSINESS_PHONE}`);
+  }
+});
+
+test("a text-only GTM number update requires ownership of the previous source destination", () => {
+  const document = phoneDocument();
+  const cta = document.add(`Call ${BUSINESS_PHONE}`);
+  const bridge = createGtmPhoneNumberBridge(document);
+  document.source.node.nodeValue = "(800) 555-0123";
+  bridge.synchronize(true);
+  document.source.node.nodeValue = "(800) 555-0124";
+  bridge.synchronize(true);
+  assert.equal(document.source.getAttribute("href"), "tel:+18005550124");
+  assert.equal(cta.getAttribute("href"), "tel:+18005550124");
+  assert.equal(cta.textContent, "Call (800) 555-0124");
+  document.source.node.nodeValue = "(800) 555-0125";
+  document.source.setAttribute("href", "tel:+18005550999");
+  bridge.synchronize(true);
+  assert.equal(document.source.getAttribute("href"), "tel:+18005550999");
+  assert.equal(cta.getAttribute("href"), "tel:+18005550124");
+  bridge.synchronize(false);
+  assert.equal(cta.getAttribute("href"), BUSINESS_PHONE_HREF);
+  assert.equal(document.source.getAttribute("href"), "tel:+18005550999");
 });
 
 test("mobile replacement can use the footer when the hidden desktop number is unchanged", () => {

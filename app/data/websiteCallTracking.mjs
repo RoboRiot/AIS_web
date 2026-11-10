@@ -26,21 +26,38 @@ export function normalizeForwardingNumber(formatted, dialable) {
 // Preserve React's elements, icons, and CTA text; only change number text nodes.
 export function createPhoneNumberReplacement(document) {
   const originals = new Map();
+  const ownsDestination = (anchor, original) => anchor.isConnected &&
+    [original.href, original.number.href, original.number.href.replace("tel:+", "tel:")].includes(anchor.getAttribute("href"));
+  const relinquish = (anchor, original) => {
+    if (anchor.getAttribute(FORWARDING_ATTRIBUTE) === original.number.href) anchor.removeAttribute(FORWARDING_ATTRIBUTE);
+    originals.delete(anchor);
+  };
   return {
     apply(number) {
-      for (const anchor of document.querySelectorAll(
+      const anchors = new Set(document.querySelectorAll(
         `a[href="${BUSINESS_PHONE_HREF}"],a[href="${number.href}"],a[href="${number.href.replace("tel:+", "tel:")}"]`
-      )) {
+      ));
+      // Keep links we already own in sync when GTM supplies a different number.
+      // A link repurposed by React (for example to support) is no longer ours.
+      for (const [anchor, original] of originals) {
+        if (anchors.has(anchor)) continue;
+        if (ownsDestination(anchor, original)) anchors.add(anchor);
+        else relinquish(anchor, original);
+      }
+      for (const anchor of anchors) {
         const original = originals.get(anchor) || { href: BUSINESS_PHONE_HREF,
-          forwardingHref: null, texts: new Map() };
+          forwardingHref: null };
+        const replaceableTexts = new Set([BUSINESS_PHONE, number.text, original.number?.text].filter(Boolean));
         const walker = document.createTreeWalker(anchor, 4);
         let node;
         while ((node = walker.nextNode())) {
-          if (!node.nodeValue.includes(BUSINESS_PHONE) && !node.nodeValue.includes(number.text)) continue;
-          if (!original.texts.has(node)) original.texts.set(node, node.nodeValue.replaceAll(number.text, BUSINESS_PHONE));
-          const text = node.nodeValue.replaceAll(BUSINESS_PHONE, number.text);
+          if (![...replaceableTexts].some((text) => node.nodeValue.includes(text))) continue;
+          let baseline = node.nodeValue;
+          for (const text of replaceableTexts) baseline = baseline.replaceAll(text, BUSINESS_PHONE);
+          const text = baseline.replaceAll(BUSINESS_PHONE, number.text);
           if (node.nodeValue !== text) node.nodeValue = text;
         }
+        original.number = number;
         originals.set(anchor, original);
         if (anchor.getAttribute(FORWARDING_ATTRIBUTE) !== number.href) anchor.setAttribute(FORWARDING_ATTRIBUTE, number.href);
         if (anchor.getAttribute("href") !== number.href) anchor.setAttribute("href", number.href);
@@ -49,10 +66,20 @@ export function createPhoneNumberReplacement(document) {
     },
     restore() {
       for (const [anchor, original] of originals) {
-        anchor.setAttribute("href", original.href);
+        if (!ownsDestination(anchor, original)) {
+          relinquish(anchor, original);
+          continue;
+        }
+        if (anchor.getAttribute("href") !== original.href) anchor.setAttribute("href", original.href);
         if (original.forwardingHref === null) anchor.removeAttribute(FORWARDING_ATTRIBUTE);
         else anchor.setAttribute(FORWARDING_ATTRIBUTE, original.forwardingHref);
-        for (const [node, value] of original.texts) if (node.isConnected) node.nodeValue = value;
+        // Restore only the number in the current React text, not a stale label.
+        const walker = document.createTreeWalker(anchor, 4);
+        let node;
+        while ((node = walker.nextNode())) {
+          const text = node.nodeValue.replaceAll(original.number.text, BUSINESS_PHONE);
+          if (node.nodeValue !== text) node.nodeValue = text;
+        }
       }
       originals.clear();
     },
@@ -74,9 +101,10 @@ export function createGtmPhoneNumberBridge(document) {
           ? normalizeForwardingNumber(text, digits.length === 10 ? `1${digits}` : digits) : null;
         return { source, candidate };
       });
-      const { source, candidate } = sources.find(({ source, candidate }) => candidate &&
-        candidate.href !== BUSINESS_PHONE_HREF &&
-        [BUSINESS_PHONE_HREF, candidate.href, candidate.href.replace("tel:+", "tel:")].includes(source.getAttribute("href"))) || {};
+      const acceptsSource = (source, candidate) => candidate && candidate.href !== BUSINESS_PHONE_HREF &&
+        ([BUSINESS_PHONE_HREF, candidate.href, candidate.href.replace("tel:+", "tel:")].includes(source.getAttribute("href")) ||
+          (number && source.getAttribute("href") === number.href && source.getAttribute(FORWARDING_ATTRIBUTE) === number.href));
+      const { source, candidate } = sources.find(({ source, candidate }) => acceptsSource(source, candidate)) || {};
       if (!allowed) {
         if (candidate && candidate.href !== BUSINESS_PHONE_HREF) replacement.apply(candidate);
         replacement.restore();
@@ -93,8 +121,7 @@ export function createGtmPhoneNumberBridge(document) {
         number = null;
         return;
       }
-      if (candidate && candidate.href !== BUSINESS_PHONE_HREF &&
-          [BUSINESS_PHONE_HREF, candidate.href, candidate.href.replace("tel:+", "tel:")].includes(source.getAttribute("href"))) {
+      if (candidate) {
         number = candidate;
         if (source.getAttribute("href") !== number.href) source.setAttribute("href", number.href);
         if (source.getAttribute(FORWARDING_ATTRIBUTE) !== number.href) source.setAttribute(FORWARDING_ATTRIBUTE, number.href);

@@ -49,3 +49,16 @@
   .panel { flex-direction: column; align-items: stretch; gap: 12px; bottom: 8px; left: 8px; right: 8px; padding: 14px; }
   .actions { justify-content: flex-end; }
 }
+
+@media (max-width: 999px) {
+  // The collapsed reCAPTCHA tab occupies the rightmost 70px of the viewport.
+  :global(body:has(.grecaptcha-badge)) .actions {
+    padding-right: 56px;
+  }
+}
+
+@media (max-width: 380px) {
+  :global(body:has(.grecaptcha-badge)) .actions button {
+    padding-inline: 12px;
+  }
+}

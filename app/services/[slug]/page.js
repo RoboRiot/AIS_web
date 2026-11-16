@@ -61,6 +61,7 @@ export default async function ServiceLandingPage({ params }) {
   const brandLabel = page.brand || "Imaging";
   const serviceAnswers = getServiceAnswers(page);
   const modalityLabel = page.modality === "pet-ct" ? "PET/CT" : page.modality.toUpperCase();
+  const offersCallback = page.slug === "mri-service" || page.slug === "ct-service";
   const serviceImages = getServiceImages(page);
   const modelCoverage = page.modelCoverage || [];
   const modelCoverageItems = modelCoverage.flatMap((group) => group.models);
@@ -171,12 +172,12 @@ export default async function ServiceLandingPage({ params }) {
       <section className={`${styles.section} ${styles.landingHero}`}>
         <div className="container">
           <div className={styles.introGrid}>
-            <article className={styles.heroCopy}>
+            <article className={offersCallback ? `${styles.heroCopy} ${styles.callbackHero}` : styles.heroCopy}>
               <span className={styles.kicker}>{page.eyebrow}</span>
               <h1 className={styles.title}>{page.h1}</h1>
               <p className={styles.lead}>{serviceAnswers.summary}</p>
               <div className={styles.ctaRow}>
-                <a href="#request" className="simple-btn">Request Service</a>
+                <a href="#request" className="simple-btn">{offersCallback ? "Request a callback" : "Request Service"}</a>
                 <a
                   href={BUSINESS_PHONE_HREF}
                   data-analytics="service-hero-phone"
@@ -205,11 +206,12 @@ export default async function ServiceLandingPage({ params }) {
       <QuickInquiryForm
         formType="service_request"
         source={page.slug}
-        title={`Request ${page.shortTitle}`}
-        intro="Share the system and current issue so our team can review remote diagnostics, field service, and parts needs."
+        callback={offersCallback}
+        title={offersCallback ? `${modalityLabel} service callback` : `Request ${page.shortTitle}`}
+        intro={offersCallback ? undefined : "Share the system and current issue so our team can review remote diagnostics, field service, and parts needs."}
         detailsLabel="System and issue"
         detailsPlaceholder="OEM, model, error code or symptoms, facility and state, and urgency"
-        submitLabel="Request Service Support"
+        submitLabel={offersCallback ? "Request a callback" : "Request Service Support"}
       />
       {modelCoverage.length > 0 && (
         <section id="mri-service-models" className={styles.modelCoverageSection}>

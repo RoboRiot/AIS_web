@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RecaptchaStatus from "@/components/forms/RecaptchaStatus";
 import useLocalFormPreview from "@/components/forms/useLocalFormPreview";
 import { evaluateBotSignals } from "@/components/utils/antiBot";
 import { announceFormOpen, createLeadId, trackWebsiteEvent } from "@/components/utils/analytics";
-import { FORM_LIMITS, sanitizeLeadForm } from "@/components/utils/formSecurity";
+import { FORM_LIMITS, sanitizeLeadForm, sanitizeServiceCallback } from "@/components/utils/formSecurity";
 import { ensureRecaptchaScript, executeRecaptcha } from "@/components/utils/recaptcha";
 import { submitLead } from "@/components/utils/submitLead";
 import styles from "@/app/services/landingPage.module.scss";
 import { BUSINESS_PHONE, BUSINESS_PHONE_HREF } from "@/app/data/businessContact.mjs";
+
+// The focus tracker reads this same attribute. Allocate the ID in the browser
+// so a statically rendered page cannot reuse one visitor's ID for the next.
+function getFormLeadId(form) {
+  if (!form.dataset.leadId) form.dataset.leadId = createLeadId();
+  return form.dataset.leadId;
+}
 
 export default function QuickInquiryForm({
   formType,
@@ -20,6 +27,7 @@ export default function QuickInquiryForm({
   detailsPlaceholder,
   submitLabel,
   compact = false,
+  callback = false,
 }) {
   const localPreview = useLocalFormPreview();
   const [name, setName] = useState("");
@@ -27,7 +35,7 @@ export default function QuickInquiryForm({
   const [phone, setPhone] = useState("");
   const [details, setDetails] = useState("");
   const [website, setWebsite] = useState("");
-  const [leadId] = useState(createLeadId);
+  const formRef = useRef(null);
   const [startedAt] = useState(() => Date.now());
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -48,21 +56,21 @@ export default function QuickInquiryForm({
 
   useEffect(() => {
     ensureRecaptchaScript(recaptchaSiteKey);
-    announceFormOpen(formType, source, leadId);
-  }, [formType, leadId, recaptchaSiteKey, source]);
-
-  const recordError = (stage, reason = "") => {
-    trackWebsiteEvent("form_error", {
-      form_type: formType,
-      error_stage: stage,
-      error_reason: reason,
-      lead_id: leadId,
-    });
-  };
+    if (formRef.current) announceFormOpen(formType, source, getFormLeadId(formRef.current));
+  }, [formType, recaptchaSiteKey, source]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (submitting || submitted || localPreview) return;
+    const leadId = getFormLeadId(event.currentTarget);
+    const recordError = (stage, reason = "") => {
+      trackWebsiteEvent("form_error", {
+        form_type: formType,
+        error_stage: stage,
+        error_reason: reason,
+        lead_id: leadId,
+      });
+    };
 
     const botSignals = evaluateBotSignals({ honeypotValue: website, startedAt });
     if (botSignals.blocked) {
@@ -70,14 +78,15 @@ export default function QuickInquiryForm({
       recordError("bot_check", botSignals.reason);
       return;
     }
-    if (phone.replace(/\D/g, "").length < 7) {
+    if (!callback && phone.replace(/\D/g, "").length < 7) {
       setFeedback("Please enter a valid phone number.");
       recordError("validation", "phone");
       return;
     }
 
-    const message = [`Phone: ${phone}`, "", details].join("\n");
-    const { sanitized, errors } = sanitizeLeadForm({ name, email, message });
+    const { sanitized, errors } = callback
+      ? sanitizeServiceCallback({ name, callbackPhone: phone, email, message: details })
+      : sanitizeLeadForm({ name, email, message: [`Phone: ${phone}`, "", details].join("\n") });
     if (errors.length) {
       setFeedback(errors[0]);
       recordError("validation");
@@ -96,6 +105,7 @@ export default function QuickInquiryForm({
 
       const result = await submitLead({
         ...sanitized,
+        ...(callback && { requestMode: "callback" }),
         token,
         action: formType,
         formType,
@@ -117,23 +127,51 @@ export default function QuickInquiryForm({
     }
   };
 
+  const emailField = (
+    <label>
+      {callback ? "Work email (optional)" : "Work email"}
+      <input
+        type="email"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        maxLength={FORM_LIMITS.email}
+        autoComplete="email"
+        placeholder="you@company.com"
+        required={!callback}
+      />
+    </label>
+  );
+  const detailsField = (
+    <label className={styles.quickInquiryDetails}>
+      {callback ? "Scanner or issue (optional)" : detailsLabel}
+      <textarea
+        value={details}
+        onChange={(event) => setDetails(event.target.value)}
+        maxLength={1600}
+        rows={compact || callback ? 3 : 4}
+        placeholder={callback ? "For example, the scanner model or error code" : detailsPlaceholder}
+        required={!callback}
+      />
+    </label>
+  );
+
   return (
-    <section id="request" className={`${styles.quickInquirySection} ${compact ? styles.quickInquiryCompact : ""}`} aria-label={title}>
+    <section id="request" className={`${styles.quickInquirySection} ${compact ? styles.quickInquiryCompact : ""} ${callback ? styles.callbackSection : ""}`} aria-label={title}>
       <div className="container">
         <div className={styles.quickInquiryLayout}>
           <div className={styles.quickInquiryIntro}>
-            <span>{compact ? "Facility rental inquiries" : "Direct response from our imaging team"}</span>
+            {!callback && <span>{compact ? "Facility rental inquiries" : "Direct response from our imaging team"}</span>}
             <h2>{title}</h2>
-            <p>{intro}</p>
-            <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>
-            {!compact && <ul className="list-none">
+            {intro && <p>{intro}</p>}
+            {!callback && <a href={BUSINESS_PHONE_HREF}>Call {BUSINESS_PHONE}</a>}
+            {!compact && !callback && <ul className="list-none">
               {nextSteps.map((step) => <li key={step}>{step}</li>)}
             </ul>}
           </div>
           {submitted ? (
             <div className={styles.quickInquirySuccess} role="status">
-              <strong>Request received</strong>
-              <p>Our team will review the details and follow up as quickly as possible.</p>
+              <strong>{callback ? "Callback requested" : "Request received"}</strong>
+              <p>{callback ? "Our service team will call the number you provided." : "Our team will review the details and follow up as quickly as possible."}</p>
               {confirmationId ? <small>Reference {confirmationId}</small> : null}
               <a
                 href={BUSINESS_PHONE_HREF}
@@ -145,11 +183,11 @@ export default function QuickInquiryForm({
             </div>
           ) : (
             <form
+              ref={formRef}
               className={styles.quickInquiryForm}
               onSubmit={handleSubmit}
               data-form-type={formType}
               data-form-source={source}
-              data-lead-id={leadId}
             >
               <div className="bot-field" aria-hidden="true">
                 <label htmlFor={`${source}-website`}>Website</label>
@@ -172,41 +210,26 @@ export default function QuickInquiryForm({
                   required
                 />
               </label>
+              {!callback && emailField}
               <label>
-                Work email
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  maxLength={FORM_LIMITS.email}
-                  autoComplete="email"
-                  placeholder="you@company.com"
-                  required
-                />
-              </label>
-              <label>
-                Phone
+                {callback ? "Callback number" : "Phone"}
                 <input
                   type="tel"
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
-                  maxLength={30}
+                  maxLength={callback ? FORM_LIMITS.callbackPhone : 30}
                   autoComplete="tel"
-                  placeholder="Your phone number"
+                  placeholder={callback ? "Number with area code" : "Your phone number"}
                   required
                 />
               </label>
-              <label className={styles.quickInquiryDetails}>
-                {detailsLabel}
-                <textarea
-                  value={details}
-                  onChange={(event) => setDetails(event.target.value)}
-                  maxLength={1600}
-                  rows={compact ? 3 : 4}
-                  placeholder={detailsPlaceholder}
-                  required
-                />
-              </label>
+              {callback ? (
+                <details className={styles.callbackDetails}>
+                  <summary>Add details (optional)</summary>
+                  {emailField}
+                  {detailsField}
+                </details>
+              ) : detailsField}
               {feedback ? <p className={styles.quickInquiryError} role="alert">{feedback}</p> : null}
               <RecaptchaStatus />
               <button
@@ -219,7 +242,7 @@ export default function QuickInquiryForm({
               >
                 {submitting ? "Sending..." : submitLabel}
               </button>
-              <small>Protected by reCAPTCHA and secure server validation.</small>
+              {!callback && <small>Protected by reCAPTCHA and secure server validation.</small>}
             </form>
           )}
         </div>

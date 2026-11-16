@@ -6,6 +6,7 @@ import {
   buildLeadEmailHtml,
   buildLeadText,
   sanitizeLeadForm,
+  sanitizeServiceCallback,
 } from "@/components/utils/formSecurity";
 import {
   cleanPath,
@@ -54,6 +55,11 @@ const FORM_CONFIG = {
     label: "Trailer rental request",
   },
 };
+
+const CALLBACK_MODALITIES = new Map([
+  ["/services/mri-service", "MRI"],
+  ["/services/ct-service", "CT"],
+]);
 
 const getRecipients = () =>
   (process.env.EMAIL_RECIPIENTS || process.env.emailAccounts || "")
@@ -147,6 +153,10 @@ export async function POST(request) {
 
     const payload = await readJsonBody(request, 16_384);
     const config = FORM_CONFIG[payload.formType];
+    const callbackModality = payload.requestMode === "callback" ? CALLBACK_MODALITIES.get(payload.sourcePage) : null;
+    if (payload.requestMode === "callback" && (payload.formType !== "service_request" || !callbackModality)) {
+      return NextResponse.json({ error: "Invalid callback request." }, { status: 400 });
+    }
     const analytics = normalizeLeadAnalytics(payload.analytics);
     const leadId = analytics.leadId || crypto.randomUUID();
     const leadHash = hashIdentifier(leadId, "website-lead");
@@ -191,7 +201,7 @@ export async function POST(request) {
       }, { status: 403 });
     }
 
-    const { sanitized, errors } = sanitizeLeadForm({
+    const { sanitized, errors } = callbackModality ? sanitizeServiceCallback(payload) : sanitizeLeadForm({
       name: payload.name,
       email: payload.email,
       message: payload.message,
@@ -208,20 +218,19 @@ export async function POST(request) {
       ? "Traffic originated outside the United States"
       : "";
 
-    const leadDetails = {
-      ...sanitized,
-      leadType: config.label,
-      sourcePage: cleanPath(payload.sourcePage),
-      context: cleanText(payload.context, 200),
-      trafficCountry,
-      reviewFlag,
-    };
-    const selectedFormType = normalizeFormType(payload.selectedFormType) || payload.formType;
-    const intent = classifyLeadIntent(payload.formType, sanitized.message);
+    const selectedFormType = callbackModality ? "service_request" : normalizeFormType(payload.selectedFormType) || payload.formType;
+    const intent = classifyLeadIntent(payload.formType, callbackModality || sanitized.message);
     const reportingFormType = getBusinessFormType(intent);
     if (reportingFormType !== selectedFormType) intent.intentSource = "message_inference";
     const reportingConfig = FORM_CONFIG[reportingFormType];
-    leadDetails.leadType = reportingConfig.label;
+    const leadDetails = {
+      ...sanitized,
+      leadType: callbackModality ? `${callbackModality} service callback` : reportingConfig.label,
+      sourcePage: cleanPath(payload.sourcePage),
+      context: callbackModality ? `${callbackModality.toLowerCase()}-service-callback` : cleanText(payload.context, 200),
+      trafficCountry,
+      reviewFlag,
+    };
 
     const to = getRecipients();
     if (!to.length) {
@@ -251,10 +260,9 @@ export async function POST(request) {
     const mailPayload = {
       to,
       message: {
-        subject: reportingConfig.subject,
+        subject: callbackModality ? `[AIS WEBSITE] ${callbackModality} Service Callback Request` : reportingConfig.subject,
         text: buildLeadText(leadDetails),
-        replyTo: sanitized.email,
-        email: sanitized.email,
+        ...(sanitized.email ? { replyTo: sanitized.email, email: sanitized.email } : {}),
         partNumber: sanitized.partNumber || null,
         html: buildLeadEmailHtml(leadDetails),
       },

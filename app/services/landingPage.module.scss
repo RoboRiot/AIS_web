@@ -50,6 +50,16 @@
   animation: fadeUp 0.7s ease both;
 }
 
+@media (max-width: $breakpoint_mobile_portrait) {
+  .callbackHero {
+    display: flex;
+    flex-direction: column;
+
+    .lead { order: 1; }
+    .heroProofList, .quickNav { order: 2; }
+  }
+}
+
 .kicker {
   color: #3797f8;
   display: block;
@@ -1515,6 +1525,52 @@
 .quickInquiryDetails,
 .quickInquiryError {
   grid-column: 1 / -1;
+}
+
+.callbackDetails {
+  grid-column: 1 / -1;
+
+  summary {
+    color: #263f63;
+    cursor: pointer;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 12px 0;
+  }
+
+  label { margin-top: 12px; }
+}
+
+.callbackSection {
+  .quickInquiryForm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    > button { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: $breakpoint_tablet) {
+    padding: 12px 0 24px;
+    scroll-margin-top: 74px;
+
+    .quickInquiryLayout { gap: 12px; }
+    .quickInquiryIntro h2 { font-size: 26px; margin-bottom: 0; }
+  }
+
+  @media (max-width: $breakpoint_mobile_portrait) {
+    .quickInquiryForm {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      padding: 16px;
+      input, textarea { font-size: 16px; }
+    }
+  }
+
+  @media (max-width: 380px) {
+    padding-top: 8px;
+    scroll-margin-top: 66px;
+    .quickInquiryLayout { gap: 8px; }
+    .quickInquiryForm { gap: 10px; padding: 12px; }
+    .quickInquiryForm label { gap: 5px; }
+  }
 }
 
 .quickInquiryError {

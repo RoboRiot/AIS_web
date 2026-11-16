@@ -1,11 +1,24 @@
 export const FORM_LIMITS = {
   name: 80,
   email: 120,
+  callbackPhone: 50,
   partNumber: 120,
   message: 2000,
 };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Allow a dialable number and an optional switchboard extension. Keep the
+// customer's formatting so the recipient can read the number as submitted.
+const isCallbackPhone = (value) => {
+  if (value.length > FORM_LIMITS.callbackPhone) return false;
+  const parts = /^(\+?[\d(). -]+?)(?: *(?:ext(?:ension)?\.?|x|#) *\d{1,8})?$/i.exec(value);
+  if (!parts) return false;
+  const digits = parts[1].replace(/\D/g, "");
+  return parts[1].startsWith("+")
+    ? /^[1-9]\d{7,14}$/.test(digits)
+    : /^1?\d{10}$/.test(digits);
+};
 
 export const normalizeInput = (value, maxLength) =>
   (value || "")
@@ -63,9 +76,28 @@ export const sanitizeLeadForm = (values = {}, options = {}) => {
   return { sanitized, errors };
 };
 
+export const sanitizeServiceCallback = ({ name, callbackPhone, email, message } = {}) => {
+  const sanitized = {
+    name: typeof name === "string" ? normalizeInput(name, FORM_LIMITS.name) : "",
+    callbackPhone: typeof callbackPhone === "string" ? callbackPhone.trim() : "",
+    email: typeof email === "string" ? normalizeInput(email, FORM_LIMITS.email).toLowerCase() : "",
+    message: typeof message === "string" ? normalizeMessage(message) : "",
+  };
+  const errors = [];
+  if (!sanitized.name) errors.push("Please enter your name.");
+  if (!isCallbackPhone(sanitized.callbackPhone)) {
+    errors.push("Please enter a phone number with its area code or country code.");
+  }
+  if ((email != null && typeof email !== "string") || (sanitized.email && !EMAIL_PATTERN.test(sanitized.email))) {
+    errors.push("Please enter a valid email address or leave it blank.");
+  }
+  return { sanitized, errors };
+};
+
 export const buildLeadText = ({
   name,
   email,
+  callbackPhone,
   message,
   partNumber,
   leadType,
@@ -81,7 +113,8 @@ export const buildLeadText = ({
     trafficCountry && trafficCountry !== "unknown" ? `Traffic Country: ${trafficCountry}` : null,
     reviewFlag ? `Review Flag: ${reviewFlag}` : null,
     `Name: ${name}`,
-    `Email: ${email}`,
+    callbackPhone ? `Callback phone: ${callbackPhone}` : null,
+    email ? `Email: ${email}` : null,
     partNumber ? `Part Number: ${partNumber}` : null,
     "",
     "Message:",
@@ -93,6 +126,7 @@ export const buildLeadText = ({
 export const buildLeadEmailHtml = ({
   name,
   email,
+  callbackPhone,
   message,
   partNumber,
   leadType,
@@ -110,7 +144,8 @@ export const buildLeadEmailHtml = ({
       : "",
     reviewFlag ? renderEmailRow("Review Flag", reviewFlag) : "",
     renderEmailRow("Name", name),
-    renderEmailRow("Email Address", email),
+    callbackPhone ? renderEmailRow("Callback phone", callbackPhone) : "",
+    email ? renderEmailRow("Email Address", email) : "",
     partNumber ? renderEmailRow("Part Number", partNumber) : "",
     renderEmailRow("Message", message || "No additional details provided."),
   ].join("");

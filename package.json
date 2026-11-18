@@ -13,6 +13,8 @@
     "test": "node --test tests/*.test.mjs",
     "verify:build": "node scripts/verify-build-assets.mjs",
     "verify:site": "node scripts/verify-site-assets.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "audit:public-links": "node scripts/audit-public-links.mjs",
     "audit:product-links": "node scripts/audit-product-links.mjs",
     "catalog:ge:audit": "node scripts/import-oem-catalog.mjs --oem=GE --audit-live",
     "catalog:ge:verify": "node scripts/import-oem-catalog.mjs --oem=GE --verify",
@@ -28,7 +30,7 @@
     "firebase": "^11.10.0",
     "firebase-admin": "^13.10.0",
     "lightgallery": "^2.7.2",
-    "next": "15.5.27",
+    "next": "15.5.29",
     "react": "^18.2.0",
     "react-dom": "^18",
     "react-google-recaptcha": "^3.1.0",
@@ -40,7 +42,7 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "15.5.27",
+    "eslint-config-next": "15.5.29",
     "fast-xml-parser": "5.8.0"
   },
   "overrides": {

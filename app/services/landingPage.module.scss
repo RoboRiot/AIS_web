@@ -1625,6 +1625,11 @@
 }
 
 @media (max-width: $breakpoint_mobile_portrait) {
+  // Keep Google's badge visible, above the trailer-only fixed controls.
+  :global(body):has(.mobileActionBar) :global(.grecaptcha-badge) {
+    bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+  }
+
   .mobileActionSpacer {
     display: block;
     height: calc(72px + env(safe-area-inset-bottom));
@@ -1639,6 +1644,7 @@
     display: grid;
     gap: 10px;
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    height: calc(72px + env(safe-area-inset-bottom));
     left: 0;
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
     position: fixed;
@@ -1652,6 +1658,7 @@
       font-size: 14px;
       font-weight: 800;
       justify-content: center;
+      line-height: 20px;
       min-height: 48px;
       padding: 10px;
       text-align: center;

@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 import { verifiedLegacyProductRoutes } from "../app/data/verifiedLegacyProductRoutes.mjs";
+import { verificationRequest } from "./lib/site-verification.mjs";
+import { LEGACY_TRAILER_REDIRECTS } from "../app/data/seoRoutes.mjs";
 
 // HTTP only: no browser tags, form submissions, database writes or lead events.
 const base = new URL(process.argv[2] || "http://localhost:3096");
 assert.ok(["127.0.0.1", "localhost", "advancedimagingparts.com"].includes(base.hostname));
-const request = (path) => fetch(new URL(path, base), {
-  redirect: "manual", headers: { "User-Agent": "AIS-Website-Health-Monitor/1.0" },
-  signal: AbortSignal.timeout(45000),
-});
+const request = (path) => verificationRequest(new URL(path, base));
 const checks = [];
 for (const route of verifiedLegacyProductRoutes) {
   const source = `/products/${route.slug}`;
@@ -37,9 +36,14 @@ for (const page of ["1", "7", "28"]) {
   assert.equal(target.searchParams.get("utm_source"), "legacy-check");
 }
 const additionalRedirects = [
+  ...LEGACY_TRAILER_REDIRECTS.map(({ source, destination }) => [`${source}?utm_source=legacy-check`, destination, null]),
+  ["/about-us?utm_source=legacy-check", "/about", null],
+  ["/ct?utm_source=legacy-check", "/services/ct-service", null],
   ["/Parts?utm_source=legacy-check", "/parts", null],
   ["/product-category/ct-scanner?utm_source=legacy-check", "/parts", "CT"],
   ["/product-category/ct-scanner/page/4?utm_source=legacy-check", "/parts", "CT"],
+  ["/product-category/cath-lab?utm_source=legacy-check", "/parts", "Cath Lab"],
+  ["/product-category/cath-lab/page/4?utm_source=legacy-check", "/parts", "Cath Lab"],
   ["/sitemaps/products/sitemap.xml?utm_source=legacy-check", "/sitemap.xml", null],
 ];
 for (const [source, pathname, modality] of additionalRedirects) {
@@ -57,6 +61,7 @@ for (const [source, pathname, modality] of additionalRedirects) {
 }
 const guarded404s = ["/products/power-brush-2189175", "/products/ais-nonexistent-health-check-part", "/parts/page/not-a-page",
   "/product-category/ct-scanner/page/0", "/product-category/ct-scanner/page/not-a-page",
+  "/product-category/cath-lab/page/0", "/product-category/cath-lab/page/not-a-page",
   "/monster-design-studios-our-web-design-company"];
 for (const source of guarded404s) {
   const response = await request(source);

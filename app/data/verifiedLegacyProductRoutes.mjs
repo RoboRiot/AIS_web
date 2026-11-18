@@ -11,4 +11,5 @@ export const verifiedLegacyProductRoutes = [
   ["absolute-encoder-multi-turnemc-2-2342726-2", "e7a82c6ba78a", "2342726-2", "GE"],
   ["gcifm-pwb-px77-99455", "cb3563dde7c4", "PX77-99455", "TOSHIBA"],
   ["10gig-sfp-receiver-and-antenna-assembly-5311645-2", "b73f9b979f2d", "5311645-2", "GE"],
+  ["a-bezel-cable-harness-hypertronics-5371622-50", "8d681b73850a", "5371622-50", "GE"],
 ].map(([slug, id, partNumber, oem]) => ({ slug, id, partNumber, oem }));

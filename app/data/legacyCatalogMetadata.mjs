@@ -16,6 +16,15 @@ export const getVerifiedLegacyMetadata = (product = {}) => {
   // Research and source links are recorded in docs/product-url-research-2026-09-16.md.
   const id = String(product.id);
   const pn = String(product.PN || "").trim().toUpperCase();
+  // Exact GE listing: services.gehealthcare.com/gehcstorefront/p/5371622-50.
+  // Repair this imported record only, without changing inventory or visibility.
+  if (id === "8d681b73850a" && pn === "5371622-50" &&
+      /^(?:-50\s+)?Bezel Cable Harness$/i.test(String(product.Name || "").trim()) &&
+      /^(?:5371622-50\s+A Bezel Cable Harness Hypertronics|GE MRI A Bezel Cable Harness, part number 5371622-50\.)/i.test(String(product.Description || "").trim()) &&
+      (!product.OEM || /^GE$/i.test(String(product.OEM)))) {
+    return { PN: "5371622-50", OEM: "GE", Modality: "MRI", replacesLegacyModality: "CT",
+      Description: "GE MRI A Bezel Cable Harness, part number 5371622-50. Contact Advanced Imaging Services to confirm compatibility, condition, current availability, and lead time." };
+  }
   // Original item and official GE listing agree on the exact motor, not -H.
   // The historical CT classification was an import error; see the URL audit.
   if (id === "9f27cda675d8" && (!pn || pn === "46-282360P1") &&

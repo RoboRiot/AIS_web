@@ -52,3 +52,10 @@ test("contact verification is covered by the submission error handler and cleanu
   assert.match(contact, /finally\s*\{\s*setIsSubmitting\(false\)/);
   assert.match(contact, /error_reason: reason,\s*lead_id: leadId/);
 });
+
+test("the mobile trailer action bar reserves space for a visible reCAPTCHA badge", async () => {
+  const styles = await readFile(new URL("../app/services/landingPage.module.scss", import.meta.url), "utf8");
+  assert.match(styles, /:global\(body\):has\(\.mobileActionBar\) :global\(\.grecaptcha-badge\)\s*\{\s*bottom: calc\(86px \+ env\(safe-area-inset-bottom\)\) !important;/);
+  assert.match(styles, /\.mobileActionBar\s*\{[\s\S]*?height: calc\(72px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.doesNotMatch(styles, /grecaptcha-badge[^}]*?(?:visibility:\s*hidden|display:\s*none)/);
+});

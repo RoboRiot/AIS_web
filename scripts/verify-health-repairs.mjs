@@ -1,14 +1,12 @@
 import assert from "node:assert/strict";
 import { BUSINESS_PHONE_HREF, SUPPORT_PHONE_HREF } from "../app/data/businessContact.mjs";
 import { serviceLandingPages, trailerLandingPages } from "../app/data/serviceLandingPages.js";
+import { verificationRequest } from "./lib/site-verification.mjs";
 
 // Read-only HTTP checks. Never submit forms, create analytics events or call Google.
 const base = new URL(process.argv[2] || "http://127.0.0.1:3096");
 assert.ok(["127.0.0.1", "localhost", "advancedimagingparts.com"].includes(base.hostname));
-const request = (path) => fetch(new URL(path, base), {
-  redirect: "manual", headers: { "User-Agent": "AIS-Website-Health-Monitor/1.0" },
-  signal: AbortSignal.timeout(30000),
-});
+const request = (path) => verificationRequest(new URL(path, base));
 const checks = [];
 for (const [path, pn, id] of [
   ["/products/vct-64-center-digital-module-kit-sherlock-5136400-3", "5136400-3", "a761c231a605"],

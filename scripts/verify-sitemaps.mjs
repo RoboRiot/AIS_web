@@ -6,6 +6,7 @@ import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { BASE_URL } from "../app/data/seoProducts.js";
 import { STATIC_SITEMAP_PATHS } from "../app/data/seoRoutes.mjs";
 import { MAX_SITEMAP_BYTES, PRODUCT_SITEMAP_PAGE_SIZE } from "../app/data/productSitemap.mjs";
+import { verificationRequest } from "./lib/site-verification.mjs";
 
 const parser = new XMLParser({ parseTagValue: false });
 const array = (value) => value == null ? [] : Array.isArray(value) ? value : [value];
@@ -81,10 +82,7 @@ if (isDirectRun) {
   const base = new URL(process.argv[2] || "http://127.0.0.1:3096");
   assert.ok(["127.0.0.1", "localhost", "advancedimagingparts.com"].includes(base.hostname));
   const result = await verifySitemaps(async (pathname) => {
-    const response = await fetch(new URL(pathname, base), {
-      redirect: "manual", signal: AbortSignal.timeout(45000),
-      headers: { "User-Agent": "AIS-Website-Health-Monitor/1.0" },
-    });
+    const response = await verificationRequest(new URL(pathname, base));
     assert.equal(response.status, 200, pathname);
     assert.match(response.headers.get("content-type"), /xml/);
     return response.text();

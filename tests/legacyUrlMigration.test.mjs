@@ -81,3 +81,40 @@ test("CT archive and old sitemap redirects have explicit replacements", async ()
   });
   assert.ok(!redirects.some((item) => item.source === "/Parts"), "Next config is case insensitive and would loop");
 });
+
+test("about and Cath Lab legacy URLs have exact replacements without catch-all redirects", async () => {
+  const redirects = await createNextConfig(PHASE_DEVELOPMENT_SERVER).redirects();
+  for (const [source, destination] of [
+    ["/about-us", "/about"],
+    ["/ct", "/services/ct-service"],
+    ["/product-category/cath-lab", "/parts?modality=Cath%20Lab"],
+    ["/product-category/cath-lab/page/:page([1-9]\\d*)", "/parts?modality=Cath%20Lab"],
+  ]) assert.deepEqual(redirects.find((item) => item.source === source), { source, destination, permanent: true });
+  assert.ok(!redirects.some((item) => item.source === "/product-category/:path*"));
+  assert.ok(!redirects.some((item) => item.destination === "/"));
+});
+
+test("the exact bezel harness uses verified GE MRI metadata and preserves catalog safeguards", () => {
+  const original = catalog.find((part) => part.id === "8d681b73850a");
+  const product = normalizePublicCatalogProduct(original);
+  assert.deepEqual(getCatalogIdentifiers(original), { PN: "5371622-50", OEM: "GE", Modality: "MRI" });
+  assert.deepEqual(getCampaignReadinessIssues(product), []);
+  assert.deepEqual(normalizePublicCatalogProduct(product), product);
+  assert.equal(original.OEM, null);
+  assert.equal(original.Modality, "CT");
+  assert.doesNotMatch(product.Description, /in stock|warranty/i);
+  const reference = buildLegacyProductAliases(catalog).get("a-bezel-cable-harness-hypertronics-5371622-50");
+  assert.ok(matchesLegacyProduct(reference, product));
+  for (const changes of [{ id: "other" }, { PN: "5371622-2" }, { PN: "5371622-50-R" },
+    { Name: "Other harness" }, { Description: "Other part" }, { OEM: "Other" }]) {
+    assert.notEqual(getCatalogIdentifiers({ ...original, ...changes }).Modality, "MRI");
+  }
+  assert.ok(getCampaignReadinessIssues({ ...product, Hidden: true }).includes("not-public"));
+  assert.ok(getCampaignReadinessIssues({ ...product, Images: [], ImagePaths: [], PrimaryImage: "" }).includes("missing-image"));
+});
+
+test("legacy deep-linked modalities stay visible even when absent from the model picker", async () => {
+  const source = await readFile(new URL("../app/parts/ProductsPage.js", import.meta.url), "utf8");
+  assert.match(source, /selectedType && !types\.includes\(selectedType\)/);
+  assert.match(source, /<option value=\{selectedType\}>\{selectedType\}<\/option>/);
+});

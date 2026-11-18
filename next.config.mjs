@@ -121,11 +121,15 @@ export default function createNextConfig(phase) {
     poweredByHeader: false,
     async redirects() {
       return [
+        { source: "/about-us", destination: "/about", permanent: true },
+        { source: "/ct", destination: "/services/ct-service", permanent: true },
         { source: "/product/:slug", destination: "/products/:slug", permanent: true },
         // The old numbered archive is replaced by the searchable catalog.
         { source: "/parts/page/:page([1-9]\\d*)", destination: "/parts", permanent: true },
         { source: "/product-category/ct-scanner", destination: "/parts?modality=CT", permanent: true },
         { source: "/product-category/ct-scanner/page/:page([1-9]\\d*)", destination: "/parts?modality=CT", permanent: true },
+        { source: "/product-category/cath-lab", destination: "/parts?modality=Cath%20Lab", permanent: true },
+        { source: "/product-category/cath-lab/page/:page([1-9]\\d*)", destination: "/parts?modality=Cath%20Lab", permanent: true },
         { source: "/sitemaps/products/sitemap.xml", destination: "/sitemap.xml", permanent: true },
         ...LEGACY_TRAILER_REDIRECTS,
       ];

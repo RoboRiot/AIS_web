@@ -469,6 +469,9 @@ export default function ProductsPage({
                                 </select>
                                 <select aria-label="Modality" value={selectedType} onChange={handleTypeChange}>
                                     <option value="">Select Type</option>
+                                    {selectedType && !types.includes(selectedType) && (
+                                        <option value={selectedType}>{selectedType}</option>
+                                    )}
                                     {types.map((type) => (
                                         <option key={type} value={type}>{type}</option>
                                     ))}

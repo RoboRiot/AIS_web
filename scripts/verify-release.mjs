@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { verifySiteAssets } from "./verify-site-assets.mjs";
 
@@ -15,11 +15,15 @@ async function assertRelease() {
 }
 await assertRelease();
 for (const script of ["verify-legacy-product-redirects.mjs", "verify-health-repairs.mjs", "verify-sitemaps.mjs"]) {
-  const child = spawnSync(process.execPath, [`scripts/${script}`, base.origin], {
-    stdio: "inherit", env: { ...process.env, AIS_EXPECTED_RELEASE: expectedRelease },
+  // Keep the event loop responsive so expired HTTP keep-alive sockets are retired.
+  const status = await new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [`scripts/${script}`, base.origin], {
+      stdio: "inherit", env: { ...process.env, AIS_EXPECTED_RELEASE: expectedRelease },
+    });
+    child.once("error", reject);
+    child.once("close", resolve);
   });
-  if (child.error) throw child.error;
-  assert.equal(child.status, 0, `${script} failed; do not call this release verified`);
+  assert.equal(status, 0, `${script} failed; do not call this release verified`);
 }
 const assets = await verifySiteAssets({ baseUrl: base.origin, concurrency: 1, maxProductPages: 40 });
 assert.equal(assets.pageFailures.length, 0, "Page failures");

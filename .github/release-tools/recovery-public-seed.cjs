@@ -15,7 +15,7 @@ const keys={sitemap:'45e470bb11f23a767ed5b67f8613e306eea414b689a1cc3cb72ca368d84
 async function get(route){
   assert(route.startsWith('/')&&!route.startsWith('//')&&!route.includes('..'));
   let failure;
-  for(let n=0;n<3;n++){try{const r=await fetch(source+route,{redirect:'error',headers:{'User-Agent':'AIS-Website-Health-Monitor/1.0'},signal:AbortSignal.timeout(30000)});assert.equal(r.status,200,route+': '+r.status);assert.equal(r.headers.get('x-ais-release'),'bc39bcffbdf1-linux-20261116');return await r.text();}catch(e){failure=e;await new Promise(ok=>setTimeout(ok,1500*(n+1)));}}
+  for(let n=0;n<3;n++){try{const r=await fetch(source+route,{redirect:'error',headers:{'User-Agent':'AIS-Website-Health-Monitor/1.0'},signal:AbortSignal.timeout(30000)});assert.equal(r.status,200,route+': '+r.status);assert.equal(r.headers.get('x-ais-release'),'94deaa7391cc-linux-20261118');return await r.text();}catch(e){failure=e;await new Promise(ok=>setTimeout(ok,1500*(n+1)));}}
   throw failure;
 }
 function props(html,property) {

@@ -1,7 +1,7 @@
-name: Build AIS tracking recovery release 94deaa7
+name: Build AIS memory reliability release 82838bf
 on:
   push:
-    branches: [codex/recovery-linux-build-94deaa7]
+    branches: [codex/memory-linux-build-82838bf]
 permissions:
   contents: read
 jobs:
@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      SOURCE_REVISION: 94deaa7391cc0ac5e195dc9fc0f9590b5f60105a
-      RELEASE: 94deaa7391cc-linux-20261118
-      LOCK_SHA256: 8daee665bb25820470b1b9e544933c561626df686d0ee3305bb7bdb94748cc4c
+      SOURCE_REVISION: 82838bfc251a1fd9d31485f1460219412694b4a9
+      RELEASE: 82838bfc251a-linux-20261118
+      LOCK_SHA256: 942c074a7c95baca7436fb72b07f275f2da9b08c4b3e95293c3f3fdd89a0f5d5
       ROUTE_SHA256: 16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5
       RECOVERY_TEST_SHA256: 2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b
       PUBLIC_KEY_DIGEST: 7c5325217329a2e8847d34e36a6d2af5e5122a32826fcaabd93b7eb56c28f88a
@@ -19,7 +19,7 @@ jobs:
       - name: Check out only the pinned source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 94deaa7391cc0ac5e195dc9fc0f9590b5f60105a
+          ref: 82838bfc251a1fd9d31485f1460219412694b4a9
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -67,6 +67,26 @@ jobs:
           test "$(cat ".next-releases/$RELEASE/BUILD_ID")" = "$RELEASE"
           test ! -e .next-release-current
           test -z "$(git status --porcelain=v1 --untracked-files=no)"
+          "${isolated[@]}" node scripts/verify-runtime-memory-fixes.cjs
+          "${isolated[@]}" "AIS_RELEASE_ID=$RELEASE" "AIS_NEXT_DIST_DIR=.next-releases/$RELEASE" "AIS_LOCAL_FORCE_GC=1" node --expose-gc --max-old-space-size=480 --require ./scripts/local-memory-probe.cjs node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3098 > "$RUNNER_TEMP/runtime-memory.log" 2>&1 &
+          runtime_pid=$!
+          trap 'kill "$runtime_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail -A 'Mozilla/5.0 AIS local-only check' http://127.0.0.1:3098/contact > /dev/null; then break; fi
+            sleep 1
+          done
+          "${isolated[@]}" node scripts/test-local-runtime-memory.mjs http://127.0.0.1:3098 10000 | tee "$RUNNER_TEMP/runtime-requests.log"
+          node - "$RUNNER_TEMP/runtime-memory.log" <<'JS'
+          const fs = require('fs'), assert = require('assert/strict');
+          const rows = fs.readFileSync(process.argv[2], 'utf8').split('\n').filter(x => x.startsWith('{')).map(JSON.parse).filter(x => x.type === 'local-memory');
+          assert(rows.length >= 3);
+          assert(rows.every(x => x.sandboxTimeouts === 0 && x.heapUsed < 256 * 1024 * 1024));
+          assert(rows.some(x => x.routerCaches.some(c => c.entries > 1000 && c.accountedBytes > c.entries * 128)));
+          console.log(JSON.stringify({linuxRuntimeRequests:10000,peakHeapBytes:Math.max(...rows.map(x=>x.heapUsed)),peakRssBytes:Math.max(...rows.map(x=>x.rss)),retainedSandboxTimeouts:0}));
+          JS
+          kill "$runtime_pid"
+          wait "$runtime_pid" || true
+          trap - EXIT
       - name: Package runtime and signpost its contents
         shell: bash
         run: |
@@ -102,7 +122,7 @@ jobs:
               assert re.search(r"^# fail 0$", text, re.M), "test failures"
               return int(re.findall(r"^# tests (\d+)$", text, re.M)[-1])
           test_counts = {"repository":count_tests("repository-tests.log"), "recovery":count_tests("recovery-tests.log")}
-          assert test_counts == {"repository":202, "recovery":9}, "unexpected exact candidate test coverage"
+          assert test_counts == {"repository":219, "recovery":9}, "unexpected exact candidate test coverage"
           manifest = {"dependencyLockSha256":os.environ["LOCK_SHA256"], "sourceFileSha256":{"app/api/service-requests/route.js":os.environ["ROUTE_SHA256"], "tests/serviceRequestRecovery.test.mjs":os.environ["RECOVERY_TEST_SHA256"]}, "checks":{"tests":test_counts,"lint":"passed","publicSitemapDocuments":84}, "release":os.environ["RELEASE"], "sourceRevision":os.environ["SOURCE_REVISION"], "nodeVersion":"v22.23.4", "platform":"linux", "arch":"x64", "archive":"release.tar.gz", "sizeBytes":a.stat().st_size, "sha256":hashlib.sha256(a.read_bytes()).hexdigest(), "publicConfigSha256":{"NEXT_PUBLIC_RECAPTCHA_SITE_KEY":os.environ["PUBLIC_KEY_DIGEST"]}, "workflowRunId":os.environ["GITHUB_RUN_ID"]}
           (d / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
           print(json.dumps(manifest))
@@ -111,7 +131,7 @@ jobs:
       - name: Retain the reviewed release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ais-recovery-linux-94deaa7
+          name: ais-memory-linux-82838bf
           path: |
             ${{ runner.temp }}/ais-artifact/release.tar.gz.enc
             ${{ runner.temp }}/ais-artifact/manifest.json

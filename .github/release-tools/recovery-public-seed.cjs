@@ -61,7 +61,7 @@ async function main() {
     const {verifySitemaps}=await import(pathToFileURL(path.join(cwd,'scripts/verify-sitemaps.mjs')));
     const raw=new Map(), {XMLParser}=appRequire('fast-xml-parser');
     let entries=[];
-    if(process.env.AIS_PUBLIC_SITEMAP){const snap=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(process.env.AIS_PUBLIC_SITEMAP)));entries=snap.entries;Object.assign(hashes,snap.hashes);assert.equal(entries.length,7982);assert.equal(Object.keys(hashes).length,84);}
+    if(process.env.AIS_PUBLIC_SITEMAP){const snap=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(process.env.AIS_PUBLIC_SITEMAP)));entries=snap.entries;Object.assign(hashes,snap.hashes);assert.equal(entries.length,7983);assert.equal(Object.keys(hashes).length,84);}
     else{
       const tree=await verifySitemaps(async p=>{const s=await get(p);raw.set(p,s);hashes[p]=digest(s);return s;});
       for(const doc of tree.documents.filter(d=>d.path.startsWith('/sitemaps/products/'))){

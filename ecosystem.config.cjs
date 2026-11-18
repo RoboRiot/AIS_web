@@ -31,5 +31,6 @@ module.exports = { apps: [{
   kill_timeout: 10000,
   // Operational guard, not proof that sustained memory growth is repaired.
   max_memory_restart: "450M",
-  env: { NODE_ENV: "production", AIS_RELEASE_ID: release, AIS_NEXT_DIST_DIR: dist, AIS_MEMORY_TELEMETRY: "1" },
+  // Bound glibc allocator arenas for native image work; this affects only this process.
+  env: { NODE_ENV: "production", AIS_RELEASE_ID: release, AIS_NEXT_DIST_DIR: dist, AIS_MEMORY_TELEMETRY: "1", MALLOC_ARENA_MAX: "2" },
 }] };

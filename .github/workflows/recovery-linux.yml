@@ -1,0 +1,120 @@
+name: Build AIS tracking recovery release 94deaa7
+on:
+  push:
+    branches: [codex/recovery-linux-build-94deaa7]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      SOURCE_REVISION: 94deaa7391cc0ac5e195dc9fc0f9590b5f60105a
+      RELEASE: 94deaa7391cc-linux-20261118
+      LOCK_SHA256: 8daee665bb25820470b1b9e544933c561626df686d0ee3305bb7bdb94748cc4c
+      ROUTE_SHA256: 16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5
+      RECOVERY_TEST_SHA256: 2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b
+      PUBLIC_KEY_DIGEST: 7c5325217329a2e8847d34e36a6d2af5e5122a32826fcaabd93b7eb56c28f88a
+    steps:
+      - name: Check out only the pinned source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 94deaa7391cc0ac5e195dc9fc0f9590b5f60105a
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/data/
+      - name: Use the production Node version
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22.23.4
+      - name: Build from public configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          test -z "$(git status --porcelain=v1)"
+          test "$(node --version)" = "v22.23.4"
+          test "$(sha256sum package-lock.json | cut -d' ' -f1)" = "$LOCK_SHA256"
+          test "$(sha256sum app/api/service-requests/route.js | cut -d' ' -f1)" = "$ROUTE_SHA256"
+          test "$(sha256sum tests/serviceRequestRecovery.test.mjs | cut -d' ' -f1)" = "$RECOVERY_TEST_SHA256"
+          test "$(uname -m)" = "x86_64"
+          test ! -d data
+          test -f public/assets/data/parts.json
+          test -z "$(find . -maxdepth 1 -type f -name '.env*' ! -name '.env.example' -print)"
+          test -z "$(git config --local --name-only --get-regexp 'http\..*extraheader' || true)"
+          public_key='6Lf2bQstAAAAAOvre4_JVGtcCkFY4sVQHFj0-a3X'
+          test "$(printf %s "$public_key" | sha256sum | cut -d' ' -f1)" = "$PUBLIC_KEY_DIGEST"
+          # Modules and compiler receive no runner tokens, credential helpers, or production secrets.
+          mkdir -p "$RUNNER_TEMP/ais-home"
+          isolated=(env -i "PATH=$PATH" "HOME=$RUNNER_TEMP/ais-home" "LANG=C.UTF-8" "CI=true" "NEXT_TELEMETRY_DISABLED=1")
+          "${isolated[@]}" npm ci --no-audit --no-fund
+          "${isolated[@]}" npm test | tee "$RUNNER_TEMP/repository-tests.log"
+          "${isolated[@]}" node --experimental-vm-modules --test tests/serviceRequestRecovery.test.mjs | tee "$RUNNER_TEMP/recovery-tests.log"
+          "${isolated[@]}" npm run lint
+          # Static generation needs the public catalog. Seed Next's ignored cache
+          # from the live public sitemap, homepage and parts display, then verify
+          # every published sitemap byte and every featured/parts card after build.
+          git fetch --no-tags --depth=1 https://github.com/RoboRiot/AIS_web.git "$GITHUB_SHA"
+          git show "$GITHUB_SHA:.github/release-tools/recovery-public-seed.cjs" > "$RUNNER_TEMP/ais-public-seed.cjs"
+          git show "$GITHUB_SHA:.github/release-tools/public-sitemaps.json.gz" > "$RUNNER_TEMP/public-sitemaps.json.gz"
+          git show "$GITHUB_SHA:.github/release-tools/transport.cjs" > "$RUNNER_TEMP/transport.cjs"
+          git show "$GITHUB_SHA:.github/release-tools/public-keys.json" > "$RUNNER_TEMP/public-keys.json"
+          "${isolated[@]}" "RUNNER_TEMP=$RUNNER_TEMP" "RELEASE=$RELEASE" "AIS_PUBLIC_SITEMAP=$RUNNER_TEMP/public-sitemaps.json.gz" node "$RUNNER_TEMP/ais-public-seed.cjs" capture
+          "${isolated[@]}" "NEXT_PUBLIC_RECAPTCHA_SITE_KEY=$public_key" "AIS_RELEASE_ID=$RELEASE" "NEXT_DEPLOYMENT_ID=$RELEASE" "AIS_NEXT_DIST_DIR=.next-releases/$RELEASE" npm run build
+          "${isolated[@]}" "RUNNER_TEMP=$RUNNER_TEMP" "RELEASE=$RELEASE" node "$RUNNER_TEMP/ais-public-seed.cjs" verify
+          test "$(cat ".next-releases/$RELEASE/BUILD_ID")" = "$RELEASE"
+          test ! -e .next-release-current
+          test -z "$(git status --porcelain=v1 --untracked-files=no)"
+      - name: Package runtime and signpost its contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ais-artifact"
+          root=".next-releases/$RELEASE"
+          artifact="$RUNNER_TEMP/ais-artifact/release.tar.gz"
+          tar --sort=name --owner=0 --group=0 --numeric-owner --exclude="$root/cache" --exclude="$root/trace" -czf "$artifact" "$root"
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, tarfile
+          d = pathlib.Path(os.environ["RUNNER_TEMP"], "ais-artifact")
+          a = d / "release.tar.gz"
+          root = ".next-releases/" + os.environ["RELEASE"]
+          required = {root + "/" + n for n in ("BUILD_ID", "required-server-files.json", "routes-manifest.json", "prerender-manifest.json", "server/app/services/mri-service.html", "server/app/services/ct-service.html", "server/app/api/service-requests/route.js")}
+          sec = re.compile(rb"(?:-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----(?:\\n|[\r\n])+[A-Za-z0-9+/=]{32,}|gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[a-zA-Z0-9_]{60,}|\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{30,})")
+          with tarfile.open(a, "r:gz") as t:
+              seen = set()
+              key_in_client = False
+              for e in t:
+                  p = pathlib.PurePosixPath(e.name)
+                  assert e.name == root or e.name.startswith(root + "/")
+                  assert not p.is_absolute() and ".." not in p.parts and not (set(p.parts) & {".git", "cache", "node_modules"})
+                  assert e.name not in seen and (e.isfile() or e.isdir()) and not p.name.startswith(".env")
+                  seen.add(e.name)
+                  if e.isfile():
+                      b = t.extractfile(e).read()
+                      assert not sec.search(b), "unexpected sensitive material in artifact"
+                      if e.name.startswith(root + "/static/") and b"6Lf2bQstAAAAAOvre4_JVGtcCkFY4sVQHFj0-a3X" in b:
+                          key_in_client = True
+              assert key_in_client and required.issubset(seen), "candidate files or public configuration missing"
+          def count_tests(name):
+              text = pathlib.Path(os.environ["RUNNER_TEMP"], name).read_text()
+              assert re.search(r"^# fail 0$", text, re.M), "test failures"
+              return int(re.findall(r"^# tests (\d+)$", text, re.M)[-1])
+          test_counts = {"repository":count_tests("repository-tests.log"), "recovery":count_tests("recovery-tests.log")}
+          assert test_counts == {"repository":202, "recovery":9}, "unexpected exact candidate test coverage"
+          manifest = {"dependencyLockSha256":os.environ["LOCK_SHA256"], "sourceFileSha256":{"app/api/service-requests/route.js":os.environ["ROUTE_SHA256"], "tests/serviceRequestRecovery.test.mjs":os.environ["RECOVERY_TEST_SHA256"]}, "checks":{"tests":test_counts,"lint":"passed","publicSitemapDocuments":84}, "release":os.environ["RELEASE"], "sourceRevision":os.environ["SOURCE_REVISION"], "nodeVersion":"v22.23.4", "platform":"linux", "arch":"x64", "archive":"release.tar.gz", "sizeBytes":a.stat().st_size, "sha256":hashlib.sha256(a.read_bytes()).hexdigest(), "publicConfigSha256":{"NEXT_PUBLIC_RECAPTCHA_SITE_KEY":os.environ["PUBLIC_KEY_DIGEST"]}, "workflowRunId":os.environ["GITHUB_RUN_ID"]}
+          (d / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          print(json.dumps(manifest))
+          PY
+          node "$RUNNER_TEMP/transport.cjs" encrypt "$RUNNER_TEMP/ais-artifact" "$RUNNER_TEMP/public-keys.json"
+      - name: Retain the reviewed release artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ais-recovery-linux-94deaa7
+          path: |
+            ${{ runner.temp }}/ais-artifact/release.tar.gz.enc
+            ${{ runner.temp }}/ais-artifact/manifest.json
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error

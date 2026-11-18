@@ -1,4 +1,4 @@
-name: Build AIS memory reliability release 02df943
+name: Build AIS memory reliability release 839c939
 on:
   push:
     branches: [codex/memory-linux-build-82838bf]
@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      SOURCE_REVISION: 02df943c77173bce9cb09b5aa7ab7cfc467995b7
-      RELEASE: 02df943c7717-linux-20261118
+      SOURCE_REVISION: 839c939f08a2fd4039c7c88091d9d16cbeb00298
+      RELEASE: 839c939f08a2-linux-20261118
       LOCK_SHA256: 942c074a7c95baca7436fb72b07f275f2da9b08c4b3e95293c3f3fdd89a0f5d5
       ROUTE_SHA256: 16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5
       RECOVERY_TEST_SHA256: 2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b
@@ -19,7 +19,7 @@ jobs:
       - name: Check out only the pinned source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 02df943c77173bce9cb09b5aa7ab7cfc467995b7
+          ref: 839c939f08a2fd4039c7c88091d9d16cbeb00298
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -77,10 +77,11 @@ jobs:
           done
           "${isolated[@]}" node --input-type=module - <<'JS'
           import assert from 'node:assert/strict';
+          import {request} from 'node:http';
           for (const [route, expected] of [['/Parts?utm_source=proxy-check','/parts?utm_source=proxy-check'],['/product-detail?MRI%20Coil%20123','/products/mri-coil-123']]) {
-            const r = await fetch('http://127.0.0.1:3098'+route,{redirect:'manual',headers:{host:'advancedimagingparts.com','x-forwarded-proto':'https','user-agent':'AIS-Release-Verification/1.0'}});
-            await r.arrayBuffer(); assert.equal(r.status,308);
-            const target = new URL(r.headers.get('location'),'https://advancedimagingparts.com');
+            const r = await new Promise((resolve,reject)=>{const q=request('http://127.0.0.1:3098'+route,{headers:{host:'advancedimagingparts.com','x-forwarded-proto':'https','user-agent':'AIS-Release-Verification/1.0'}},r=>{r.resume();r.on('end',()=>resolve(r));});q.on('error',reject);q.end();});
+            assert.equal(r.statusCode,308);
+            const target = new URL(r.headers.location,'https://advancedimagingparts.com');
             assert.equal(target.origin,'https://advancedimagingparts.com'); assert.equal(target.pathname+target.search,expected);
           }
           console.log('Production-host redirect integration passed');
@@ -141,7 +142,7 @@ jobs:
       - name: Retain the reviewed release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ais-memory-linux-02df943
+          name: ais-memory-linux-839c939
           path: |
             ${{ runner.temp }}/ais-artifact/release.tar.gz.enc
             ${{ runner.temp }}/ais-artifact/manifest.json

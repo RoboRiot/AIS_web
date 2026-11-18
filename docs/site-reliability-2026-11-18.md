@@ -4,7 +4,9 @@
 
 The approved staging run caught an internal-origin regression before cutover:
 Node middleware could emit localhost in the Location header for /Parts and
-/product-detail. Those same-host redirects now use relative Location values.
+/product-detail. Those same-host redirects now use the canonical production
+origin or the validated local/staging host. Relative Location headers are not
+accepted by Next's middleware adapter and are not used.
 The regression test fails on the prior code, and the HTTP gate now also sends
 the production Host and forwarded protocol to the loopback candidate. This
 must pass before any application switch. No public traffic was switched during

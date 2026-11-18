@@ -24,8 +24,10 @@ test("same-host legacy redirects cannot expose a Node middleware internal origin
       const request = new NextRequest(`http://localhost:3098${route}`, { headers: { host, "user-agent": "AIS-Release-Verification/1.0" } });
       const response = middleware(request);
       assert.equal(response.status, 308);
-      assert.equal(response.headers.get("location"), expected);
-      assert.equal(new URL(response.headers.get("location"), `https://${host}`).host, host);
+      const target = new URL(response.headers.get("location"));
+      assert.equal(`${target.pathname}${target.search}`, expected);
+      assert.equal(target.host, host);
+      if (host === "advancedimagingparts.com") assert.equal(target.protocol, "https:");
     }
   }
 });

@@ -85,6 +85,18 @@ function buildCanonicalUrl(request) {
   return new URL(`${request.nextUrl.pathname}${request.nextUrl.search}`, PRODUCTION_SITE_URL);
 }
 
+function buildSameHostRedirectUrl(request, requestHost) {
+  if (isProductionRequest(requestHost)) return buildCanonicalUrl(request);
+  // The Node adapter may put its internal hostname in nextUrl. Only callers
+  // that passed the recognized-host and staging-auth checks reach this helper.
+  const url = new URL(request.nextUrl.toString());
+  url.hostname = requestHost;
+  const authority = (request.headers.get("host") || request.headers.get("x-forwarded-host") || request.nextUrl.host)
+    .split(",")[0].trim();
+  url.port = authority.match(/:(\d+)$/)?.[1] || "";
+  return url;
+}
+
 function isLocalRequest(host) {
   return LOCAL_HOSTS.includes(host);
 }
@@ -218,17 +230,14 @@ export function middleware(request) {
 
   // Next config redirects match case-insensitively; keep /parts out of this alias.
   if (pathname === "/Parts") {
-    const redirectUrl = request.nextUrl.clone();
+    const redirectUrl = buildSameHostRedirectUrl(request, requestHost);
     redirectUrl.pathname = "/parts";
-    // Node middleware can expose an internal localhost origin in nextUrl.
-    return respond(new NextResponse(null, { status: 308,
-      headers: { Location: `${redirectUrl.pathname}${redirectUrl.search}` },
-    }));
+    return respond(NextResponse.redirect(redirectUrl, 308));
   }
 
   if (pathname === "/product-detail") {
     const rawQuery = request.nextUrl.search.replace(/^\?/, "");
-    const redirectUrl = request.nextUrl.clone();
+    const redirectUrl = buildSameHostRedirectUrl(request, requestHost);
     if (rawQuery) {
       const decoded = decodeURIComponent(rawQuery);
       const slug = decoded
@@ -243,9 +252,7 @@ export function middleware(request) {
       redirectUrl.pathname = "/parts";
     }
     redirectUrl.search = "";
-    return respond(new NextResponse(null, { status: 308,
-      headers: { Location: redirectUrl.pathname },
-    }));
+    return respond(NextResponse.redirect(redirectUrl, 308));
   }
 
   if (

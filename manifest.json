@@ -1,0 +1,39 @@
+{
+  "dependencyLockSha256": "942c074a7c95baca7436fb72b07f275f2da9b08c4b3e95293c3f3fdd89a0f5d5",
+  "sourceFileSha256": {
+    "app/api/service-requests/route.js": "16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5",
+    "tests/serviceRequestRecovery.test.mjs": "2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b"
+  },
+  "checks": {
+    "tests": {
+      "repository": 221,
+      "recovery": 9
+    },
+    "lint": "passed",
+    "publicSitemapDocuments": 84
+  },
+  "release": "839c939f08a2-linux-20261118",
+  "sourceRevision": "839c939f08a2fd4039c7c88091d9d16cbeb00298",
+  "nodeVersion": "v22.23.4",
+  "platform": "linux",
+  "arch": "x64",
+  "archive": "release.tar.gz",
+  "sizeBytes": 4878115,
+  "sha256": "164d550c2e795e4c68e1131ab3f70f87b8c5c8d047e5c2904e1cb5ad260d2907",
+  "publicConfigSha256": {
+    "NEXT_PUBLIC_RECAPTCHA_SITE_KEY": "7c5325217329a2e8847d34e36a6d2af5e5122a32826fcaabd93b7eb56c28f88a"
+  },
+  "workflowRunId": "44418765898",
+  "transport": {
+    "algorithm": "AES-256-GCM",
+    "wrap": "RSA-OAEP-SHA256",
+    "file": "release.tar.gz.enc",
+    "sha256": "b8f9389baaf1cb8cf345e6c5fb28b84a764567c5ab22f6a3f3578cebf20e6321",
+    "sizeBytes": 4878115,
+    "ivBase64": "KnX7hsDvYOJNuZq3",
+    "tagBase64": "IwoAs58SelMPwcfBODTRyg==",
+    "serverWrappedKeyBase64": "gx3EneRyxAEAbASyAkMUsYaMiQ5akZioADmfgQpRA3iG1FFPQrcmZmGpzA4Zr+Uh7htlPpqhDp8rWm7g6KHAdp3PLrxS9q82UZ4lEhgCgyKHlHIl5gQKg16T5NDA5eq2gmLd3zM8El60mbVUj0HbYHxe63vHkUzeSiLivQC2NiR+Z3JalWMwaPPb4tN1FdkA8S8A7dUyuajWZJ7kHOag22lFb20Zl5DPpVwKSmD/X7dZFiGWe0E4Fqk0etLqo3GI/LxolLQAFl0PbRVp12GYi2Bk5QlnoGNbUZm7Hp5MkabmQDIM6KBiOO+dRfDPF7CwIayFRQlsJKcJOaTVrfP8Icclyr/kq7QQfURBZx/ZFwUPSFayXPnho4ij/XJN2cUxOU2Lmk6Kh/SQbMNyd2PEbJXJi9FO1SLtwPbJcoom8nYtifpBWahk0XcU81Je/vS52h210bD+QR+xrMGY0aOhD4JbjAJPxOvvJV7BcoNQv2EEI0DHCNd9Ijs1PIRI9OrM",
+    "serverPublicKeySha256": "49fdcd0d2cb9dce16ecc323f4ba1ae2e860e9d648ee23eb3ec1f4a09aac40869",
+    "localWrappedKeyBase64": "npcmqHlnVRYNII22fYFzmwJfq2r/Y0v/utKWiFJrEtDtIF7XsF60z6ysXQlOOU/sRYULbYOMqbDtVTvcYhPQpQkQIl7uwv7pyKJFol0MntCN5mb5B5Lg3OL7HSvHa3aZ52dg4WFEhHPkj/393Z3KXS/pL74YUKrt9SxHfKZaASjrAzdaTaE0x6KO86BQKSvSLV/MqIoU57u+Y9l3L9Rhymil/q0mL7HwgelTA9Nnuky+/7gPJnQxK7SEZQ2+QDkbsMhp4HO2Y71NNuP9iJp5eFxhLPzEo3N9aOaGbH4lHhe52ZlEDc4HjB1tefOkCaHPkv4ZBAHraepVcoKHkJRFeUskeXMvU4+5YWxKv5h9WXS+52abrzerb5fhfM840uANOgVekTvQg+2Ql+/lap3VuRIH91UnmGtj0j5Qg1jq0vfnwc9OK3RiEE7/edl8K0j0IZ+zEBmVb6aP/H/eLyKtvquyfKehfHn4pabe5aE0f1bNBeCobzWkIO8lG5Y1xRBl"
+  }
+}

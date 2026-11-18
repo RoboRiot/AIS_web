@@ -203,8 +203,114 @@ const validationError = (payload) => {
   return "";
 };
 
+const acceptanceTime = (record) => {
+  const stored = record.analytics?.acceptedAtMs;
+  if (Number.isSafeInteger(stored) && stored > 0) return stored;
+  const original = record.createdAt?.toMillis?.() ?? record.createdAt?.toDate?.().getTime();
+  return Number.isSafeInteger(original) && original > 0 ? original : null;
+};
+
+// Repair only the same accepted request. Retry context must never replace its
+// original source, classification, consent, acceptance time, or conversion proof.
+async function recordAcceptedAnalytics({ db, requestReference, eventReference, leadHash, verifiedAnalytics }) {
+  if (!verifiedAnalytics) return;
+  await db.runTransaction(async (transaction) => {
+    const saved = await transaction.get(requestReference);
+    if (!saved.exists) return;
+    const original = saved.data();
+    const analytics = original.analytics || {};
+    const acceptedAt = acceptanceTime(original);
+    // Legacy website records can recover first-party counts from their original
+    // metadata. They never acquire conversion proof from a later submission.
+    if (original.source !== "ais_website" || !original.analytics || analytics.productionEligible === false || !acceptedAt) return;
+    const existingEvent = await transaction.get(eventReference);
+    if (existingEvent.exists) {
+      if (analytics.openAiConversion) transaction.update(requestReference, { "analytics.openAiConversion": FieldValue.delete() });
+      return;
+    }
+    const date = new Date(acceptedAt).toISOString().slice(0, 10);
+    const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
+    const funnelReference = db.collection("WebsiteLeadFunnels").doc(leadHash);
+    const dailySnapshot = await transaction.get(dailyReference);
+    const funnelSnapshot = await transaction.get(funnelReference);
+    const formType = getBusinessFormType({ formType: "service_request", ...original });
+    const intent = {
+      businessCategory: original.businessCategory || "service",
+      modality: original.modality || "unknown",
+      intentSource: original.intentSource || "form_selection",
+      intentReviewStatus: original.intentReviewStatus || "unreviewed",
+    };
+    const sourcePage = cleanPath(analytics.sourcePage || "/service-request");
+    const createdAt = original.createdAt || Timestamp.fromMillis(acceptedAt);
+    const conversion = analytics.productionEligible === true ? analytics.openAiConversion : null;
+    transaction.set(eventReference, {
+      ...(conversion ? { openAiConversion: conversion } : {}),
+      eventType: "form_submit", measurement: analytics.measurement || {}, date, path: sourcePage,
+      properties: {
+        form_type: formType, selected_form_type: "service_request", business_category: intent.businessCategory,
+        modality: intent.modality, context: original.requestNumber || "", confirmed_by: "service_request_api",
+        lead_id: leadHash, acquisition_source: analytics.acquisitionSource || "unknown",
+        landing_path: analytics.landingPath || "",
+      },
+      formType, selectedFormType: "service_request", ...intent,
+      referrerHost: analytics.referrerHost || "direct", visitorHash: analytics.visitorHash || null,
+      sessionHash: analytics.sessionHash || null, browser: "unknown", device: "unknown",
+      country: original.trafficCountry || "unknown", utm: analytics.utm || {},
+      clickIdPresent: analytics.clickIdPresent || false, acquisitionSource: analytics.acquisitionSource || "unknown",
+      landingPath: cleanPath(analytics.landingPath), analyticsVersion: 3, trafficClass: "human",
+      aggregateVersion: null, createdAt, clientOccurredAt: "",
+      productionVerification: analytics.productionEligible === true ? "original_request" : "legacy_unknown",
+      expiresAt: Timestamp.fromMillis(acceptedAt + 90 * 24 * 60 * 60 * 1000),
+    });
+    transaction.set(funnelReference, {
+      formType, selectedFormType: "service_request", ...intent, source: "service_request_page", path: sourcePage,
+      acquisitionSource: analytics.acquisitionSource || "unknown", landingPath: cleanPath(analytics.landingPath),
+      utm: analytics.utm || {}, clickIdPresent: analytics.clickIdPresent || false,
+      country: original.trafficCountry || "unknown", reviewFlags: original.reviewFlags || [],
+      sessionHash: analytics.sessionHash || null, visitorHash: analytics.visitorHash || null,
+      milestones: { form_submit: true }, milestoneDates: { form_submit: date },
+      leadDocumentId: requestReference.id,
+      qualificationStatus: funnelSnapshot.get("qualificationStatus") || "unreviewed",
+      measurement: analytics.measurement || {},
+      createdAt: funnelSnapshot.get("createdAt") || createdAt, updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    if (analytics.openAiConversion) transaction.update(requestReference, { "analytics.openAiConversion": FieldValue.delete() });
+    if (funnelSnapshot.get("milestones.form_submit")) return;
+    if (dailySnapshot.exists) {
+      transaction.update(dailyReference, {
+        "totals.form_submit": FieldValue.increment(1), "humanTotals.form_submit": FieldValue.increment(1),
+        [`forms.${formType}.form_submit`]: FieldValue.increment(1), [`humanForms.${formType}.form_submit`]: FieldValue.increment(1),
+        totalEvents: FieldValue.increment(1), humanTotalEvents: FieldValue.increment(1), updatedAt: FieldValue.serverTimestamp(),
+      });
+    } else {
+      transaction.set(dailyReference, {
+        date, totalEvents: 1, humanTotalEvents: 1, totals: { form_submit: 1 }, humanTotals: { form_submit: 1 },
+        forms: { [formType]: { form_submit: 1 } }, humanForms: { [formType]: { form_submit: 1 } },
+        createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  });
+}
+
+async function acceptedResponse({ db, requestReference, eventReference, leadHash, original, analytics, verifiedAnalytics, duplicate }) {
+  const formType = getBusinessFormType({ formType: "service_request", ...original });
+  try {
+    await recordAcceptedAnalytics({ db, requestReference, eventReference, leadHash, verifiedAnalytics });
+    await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
+      allowed: canMeasureOpenAiLead({ analytics, formType, productionEligible: verifiedAnalytics }) });
+  } catch {
+    // Accepted service requests and their attachments survive measurement outages.
+    console.error("Accepted service request measurement deferred");
+  }
+  return NextResponse.json({ ok: true, duplicate, requestId: requestReference.id,
+    requestNumber: original.requestNumber, analyticsLeadId: leadHash, formType,
+    businessCategory: original.businessCategory || "service", modality: original.modality || "unknown" },
+  { status: duplicate ? 200 : 201 });
+}
+
 export async function POST(request) {
   const uploadedPaths = [];
+  let preserveUploads = false;
   try {
     if (!isTrustedOrigin(request)) return fail("Invalid submission origin.", 403);
 
@@ -282,23 +388,8 @@ export async function POST(request) {
     const verifiedAnalytics = isProductionAnalyticsRequest(request);
     const existingRequest = await requestReference.get();
     if (existingRequest.exists) {
-      await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
-        allowed: canMeasureOpenAiLead({ analytics,
-          formType: getBusinessFormType({ formType: "service_request", ...existingRequest.data() }),
-          productionEligible: verifiedAnalytics }) });
-      return NextResponse.json(
-        {
-          ok: true,
-          duplicate: true,
-          analyticsLeadId: leadHash,
-          requestId: requestReference.id,
-          requestNumber: existingRequest.get("requestNumber"),
-          formType: getBusinessFormType({ formType: "service_request", ...existingRequest.data() }),
-          businessCategory: existingRequest.get("businessCategory") || "service",
-          modality: existingRequest.get("modality") || "unknown",
-        },
-        { status: 200 }
-      );
+      return acceptedResponse({ db, requestReference, eventReference, leadHash, original: existingRequest.data(),
+        analytics, verifiedAnalytics, duplicate: true });
     }
     const requestNumber = `SR-${requestReference.id.slice(0, 8).toUpperCase()}`;
     const bucket = getAdminBucket();
@@ -364,7 +455,10 @@ export async function POST(request) {
 
     const intent = classifyLeadIntent("service_request", `${payload.issueTitle || ""} ${payload.description || ""}`);
     const reportingFormType = getBusinessFormType(intent);
-    await requestReference.set({
+    const acceptedAtMs = Date.now();
+    const openAiConversion = createOpenAiConversion({ analytics, formType: reportingFormType,
+      productionEligible: verifiedAnalytics, leadId, sourcePage: analytics.sourcePage || "/service-request", now: acceptedAtMs });
+    const original = {
       ...payload,
       ...intent,
       selectedFormType: "service_request",
@@ -383,6 +477,9 @@ export async function POST(request) {
       magmo: null,
       processing: null,
       analytics: {
+        acceptedAtMs,
+        productionEligible: verifiedAnalytics,
+        ...(openAiConversion ? { openAiConversion } : {}),
         acquisitionSource: analytics.acquisitionSource,
         landingPath: cleanPath(analytics.landingPath),
         sourcePage: cleanPath(analytics.sourcePage),
@@ -401,136 +498,36 @@ export async function POST(request) {
       },
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
-    });
+    };
 
-    if (verifiedAnalytics) {
-      try {
-        const now = new Date();
-        const date = now.toISOString().slice(0, 10);
-        const dailyReference = db.collection("WebsiteAnalyticsDaily").doc(date);
-        const funnelReference = db.collection("WebsiteLeadFunnels").doc(leadHash);
-        const openAiConversion = createOpenAiConversion({ analytics, formType: reportingFormType,
-          productionEligible: verifiedAnalytics, leadId, sourcePage: analytics.sourcePage || "/service-request",
-          now: now.getTime() });
-        const sessionHash = analytics.sessionId
-          ? hashIdentifier(analytics.sessionId, "website-session")
-          : null;
-        const visitorHash = analytics.visitorId
-          ? hashIdentifier(analytics.visitorId, "website-visitor")
-          : null;
-
-        await db.runTransaction(async (transaction) => {
-          const dailySnapshot = await transaction.get(dailyReference);
-          const funnelSnapshot = await transaction.get(funnelReference);
-          const existingEvent = await transaction.get(eventReference);
-          const conversion = existingEvent.get("openAiConversion") || openAiConversion;
-          const shouldAggregate = !funnelSnapshot.get("milestones.form_submit");
-          transaction.set(eventReference, {
-            ...(conversion ? { openAiConversion: conversion } : {}),
-            eventType: "form_submit",
-            measurement: analytics.measurement,
-            date,
-            path: cleanPath(analytics.sourcePage || "/service-request"),
-            properties: {
-              form_type: reportingFormType,
-              selected_form_type: "service_request",
-              business_category: intent.businessCategory,
-              modality: intent.modality,
-              context: requestNumber,
-              confirmed_by: "service_request_api",
-              lead_id: leadHash,
-              acquisition_source: analytics.acquisitionSource,
-              landing_path: analytics.landingPath || "",
-            },
-            formType: reportingFormType,
-            selectedFormType: "service_request",
-            ...intent,
-            referrerHost: analytics.referrerHost || "direct",
-            visitorHash,
-            sessionHash,
-            browser: "unknown",
-            device: "unknown",
-            country: trafficCountry,
-            utm: analytics.utm,
-            clickIdPresent: analytics.clickIdPresent,
-            acquisitionSource: analytics.acquisitionSource,
-            landingPath: cleanPath(analytics.landingPath),
-            analyticsVersion: 3,
-            trafficClass: "human",
-            aggregateVersion: null,
-            createdAt: FieldValue.serverTimestamp(),
-            clientOccurredAt: "",
-            expiresAt: Timestamp.fromMillis(now.getTime() + 90 * 24 * 60 * 60 * 1000),
-          });
-          transaction.set(
-            funnelReference,
-            {
-              formType: reportingFormType,
-              selectedFormType: "service_request",
-              ...intent,
-              source: "service_request_page",
-              path: cleanPath(analytics.sourcePage || "/service-request"),
-              acquisitionSource: analytics.acquisitionSource,
-              landingPath: cleanPath(analytics.landingPath),
-              utm: analytics.utm,
-              clickIdPresent: analytics.clickIdPresent,
-              country: trafficCountry,
-              reviewFlags,
-              sessionHash,
-              visitorHash,
-              milestones: { form_submit: true },
-              milestoneDates: { form_submit: date },
-              leadDocumentId: requestReference.id,
-              measurement: analytics.measurement,
-              createdAt: funnelSnapshot.exists
-                ? funnelSnapshot.get("createdAt") || FieldValue.serverTimestamp()
-                : FieldValue.serverTimestamp(),
-              updatedAt: FieldValue.serverTimestamp(),
-            },
-            { merge: true }
-          );
-          if (!shouldAggregate) return;
-          if (dailySnapshot.exists) {
-            transaction.update(dailyReference, {
-              "totals.form_submit": FieldValue.increment(1),
-              "humanTotals.form_submit": FieldValue.increment(1),
-              [`forms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
-              [`humanForms.${reportingFormType}.form_submit`]: FieldValue.increment(1),
-              totalEvents: FieldValue.increment(1),
-              humanTotalEvents: FieldValue.increment(1),
-              updatedAt: FieldValue.serverTimestamp(),
-            });
-          } else {
-            transaction.set(dailyReference, {
-              date,
-              totalEvents: 1,
-              humanTotalEvents: 1,
-              totals: { form_submit: 1 },
-              humanTotals: { form_submit: 1 },
-              forms: { [reportingFormType]: { form_submit: 1 } },
-              humanForms: { [reportingFormType]: { form_submit: 1 } },
-              createdAt: FieldValue.serverTimestamp(),
-              updatedAt: FieldValue.serverTimestamp(),
-            });
-          }
-        });
-      } catch (analyticsError) {
-        console.error("Service request analytics failed:", analyticsError);
+    let accepted = original;
+    let duplicate = false;
+    try {
+      // A duplicate or concurrent retry cannot overwrite the accepted request.
+      await requestReference.create(original);
+      preserveUploads = true;
+    } catch (creationError) {
+      let confirmed;
+      try { confirmed = await requestReference.get(); } catch {
+        // A timed-out create may have committed. Never delete possibly referenced
+        // attachments while the acceptance outcome is unknown.
+        preserveUploads = true;
+        throw creationError;
       }
+      if (!confirmed.exists) throw creationError;
+      accepted = confirmed.data();
+      duplicate = true;
+      preserveUploads = true;
+      const referenced = new Set((accepted.files || []).map(file => file.storagePath));
+      await Promise.allSettled(uploadedPaths.filter(file => !referenced.has(file))
+        .map(file => bucket.file(file).delete({ ignoreNotFound: true })));
     }
 
-    await deliverOpenAiConversion({ db, eventReference, oppref: analytics.openAiClickId,
-      allowed: canMeasureOpenAiLead({ analytics, formType: reportingFormType,
-        productionEligible: verifiedAnalytics }) });
-
-    return NextResponse.json(
-      { ok: true, requestId: requestReference.id, requestNumber, analyticsLeadId: leadHash,
-        formType: reportingFormType, businessCategory: intent.businessCategory, modality: intent.modality },
-      { status: 201 }
-    );
+    return acceptedResponse({ db, requestReference, eventReference, leadHash, original: accepted,
+      analytics, verifiedAnalytics, duplicate });
   } catch (error) {
     console.error("Service request submission failed:", error);
-    if (uploadedPaths.length) {
+    if (uploadedPaths.length && !preserveUploads) {
       try {
         const bucket = getAdminBucket();
         await Promise.all(

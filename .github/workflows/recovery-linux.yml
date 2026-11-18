@@ -86,7 +86,24 @@ jobs:
           }
           console.log('Production-host redirect integration passed');
           JS
-          "${isolated[@]}" node scripts/verify-release.mjs http://localhost:3098 "$RELEASE" "$RUNNER_TEMP/candidate-http.json"
+          # CI has public configuration only. Dynamic catalog verification stays
+          # in the private stage; exercise all seven bounded service images here.
+          "${isolated[@]}" node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import {getServiceImages} from './app/data/serviceImages.js';
+          let checked = 0;
+          for (const image of [...getServiceImages({modality:'mri'}), ...getServiceImages({modality:'ct'})]) {
+            for (const width of [640,1080,1920,3840]) {
+              const query = new URLSearchParams({url:image.src,w:String(width),q:'75'});
+              const r = await fetch('http://127.0.0.1:3098/_next/image?'+query,{signal:AbortSignal.timeout(30000)});
+              assert.equal(r.status,200,image.src+' width '+width);
+              assert.match(r.headers.get('content-type'),/^image\//);
+              assert((await r.arrayBuffer()).byteLength > 0);
+              checked++;
+            }
+          }
+          console.log(JSON.stringify({coldServiceImageVariants:checked}));
+          JS
           "${isolated[@]}" node scripts/test-local-runtime-memory.mjs http://127.0.0.1:3098 10000 | tee "$RUNNER_TEMP/runtime-requests.log"
           node - "$RUNNER_TEMP/runtime-memory.log" <<'JS'
           const fs = require('fs'), assert = require('assert/strict');

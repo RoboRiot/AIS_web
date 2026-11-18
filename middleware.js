@@ -220,7 +220,10 @@ export function middleware(request) {
   if (pathname === "/Parts") {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/parts";
-    return respond(NextResponse.redirect(redirectUrl, 308));
+    // Node middleware can expose an internal localhost origin in nextUrl.
+    return respond(new NextResponse(null, { status: 308,
+      headers: { Location: `${redirectUrl.pathname}${redirectUrl.search}` },
+    }));
   }
 
   if (pathname === "/product-detail") {
@@ -240,7 +243,9 @@ export function middleware(request) {
       redirectUrl.pathname = "/parts";
     }
     redirectUrl.search = "";
-    return respond(NextResponse.redirect(redirectUrl, 308));
+    return respond(new NextResponse(null, { status: 308,
+      headers: { Location: redirectUrl.pathname },
+    }));
   }
 
   if (

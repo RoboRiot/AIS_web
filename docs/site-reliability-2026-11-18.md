@@ -2,6 +2,18 @@
 
 ## Memory follow-up and cutover hold
 
+The approved staging run caught an internal-origin regression before cutover:
+Node middleware could emit localhost in the Location header for /Parts and
+/product-detail. Those same-host redirects now use relative Location values.
+The regression test fails on the prior code, and the HTTP gate now also sends
+the production Host and forwarded protocol to the loopback candidate. This
+must pass before any application switch. No public traffic was switched during
+the failed preflight attempts.
+
+Current rollback baseline, refreshed after the separate tracking deployment:
+94deaa7391cc-linux-20261118 at /root/ais-recovery-94deaa7391cc-20261118/app,
+PM2 AIS_web_recovery. The older bc39 paths and readings below are historical.
+
 Fresh read-only inspection at 22:03 UTC confirmed the actual Next process is
 Node v22.23.4, Next 15.5.27, PID 86022, not the shell's default Node v20.18.2.
 It had 307848 KiB RSS and 354432 KiB swap. The PM2 wrapper was still PID 86010
@@ -62,9 +74,9 @@ candidate. These are Windows local results, not Linux deployment evidence.
    over the following day. A restart guard is backup protection, not the fix.
 6. Roll back immediately on startup/identity/route/form-render/asset failure:
    stop the new process, restart the retained old PM2 definition from
-   `/root/ais-badge-bc39bcffbdf1-20261116/app` on port 3000 with its original
+   `/root/ais-recovery-94deaa7391cc-20261118/app` on port 3000 with its original
    release/env and verified Node binary, then confirm public old release
-   `bc39bcffbdf1-linux-20261116`. No database migration is involved. Do not delete
+   `94deaa7391cc-linux-20261118`. No database migration is involved. Do not delete
    either artifact or change the saved PM2 boot state until service is verified.
 
 The 350 MiB staging threshold was not met at the latest reading (308 MiB).

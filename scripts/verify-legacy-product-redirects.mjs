@@ -68,6 +68,19 @@ for (const source of guarded404s) {
   await response.arrayBuffer();
   assert.equal(response.status, 404, `${source}: must not redirect to an unrelated item`);
 }
+if (["127.0.0.1", "localhost"].includes(base.hostname)) {
+  for (const [source, destination] of [["/Parts?utm_source=proxy-check", "/parts?utm_source=proxy-check"],
+    ["/product-detail?MRI%20Coil%20123", "/products/mri-coil-123"]]) {
+    const response = await fetch(new URL(source, base), { redirect: "manual", headers: {
+      Host: "advancedimagingparts.com", "X-Forwarded-Proto": "https", "User-Agent": "AIS-Release-Verification/1.0",
+    } });
+    await response.arrayBuffer();
+    assert.equal(response.status, 308);
+    const target = new URL(response.headers.get("location"), "https://advancedimagingparts.com");
+    assert.equal(target.origin, "https://advancedimagingparts.com", "Internal origin escaped the reverse proxy");
+    assert.equal(`${target.pathname}${target.search}`, destination);
+  }
+}
 console.log(JSON.stringify({ checkedAt: new Date().toISOString(), base: base.origin,
   productRedirects: verifiedLegacyProductRoutes.length, paginationRedirects: 3,
   additionalRedirects: additionalRedirects.length, guarded404s: guarded404s.length, checks }, null, 2));

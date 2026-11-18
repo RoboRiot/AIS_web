@@ -1,4 +1,4 @@
-name: Build AIS memory reliability release 82838bf
+name: Build AIS memory reliability release 2e4b31f
 on:
   push:
     branches: [codex/memory-linux-build-82838bf]
@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      SOURCE_REVISION: 82838bfc251a1fd9d31485f1460219412694b4a9
-      RELEASE: 82838bfc251a-linux-20261118
+      SOURCE_REVISION: 2e4b31fc04a5a5a0784ea790faabb7b6e591d5d2
+      RELEASE: 2e4b31fc04a5-linux-20261118
       LOCK_SHA256: 942c074a7c95baca7436fb72b07f275f2da9b08c4b3e95293c3f3fdd89a0f5d5
       ROUTE_SHA256: 16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5
       RECOVERY_TEST_SHA256: 2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b
@@ -19,7 +19,7 @@ jobs:
       - name: Check out only the pinned source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 82838bfc251a1fd9d31485f1460219412694b4a9
+          ref: 2e4b31fc04a5a5a0784ea790faabb7b6e591d5d2
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -75,6 +75,16 @@ jobs:
             if curl --silent --fail -A 'Mozilla/5.0 AIS local-only check' http://127.0.0.1:3098/contact > /dev/null; then break; fi
             sleep 1
           done
+          "${isolated[@]}" node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          for (const [route, expected] of [['/Parts?utm_source=proxy-check','/parts?utm_source=proxy-check'],['/product-detail?MRI%20Coil%20123','/products/mri-coil-123']]) {
+            const r = await fetch('http://127.0.0.1:3098'+route,{redirect:'manual',headers:{host:'advancedimagingparts.com','x-forwarded-proto':'https','user-agent':'AIS-Release-Verification/1.0'}});
+            await r.arrayBuffer(); assert.equal(r.status,308);
+            const target = new URL(r.headers.get('location'),'https://advancedimagingparts.com');
+            assert.equal(target.origin,'https://advancedimagingparts.com'); assert.equal(target.pathname+target.search,expected);
+          }
+          console.log('Production-host redirect integration passed');
+          JS
           "${isolated[@]}" node scripts/test-local-runtime-memory.mjs http://127.0.0.1:3098 10000 | tee "$RUNNER_TEMP/runtime-requests.log"
           node - "$RUNNER_TEMP/runtime-memory.log" <<'JS'
           const fs = require('fs'), assert = require('assert/strict');
@@ -122,7 +132,7 @@ jobs:
               assert re.search(r"^# fail 0$", text, re.M), "test failures"
               return int(re.findall(r"^# tests (\d+)$", text, re.M)[-1])
           test_counts = {"repository":count_tests("repository-tests.log"), "recovery":count_tests("recovery-tests.log")}
-          assert test_counts == {"repository":219, "recovery":9}, "unexpected exact candidate test coverage"
+          assert test_counts == {"repository":221, "recovery":9}, "unexpected exact candidate test coverage"
           manifest = {"dependencyLockSha256":os.environ["LOCK_SHA256"], "sourceFileSha256":{"app/api/service-requests/route.js":os.environ["ROUTE_SHA256"], "tests/serviceRequestRecovery.test.mjs":os.environ["RECOVERY_TEST_SHA256"]}, "checks":{"tests":test_counts,"lint":"passed","publicSitemapDocuments":84}, "release":os.environ["RELEASE"], "sourceRevision":os.environ["SOURCE_REVISION"], "nodeVersion":"v22.23.4", "platform":"linux", "arch":"x64", "archive":"release.tar.gz", "sizeBytes":a.stat().st_size, "sha256":hashlib.sha256(a.read_bytes()).hexdigest(), "publicConfigSha256":{"NEXT_PUBLIC_RECAPTCHA_SITE_KEY":os.environ["PUBLIC_KEY_DIGEST"]}, "workflowRunId":os.environ["GITHUB_RUN_ID"]}
           (d / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
           print(json.dumps(manifest))
@@ -131,7 +141,7 @@ jobs:
       - name: Retain the reviewed release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ais-memory-linux-82838bf
+          name: ais-memory-linux-2e4b31f
           path: |
             ${{ runner.temp }}/ais-artifact/release.tar.gz.enc
             ${{ runner.temp }}/ais-artifact/manifest.json

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { request as httpRequest } from "node:http";
 import { verifiedLegacyProductRoutes } from "../app/data/verifiedLegacyProductRoutes.mjs";
 import { verificationRequest } from "./lib/site-verification.mjs";
 import { LEGACY_TRAILER_REDIRECTS } from "../app/data/seoRoutes.mjs";
@@ -71,12 +72,17 @@ for (const source of guarded404s) {
 if (["127.0.0.1", "localhost"].includes(base.hostname)) {
   for (const [source, destination] of [["/Parts?utm_source=proxy-check", "/parts?utm_source=proxy-check"],
     ["/product-detail?MRI%20Coil%20123", "/products/mri-coil-123"]]) {
-    const response = await fetch(new URL(source, base), { redirect: "manual", headers: {
-      Host: "advancedimagingparts.com", "X-Forwarded-Proto": "https", "User-Agent": "AIS-Release-Verification/1.0",
-    } });
-    await response.arrayBuffer();
-    assert.equal(response.status, 308);
-    const target = new URL(response.headers.get("location"), "https://advancedimagingparts.com");
+    // Node fetch ignores a supplied Host header; use the HTTP client for this proxy fixture.
+    const response = await new Promise((resolve, reject) => {
+      const request = httpRequest(new URL(source, base), { headers: {
+        Host: "advancedimagingparts.com", "X-Forwarded-Proto": "https", "User-Agent": "AIS-Release-Verification/1.0",
+      } }, response => { response.resume(); response.on("end", () => resolve(response)); });
+      request.setTimeout(30000, () => request.destroy(new Error("Proxy-host verification timed out")));
+      request.on("error", reject);
+      request.end();
+    });
+    assert.equal(response.statusCode, 308);
+    const target = new URL(response.headers.location, "https://advancedimagingparts.com");
     assert.equal(target.origin, "https://advancedimagingparts.com", "Internal origin escaped the reverse proxy");
     assert.equal(`${target.pathname}${target.search}`, destination);
   }

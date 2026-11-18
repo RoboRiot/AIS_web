@@ -13,7 +13,7 @@ if(mode==='encrypt'){
   const plain=fs.readFileSync(p('release.tar.gz'));assert.equal(sha(plain),m.sha256);assert.equal(plain.length,m.sizeBytes);
   const data=Buffer.concat([cipher.update(plain),cipher.final()]);
   m.transport={algorithm:'AES-256-GCM',wrap:'RSA-OAEP-SHA256',file:'release.tar.gz.enc',sha256:sha(data),sizeBytes:data.length,ivBase64:iv.toString('base64'),tagBase64:cipher.getAuthTag().toString('base64'),serverWrappedKeyBase64:wrap('server',key),serverPublicKeySha256:sha(Buffer.from(publics.server,'base64')),localWrappedKeyBase64:wrap('local',key)};
-  assert.equal(m.transport.serverPublicKeySha256,'7f7ad2cf13abfd9a86d23c1fc1b1aff49a51a8da5a4971490843a5972da87e92');
+  assert.equal(m.transport.serverPublicKeySha256,'49fdcd0d2cb9dce16ecc323f4ba1ae2e860e9d648ee23eb3ec1f4a09aac40869');
   fs.writeFileSync(p(m.transport.file),data,{flag:'wx'});fs.writeFileSync(p('manifest.json'),JSON.stringify(m,null,2)+'\n');
   fs.unlinkSync(p('release.tar.gz'));
   assert.deepEqual(fs.readdirSync(directory).sort(),['manifest.json','release.tar.gz.enc']);

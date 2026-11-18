@@ -16,6 +16,9 @@ import {
 } from "./release-config.mjs";
 import { verifyBuildAssets } from "./verify-build-assets.mjs";
 import { verifyBuiltSitemaps } from "./verify-sitemaps.mjs";
+import verifyRuntimeMemoryFixes from "./verify-runtime-memory-fixes.cjs";
+
+verifyRuntimeMemoryFixes();
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);

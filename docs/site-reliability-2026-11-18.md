@@ -1,5 +1,78 @@
 # Website reliability repair - November 18, 2026
 
+## Memory follow-up and cutover hold
+
+Fresh read-only inspection at 22:03 UTC confirmed the actual Next process is
+Node v22.23.4, Next 15.5.27, PID 86022, not the shell's default Node v20.18.2.
+It had 307848 KiB RSS and 354432 KiB swap. The PM2 wrapper was still PID 86010
+with two restarts. There was no NODE_OPTIONS or memory restart limit. Disk free
+remained about 3.2 GB after the approved inactive-cache cleanup; no active files
+were removed. No new production changes occurred during this inspection.
+
+Two framework retention defects were reproduced locally on Next 15.5.29:
+
+- After 10000 requests, the Edge timer manager retained 10000 completed timeout
+  IDs. The supported `runtime: "nodejs"` middleware avoids this sandbox path.
+- The route cache retained 8002 entries while counting only 8033 bytes, omitting
+  URL keys and node overhead. The pinned patch backports upstream Next #96229,
+  including flat string copies and an 8 MiB byte budget. Both CJS and ESM copies
+  are patched. Build and PM2 launch verify normalized SHA-256 hashes so a skipped
+  install hook cannot silently undo this fix. CI explicitly applies the patch.
+
+The regression fails against unpatched Next and passes with the backport.
+After the changes, 100000 local requests completed (20000 contact-page GETs and
+80000 distinct expected 404s, no submissions). Completed sandbox timer count
+stayed zero and the route cache plateaued at approximately 8 MiB with eviction.
+Local instrumentation used forced GC to measure retained heap; it is never a
+production preload. The production crashes prove heap exhaustion, but without
+a production heap dump these reproduced defects cannot be claimed to be the
+exclusive retained-object cause. Post-release monitoring is still required.
+
+The existing 218 tests, lint, build, 84 sitemap documents / 7983 products,
+and the 81-page / 991-resource HTTP release gate passed for the local memory
+candidate. These are Windows local results, not Linux deployment evidence.
+
+### Deployment and rollback plan to approve before cutover
+
+1. Build the exact committed candidate on a separate Linux runner using Node
+   22.23.4. Do not build on the 1 GB production server. Use only public build
+   configuration/catalog inputs; keep production secrets on the server. Verify
+   dependency patch hashes, full tests, build, sitemap and artifact checksum.
+2. With fresh console authorization, stage the immutable Linux release outside
+   the active app, preserve existing environment permissions, and copy missing
+   content-hashed static assets from the current release. Verify free disk and
+   artifact size before extraction; preserve the complete current app and PM2
+   launch metadata privately for rollback. No additional cleanup is implicit.
+3. Start a short-lived candidate on loopback port 3001 only if fresh available
+   RAM is at least 350 MiB and swap is not pressured; otherwise do not run two
+   copies together. Verify candidate identity, redirects, rendered contact and
+   trailer pages, sitemaps and assets without sending leads. No production load
+   test, heap dump or inspector endpoint.
+4. Show the exact staged path, release ID, Node binary and final commands for
+   confirmation. During cutover stop the old `AIS_web_badge` wrapper and start
+   the candidate directly under PM2 on the existing loopback port 3000. Keep
+   nginx routing, TLS, DNS and SSH settings unchanged. Allow a brief restart
+   interruption; do not promise zero downtime. The new PM2 config pins Node
+   22.23.4, the release, a 480 MiB heap ceiling and 450 MB RSS restart guard.
+   A once-per-minute process-only telemetry line records heap/RSS/uptime without
+   customer data, request details, forced GC or production inspector exposure.
+5. Verify live HTTPS release identity plus the full HTTP and desktop/mobile
+   browser gates immediately. Save the new PM2 boot state only after passing.
+   Observe actual Node RSS, swap, restarts and error responses after cutover and
+   over the following day. A restart guard is backup protection, not the fix.
+6. Roll back immediately on startup/identity/route/form-render/asset failure:
+   stop the new process, restart the retained old PM2 definition from
+   `/root/ais-badge-bc39bcffbdf1-20261116/app` on port 3000 with its original
+   release/env and verified Node binary, then confirm public old release
+   `bc39bcffbdf1-linux-20261116`. No database migration is involved. Do not delete
+   either artifact or change the saved PM2 boot state until service is verified.
+
+The 350 MiB staging threshold was not met at the latest reading (308 MiB).
+If it remains below that threshold, hold cutover for approval of a short
+stop/start validation window or a separately priced capacity increase; do not
+silently resize the Droplet or consume the rollback reserve. Current authority
+covers inspection only, not these production writes. Ad budgets remain untouched.
+
 ## Findings, not assumptions
 
 - The public site is Droplet 417833875, 164.92.111.36. Do not deploy to the

@@ -1,5 +1,12 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
+require("./scripts/verify-runtime-memory-fixes.cjs")();
+
+const interpreter = fs.realpathSync(process.env.AIS_NODE_BINARY || process.execPath);
+if (execFileSync(interpreter, ["--version"], { encoding: "utf8" }).trim() !== "v22.23.4") {
+  throw new Error("Set AIS_NODE_BINARY to the verified Node v22.23.4 executable");
+}
 
 const cwd = fs.realpathSync(process.env.AIS_APP_ROOT || __dirname);
 const release = process.env.AIS_RELEASE_ID;
@@ -14,9 +21,9 @@ module.exports = { apps: [{
   cwd,
   // Supervise Node itself. A bash/npm wrapper hides the child process's memory.
   script: path.join(cwd, "node_modules", "next", "dist", "bin", "next"),
-  interpreter: process.execPath,
+  interpreter,
   args: ["start", "-H", "127.0.0.1", "-p", String(port)],
-  node_args: ["--max-old-space-size=480"],
+  node_args: ["--max-old-space-size=480", "--require", path.join(cwd, "scripts", "runtime-memory-telemetry.cjs")],
   exec_mode: "fork",
   instances: 1,
   autorestart: true,
@@ -24,5 +31,5 @@ module.exports = { apps: [{
   kill_timeout: 10000,
   // Operational guard, not proof that sustained memory growth is repaired.
   max_memory_restart: "450M",
-  env: { NODE_ENV: "production", AIS_RELEASE_ID: release, AIS_NEXT_DIST_DIR: dist },
+  env: { NODE_ENV: "production", AIS_RELEASE_ID: release, AIS_NEXT_DIST_DIR: dist, AIS_MEMORY_TELEMETRY: "1" },
 }] };

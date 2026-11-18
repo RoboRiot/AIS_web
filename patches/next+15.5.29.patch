@@ -1,0 +1,102 @@
+diff --git a/node_modules/next/dist/esm/server/lib/lru-cache.js b/node_modules/next/dist/esm/server/lib/lru-cache.js
+index a04a987..ec75fce 100644
+--- a/node_modules/next/dist/esm/server/lib/lru-cache.js
++++ b/node_modules/next/dist/esm/server/lib/lru-cache.js
+@@ -96,7 +96,7 @@
+    * - O(1) for uniform item sizes
+    * - O(k) where k is the number of items evicted (can be O(N) for variable sizes)
+    */ set(key, value) {
+-        const size = (this.calculateSize == null ? void 0 : this.calculateSize.call(this, value)) ?? 1;
++        const size = (this.calculateSize == null ? void 0 : this.calculateSize.call(this, value, key)) ?? 1;
+         if (size <= 0) {
+             throw Object.defineProperty(new Error(`LRUCache: calculateSize returned ${size}, but size must be > 0. ` + `Items with size 0 would never be evicted, causing unbounded cache growth.`), "__NEXT_ERROR_CODE", {
+                 value: "E789",
+diff --git a/node_modules/next/dist/esm/server/lib/router-utils/filesystem.js b/node_modules/next/dist/esm/server/lib/router-utils/filesystem.js
+index 6fe5d4d..6136c27 100644
+--- a/node_modules/next/dist/esm/server/lib/router-utils/filesystem.js
++++ b/node_modules/next/dist/esm/server/lib/router-utils/filesystem.js
+@@ -50,12 +50,12 @@ export const buildCustomRoute = (type, item, basePath, caseSensitive)=>{
+     };
+ };
+ export async function setupFsCheck(opts) {
+-    const getItemsLru = !opts.dev ? new LRUCache(1024 * 1024, function length(value) {
++    const getItemsLru = !opts.dev ? new LRUCache(8 * 1024 * 1024, function length(value, key) {
++        const size = 128 + key.length;
+         if (!value) {
+-            // Null entries (negative cache) still need a non-zero size for LRU eviction
+-            return 1;
++            return size;
+         }
+-        return (value.fsPath || '').length + value.itemPath.length + value.type.length;
++        return size + (value.fsPath || '').length + value.itemPath.length + value.type.length;
+     }) : undefined;
+     // routes that have _next/data endpoints (SSG/SSP)
+     const nextDataRoutes = new Set();
+@@ -482,13 +482,13 @@ export async function setupFsCheck(opts) {
+                         fsPath,
+                         locale,
+                         itemsRoot,
+-                        itemPath: curItemPath
++                        itemPath: JSON.parse(JSON.stringify(curItemPath))
+                     };
+-                    getItemsLru == null ? void 0 : getItemsLru.set(itemKey, itemResult);
++                    getItemsLru == null ? void 0 : getItemsLru.set(JSON.parse(JSON.stringify(itemKey)), itemResult);
+                     return itemResult;
+                 }
+             }
+-            getItemsLru == null ? void 0 : getItemsLru.set(itemKey, null);
++            getItemsLru == null ? void 0 : getItemsLru.set(JSON.parse(JSON.stringify(itemKey)), null);
+             return null;
+         },
+         getDynamicRoutes () {
+diff --git a/node_modules/next/dist/server/lib/lru-cache.js b/node_modules/next/dist/server/lib/lru-cache.js
+index 3906e05..2b284a9 100644
+--- a/node_modules/next/dist/server/lib/lru-cache.js
++++ b/node_modules/next/dist/server/lib/lru-cache.js
+@@ -89,7 +89,7 @@ class LRUCache {
+    * - O(1) for uniform item sizes
+    * - O(k) where k is the number of items evicted (can be O(N) for variable sizes)
+    */ set(key, value) {
+-        const size = (this.calculateSize == null ? void 0 : this.calculateSize.call(this, value)) ?? 1;
++        const size = (this.calculateSize == null ? void 0 : this.calculateSize.call(this, value, key)) ?? 1;
+         if (size <= 0) {
+             throw Object.defineProperty(new Error(`LRUCache: calculateSize returned ${size}, but size must be > 0. ` + `Items with size 0 would never be evicted, causing unbounded cache growth.`), "__NEXT_ERROR_CODE", {
+                 value: "E789",
+diff --git a/node_modules/next/dist/server/lib/router-utils/filesystem.js b/node_modules/next/dist/server/lib/router-utils/filesystem.js
+index 027577b..089e3bd 100644
+--- a/node_modules/next/dist/server/lib/router-utils/filesystem.js
++++ b/node_modules/next/dist/server/lib/router-utils/filesystem.js
+@@ -118,12 +118,12 @@ const buildCustomRoute = (type, item, basePath, caseSensitive)=>{
+     };
+ };
+ async function setupFsCheck(opts) {
+-    const getItemsLru = !opts.dev ? new _lrucache.LRUCache(1024 * 1024, function length(value) {
++    const getItemsLru = !opts.dev ? new _lrucache.LRUCache(8 * 1024 * 1024, function length(value, key) {
++        const size = 128 + key.length;
+         if (!value) {
+-            // Null entries (negative cache) still need a non-zero size for LRU eviction
+-            return 1;
++            return size;
+         }
+-        return (value.fsPath || '').length + value.itemPath.length + value.type.length;
++        return size + (value.fsPath || '').length + value.itemPath.length + value.type.length;
+     }) : undefined;
+     // routes that have _next/data endpoints (SSG/SSP)
+     const nextDataRoutes = new Set();
+@@ -550,13 +550,13 @@ async function setupFsCheck(opts) {
+                         fsPath,
+                         locale,
+                         itemsRoot,
+-                        itemPath: curItemPath
++                        itemPath: JSON.parse(JSON.stringify(curItemPath))
+                     };
+-                    getItemsLru == null ? void 0 : getItemsLru.set(itemKey, itemResult);
++                    getItemsLru == null ? void 0 : getItemsLru.set(JSON.parse(JSON.stringify(itemKey)), itemResult);
+                     return itemResult;
+                 }
+             }
+-            getItemsLru == null ? void 0 : getItemsLru.set(itemKey, null);
++            getItemsLru == null ? void 0 : getItemsLru.set(JSON.parse(JSON.stringify(itemKey)), null);
+             return null;
+         },
+         getDynamicRoutes () {

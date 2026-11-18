@@ -278,6 +278,8 @@ export function middleware(request) {
 }
 
 export const config = {
+  // Avoid the Edge sandbox's retained one-shot timers in Next 15 (upstream #96161).
+  runtime: "nodejs",
   matcher: [
     "/robots.txt",
     "/sitemap.xml",

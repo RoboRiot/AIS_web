@@ -23,7 +23,7 @@ module.exports = { apps: [{
   script: path.join(cwd, "node_modules", "next", "dist", "bin", "next"),
   interpreter,
   args: ["start", "-H", "127.0.0.1", "-p", String(port)],
-  node_args: ["--max-old-space-size=480", "--require", path.join(cwd, "scripts", "runtime-memory-telemetry.cjs")],
+  node_args: ["--max-old-space-size=320", "--require", path.join(cwd, "scripts", "runtime-memory-telemetry.cjs")],
   exec_mode: "fork",
   instances: 1,
   autorestart: true,

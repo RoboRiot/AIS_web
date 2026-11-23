@@ -27,6 +27,7 @@ test("PM2 supervises the actual Node process and refuses mismatched build IDs", 
   assert.ok(app.script.endsWith(path.join("next", "dist", "bin", "next")));
   assert.deepEqual(app.args, ["start", "-H", "127.0.0.1", "-p", "3097"]);
   assert.equal(app.max_memory_restart, "450M");
+  assert.ok(app.node_args.includes("--max-old-space-size=320"));
   assert.equal(app.env.AIS_MEMORY_TELEMETRY, "1");
   assert.ok(app.node_args.includes(path.join(root, "scripts", "runtime-memory-telemetry.cjs")));
   writeFileSync(path.join(dist, "BUILD_ID"), "different-release");

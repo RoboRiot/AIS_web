@@ -219,14 +219,35 @@ async function observe() {
   function checkLogs(){for(const state of logStates){const stat=fs.statSync(state.file);if(stat.ino!==state.inode||stat.size<state.offset){state.inode=stat.ino;state.offset=0;}const size=stat.size-state.offset;assert(size<=4*MiB,'Unexpected nginx log growth');if(!size)continue;const handle=fs.openSync(state.file,'r'),buffer=Buffer.alloc(size);try{fs.readSync(handle,buffer,0,size,state.offset);}finally{fs.closeSync(handle);}state.offset=stat.size;const value=buffer.toString();if(state.file.endsWith('/access.log'))assert(!/"\s+5\d\d\s/.test(value),'New nginx 5xx after cutover');else assert(!/connect\(\) failed|upstream prematurely closed|upstream timed out|no live upstreams/.test(value),'New nginx upstream failure');}}
   try{logStates=['/var/log/nginx/access.log','/var/log/nginx/error.log'].map(file=>({file,inode:fs.statSync(file).ino,offset:fs.statSync(file).size}));while(Date.now()-started<1800000){const p=active();assert.equal(p.pid,baseline.pid);assert.equal(p.pm2_env.restart_time,baseline.restarts);assert.equal(p.pm2_env.status,'online');assert.equal(p.pm2_env.AIS_RELEASE_ID,release);assert(p.monit.memory<400*MiB);assert(available()>=150*MiB);assert(disk()>1024**3);samples.push({at:new Date().toISOString(),rssBytes:p.monit.memory,availableBytes:available()});await smoke(3000,release);checkLogs();write('live-progress.json',{started:new Date(started).toISOString(),samples:samples.length,release,latest:samples.at(-1)});await sleep(60000);}
     checkLogs();
-    const errors=fs.readFileSync(stage+'/runtime-error.private.log','utf8');assert(!/FATAL ERROR|heap out of memory|ENOMEM|Unable to generate|Missing Firebase|Unhandled/i.test(errors));
+    checkRuntimeLog(active());
     const result={success:true,release,started:new Date(started).toISOString(),elapsedMs:Date.now()-started,peakRssBytes:Math.max(...samples.map(x=>x.rssBytes)),minAvailableBytes:Math.min(...samples.map(x=>x.availableBytes)),restarts:0,nginx5xx:0,nginxUpstreamErrors:0,samples};write('live-result.json',result,true);console.log(JSON.stringify({...result,samples:samples.length}));
   }catch(error){write('live-failure.json',{at:new Date().toISOString(),reason:error.message});await rollback();throw error;}
 }
+function checkRuntimeLog(p) {
+  assert.equal(p.pm2_env.pm_cwd,app);assert.equal(p.pm2_env.AIS_RELEASE_ID,release);
+  const file=p.pm2_env.pm_err_log_path;
+  assert(path.dirname(file)===stage&&/^runtime-error\.private(?:-\d+)?\.log$/.test(path.basename(file)),'Unexpected runtime log');
+  assert(fs.statSync(file).size<=4*MiB,'Runtime log growth exceeded guard');
+  const errors=fs.readFileSync(file,'utf8');
+  assert(!/FATAL ERROR|heap out of memory|ENOMEM|Unable to generate|Missing Firebase|Unhandled/i.test(errors),'Fatal runtime log entry');
+  return {file,bytes:Buffer.byteLength(errors),fatalEntries:0};
+}
+async function guardRuntime() {
+  const baseline=read('cutover-result.json');let samples=0;
+  try{while(true){
+    if(fs.existsSync(stage+'/live-failure.json')||fs.existsSync(stage+'/rollback-result.json'))return;
+    const p=active();assert.equal(p.pid,baseline.pid);assert.equal(p.pm2_env.restart_time,baseline.restarts);
+    const log=checkRuntimeLog(p);samples++;
+    write('runtime-guard-progress.json',{at:new Date().toISOString(),release,pid:p.pid,samples,...log});
+    if(fs.existsSync(stage+'/live-result.json')){assert(read('live-result.json').success);write('runtime-guard-result.json',{at:new Date().toISOString(),release,success:true,samples,coveredFrom:'Full candidate runtime log since startup',...log},true);return;}
+    await sleep(15000);
+  }}catch(error){write('runtime-guard-failure.json',{at:new Date().toISOString(),reason:error.message});await rollback();throw error;}
+}
 async function finalize() {
   const live=read('live-result.json'),browser=read('browser-acceptance.json');assert(live.success&&live.elapsedMs>=1800000&&live.release===release);assert(browser.release===release&&browser.desktop&&browser.mobile&&browser.publicHttp&&browser.nginxErrors===0);
-  const p=active(),cutover=read('cutover-result.json');assert.equal(p.pid,cutover.pid);assert.equal(p.pm2_env.restart_time,cutover.restarts);await smoke(3000,release);pm2(['save']);
+  assert(read('runtime-guard-result.json').success,'Actual PM2 runtime log guard must pass');
+  const p=active(),cutover=read('cutover-result.json');assert.equal(p.pid,cutover.pid);assert.equal(p.pm2_env.restart_time,cutover.restarts);checkRuntimeLog(p);await smoke(3000,release);pm2(['save']);
   write('finalized.json',{at:new Date().toISOString(),release,source,bootSaved:true,rollbackRetained:true},true);console.log(JSON.stringify({finalized:true,release,rollbackRetained:true}));
 }
-async function main(){assertHost();const command=process.argv[2];if(command!=='capture'){assert.equal(fs.realpathSync(stage),stage);assert.equal(fs.statSync(stage).mode&0o077,0);}if(command==='capture')capture();else if(command==='stage-source')stageSource();else if(command==='install-artifact')await installArtifact();else if(command==='nginx')await nginx();else if(command==='preview')await preview();else if(command==='cutover')await cutover();else if(command==='cutover-single-copy-approved'){await cutover(true);await observe();}else if(command==='observe')await observe();else if(command==='rollback')await rollback();else if(command==='finalize')await finalize();else throw Error('Unknown operation');}
+async function main(){assertHost();const command=process.argv[2];if(command!=='capture'){assert.equal(fs.realpathSync(stage),stage);assert.equal(fs.statSync(stage).mode&0o077,0);}if(command==='capture')capture();else if(command==='stage-source')stageSource();else if(command==='install-artifact')await installArtifact();else if(command==='nginx')await nginx();else if(command==='preview')await preview();else if(command==='cutover')await cutover();else if(command==='cutover-single-copy-approved'){await cutover(true);await observe();}else if(command==='observe')await observe();else if(command==='guard-runtime')await guardRuntime();else if(command==='rollback')await rollback();else if(command==='finalize')await finalize();else throw Error('Unknown operation');}
 main().catch(error=>{console.error(error.message);process.exitCode=1;});

@@ -63,7 +63,7 @@ jobs:
           git show "$GITHUB_SHA:.github/release-tools/public-keys.json" > "$RUNNER_TEMP/public-keys.json"
           git show "$GITHUB_SHA:.github/release-tools/sitemap-build-seed.cjs" > "$RUNNER_TEMP/sitemap-build-seed.cjs"
           "${isolated[@]}" "RUNNER_TEMP=$RUNNER_TEMP" "RELEASE=$RELEASE" "AIS_PUBLIC_SITEMAP=$RUNNER_TEMP/public-sitemaps.json.gz" node "$RUNNER_TEMP/ais-public-seed.cjs" capture
-          "${isolated[@]}" "NEXT_PUBLIC_RECAPTCHA_SITE_KEY=$public_key" "AIS_RELEASE_ID=$RELEASE" "NEXT_DEPLOYMENT_ID=$RELEASE" "AIS_NEXT_DIST_DIR=.next-releases/$RELEASE" "AIS_BUILD_PUBLIC_SITEMAP_SEED=1" "AIS_SITEMAP_ENTRIES=$RUNNER_TEMP/ais-sitemap-entries.json" "NODE_OPTIONS=--require=$RUNNER_TEMP/sitemap-build-seed.cjs" npm run build
+          "${isolated[@]}" "NEXT_PUBLIC_RECAPTCHA_SITE_KEY=$public_key" "AIS_RELEASE_ID=$RELEASE" "NEXT_DEPLOYMENT_ID=$RELEASE" "AIS_NEXT_DIST_DIR=.next-releases/$RELEASE" "AIS_BUILD_PUBLIC_SITEMAP_SEED=1" "AIS_SITEMAP_ENTRIES=$RUNNER_TEMP/ais-sitemap-entries.json" "AIS_PUBLIC_SITEMAP=$RUNNER_TEMP/public-sitemaps.json.gz" "NODE_OPTIONS=--require=$RUNNER_TEMP/sitemap-build-seed.cjs" npm run build
           "${isolated[@]}" "RUNNER_TEMP=$RUNNER_TEMP" "RELEASE=$RELEASE" node "$RUNNER_TEMP/ais-public-seed.cjs" verify
           test "$(cat ".next-releases/$RELEASE/BUILD_ID")" = "$RELEASE"
           test ! -e .next-release-current

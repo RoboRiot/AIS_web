@@ -1,4 +1,4 @@
-name: Build AIS memory monitoring release 722a524
+name: Build AIS memory monitoring release 212f075
 on:
   push:
     branches: [codex/memory-linux-build-20261123]
@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      SOURCE_REVISION: 722a52403a2678dfecb3454239dc064dc7f80728
-      RELEASE: 722a52403a26-linux-20261123
+      SOURCE_REVISION: 212f075d11985f818424c3f87ff94cf96dfe4954
+      RELEASE: 212f075d1198-linux-20261123
       LOCK_SHA256: 942c074a7c95baca7436fb72b07f275f2da9b08c4b3e95293c3f3fdd89a0f5d5
       ROUTE_SHA256: 16f4ca5798eef0259868bd4328e200d280983734c3135728590bc5898a36abc5
       RECOVERY_TEST_SHA256: 2da6ae8fcd6bef3c51414ac467106f054eb3359735864484a9cd3bada0768d7b
@@ -19,7 +19,7 @@ jobs:
       - name: Check out only the pinned source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 722a52403a2678dfecb3454239dc064dc7f80728
+          ref: 212f075d11985f818424c3f87ff94cf96dfe4954
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -162,7 +162,7 @@ jobs:
       - name: Retain the reviewed release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ais-memory-linux-722a524
+          name: ais-memory-linux-212f075
           path: |
             ${{ runner.temp }}/ais-artifact/release.tar.gz.enc
             ${{ runner.temp }}/ais-artifact/manifest.json

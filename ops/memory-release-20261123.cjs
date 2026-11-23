@@ -175,8 +175,8 @@ async function preview() {
     const log=fs.openSync(stage+'/preview-http.private.log','wx',0o600);
     try {await new Promise((resolve,reject)=>{
       verifier=cp.spawn(node,['--max-old-space-size=96','scripts/verify-release.mjs','http://localhost:3001',release,stage+'/preview-http.json'],{cwd:app,detached:true,env:{...process.env,...config.env,NODE_OPTIONS:'--max-old-space-size=96'},stdio:['ignore',log,log]});
-      const timeout=setTimeout(()=>{verifier.kill('SIGTERM');reject(Error('Verifier timeout'));},600000);
-      verifier.once('error',e=>{clearTimeout(timeout);reject(e);});verifier.once('close',code=>{clearTimeout(timeout);code===0&&!failure?resolve():reject(Error(failure||'HTTP gate failed: '+code));});
+      const timeout=setTimeout(()=>{stop('Verifier timeout');reject(Error('Verifier timeout'));},600000);
+      verifier.once('error',e=>{clearTimeout(timeout);reject(e);});verifier.once('close',code=>{clearTimeout(timeout);verifier=null;code===0&&!failure?resolve():reject(Error(failure||'HTTP gate failed: '+code));});
     });}finally{fs.closeSync(log);}
     while(Date.now()-started<1800000){if(failure)throw Error(failure);assert.equal(child.exitCode,null);await smoke(3001,release);await sleep(60000);}
     sample();if(failure)throw Error(failure);assertOld();
@@ -193,18 +193,21 @@ function restoreNginx() {
   fs.writeFileSync(nginxFile,fs.readFileSync(stage+'/rollback/nginx.conf'));run('nginx',['-t']);run('systemctl',['reload','nginx']);
 }
 async function rollback() {
-  const current=active();assert.equal(current.name,'AIS_web');assert([app,oldApp].includes(current.pm2_env.pm_cwd));
-  if(current.pm2_env.pm_cwd===app){pm2(['delete','AIS_web']);pm2(['start',stage+'/rollback/ecosystem.private.json','--only','AIS_web']);}
+  const rows=processes();assert(rows.length<=1,'Unexpected rollback topology');const current=rows[0];
+  if(current){assert.equal(current.name,'AIS_web');assert([app,oldApp].includes(current.pm2_env.pm_cwd));}
+  if(current?.pm2_env.pm_cwd===app)pm2(['delete','AIS_web']);
+  if(!current||current.pm2_env.pm_cwd===app)pm2(['start',stage+'/rollback/ecosystem.private.json','--only','AIS_web']);
+  else if(current.pm2_env.status!=='online')pm2(['restart','AIS_web']);
   await ready(3000,oldRelease);await smoke(3000,oldRelease);restoreNginx();pm2(['save']);
   write('rollback-result.json',{at:new Date().toISOString(),release:oldRelease,verified:true});console.log(JSON.stringify({rolledBack:true,release:oldRelease}));
 }
 async function cutover() {
   const preview=read('preview-result.json');assert(preview.success&&preview.release===release&&preview.elapsedMs>=1800000);
   assertOld();assert(available()>=350*MiB);assert(disk()>1024**3);assert(read('nginx-applied.json').tested);candidateConfig();
-  const started=Date.now();pm2(['stop','AIS_web']);pm2(['delete','AIS_web']);
-  try{pm2(['start',stage+'/ecosystem.candidate.private.json','--only','AIS_web']);await ready(3000,release);await smoke(3000,release);
+  const started=Date.now();
+  try{pm2(['stop','AIS_web']);pm2(['delete','AIS_web']);pm2(['start',stage+'/ecosystem.candidate.private.json','--only','AIS_web']);await ready(3000,release);await smoke(3000,release);
     const p=active();assert.equal(p.pm2_env.pm_cwd,app);write('cutover-result.json',{started:new Date(started).toISOString(),release,pid:p.pid,restarts:p.pm2_env.restart_time,bootSaved:false},true);console.log(JSON.stringify({cutover:true,release,pid:p.pid,elapsedMs:Date.now()-started,bootSaved:false}));
-  }catch(error){if(!processes().length)pm2(['start',stage+'/rollback/ecosystem.private.json','--only','AIS_web']);await rollback();throw error;}
+  }catch(error){await rollback();throw error;}
 }
 async function observe() {
   const baseline=read('cutover-result.json'),started=Date.now(),samples=[];

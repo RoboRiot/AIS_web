@@ -9,19 +9,19 @@ const response = (status, text = "", type = "text/html") => new Response(text, {
 const sitemap = (...paths) => `<urlset>${paths.map((p) => `<url><loc>${base}${p}</loc></url>`).join("")}</urlset>`;
 const page = (p, links = "") => `<html><head><link rel="canonical" href="${base}${p}"></head><body><h1>AIS</h1>${links}</body></html>`;
 
-test("transient errors retry once, then stop after three exhausted requests", async () => {
+test("first transient failure stops further requests without a retry", async () => {
   let calls = 0;
   const client = createAuditRequester({ fetchImpl: async () => { calls++; return response(502); }, sleep: noSleep });
-  for (let i = 0; i < 3; i++) assert.equal((await client.request(`${base}/${i}`)).status, 502);
+  assert.equal((await client.request(`${base}/0`)).status, 502);
   await assert.rejects(client.request(`${base}/4`), AvailabilityStop);
-  assert.equal(calls, 6);
-  assert.equal(client.incidents.length, 3);
+  assert.equal(calls, 1);
+  assert.equal(client.incidents.length, 1);
 });
 
-test("recovered retries, 404s, and external blocks do not trip the internal circuit", async () => {
-  const statuses = [502, 200, 404, 403, 200];
+test("404s and external blocks do not trip the internal circuit", async () => {
+  const statuses = [200, 404, 503, 200];
   const client = createAuditRequester({ fetchImpl: async () => response(statuses.shift()), sleep: noSleep });
-  assert.equal((await client.request(base)).attempts, 2);
+  assert.equal((await client.request(base)).attempts, 1);
   assert.equal((await client.request(`${base}/missing`)).status, 404);
   await client.request("https://external.example", { internal: false });
   assert.equal((await client.request(base)).status, 200);
@@ -64,7 +64,7 @@ test("outage stops bounded work and never advances unattempted products", async 
   const result = await auditPublicLinks({ sleep: noSleep, fetchImpl: async (url) => url.endsWith("sitemap.xml")
     ? response(200, sitemap("/products/a", "/products/b", "/products/c", "/products/d"), "application/xml") : response(502) });
   assert.equal(result.report.complete, false);
-  assert.equal(result.report.coverage.productsThisRun, 3);
+  assert.equal(result.report.coverage.productsThisRun, 1);
   assert.equal(result.report.coverage.productsVerifiedThisRun, 0);
   assert.equal(result.state[`${base}/products/d`].attemptedAt, undefined);
   assert.equal(result.report.issues.filter((i) => i.type === "http").length, 0);

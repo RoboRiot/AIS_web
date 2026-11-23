@@ -2,14 +2,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { readSitemapTree } from "./verify-sitemaps.mjs";
+import { openMonitoringSession } from "./lib/public-monitoring-session.mjs";
 
 const require = createRequire(import.meta.url);
 const { parse } = require("next/dist/compiled/node-html-parser");
 
 const CSS_URL_PATTERN = /url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
-const USER_AGENT =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
-  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36";
+const USER_AGENT = "AIS-ReadOnly-AssetAudit/3.0";
 
 const parseArguments = () =>
   Object.fromEntries(
@@ -38,16 +37,15 @@ const mapWithConcurrency = async (items, concurrency, worker) => {
   return results;
 };
 
-const fetchWithTimeout = async (url, { readBody = false, timeoutMs = 30_000 } = {}) => {
+const fetchResource = async (fetchImpl, url, { readBody = false, timeoutMs = 30_000 } = {}) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const startedAt = Date.now();
 
   try {
-    const response = await fetch(url, {
+    const response = await fetchImpl(url, {
       headers: {
         "user-agent": USER_AGENT,
-        "cache-control": "no-cache",
       },
       redirect: "follow",
       signal: controller.signal,
@@ -143,7 +141,7 @@ export const extractInternalResources = (contents, pageUrl, baseOrigin) => {
   return [...resources];
 };
 
-const loadRoutes = async (baseUrl) => {
+const loadRoutes = async (baseUrl, fetchWithTimeout) => {
   const { urls } = await readSitemapTree(async (pathname) => {
     const sitemap = await fetchWithTimeout(new URL(pathname, baseUrl), { readBody: true });
     if (sitemap.status !== 200) throw new Error(`Sitemap ${pathname}: ${sitemap.error || `HTTP ${sitemap.status}`}`);
@@ -154,13 +152,23 @@ const loadRoutes = async (baseUrl) => {
 
 export const verifySiteAssets = async ({
   baseUrl,
-  concurrency = 8,
+  concurrency = 1,
   maxPages = Number.POSITIVE_INFINITY,
   maxProductPages = 40,
   scanAllPages = false,
 }) => {
   const base = new URL(baseUrl);
-  const discoveredRoutes = await loadRoutes(base);
+  const loopback = ["127.0.0.1", "localhost", "[::1]"].includes(base.hostname);
+  if (!loopback) concurrency = 1;
+  const monitoring = await openMonitoringSession({ base, intervalMs: loopback ? 0 : 2000 });
+  const fetchWithTimeout = async (url, options) => {
+    if (monitoring.state.stopped) throw new Error("Asset audit stopped after an availability failure.");
+    const response = await fetchResource(monitoring.fetch, url, options);
+    if (response.status === 0) await monitoring.stop();
+    return response;
+  };
+  try {
+  const discoveredRoutes = await loadRoutes(base, fetchWithTimeout);
   const productRoutes = discoveredRoutes.filter((route) => route.startsWith("/products/"));
   const regularRoutes = discoveredRoutes.filter((route) => !route.startsWith("/products/"));
   const routes = (
@@ -192,7 +200,7 @@ export const verifySiteAssets = async ({
   const initialResourceUrls = [...resourceToPages.keys()];
   const initialResults = await mapWithConcurrency(
     initialResourceUrls,
-    concurrency * 2,
+    concurrency,
     async (resourceUrl) => {
       const isCss = new URL(resourceUrl).pathname.endsWith(".css");
       return {
@@ -221,7 +229,7 @@ export const verifySiteAssets = async ({
   const nestedResourceUrls = [...resourceToPages.keys()].filter((url) => !initialSet.has(url));
   const nestedResults = await mapWithConcurrency(
     nestedResourceUrls,
-    concurrency * 2,
+    concurrency,
     async (resourceUrl) => ({
       resourceUrl,
       referencedBy: [...(resourceToPages.get(resourceUrl) || [])],
@@ -251,6 +259,7 @@ export const verifySiteAssets = async ({
     }));
 
   return {
+    monitoring: monitoring.state,
     assetFailures,
     pageFailures,
     pageResults,
@@ -260,6 +269,7 @@ export const verifySiteAssets = async ({
     discoveredRoutes,
     slowestPages,
   };
+  } finally { await monitoring.close(); }
 };
 
 const isDirectRun =
@@ -268,7 +278,7 @@ const isDirectRun =
 if (isDirectRun) {
   const args = parseArguments();
   const baseUrl = String(args["base-url"] || "http://127.0.0.1:3000");
-  const concurrency = Math.max(1, Math.min(Number(args.concurrency) || 8, 20));
+  const concurrency = Math.max(1, Math.min(Number(args.concurrency) || 1, 20));
   const maxPages = args["max-pages"]
     ? Math.max(1, Number(args["max-pages"]) || 1)
     : Number.POSITIVE_INFINITY;
@@ -292,6 +302,7 @@ if (isDirectRun) {
         `across release(s): ${result.releases.join(", ") || "unlabeled"}.`,
     );
     console.log("Slowest pages:");
+    console.log(`Sitemaps: ${result.monitoring.freshSitemaps.length} fetched now; ${result.monitoring.cachedSitemaps.length} reused with recorded timestamps.`);
     for (const page of result.slowestPages) {
       console.log(`- ${page.durationMs}ms ${page.status} ${page.route}`);
     }

@@ -21,6 +21,16 @@ export function buildProductSitemapEntries(products) {
   return entries.sort((a, b) => a.url < b.url ? -1 : a.url > b.url ? 1 : 0);
 }
 
+export async function buildProductSitemapEntriesFromPages(pages) {
+  const entries = new Map();
+  for await (const products of pages) {
+    for (const entry of buildProductSitemapEntries(products)) {
+      if (!entries.has(entry.url)) entries.set(entry.url, entry);
+    }
+  }
+  return [...entries.values()].sort((a, b) => a.url < b.url ? -1 : a.url > b.url ? 1 : 0);
+}
+
 export function getProductSitemapIds(entries) {
   return Array.from({ length: Math.ceil(entries.length / PRODUCT_SITEMAP_PAGE_SIZE) },
     (_, id) => ({ id }));

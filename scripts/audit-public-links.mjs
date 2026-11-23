@@ -3,6 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import { AvailabilityStop, createAuditRequester, isTransient, oldestFirst, publicInternalUrl, recordCheck } from "./lib/link-audit-policy.mjs";
+import { openMonitoringSession } from "./lib/public-monitoring-session.mjs";
 
 const require = createRequire(import.meta.url);
 const { XMLParser, XMLValidator } = require("fast-xml-parser");
@@ -26,7 +27,7 @@ export async function auditPublicLinks({ base = "https://advancedimagingparts.co
     if (publicInternalUrl(url, base, base) !== url) throw new Error(`Non-local sitemap: ${url}`);
     visitedSitemaps.add(url);
     const result = await requester.request(url);
-    sitemapResults.push({ url, status: result.status });
+    sitemapResults.push({ url, status: result.status, cachedAt: result.cachedAt || null });
     if (result.status !== 200) throw new Error(`Sitemap failed: ${url} (${result.status})`);
     if (XMLValidator.validate(result.text) !== true) throw new Error(`Invalid sitemap XML: ${url}`);
     const xml = new XMLParser().parse(result.text);
@@ -120,7 +121,9 @@ export async function auditPublicLinks({ base = "https://advancedimagingparts.co
   return { state, report: {
     checkedAt, base, complete: sitemapComplete && !interrupted && !requester.incidents.length,
     scope: "Bounded public GET audit, not a full catalog audit or form delivery test. External failures are inconclusive.",
-    coverage: { sitemapDiscoveryComplete: sitemapComplete, sitemapRoutes: routes.size, coreRoutes: [...routes].filter((url) => !product(url)).length,
+    coverage: { sitemapDiscoveryComplete: sitemapComplete, sitemapsFetchedThisRun: sitemapResults.filter((r) => !r.cachedAt).length,
+      sitemapsReusedFromCache: sitemapResults.filter((r) => r.cachedAt).length,
+      sitemapRoutes: routes.size, coreRoutes: [...routes].filter((url) => !product(url)).length,
       productRoutes: [...routes].filter(product).length, productQueue: products.length,
       productsThisRun: pages.filter((p) => product(p.url)).length,
       productsVerifiedThisRun: pages.filter((p) => product(p.url) && !isTransient(p.status)).length,
@@ -139,7 +142,13 @@ export async function main(args = process.argv.slice(2)) {
   const statePath = path.join(outputDir, "link-audit-state.json");
   let previous = {};
   try { previous = JSON.parse(await fs.readFile(statePath, "utf8")); } catch (error) { if (error.code !== "ENOENT") throw error; }
-  const { state, report } = await auditPublicLinks({ previous, batchSize: Number(args[0]) || 500 });
+  const monitoring = await openMonitoringSession({ base: "https://advancedimagingparts.com" });
+  let state, report;
+  try {
+    ({ state, report } = await auditPublicLinks({ previous, batchSize: Number(args[0]) || 500, fetchImpl: monitoring.fetch }));
+    if (report.issues.some((issue) => issue.type === "availability-incident")) await monitoring.stop();
+    report.monitoring = monitoring.state;
+  } finally { await monitoring.close(); }
   const reportPath = path.join(outputDir, `link-audit-${report.checkedAt.replace(/[:.]/g, "-")}.json`);
   // Write evidence first and replace state atomically; an interrupted run must
   // never discard the previously discovered queue or advance unattempted URLs.

@@ -4,6 +4,7 @@ import { getProductSitemapEntries } from "@/app/data/serverProductSitemap";
 import { getProductSitemapIds, productSitemapPath } from "@/app/data/productSitemap.mjs";
 
 export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function GET() {
   const productIds = getProductSitemapIds(await getProductSitemapEntries());

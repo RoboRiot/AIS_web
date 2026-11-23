@@ -1,10 +1,9 @@
-import { unstable_cache } from "next/cache";
-import { fetchAllProducts } from "@/app/data/serverFirestoreProducts";
-import { buildProductSitemapEntries } from "@/app/data/productSitemap.mjs";
+import { fetchPublicProductPages } from "@/app/data/serverFirestoreProducts";
+import { buildProductSitemapEntriesFromPages } from "@/app/data/productSitemap.mjs";
+import { sharedProductSitemapEntries } from "@/app/data/productSitemapCache.mjs";
 
-// Share compact entries across static sitemap generation, not full catalog records.
-export const getProductSitemapEntries = unstable_cache(async () => {
-  const entries = buildProductSitemapEntries(await fetchAllProducts());
-  if (!entries.length) throw new Error("Product sitemap generation returned no public products.");
-  return entries;
-}, ["product-sitemap-entries-v1"], { revalidate: 3600 });
+// Do not deserialize the full sitemap array or launch a catalog scan per shard.
+// ISR still caches XML responses; the shared data refresh blocks and coalesces.
+export const getProductSitemapEntries = () => sharedProductSitemapEntries(
+  () => buildProductSitemapEntriesFromPages(fetchPublicProductPages())
+);

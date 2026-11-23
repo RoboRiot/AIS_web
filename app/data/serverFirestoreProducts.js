@@ -51,9 +51,8 @@ export const fetchProductByLegacySlug = async (slug) => {
   return matchesLegacyProduct(reference, product) && isCampaignReadyProduct(product) ? product : null;
 };
 
-export const fetchAllProducts = async () => {
+export async function* fetchPublicProductPages() {
   const db = getAdminDb();
-  const products = [];
   let cursor = null;
 
   do {
@@ -81,10 +80,15 @@ export const fetchAllProducts = async () => {
       .limit(500);
     if (cursor) query = query.startAfter(cursor);
     const snapshot = await query.get();
-    products.push(...readyProductsFromDocuments(snapshot.docs));
+    yield readyProductsFromDocuments(snapshot.docs);
     cursor = snapshot.docs.length === 500 ? snapshot.docs[snapshot.docs.length - 1] : null;
   } while (cursor);
 
+}
+
+export const fetchAllProducts = async () => {
+  const products = [];
+  for await (const page of fetchPublicProductPages()) products.push(...page);
   return products;
 };
 

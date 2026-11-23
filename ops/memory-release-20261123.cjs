@@ -96,11 +96,12 @@ async function nginx() {
   assert.equal(sha(fs.readFileSync(nginxFile)),sha(before),'Nginx drift');
   const {prepareNginxUpstream}=await import(pathToFileURL(app+'/scripts/prepare-nginx-upstream.mjs'));
   const after=Buffer.from(prepareNginxUpstream(before.toString()));
-  fs.writeFileSync(stage+'/nginx.candidate.conf',after,{flag:'wx',mode:0o600});
+  if(fs.existsSync(stage+'/nginx.candidate.conf'))assert.equal(sha(fs.readFileSync(stage+'/nginx.candidate.conf')),sha(after),'Existing nginx candidate drift');
+  else fs.writeFileSync(stage+'/nginx.candidate.conf',after,{flag:'wx',mode:0o600});
   run('nginx',['-t']);
   try {
     fs.writeFileSync(nginxFile,after);run('nginx',['-t']);run('systemctl',['reload','nginx']);
-    const response=run('curl',['--silent','--show-error','--fail','--max-time','30','--resolve','advancedimagingparts.com:443:127.0.0.1','-I','https://advancedimagingparts.com/']);
+    const response=run('curl',['--silent','--show-error','--fail','--max-time','30','--resolve','advancedimagingparts.com:443:127.0.0.1','--user-agent','AIS-Release-Verification/1.0','-D','-','-o','/dev/null','https://advancedimagingparts.com/']);
     assert(response.includes(oldRelease),'Nginx release check');
     write('nginx-applied.json',{at:new Date().toISOString(),before:sha(before),after:sha(after),tested:true,reloaded:true},true);
     console.log(JSON.stringify({nginxReloaded:true,onlyChange:'localhost:3000 -> 127.0.0.1:3000',release:oldRelease}));
@@ -214,9 +215,9 @@ async function cutover(singleCopyApproved=false) {
 }
 async function observe() {
   const baseline=read('cutover-result.json'),started=Date.now(),samples=[];
-  const logStates=['/var/log/nginx/access.log','/var/log/nginx/error.log'].map(file=>({file,inode:fs.statSync(file).ino,offset:fs.statSync(file).size}));
+  let logStates=[];
   function checkLogs(){for(const state of logStates){const stat=fs.statSync(state.file);if(stat.ino!==state.inode||stat.size<state.offset){state.inode=stat.ino;state.offset=0;}const size=stat.size-state.offset;assert(size<=4*MiB,'Unexpected nginx log growth');if(!size)continue;const handle=fs.openSync(state.file,'r'),buffer=Buffer.alloc(size);try{fs.readSync(handle,buffer,0,size,state.offset);}finally{fs.closeSync(handle);}state.offset=stat.size;const value=buffer.toString();if(state.file.endsWith('/access.log'))assert(!/"\s+5\d\d\s/.test(value),'New nginx 5xx after cutover');else assert(!/connect\(\) failed|upstream prematurely closed|upstream timed out|no live upstreams/.test(value),'New nginx upstream failure');}}
-  try{while(Date.now()-started<1800000){const p=active();assert.equal(p.pid,baseline.pid);assert.equal(p.pm2_env.restart_time,baseline.restarts);assert.equal(p.pm2_env.status,'online');assert.equal(p.pm2_env.AIS_RELEASE_ID,release);assert(p.monit.memory<400*MiB);assert(available()>=150*MiB);assert(disk()>1024**3);samples.push({at:new Date().toISOString(),rssBytes:p.monit.memory,availableBytes:available()});await smoke(3000,release);checkLogs();write('live-progress.json',{started:new Date(started).toISOString(),samples:samples.length,release,latest:samples.at(-1)});await sleep(60000);}
+  try{logStates=['/var/log/nginx/access.log','/var/log/nginx/error.log'].map(file=>({file,inode:fs.statSync(file).ino,offset:fs.statSync(file).size}));while(Date.now()-started<1800000){const p=active();assert.equal(p.pid,baseline.pid);assert.equal(p.pm2_env.restart_time,baseline.restarts);assert.equal(p.pm2_env.status,'online');assert.equal(p.pm2_env.AIS_RELEASE_ID,release);assert(p.monit.memory<400*MiB);assert(available()>=150*MiB);assert(disk()>1024**3);samples.push({at:new Date().toISOString(),rssBytes:p.monit.memory,availableBytes:available()});await smoke(3000,release);checkLogs();write('live-progress.json',{started:new Date(started).toISOString(),samples:samples.length,release,latest:samples.at(-1)});await sleep(60000);}
     checkLogs();
     const errors=fs.readFileSync(stage+'/runtime-error.private.log','utf8');assert(!/FATAL ERROR|heap out of memory|ENOMEM|Unable to generate|Missing Firebase|Unhandled/i.test(errors));
     const result={success:true,release,started:new Date(started).toISOString(),elapsedMs:Date.now()-started,peakRssBytes:Math.max(...samples.map(x=>x.rssBytes)),minAvailableBytes:Math.min(...samples.map(x=>x.availableBytes)),restarts:0,nginx5xx:0,nginxUpstreamErrors:0,samples};write('live-result.json',result,true);console.log(JSON.stringify({...result,samples:samples.length}));

@@ -13,10 +13,10 @@ const source='https://advancedimagingparts.com', hashes={}, digest=s=>createHash
 const journal=process.env.AIS_SEED_JOURNAL || path.join(process.env.RUNNER_TEMP,'ais-public-catalog.json');
 const keys={sitemap:'45e470bb11f23a767ed5b67f8613e306eea414b689a1cc3cb72ca368d847c71d', parts:'83ecef1c8968768187aaba20849727df9c9abb712e14c6fa03f7ba2a7bc98e83',home:'cd4cd6d5d156c2c4a34d8ca84acaed6db20fc5996868ddf99aebac4586622331'};
 async function get(route){
+  assert(process.env.AIS_LOCAL_BUILD_DIRECTORY, 'Capture requires a local build; no production crawl allowed');
   assert(route.startsWith('/')&&!route.startsWith('//')&&!route.includes('..'));
-  let failure;
-  for(let n=0;n<3;n++){try{const r=await fetch(source+route,{redirect:'error',headers:{'User-Agent':'AIS-Website-Health-Monitor/1.0'},signal:AbortSignal.timeout(30000)});assert.equal(r.status,200,route+': '+r.status);assert.equal(r.headers.get('x-ais-release'),'94deaa7391cc-linux-20261118');return await r.text();}catch(e){failure=e;await new Promise(ok=>setTimeout(ok,1500*(n+1)));}}
-  throw failure;
+  const file = route.endsWith('.xml') ? route.slice(1)+'.body' : route === '/' ? 'index.html' : route.slice(1)+'.html';
+  return fs.readFileSync(path.join(process.env.AIS_LOCAL_BUILD_DIRECTORY,'server/app',file),'utf8');
 }
 function props(html,property) {
   const flight=[...html.matchAll(/<script>self\.__next_f\.push\((\[[^<]*\])\)<\/script>/g)].map(m=>JSON.parse(m[1])).filter(r=>r[0]===1).map(r=>r[1]).join('');
@@ -57,11 +57,12 @@ function writeSeed(key,value,seconds){
 }
 const idList=rows=>rows.map(r=>{assert(typeof r.id==='string'&&r.id&&r.Name);return r.id;});
 async function main() {
-  if(process.argv[2]==='capture'){
+  if(process.argv[2]==='capture-local' || process.argv[2]==='capture'){
     const {verifySitemaps}=await import(pathToFileURL(path.join(cwd,'scripts/verify-sitemaps.mjs')));
     const raw=new Map(), {XMLParser}=appRequire('fast-xml-parser');
     let entries=[];
-    if(process.env.AIS_PUBLIC_SITEMAP){const snap=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(process.env.AIS_PUBLIC_SITEMAP)));entries=snap.entries;Object.assign(hashes,snap.hashes);assert.equal(entries.length,7983);assert.equal(Object.keys(hashes).length,84);}
+    let snapshot;
+    if(process.env.AIS_PUBLIC_SITEMAP){snapshot=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(process.env.AIS_PUBLIC_SITEMAP)));entries=snapshot.entries;Object.assign(hashes,snapshot.hashes);assert.equal(entries.length,7983);assert.equal(Object.keys(hashes).length,84);}
     else{
       const tree=await verifySitemaps(async p=>{const s=await get(p);raw.set(p,s);hashes[p]=digest(s);return s;});
       for(const doc of tree.documents.filter(d=>d.path.startsWith('/sitemaps/products/'))){
@@ -71,10 +72,17 @@ async function main() {
       assert.equal(entries.length,tree.products);
     }
     assert.deepEqual(entries.map(x=>x.url),entries.map(x=>x.url).toSorted());
-    const home=props(await get('/'),'initialProducts'), parts=props(await get('/parts'),'initialCatalog');
+    const home=snapshot?.home || props(await get('/'),'initialProducts'), parts=snapshot?.parts || props(await get('/parts'),'initialCatalog');
     assert.equal(home.length,2);assert.equal(parts.length,1);
     for(const a of [home[0],home[1],parts[0].products])assert(a.length>=10);
-    writeSeed(keys.sitemap,entries,3600);writeSeed(keys.home,{mostRequested:home[0],ctTubes:home[1]},900);
+    if(process.argv[2]==='capture-local') {
+      assert(process.argv[3]);
+      fs.writeFileSync(process.argv[3],require('node:zlib').gzipSync(JSON.stringify({capturedAt:new Date().toISOString(),source:'local build of approved public catalog',entries,hashes,home,parts})));
+      console.log(JSON.stringify({publicProducts:entries.length,sitemapDocuments:Object.keys(hashes).length,homepageGroups:home.map(x=>x.length),parts:parts[0].products.length}));
+      return;
+    }
+    fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'ais-sitemap-entries.json'),JSON.stringify(entries));
+    writeSeed(keys.home,{mostRequested:home[0],ctTubes:home[1]},900);
     writeSeed(keys.parts,parts[0].products,900);
     fs.writeFileSync(journal,JSON.stringify({hashes,products:entries.length,home:home.map(idList),parts:idList(parts[0].products)}));
     console.log('Captured public sitemap products, documents, homepage groups and catalog items:',entries.length,raw.size,home.map(r=>r.length),parts[0].products.length);

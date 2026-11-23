@@ -3,7 +3,7 @@ const [mode,directory,configFile]=process.argv.slice(2);
 const p=f=>path.join(directory,f);
 const m=JSON.parse(fs.readFileSync(p('manifest.json')));
 const sha=data=>crypto.createHash('sha256').update(data).digest('hex');
-assert.equal(m.release,'babcc090bd4d-linux-20261118');assert.equal(m.sourceRevision,'babcc090bd4d89e1d177d03fdc141b8eb9d1aca9');
+assert.equal(m.release,'722a52403a26-linux-20261123');assert.equal(m.sourceRevision,'722a52403a2678dfecb3454239dc064dc7f80728');
 const aad=Buffer.from('AIS memory reliability release\n'+m.release+'\n'+m.sourceRevision,'utf8');
 const params={oaepHash:'sha256',padding:crypto.constants.RSA_PKCS1_OAEP_PADDING};
 if(mode==='encrypt'){

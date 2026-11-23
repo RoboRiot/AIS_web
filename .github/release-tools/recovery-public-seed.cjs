@@ -11,7 +11,7 @@ const cwd=process.cwd(), appRequire=createRequire(path.join(cwd,'package.json'))
 const dist=path.resolve(process.env.AIS_SEED_DIST || path.join(cwd,'.next-releases',process.env.RELEASE));
 const source='https://advancedimagingparts.com', hashes={}, digest=s=>createHash('sha256').update(s).digest('hex');
 const journal=process.env.AIS_SEED_JOURNAL || path.join(process.env.RUNNER_TEMP,'ais-public-catalog.json');
-const keys={sitemap:'45e470bb11f23a767ed5b67f8613e306eea414b689a1cc3cb72ca368d847c71d', parts:'83ecef1c8968768187aaba20849727df9c9abb712e14c6fa03f7ba2a7bc98e83',home:'cd4cd6d5d156c2c4a34d8ca84acaed6db20fc5996868ddf99aebac4586622331'};
+const keys={parts:'38a364b0029a179f99666cfb67b1f6bc53d9702cdd4c0b26cf320882ea86e02e',home:'019db4340abb13919af023310b2df8a7a822d8f430153868a428f69d3afd6148'};
 async function get(route){
   assert(process.env.AIS_LOCAL_BUILD_DIRECTORY, 'Capture requires a local build; no production crawl allowed');
   assert(route.startsWith('/')&&!route.startsWith('//')&&!route.includes('..'));
